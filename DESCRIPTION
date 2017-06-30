@@ -1,0 +1,38 @@
+Package: uavRmp
+Type: Package
+Title: Unmanned Aerial Vehicle Remote Mission Planner
+Version: 0.2
+Date: 2016-09-25
+Authors@R: c(person("Lars", "Opgenoorth", email = "opgenoorth@uni-marburg.de", role = c("aut", "aut")),
+             person("Christoph", "Reudenbach", email = "reudenbach@geo.uni-marburg.de", role = c("cre"))
+             )
+Encoding: UTF-8
+Maintainer: Chris Reudenbach <reudenbach@uni-marburg.de>
+Description: Unmanned Aerial Vehicle R based Mission Planner
+License: GPL (>= 3) | file LICENSE
+Depends:
+    R (>= 3.1.0)
+Imports:
+    stringr,
+    foreach,
+        sp,
+    raster,
+    htmlwidgets,
+    htmltools,
+    Rcpp,
+    rgdal,
+    rgeos,
+    gdalUtils,
+    geosphere,
+    tools,
+    maptools,
+    mapview,
+    log4r,
+    caret,
+    igraph,
+    zoo,
+    data.table,
+    spatial.tools,
+    velox,
+    link2GI
+RoxygenNote: 6.0.1
