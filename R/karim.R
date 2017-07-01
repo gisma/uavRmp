@@ -47,7 +47,8 @@ if (!isGeneric('xyz2tif')) {
 #' @description
 #' Read xyz data and generate a raster  \code{Raster*} object.  
 #' 
-#' @param txtFn ASCII tect file with xyz values
+#' @param xyzFN ASCII tect file with xyz values
+#' @param epsgCode EPSG Code default is  "25832"
 
 #' 
 #' 

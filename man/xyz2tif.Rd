@@ -7,7 +7,9 @@
 xyz2tif(xyzFN = NUL, epsgCode = "25832")
 }
 \arguments{
-\item{txtFn}{ASCII tect file with xyz values
+\item{xyzFN}{ASCII tect file with xyz values}
+
+\item{epsgCode}{EPSG Code default is  "25832"
 
 
 

@@ -1,12 +1,13 @@
-# analyzeDSM performs all DEM related preprocessing and basic analysis stuff
-# more substantial 
-# (1) it imports and deproject different kind of input DEM/DSM data
-# (2)  extracting the launching point altitude
-# (3)  extracting all altitudes at the waypointsand the "real" agl flight altitude
-# (4)  calculating the overall RTH 
-# (5)  filtering in line waypoints according to an altitude difference treshold
-# (6)  preprocessing of an highest resolution DSM dealing with clearings and other artefacts
-# (7)  generates a sp object of the outer boundary of reliable DEM values
+#'DEM related preprocessing and basic analysis stuff
+#' 
+#' (1) it imports and deproject different kind of input DEM/DSM data
+#' (2)  extracting the launching point altitude
+#' (3)  extracting all altitudes at the waypointsand the "real" agl flight altitude
+#' (4)  calculating the overall RTH 
+#' (5)  filtering in line waypoints according to an altitude difference treshold
+#' (6)  preprocessing of an highest resolution DSM dealing with clearings and other artefacts
+#' (7)  generates a sp object of the outer boundary of reliable DEM values
+#' 
 
 analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,workingDir,locationName){
   

@@ -4,11 +4,8 @@ if (!isGeneric('picapos')) {
 }
 #' picapos take  pictures at a given position
 #'
-#' @description  picapos generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles for taking top down pictures.
-#'
-#' @note basic idea is to fly in a serie to object positions with respect to the surface model for taking high resolution pics
-#' @param projectDir path to the main folder where several projects can be hosted
-#' It will overwrite the DEM based estimation if any other value than -9999
+#' @description  picapos generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles for taking top down pictures. Basic idea is to fly in a serie to object positions with respect to the surface model for taking high resolution pics
+#' @param projectDir path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999
 #' @param demFn  filname of the corresponding DEM data file
 #' @param locationName base string for mission filenames
 #' @param followSurface  \code{boolean}  TRUE performs an altitude correction 
@@ -47,16 +44,19 @@ if (!isGeneric('picapos')) {
 
 #'
 #' @examples
-#' t3<-picapos(projectDir ="/home/creu/uav/bayerwald",
-#' locationName = "filzmoosTree",
-#' missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
-#' demFn = "~/uav/grossfilz/grosserfilz.tif",
-#' windCondition = 2,
-#' uavType = "djip3",
-#' followSurfaceRes=5,
-#' launchPos = c(13.409114897133804,48.92039612988935))
+#'\dontrun{
+#' requires(mapview)
+#' t3 <- picapos(projectDir ="/home/creu/uav/bayerwald",
+#'               locationName = "filzmoosTree",
+#'               missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
+#'               demFn = "~/uav/grossfilz/grosserfilz.tif",
+#'               windCondition = 2,
+#'               uavType = "djip3",
+#'               followSurfaceRes=5,
+#'               launchPos = c(13.409114897133804,48.92039612988935))
 #' 
 #' mapview(t3$wp,zcol = "altitude",lwd=1,cex=5)+mapview(t3$lp,color="red",cex=5)
+#' }
 #' 
 #' @export picapos 
 #'               
@@ -115,8 +115,8 @@ picapos<- function(projectDir="~",
   
   # import flight area if provided by an external vector file
   #file.copy(overwrite = TRUE, from = missionTrackList, to = file.path(projectDir,"data"))
-  flightList<-uavRmp:::readTreeTrack(missionTrackList)
-  test<-try(uavRmp:::readLaunchPos(launchPos))
+  flightList<-uavRmp::readTreeTrack(missionTrackList)
+  test<-try(uavRmp::readLaunchPos(launchPos))
   if (class(test)!="try-error"){
     launchPos<-test
     flightArea<- flightList+launchPos
@@ -149,7 +149,7 @@ picapos<- function(projectDir="~",
   p$altFilter<-altFilter
   p$projectDir<-projectDir
   p$climbDist<-climbDist
-  p$task<- uavRmp:::fp_getPresetTask("treetop")
+  p$task<- uavRmp::fp_getPresetTask("treetop")
   
-  fullTreeList<-uavRmp:::makeFlightPathT3(flightList,p,uavType,task,demFn,logger,projectDir,locationName,circleRadius,flightArea)
+  fullTreeList<-uavRmp::makeFlightPathT3(flightList,p,uavType,task,demFn,logger,projectDir,locationName,circleRadius,flightArea)
 }

@@ -13,8 +13,7 @@ picapos(projectDir = "~", locationName = "autoflightcontrol",
   uavType = "solo")
 }
 \arguments{
-\item{projectDir}{path to the main folder where several projects can be hosted
-It will overwrite the DEM based estimation if any other value than -9999}
+\item{projectDir}{path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999}
 
 \item{locationName}{base string for mission filenames}
 
@@ -68,21 +67,21 @@ Further explanation at \link{seealso}}
 \item{maxFl}{maximum duration of a flight in minutes}
 }
 \description{
-picapos generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles for taking top down pictures.
-}
-\note{
-basic idea is to fly in a serie to object positions with respect to the surface model for taking high resolution pics
+picapos generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles for taking top down pictures. Basic idea is to fly in a serie to object positions with respect to the surface model for taking high resolution pics
 }
 \examples{
-t3<-picapos(projectDir ="/home/creu/uav/bayerwald",
-locationName = "filzmoosTree",
-missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
-demFn = "~/uav/grossfilz/grosserfilz.tif",
-windCondition = 2,
-uavType = "djip3",
-followSurfaceRes=5,
-launchPos = c(13.409114897133804,48.92039612988935))
+\dontrun{
+requires(mapview)
+t3 <- picapos(projectDir ="/home/creu/uav/bayerwald",
+              locationName = "filzmoosTree",
+              missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
+              demFn = "~/uav/grossfilz/grosserfilz.tif",
+              windCondition = 2,
+              uavType = "djip3",
+              followSurfaceRes=5,
+              launchPos = c(13.409114897133804,48.92039612988935))
 
 mapview(t3$wp,zcol = "altitude",lwd=1,cex=5)+mapview(t3$lp,color="red",cex=5)
+}
 
 }
