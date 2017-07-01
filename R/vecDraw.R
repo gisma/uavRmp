@@ -1,43 +1,41 @@
-#' digitizing vector features using leaflet draw
+#' digitizing vector features using a simple leaflet base map
 #'
-#' @description  vecDraw is based on the leaflet draw plugin. It provides a bunch of leaflet maps as base layers for digitizing vector features. 
+#' @description  vecDraw is designed for straightforward digitizing of simple geometries without adding attributes. It provides a bunch of leaflet base maps and optionally a sf* object can be loaded for orientation. 
 #'
-#' @note Yu can either save the digitized object to a json file or you ma grab the json string via the clipboard
-
-#' @param zoom initial zoom level
-#' @param line enable the draw tool line tool
-#' @param poly enable the draw polygon tool 
-#' @param circle enable the draw circle tool
-#' @param point enable the draw point tool
+#' @note Yu can either save the digitized object to a json (JS) or kml (KML) file.
+#' @param mapCenter center of the leaflet map
+#' @param zoom set initial zoom level of leaflet map
+#' @param line enable/disable line tool
+#' @param poly enable/disable polygon tool 
+#' @param circle enable/disable circle tool
+#' @param rectangle enable/disable polygon tool
+#' @param point enable/disable point tool
 #' @param remove enable/disable the remove feature of the draw tool
-#' @param position place to put the toolbar (topright, topleft, bottomright, bottomleft)
-#' @param mapCenter mapcenter
-#' @param rectangle rectangle
-#' @param features features
-#' @param cex cex
-#' @param lwd lwd
-#' @param alpha alpha
-#' @param opacity opacity
+#' @param position  toolbar layout (topright, topleft, bottomright, bottomleft)
+#' @param cex size of item 
+#' @param lwd line width of item
+#' @param opacity opacity of item
 #' @param maplayer string as provided by leaflet-provider 
-#' @param preset character defaut is "NULL" full draw version, "uav" for flightarea digitizing, "ext" for rectangles
-#' @param locPreset character default is "muf" for Marburg University Forest, others are "tra" Traddelstein, "hag" Hagenstein, "baw" Bayerwald.
-#' @param overlay optional sp object 
+#' @param preset character default is "uav" for line based mission digitizing, "ext" for rectangles, NULL for all drawing items
+#' @param locPreset character location preset, default is "muf" for Marburg University Forest,  "tra" Traddelstein, "hag" Hagenstein, "baw" Bayerwald.
+#' @param overlay optional sp* object may used for orientation  
 #' 
 #'
 #' @examples
 #'\dontrun{
-#' # all features
+#' # fully featured without overlay
 #' vecDraw()
 #' 
-#' # preset for digitizing uav flight areas in Meuse
+#' # preset for digitizing uav flight areas using Meuse data set as overlay
+#' require(sp)
 #' data(meuse) 
 #' coordinates(meuse) <- ~x+y 
 #' proj4string(meuse) <-CRS("+init=epsg:28992") 
-#' me<-sp::spTransform(meuse,CRSobj = sp::CRS("+init=epsg:4326"))
-#' uavRmp::vecDraw(overlay = me, preset = "uav")
+#' m<-sp::spTransform(meuse,CRSobj = sp::CRS("+init=epsg:4326"))
+#' uavRmp::vecDraw(overlay = m, preset = "uav")
 #'   
-#' # preset for digitizing extents
-#' vecDraw(preset="ext",overlay = me)
+#' # preset for digitizing simple rectangles extents
+#' vecDraw(preset="ext",overlay = m)
 #' }
 #' @export vecDraw
 

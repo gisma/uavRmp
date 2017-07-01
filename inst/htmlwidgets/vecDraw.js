@@ -297,12 +297,14 @@ HTMLWidgets.widget({
         L.easyButton(  '<span style="font-size: 10px " class="glyphicon glyphicon-download"> KML</span>',
          function(){
              var data = drawnItems.toGeoJSON();
+             
         // Stringify the GeoJson
         var convertedData = JSON.stringify(data);
         var kml = tokml(data);
         //var grabstring = "c(" + kml.replace(/ /g, ",") +")";
         //document.write(convertedData);
         //document.getElementById("coords").innerHTML = '<div class="coords"' + grabstring + '"</div>"' 
+        $('#coords').text( convertedData );
         //window.alert(grabstring);}).addTo(map);
        download(new Blob([kml]), "dlTextBlob.txt", "text/plain");}).addTo(map);
       //}
