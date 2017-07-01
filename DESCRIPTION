@@ -3,12 +3,13 @@ Type: Package
 Title: Unmanned Aerial Vehicle R based Mission Planner
 Version: 0.5
 Date: 2017-07-01
-Authors@R: c(person("Lars", "Opgenoorth", email = "opgenoorth@uni-marburg.de", role = c("aut", "aut")),
-             person("Christoph", "Reudenbach", email = "reudenbach@geo.uni-marburg.de", role = c("cre"))
+Authors@R: c(person("Christoph", "Reudenbach", email = "reudenbach@geo.uni-marburg.de", role = c("cre", "aut")),
+             person("Lars", "Opgenoorth", email = "opgenoorth@uni-marburg.de", role = c("ctb")),
+             person("Richter", "Sebastian", role = c("ctb"))
              )
 Encoding: UTF-8
 Maintainer: Chris Reudenbach <reudenbach@uni-marburg.de>
-Description: Unmanned Aerial Vehicle R based Mission Planner
+Description: The Unmanned Aerial Vehicle R based Mission Planner is designed to simplify the planning of surface following flight missions.
 License: GPL (>= 3) | file LICENSE
 Depends:
     R (>= 3.1.0)
@@ -33,8 +34,13 @@ Imports:
     zoo,
     data.table,
     spatial.tools,
+    rgrass7,
+    devtools,
+    sf,
+    roxygen2,
     velox,
-    link2GI
+    link2GI,
+    methods
 LinkingTo: Rcpp
 RoxygenNote: 6.0.1
 SystemRequirements: GNU make

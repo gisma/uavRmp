@@ -2,7 +2,7 @@
 % Please edit documentation in R/soloTB.R
 \name{soloLog}
 \alias{soloLog}
-\title{Download , reorganize and export the telemetry (tlog) files from 3DR Solo (and Pixhawk)}
+\title{Download, reorganize and export the telemetry (tlog) files from 3DR Solo (and Pixhawk)}
 \usage{
 soloLog(logFiles = "solo.t*", logDir = "~/soloLog", downloadOnly = FALSE,
   netWarn = TRUE, organize = TRUE, makeSP = FALSE)
@@ -31,7 +31,7 @@ sudo pip install dronekit \cr
 sudo apt-get install sshpass \cr
 }
 \examples{
-
+\dontrun{
 ## download current telemetry log file from controller and convert it to gpx
 soloLog(logDir="~/tmp/solo",logFiles = "solo.tlog")
 
@@ -40,5 +40,5 @@ soloLog(logDir="~/tmp/solo")
 
 ## download ALL logfiles from the controller
 soloLog(logDir="~/tmp/solo", logFiles = "*")
-
+}
 }

@@ -14,6 +14,8 @@ sp_line(p1, p2, ID, proj4 = "+proj=longlat +datum=WGS84 +no_defs",
 
 \item{ID}{id of line}
 
+\item{proj4}{projection}
+
 \item{export}{write shafefile default = F}
 }
 \description{

@@ -13,9 +13,13 @@ vecSelect(mapCenter = c(50.80801, 8.72993), zoom = 15, line = TRUE,
   color = "blue")
 }
 \arguments{
+\item{mapCenter}{c(lat,lon) central point of the leaflet map}
+
 \item{zoom}{initial zoom level}
 
 \item{line}{enable/disable the draw tool line tool}
+
+\item{rectangle}{rectangle}
 
 \item{poly}{enable/disable the draw polygon tool}
 
@@ -25,29 +29,31 @@ vecSelect(mapCenter = c(50.80801, 8.72993), zoom = 15, line = TRUE,
 
 \item{remove}{enable/disable the remove feature of the draw tool}
 
+\item{hidemenu}{hidemenu}
+
 \item{position}{place to put the toolbar (topright, topleft, bottomright, bottomleft)}
 
 \item{maplayer}{leaflet-provider maplayers}
 
 \item{overlay}{sp object  for selection}
 
+\item{features}{features}
+
 \item{cex}{size of features}
+
+\item{lwd}{lwd}
 
 \item{alpha}{0.6,}
 
 \item{opacity}{0.7,}
 
 \item{color}{"blue"}
-
-\item{mapcenter}{c(lat,lon) central point of the leaflet map}
-
-\item{intersection}{enable/disable th possibility to overlay lines or polygons}
 }
 \description{
 Simple interactive way to select/deselect features from a vector data set. The selection is exported to geojson format. For control and copy & paste issues the data is pushed to a text box.
 }
 \examples{
-
+\dontrun{
 # get meuse data
 data(meuse)
 coordinates(meuse) <- ~x+y
@@ -65,5 +71,5 @@ proj4string(meuse) <- CRS("+init=epsg:28992")
  
  #'  # re-import selection saved as "ch_sel.json"
  import <-rgdal::readOGR(dsn = path.expand("~/ch_sel.json"), layer = "OGRGeoJSON")
-
+}
 }

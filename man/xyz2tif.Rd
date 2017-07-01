@@ -4,7 +4,7 @@
 \alias{xyz2tif}
 \title{Read and Convert xyz DEM/DSM Data as typically provided by the Authorities}
 \usage{
-xyz2tif(xyzFN = NUL, epsgCode = "25832")
+xyz2tif(xyzFN = NULL, epsgCode = "25832")
 }
 \arguments{
 \item{xyzFN}{ASCII tect file with xyz values}

@@ -21,10 +21,6 @@ upload2Solo provides a crude interface to upload the Solo mission file to the 3d
 #' @note for using the solo stuff you need to install: sudo pip install pymavlink; sudo pip install dronekit-sitl; sudo pip install dronekit; sudo apt-get install sshpass
 }
 \examples{
-
-
-
-
 upload2Solo("export_1001_solo.waypoints")
 
 }

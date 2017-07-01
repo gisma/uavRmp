@@ -2,7 +2,7 @@
 #' @description  Simple interactive way to select/deselect features from a vector data set. The selection is exported to geojson format. For control and copy & paste issues the data is pushed to a text box.
 
 #' @param overlay sp object  for selection
-#' @param mapcenter c(lat,lon) central point of the leaflet map
+#' @param mapCenter c(lat,lon) central point of the leaflet map
 #' @param zoom initial zoom level
 #' @param line enable/disable the draw tool line tool
 #' @param poly enable/disable the draw polygon tool 
@@ -10,15 +10,18 @@
 #' @param point enable/disable the draw point tool
 #' @param remove enable/disable the remove feature of the draw tool
 #' @param position place to put the toolbar (topright, topleft, bottomright, bottomleft)
-#' @param intersection enable/disable th possibility to overlay lines or polygons
 #' @param maplayer  leaflet-provider maplayers
+#' @param rectangle rectangle
+#' @param hidemenu hidemenu
+#' @param features  features
+#' @param lwd lwd
 #' @param cex size of features
 #' @param alpha  0.6,
 #' @param opacity  0.7,
 #' @param color "blue"
 #'
 #' @examples
-#' 
+#'\dontrun{
 #' # get meuse data
 #' data(meuse)
 #' coordinates(meuse) <- ~x+y
@@ -37,7 +40,7 @@
 #'  #'  # re-import selection saved as "ch_sel.json"
 #'  import <-rgdal::readOGR(dsn = path.expand("~/ch_sel.json"), layer = "OGRGeoJSON")
 
-#' 
+#' }
 #' @export vecSelect
 #'               
 
@@ -100,7 +103,7 @@ vecSelect <- function(mapCenter=c(50.80801,8.72993),
     lns[1,] <-paste0('var jsondata = {')
     lns[3,]<-paste0('"crs": { "type": "name", "properties": { "name": "EPSG:4326" } },')
     lns[length(lns[,1]),]<- '};'
-    write.table(lns, paste(tmpPath, "jsondata", sep=.Platform$file.sep), sep="\n", row.names=FALSE, col.names=FALSE, quote = FALSE)
+    utils::write.table(lns, paste(tmpPath, "jsondata", sep=.Platform$file.sep), sep="\n", row.names=FALSE, col.names=FALSE, quote = FALSE)
     features<-names(overlay)
     # correct if only Lines or Polygons (obsolete here?)
     if (class(overlay)[1] == 'SpatialPolygonsDataFrame' | class(overlay)[1] == 'SpatialPolygons'){
@@ -220,6 +223,7 @@ vecSelectOutput <- function(outputId, width = '100%', height = '800px') {
 ### Widget render function for use in Shiny =================================================
 #
 rendervecSelect<- function(expr, env = parent.frame(), quoted = FALSE) {
+  projViewOutput<-NULL
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted

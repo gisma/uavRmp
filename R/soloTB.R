@@ -37,10 +37,6 @@ if (!isGeneric('upload2Solo')) {
 #'@note #' @note for using the solo stuff you need to install: sudo pip install pymavlink; sudo pip install dronekit-sitl; sudo pip install dronekit; sudo apt-get install sshpass
 #'
 #' @examples
-#' 
-#' 
-#' 
-#' 
 #' upload2Solo("export_1001_solo.waypoints")
 #' 
 #' @export upload2Solo
@@ -77,7 +73,7 @@ if (!isGeneric('soloLog')) {
   setGeneric('soloLog', function(x, ...)
     standardGeneric('soloLog'))
 }
-#' Download , reorganize and export the telemetry (tlog) files from 3DR Solo (and Pixhawk) 
+#' Download, reorganize and export the telemetry (tlog) files from 3DR Solo (and Pixhawk) 
 #'
 #' @description  Wraps the mavtogpx.py converter as provided by the dronkit library. It downloads and/ or converts the 3DR Solo logfiles. Otionally you may import the geometries and data as sp objects in R
 #'
@@ -96,7 +92,7 @@ if (!isGeneric('soloLog')) {
 #' sudo apt-get install sshpass \cr 
 #' 
 #' @examples
-#' 
+#' \dontrun{
 #' ## download current telemetry log file from controller and convert it to gpx
 #' soloLog(logDir="~/tmp/solo",logFiles = "solo.tlog")
 #' 
@@ -105,7 +101,7 @@ if (!isGeneric('soloLog')) {
 #' 
 #' ## download ALL logfiles from the controller
 #' soloLog(logDir="~/tmp/solo", logFiles = "*")
-#' 
+#' }
 #' @export soloLog
 #'               
 
@@ -115,7 +111,7 @@ soloLog <- function(logFiles="solo.t*",
                     netWarn=TRUE,
                     organize=TRUE,
                     makeSP = FALSE){
-  
+  exit<-NULL
   logDir<- path.expand(logDir)
   command <-"mavtogpx.py"
   option1<-paste0(logDir,"/",logFiles)

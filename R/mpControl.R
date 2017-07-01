@@ -1,13 +1,13 @@
-#'DEM related preprocessing and basic analysis stuff
-#' 
-#' (1) it imports and deproject different kind of input DEM/DSM data
-#' (2)  extracting the launching point altitude
-#' (3)  extracting all altitudes at the waypointsand the "real" agl flight altitude
-#' (4)  calculating the overall RTH 
-#' (5)  filtering in line waypoints according to an altitude difference treshold
-#' (6)  preprocessing of an highest resolution DSM dealing with clearings and other artefacts
-#' (7)  generates a sp object of the outer boundary of reliable DEM values
-#' 
+#DEM related preprocessing and basic analysis stuff
+# 
+# (1) it imports and deproject different kind of input DEM/DSM data
+# (2)  extracting the launching point altitude
+# (3)  extracting all altitudes at the waypointsand the "real" agl flight altitude
+# (4)  calculating the overall RTH 
+# (5)  filtering in line waypoints according to an altitude difference treshold
+# (6)  preprocessing of an highest resolution DSM dealing with clearings and other artefacts
+# (7)  generates a sp object of the outer boundary of reliable DEM values
+# 
 
 analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,workingDir,locationName){
   
@@ -16,20 +16,20 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   #if no DEM is provided try to get SRTM data
   if (is.null(demFn)) {
     levellog(logger, 'WARN', "CAUTION!!! no DEM file provided I try to download SRTM data... SRTM DATA has a poor resolution for UAVs!!! ")
-    cat("\nCAUTION! No DEM data is provided.\n trying to download SRTM data... \n Be aware that the resulution of SRTM is NOT sufficient for terrain following flights!")
+    stop("\nCAUTION! No DEM data is provided.\n Please download e.g. SRTM data... \n Be aware that the resulution of SRTM is NOT sufficient for terrain following flights!")
     # download corresponding srtm data
-    dem <- uavRmp::ggeodata(name = "SRTM",
-                                xtent = extent(p$lon1,p$lon3,p$lat1,p$lat3), 
-                                zone = 1.5 ,
-                                merge = TRUE)
-    dem <- setMinMax(dem)
-    rundem <- raster::crop(dem,
-                           extent(min(p$lon1,p$lon3) - 0.0083, 
-                                  max(p$lon1,p$lon3) + 0.0083,
-                                  min(p$lat1,p$lat3) - 0.0083,
-                                  max(p$lat1,p$lat3) + 0.0083)
-    )
-    raster::writeRaster(dem,"tmpdem.tif",overwrite = TRUE)
+    #dem <- uavRmp::ggeodata(name = "SRTM",
+    #                            xtent = extent(p$lon1,p$lon3,p$lat1,p$lat3), 
+    #                            zone = 1.5 ,
+    #                            merge = TRUE)
+    #dem <- setMinMax(dem)
+    #rundem <- raster::crop(dem,
+    #                       extent(min(p$lon1,p$lon3) - 0.0083, 
+    #                              max(p$lon1,p$lon3) + 0.0083,
+    #                              min(p$lat1,p$lat3) - 0.0083,
+    #                              max(p$lat1,p$lat3) + 0.0083)
+    #)
+    #raster::writeRaster(dem,"tmpdem.tif",overwrite = TRUE)
     # if demFN is NOT NULL
   } else {
     
@@ -316,8 +316,8 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       # keeps <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","j")
       keeps <- c("latitude","longitude","altitude")
       DF <- DF[keeps]
-      DF[complete.cases(DF),]
-      write.table(DF[,1:(ncol(DF))],file = "tmp2.csv",quote = FALSE,row.names = FALSE,sep = "\t")
+      DF[stats::complete.cases(DF),]
+      utils::write.table(DF[,1:(ncol(DF))],file = "tmp2.csv",quote = FALSE,row.names = FALSE,sep = "\t")
       
       #read raw waypoint list
       lns <- data.table::fread("tmp2.csv", skip = 1L, header = FALSE,sep = "\n", data.table = FALSE)
@@ -408,7 +408,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
                                                  cmd = 20)
       
       # write the control file
-      write.table(lnsnew, paste0(projectDir, "/",locationName , "/", workingDir,"/control/", mission,"_", i, "_solo.txt"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, na = "")
+      utils::write.table(lnsnew, paste0(projectDir, "/",locationName , "/", workingDir,"/control/", mission,"_", i, "_solo.txt"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, na = "")
       
       # log event 
       levellog(logger, 'INFO', paste("created : ", paste0(mission,"-",i,".csv")))
@@ -542,7 +542,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     DF = rbind(DF,homerow)
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
-    write.csv(DF[,1:(ncol(DF) - 2)],file = paste0(projectDir,"/",locationName ,"/", workingDir,"/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
+    utils::write.csv(DF[,1:(ncol(DF) - 2)],file = paste0(projectDir,"/",locationName ,"/", workingDir,"/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
     
     levellog(logger, 'INFO', paste("created : ", paste0(strsplit(getwd(),"/tmp")[[1]][1],"/log/",mission,"-",i,".csv")))
     
@@ -1023,7 +1023,7 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
     sep<-"\t"
     keeps <- c("CURRENT_WP","COORD_FRAME","COMMAND","PARAM1","PARAM2","PARAM3","PARAM4","latitude","longitude","altitude","id")
     df@data<-df@data[keeps]
-    write.table(df@data[minPoints:maxPoints,1:(ncol(df@data))],file = "tmp.csv",quote = FALSE,row.names = FALSE,sep = "\t")
+    utils::write.table(df@data[minPoints:maxPoints,1:(ncol(df@data))],file = "tmp.csv",quote = FALSE,row.names = FALSE,sep = "\t")
     lns <- data.table::fread("tmp.csv", skip=1L, header = FALSE,sep = "\n", data.table = FALSE)
     lnsnew<-data.frame()
     
@@ -1102,7 +1102,7 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
                                                cmd = 20)
     
     # write the control file
-    write.table(lnsnew, 
+    utils::write.table(lnsnew, 
                 paste0(strsplit(getwd(),"/run")[[1]][1],"/control/",mission,"_",i,"_solo.txt"), 
                 sep="\t", 
                 row.names=FALSE, 
@@ -1124,7 +1124,7 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
 
 # read text file contasining x,y coordinates
 readTreeTrack<- function(treeTrack){
-  tTkDF<-read.csv(treeTrack,sep=",",header = TRUE)
+  tTkDF<-utils::read.csv(treeTrack,sep=",",header = TRUE)
   sp::coordinates(tTkDF) <- ~X+Y
   sp::proj4string(tTkDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   #sp::proj4string(tTkDF) <- sp::CRS("+proj=utm +zone=33 +datum=WGS84 +no_defs")
@@ -1133,7 +1133,10 @@ readTreeTrack<- function(treeTrack){
 }
 
 # calculate a obstacle free flight path for  a given list of coordinates
+
 makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,locationName,circleRadius,flightArea,takeOffAlt){
+  # due to RMD Check Note
+  uavViewDir<-pos<-workingDir<-trackSwitch<-NULL
   if (is.null(demFn)) {
     levellog(logger, 'WARN', "CAUTION!!! no DEM file provided")
     stop("CAUTION!!! no DEM file provided")}
@@ -1290,7 +1293,7 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
   close(fileConn)
   if (uavType == "djip3") {
     cat("calculating DEM related stuff\n")
-    djiDF <- read.csv("treepoints.csv",sep = ",",header = FALSE)
+    djiDF <- utils::read.csv("treepoints.csv",sep = ",",header = FALSE)
     names(djiDF) <- unlist(strsplit( makeUavPoint(pos,uavViewDir,group = 99,p,header = TRUE,sep = ' '),split = " "))
     sp::coordinates(djiDF) <- ~lon+lat
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
@@ -1300,7 +1303,7 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
     
   } else if (uavType == "solo") {
     cat("getting altitudes...\n")
-    df <- read.csv("treepoints.csv",sep = "\t",header = FALSE)
+    df <- utils::read.csv("treepoints.csv",sep = "\t",header = FALSE)
     names(df) <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","autocont","lat","lon")
     sp::coordinates(df) <- ~lon+lat
     sp::proj4string(df) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
@@ -1403,7 +1406,7 @@ writeDjiTreeCsv <-function(df,mission){
   
   for (i in 1:nofiles) {
     if (maxPoints>nrow(df@data)){maxPoints<-nrow(df@data)}
-    write.csv(df@data[minPoints:maxPoints,1:(ncol(df@data)-2)],file = paste0(strsplit(getwd(),"/run")[[1]][1],"/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
+    utils::write.csv(df@data[minPoints:maxPoints,1:(ncol(df@data)-2)],file = paste0(strsplit(getwd(),"/run")[[1]][1],"/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
     minPoints<-maxPoints
     maxPoints<-maxPoints+96
     
@@ -1477,7 +1480,7 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     DF = rbind(DF,homerow)
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
-    write.csv(DF[,1:(ncol(DF)-2)],file = paste0(strsplit(getwd(),"/tmp")[[1]][1],"/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
+    utils::write.csv(DF[,1:(ncol(DF)-2)],file = paste0(strsplit(getwd(),"/tmp")[[1]][1],"/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
     
     
     levellog(logger, 'INFO', paste("created : ", paste0(strsplit(getwd(),"/tmp")[[1]][1],"/control/",mission,"-",i,"_dji.csv")))

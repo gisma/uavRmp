@@ -159,16 +159,16 @@ if (!isGeneric('makeFP')) {
 #' an OGR compatible file (preferably geoJSON or KML) with
 #' at least 4 coordinates that describe the flight area.
 #' The fourth coordinate is the launch position.
-#'  You will find further explanation under the \link{seealso}.
+#'  You will find further explanation under seealso.
 #' @param launchAltitude absolute altitude of launching position.
 #' It will overwrite the DEM based estimation if any other value than -9999
 #' @param demFn  filename of the corresponding DEM data file
-#' @param taskName base string for taskName filenames
+
 #' @param followSurface  \code{boolean}  TRUE performs an altitude correction
 #' of the missions flight altitude using additional DEM data.
 #' If no DEM data is provided and \code{followSurface} is TRUE,
 #' SRTM data will be downloaded and used
-#' Further explanation at \link{seealso}
+#' Further explanation at seealso
 #' @param altFilter if \code{followingTerrain} is equal \code{TRUE} then
 #' \code{altFilter} is the threshold value of accepted altitude difference (m) between two way points.
 #'  If this value is not exceeded the way point is omitted due to the fact that only 99 way points per mission are allowed.
@@ -205,7 +205,10 @@ if (!isGeneric('makeFP')) {
 #' @param followSurfaceRes horizontal step distance for analyzing the DEM altitudes
 #' @param picRate fastest stable interval (s) for shooting pictures
 #' @param windCondition 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h
-
+#' @param copy copy switch
+#' @param terrainSmooth terrain smoothiiing switch
+#' @param cmd mavlink command
+#' @param uavViewDir dview direction of uav
 #' @param maxFlightTime user defined estimation of the lipo lifetime (20 min default)
 #' @param rcRange range of estimated range of remote control
 #' @param uavType type of uav. currently "djip3" and "solo" are supported
@@ -584,7 +587,7 @@ makeFP <- function(projectDir = "~",
   else if (mode == "terrainTrack") group = 99
   #
   cat("calculating waypoints...\n")
-  pb <- pb <- txtProgressBar(max = tracks, style = 3)
+  pb <- pb <- utils::txtProgressBar(max = tracks, style = 3)
   # then do for the rest  forward and backward
   for (j in seq(1:tracks)) {
     for (i in seq(1:multiply)) {
@@ -653,7 +656,7 @@ makeFP <- function(projectDir = "~",
       
     }
     # status bar
-    setTxtProgressBar(pb, j)
+    utils::setTxtProgressBar(pb, j)
   }
   close(pb)
   
@@ -678,7 +681,7 @@ makeFP <- function(projectDir = "~",
   if (uavType == "djip3") {
     # dump lns to file for read in as csv
     writeLines(unlist(lns[1:length(lns) - 1]), fileConn)
-    djiDF <- read.csv("tmp.csv", sep = ",", header = FALSE)
+    djiDF <- utils::read.csv("tmp.csv", sep = ",", header = FALSE)
     # add correct header
     names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group = 99,p,header = TRUE,sep = ' '),split = " "))
     # make it spatial
@@ -705,11 +708,11 @@ makeFP <- function(projectDir = "~",
     # start the creation of the control file(s)
     cat('generate control files...\n')
     # generate single tasks waypoint file for DJI Litchi import format
-    calcDjiTask( result[[2]],taskName,nofiles,maxPoints,p,logger, round(result[[6]], digits = 0), trackSwitch,"flightDEM.tif",result[[8]], projectDir,workingDir,locationName)
+    calcDjiTask( result[[2]],taskName,nofiles,maxPoints,p,logger, round(result[[6]], digits = 0), trackSwitch=FALSE,"flightDEM.tif",result[[8]], projectDir,workingDir,locationName)
   }
   else if (uavType == "solo") {
     writeLines(unlist(lns), fileConn)
-    mavDF <- read.csv("tmp.csv", colClasses=c("V4"="character",
+    mavDF <- utils::read.csv("tmp.csv", colClasses=c("V4"="character",
                                               "V5"="character",
                                               "V6"="character",
                                               "V7"="character"),sep = "\t", header = FALSE)
@@ -744,19 +747,19 @@ makeFP <- function(projectDir = "~",
   }
   
   # call rcShed
-  if (!is.null(rcRange)) {
+  ##if (!is.null(rcRange)) {
     
-    cat("calculating RC-range\n")
-    rcCover <-
-      rcShed(
-        launchP = c(as.numeric(p$launchLon), as.numeric(p$launchLat)),
-        flightAlt =  as.numeric(p$flightAltitude),
-        rcRange = rcRange,
-        dem = result[[4]]
-      )
-  } else {
+  ##  cat("calculating RC-range\n")
+  ##  rcCover <-
+  ##    rcShed(
+  ##      launchP = c(as.numeric(p$launchLon), as.numeric(p$launchLat)),
+  ##      flightAlt =  as.numeric(p$flightAltitude),
+  ##      rcRange = rcRange,
+  ##      dem = result[[4]]
+  ##    )
+  ##} else {
     rcCover = "NULL"
-  }
+  ##}
   
   
   

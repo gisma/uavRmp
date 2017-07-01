@@ -65,7 +65,7 @@ if (!isGeneric('xyz2tif')) {
 #' @export xyz2tif
 #' 
 
-xyz2tif <- function(xyzFN=NUL,  epsgCode ="25832"){
+xyz2tif <- function(xyzFN=NULL,  epsgCode ="25832"){
   # read data 
   xyz<-data.table::fread(xyzFN)
   cat("write it to",paste0(dirname(xyzFN),"/",tools::file_path_sans_ext(basename(xyzFN)),".tif"),"\n")
@@ -141,6 +141,7 @@ comp_ll_proj4 <- function(x) {
 #' @param p1 coordinate of first point
 #' @param p2 coordinate of second point
 #' @param ID id of line
+#' @param proj4 projection
 #' @param export write shafefile default = F 
 #' @export
 #' 
@@ -159,7 +160,9 @@ sp_line <- function(p1,
 #' create an spatialpointobject from 1 points
 #' @description
 #' create an spatialpointobject from 1 points, optional export as shapefile
-#' @param p1 coordinate of first point
+#' @param lon lon
+#' @param lat lat
+#' @param proj4 projection
 #' @param ID name of point
 #' @param export write shafefile default = F 
 #' @export
@@ -208,6 +211,8 @@ line_extract_maxpos <- function(dem,line){
 #' @export
 #' 
 poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
+  # due to RMD Check Note
+  path_tmp<-path_run<-as<-NULL
   # read raster input data 
   if (poly_split) {system(paste0("rm -rf ",paste0(path_tmp,"split")))}
   dem <- raster::raster(x)
@@ -302,65 +307,20 @@ poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
   return(list(seeds,max_pos))
 }
 
-#' converts GRASS raster to geotiff
-#' @description converts GRASS raster to geotiff
-#' @param runDir path of working directory
-#' @param layer name GRASS raster
-#' @param returnRaster return GRASS raster as an R raster object default = FALSE
-
-#' @export
-#' 
-grass2tif <- function(runDir = NULL, layer = NULL, returnRaster = FALSE) {
-  
-  rgrass7::execGRASS("r.out.gdal",
-                     flags     = c("c","overwrite","quiet"),
-                     createopt = "TFW=YES,COMPRESS=LZW",
-                     input     = layer,
-                     output    = paste0(runDir,"/",layer,".tif")
-  )
-  if (returnRaster) return(raster::raster(paste0(runDir,"/",layer,".tif")))
-}
-
-#' converts geotiff to GRASS raster 
-#' @description converts geotiff to GRASS raster 
-#' @param runDir path of working directory
-#' @param layer name GRASS raster
-#' @export
-grass2tif <- function(runDir = NULL, layer = NULL) {
-  rgrass7::execGRASS('r.external',
-                     flags  = c('o',"overwrite","quiet"),
-                     input  = paste0(layer,".tif"),
-                     output = layer,
-                     band   = 1
-  )
-}
-
-#' converts OGR to GRASS vector 
-#' @description converts OGR to GRASS vector 
-#' @param runDir path of working directory
-#' @param layer name GRASS raster
-#' @export
-shape2grass <- function(runDir = NULL, layer = NULL) {
-  # import point locations to GRASS
-  rgrass7::execGRASS('v.in.ogr',
-                     flags  = c('o',"overwrite","quiet"),
-                     input  = paste0(layer,".shp"),
-                     output = layer
-  )
-}
-
 #' converts GRASS vector to shape file
 #' @description converts GRASS vector to shape file
 #' @param runDir path of working directory
 #' @param layer name GRASS raster
 #' @export
 grass2shape <- function(runDir = NULL, layer = NULL){
-  rgrass7::execGRASS("v.out.ogr",
-                     flags  = c("overwrite","quiet"),
-                     input  = layer,
-                     type   = "line",
-                     output = paste0(layer,".shp")
-  )
+  
+    rgrass7::execGRASS("v.out.ogr",
+                       flags  = c("overwrite","quiet"),
+                       input  = layer,
+                       type   = "line",
+                       output = paste0(layer,".shp")
+    )
+
 }
 
 #' Build package manually
@@ -395,7 +355,7 @@ grass2shape <- function(runDir = NULL, layer = NULL){
 #' @export umr_build
 #' @name umr_build
 umr_build <- function(dsn = getwd(), pkgDir="H:/Dokumente",document = TRUE, ...) {
-  
+
   ## reset 'dsn' to 'H:/...'  
   if (length(grep("students_smb", dsn)) > 0) {
     lst_dsn <- strsplit(dsn, "/")
@@ -422,7 +382,7 @@ umr_build <- function(dsn = getwd(), pkgDir="H:/Dokumente",document = TRUE, ...)
                     pattern = paste0(basename(dsn), ".*.tar.gz$"))
   pkg <- pkg[length(pkg)]
   
-  install.packages(pkg, repos = NULL)
+  utils::install.packages(pkg, repos = NULL)
   
   return(invisible(NULL))
 }
@@ -433,6 +393,7 @@ umr_build <- function(dsn = getwd(), pkgDir="H:/Dokumente",document = TRUE, ...)
 #' @param ext extent of the raster in R notation
 #' @export
 saga2r<- function(fn,ext) {
+  path_run<-NULL
   gdalUtils::gdalwarp(paste0(path_run,fn,".sdat"), 
                       paste0(path_run,fn,".tif"), 
                       overwrite = TRUE,  
@@ -449,7 +410,8 @@ saga2r<- function(fn,ext) {
 #' @param fn filname without extension
 #' @export
 r2saga <- function(x,fn) {
-  
+  # due to RMD Check Note
+  path_run<-NULL
   raster::writeRaster(x,paste0(path_run,fn,".tif"),overwrite = TRUE)
   # convert to SAGA
   gdalUtils::gdalwarp(paste0(path_run,fn,".tif"), 
@@ -474,3 +436,29 @@ fun_multiply <- function(x)
 	fun_whichmax <- function(mask,value) { 
 raster::xyFromCell(value,which.max(mask * value))
 }
+
+	### getPopupStyle creates popup style =================================================
+	getPopupStyle <- function() {
+	  # htmlTemplate <- paste(
+	  #   "<html>",
+	  #   "<head>",
+	  #   "<style>",
+	  #   "#popup",
+	  #   "{font-family: Arial, Helvetica, sans-serif;width: 20%;border-collapse: collapse;}",
+	  #   "#popup td {font-size: 1em;border: 0px solid #85ADFF;padding: 3px 20px 3px 3px;}",
+	  #   "#popup tr.alt td {color: #000000;background-color: #F0F5FF;}",
+	  #   "#popup tr.coord td {color: #000000;background-color: #A8E6A8;}",
+	  #   "div.scrollableContainer {max-height: 200px;max-width: 100%;overflow-y: auto;overflow-x: auto;margin: 0px;background: #D1E0FF;}",
+	  #   "</style>",
+	  #   "</head>",
+	  #   "<body>",
+	  #   "<div class='scrollableContainer'>",
+	  #   "<table class='popup scrollable'>",
+	  #   "<table id='popup'>")
+	  # return(htmlTemplate)
+	  fl <- system.file("templates/popup.brew", package = "mapview")
+	  pop <- readLines(fl)
+	  end <- grep("<%=pop%>", pop)
+	  return(paste(pop[1:(end-2)], collapse = ""))
+	}
+	

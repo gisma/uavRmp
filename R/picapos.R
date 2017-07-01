@@ -8,11 +8,6 @@ if (!isGeneric('picapos')) {
 #' @param projectDir path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999
 #' @param demFn  filname of the corresponding DEM data file
 #' @param locationName base string for mission filenames
-#' @param followSurface  \code{boolean}  TRUE performs an altitude correction 
-#' of the missions flight altitude using additional DEM data. 
-#' If no DEM data is provided and \code{followSurface} is TRUE, 
-#' SRTM data will be downloaded and used
-#' Further explanation at \link{seealso}
 #' @param presetFlightTask (DJI only) strongly recommended to use "remote" 
 #'        \cr
 #'  Options are: 
@@ -27,20 +22,22 @@ if (!isGeneric('picapos')) {
 #' calculated from the swath width of the pictures. NOTE This makes only sense for 
 #' \code{followingTerrain = TRUE} to smooth curves.
 #' For \code{flightPlanMode = "waypoint"} camera actions are DISABLED during curve flights.
-#' @param rotationdir (DJI only) camera control parameter set the UAV basic turn direction to right (0) or left (1)
-#' @param gimbalmode (DJI only) camera control parameter
-#' \code{0} deactivates the gimbal control
-#' \code{1} activates the gimbale for focussing POIs
-#' \code{2} activates the gimbale for focus and interpolate a field of view in an angel of \code{gimbalpitchangle}
-#' @param gimbalpitchangle (DJI only) vertical angle of camera  \code{+30 deg..-90 deg} 
-#' @param actiontype (DJI only) individual actionype settings of the camera c(1,1,...)
-#' @param actionparam (DJI only) corresponding parameter for the above individual actiontype c(0,0,...)
+
+
 #' @param maxSpeed  cruising speed
-#' @param followSurfaceRes horizontal step distance for analysing the DEM altitudes
 #' @param windCondition 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h
 #' @param rcRange range of estimated range of remote control 
 #' @param uavType type of uav. currently "djip3" and "solo" are supported
-#' @param maxFl maximum duration of a flight in minutes
+#' @param missionTrackList mission tracklist
+#' @param launchPos launch position
+#' @param climbDist climbdist 
+#' @param aboveTreeAlt altitude above trees
+#' @param circleRadius radius to circle around
+#' @param takeOffAlt altitude of take off point
+#' @param altFilter allowed altitude differences
+#' @param launchAltitude altitude of launch position
+#' @param followSurfaceRes followSurfaceRes
+#' @param maxFL maxFL
 
 #'
 #' @examples
@@ -80,7 +77,8 @@ picapos<- function(projectDir="~",
                rcRange=-9999,
                launchAltitude=-9999,
                uavType="solo") {
-  
+  # due to RMD Check Note
+  task<-NULL
   demFn <- path.expand(demFn)
   # assign flight mission name 
   mission<-paste(locationName, sep=.Platform$file.sep)
@@ -115,8 +113,8 @@ picapos<- function(projectDir="~",
   
   # import flight area if provided by an external vector file
   #file.copy(overwrite = TRUE, from = missionTrackList, to = file.path(projectDir,"data"))
-  flightList<-uavRmp::readTreeTrack(missionTrackList)
-  test<-try(uavRmp::readLaunchPos(launchPos))
+  flightList<-readTreeTrack(missionTrackList)
+  test<-try(readLaunchPos(launchPos))
   if (class(test)!="try-error"){
     launchPos<-test
     flightArea<- flightList+launchPos
@@ -149,7 +147,7 @@ picapos<- function(projectDir="~",
   p$altFilter<-altFilter
   p$projectDir<-projectDir
   p$climbDist<-climbDist
-  p$task<- uavRmp::fp_getPresetTask("treetop")
+  p$task<- fp_getPresetTask("treetop")
   
-  fullTreeList<-uavRmp::makeFlightPathT3(flightList,p,uavType,task,demFn,logger,projectDir,locationName,circleRadius,flightArea)
+  fullTreeList<-makeFlightPathT3(flightList,p,uavType,task,demFn,logger,projectDir,locationName,circleRadius,flightArea)
 }

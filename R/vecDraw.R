@@ -3,7 +3,7 @@
 #' @description  vecDraw is based on the leaflet draw plugin. It provides a bunch of leaflet maps as base layers for digitizing vector features. 
 #'
 #' @note Yu can either save the digitized object to a json file or you ma grab the json string via the clipboard
-#' @param mapcenter c(lat,lon) central point of the leaflet map
+
 #' @param zoom initial zoom level
 #' @param line enable the draw tool line tool
 #' @param poly enable the draw polygon tool 
@@ -11,7 +11,13 @@
 #' @param point enable the draw point tool
 #' @param remove enable/disable the remove feature of the draw tool
 #' @param position place to put the toolbar (topright, topleft, bottomright, bottomleft)
-#' @param intersection enable/disable th possibility to overlay lines or polygons
+#' @param mapCenter mapcenter
+#' @param rectangle rectangle
+#' @param features features
+#' @param cex cex
+#' @param lwd lwd
+#' @param alpha alpha
+#' @param opacity opacity
 #' @param maplayer string as provided by leaflet-provider 
 #' @param preset character defaut is "NULL" full draw version, "uav" for flightarea digitizing, "ext" for rectangles
 #' @param locPreset character default is "muf" for Marburg University Forest, others are "tra" Traddelstein, "hag" Hagenstein, "baw" Bayerwald.
@@ -19,7 +25,7 @@
 #' 
 #'
 #' @examples
-#' 
+#'\dontrun{
 #' # all features
 #' vecDraw()
 #' 
@@ -32,7 +38,7 @@
 #'   
 #' # preset for digitizing extents
 #' vecDraw(preset="ext",overlay = me)
-#' 
+#' }
 #' @export vecDraw
 
 vecDraw <- function(mapCenter=NULL,
@@ -98,7 +104,7 @@ vecDraw <- function(mapCenter=NULL,
     lns[1,] <-paste0('var jsondata = {')
     lns[3,]<-paste0('"crs": { "type": "name", "properties": { "name": "EPSG:4326" } },')
     lns[length(lns[,1]),]<- '};'
-    write.table(lns, paste(tmpPath, "jsondata", sep=.Platform$file.sep), sep="\n", row.names=FALSE, col.names=FALSE, quote = FALSE)
+    utils::write.table(lns, paste(tmpPath, "jsondata", sep=.Platform$file.sep), sep="\n", row.names=FALSE, col.names=FALSE, quote = FALSE)
     features<-names(overlay)
     # correct if only Lines or Polygons (obsolete here?)
     if (class(overlay)[1] == 'SpatialPolygonsDataFrame' | class(overlay)[1] == 'SpatialPolygons'){
@@ -179,7 +185,7 @@ vecDraw <- function(mapCenter=NULL,
             features=features,
             layer=maplayer,
             zoom = zoom,
-            html = mapview::getPopupStyle(),
+            html = getPopupStyle(),
             #refpoint=refpoint,
             line=line,
             rectangle=rectangle,

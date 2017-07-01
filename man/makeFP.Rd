@@ -26,7 +26,7 @@ c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or
 an OGR compatible file (preferably geoJSON or KML) with
 at least 4 coordinates that describe the flight area.
 The fourth coordinate is the launch position.
- You will find further explanation under the \link{seealso}.}
+ You will find further explanation under seealso.}
 
 \item{flightAltitude}{set the default flight altitude of the mission. It is
 assumed that the UAV is started at the highest point of the surveyArea
@@ -39,7 +39,7 @@ It will overwrite the DEM based estimation if any other value than -9999}
 of the missions flight altitude using additional DEM data.
 If no DEM data is provided and \code{followSurface} is TRUE,
 SRTM data will be downloaded and used
-Further explanation at \link{seealso}}
+Further explanation at seealso}
 
 \item{followSurfaceRes}{horizontal step distance for analyzing the DEM altitudes}
 
@@ -51,6 +51,8 @@ Further explanation at \link{seealso}}
  If this value is not exceeded the way point is omitted due to the fact that only 99 way points per mission are allowed.}
 
 \item{horizonFilter}{integer filter size of the rolling filter kernel for the flight track. Must be multiplied by the \code{followSurfaceRes} to get the spatial extent}
+
+\item{terrainSmooth}{terrain smoothiiing switch}
 
 \item{flightPlanMode}{type of flight plan. Available are: \code{"waypoints"},
 \code{"track"}, \code{"manual"}.}
@@ -77,6 +79,10 @@ Further explanation at \link{seealso}}
 
 \item{cameraType}{depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2}
 
+\item{cmd}{mavlink command}
+
+\item{uavViewDir}{dview direction of uav}
+
 \item{djiBasic}{c(0,0,0,-90)
 \cr curvesize (DJI only) controls the curve angle of the uav passing way points.
 By default it is set to (\code{= 0.0}).
@@ -98,7 +104,7 @@ By default it is set to (\code{= 0.0}).
 
 \item{rcRange}{range of estimated range of remote control}
 
-\item{taskName}{base string for taskName filenames}
+\item{copy}{copy switch}
 }
 \description{
 The basic idea is to provide an easy to use workflow for

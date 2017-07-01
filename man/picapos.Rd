@@ -17,6 +17,10 @@ picapos(projectDir = "~", locationName = "autoflightcontrol",
 
 \item{locationName}{base string for mission filenames}
 
+\item{missionTrackList}{mission tracklist}
+
+\item{launchPos}{launch position}
+
 \item{demFn}{filname of the corresponding DEM data file}
 
 \item{flightAltitude}{set the default flight altitude of the mission. It is 
@@ -26,6 +30,14 @@ By default it is set to (\code{= 0.0}). If set to \code{-99} it will be
 calculated from the swath width of the pictures. NOTE This makes only sense for 
 \code{followingTerrain = TRUE} to smooth curves.
 For \code{flightPlanMode = "waypoint"} camera actions are DISABLED during curve flights.}
+
+\item{climbDist}{climbdist}
+
+\item{aboveTreeAlt}{altitude above trees}
+
+\item{circleRadius}{radius to circle around}
+
+\item{takeOffAlt}{altitude of take off point}
 
 \item{presetFlightTask}{(DJI only) strongly recommended to use "remote" 
        \cr
@@ -37,34 +49,19 @@ For \code{flightPlanMode = "waypoint"} camera actions are DISABLED during curve 
 
 \item{maxSpeed}{cruising speed}
 
-\item{followSurfaceRes}{horizontal step distance for analysing the DEM altitudes}
+\item{followSurfaceRes}{followSurfaceRes}
+
+\item{altFilter}{allowed altitude differences}
+
+\item{maxFL}{maxFL}
 
 \item{windCondition}{1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h}
 
 \item{rcRange}{range of estimated range of remote control}
 
+\item{launchAltitude}{altitude of launch position}
+
 \item{uavType}{type of uav. currently "djip3" and "solo" are supported}
-
-\item{followSurface}{\code{boolean}  TRUE performs an altitude correction 
-of the missions flight altitude using additional DEM data. 
-If no DEM data is provided and \code{followSurface} is TRUE, 
-SRTM data will be downloaded and used
-Further explanation at \link{seealso}}
-
-\item{rotationdir}{(DJI only) camera control parameter set the UAV basic turn direction to right (0) or left (1)}
-
-\item{gimbalmode}{(DJI only) camera control parameter
-\code{0} deactivates the gimbal control
-\code{1} activates the gimbale for focussing POIs
-\code{2} activates the gimbale for focus and interpolate a field of view in an angel of \code{gimbalpitchangle}}
-
-\item{gimbalpitchangle}{(DJI only) vertical angle of camera  \code{+30 deg..-90 deg}}
-
-\item{actiontype}{(DJI only) individual actionype settings of the camera c(1,1,...)}
-
-\item{actionparam}{(DJI only) corresponding parameter for the above individual actiontype c(0,0,...)}
-
-\item{maxFl}{maximum duration of a flight in minutes}
 }
 \description{
 picapos generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles for taking top down pictures. Basic idea is to fly in a serie to object positions with respect to the surface model for taking high resolution pics

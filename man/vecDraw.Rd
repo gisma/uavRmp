@@ -12,9 +12,13 @@ vecDraw(mapCenter = NULL, zoom = 15, line = TRUE, rectangle = TRUE,
   cex = 10, lwd = 2, alpha = 0.6, opacity = 0.7)
 }
 \arguments{
+\item{mapCenter}{mapcenter}
+
 \item{zoom}{initial zoom level}
 
 \item{line}{enable the draw tool line tool}
+
+\item{rectangle}{rectangle}
 
 \item{poly}{enable the draw polygon tool}
 
@@ -30,13 +34,19 @@ vecDraw(mapCenter = NULL, zoom = 15, line = TRUE, rectangle = TRUE,
 
 \item{overlay}{optional sp object}
 
+\item{features}{features}
+
 \item{preset}{character defaut is "NULL" full draw version, "uav" for flightarea digitizing, "ext" for rectangles}
 
 \item{locPreset}{character default is "muf" for Marburg University Forest, others are "tra" Traddelstein, "hag" Hagenstein, "baw" Bayerwald.}
 
-\item{mapcenter}{c(lat,lon) central point of the leaflet map}
+\item{cex}{cex}
 
-\item{intersection}{enable/disable th possibility to overlay lines or polygons}
+\item{lwd}{lwd}
+
+\item{alpha}{alpha}
+
+\item{opacity}{opacity}
 }
 \description{
 vecDraw is based on the leaflet draw plugin. It provides a bunch of leaflet maps as base layers for digitizing vector features.
@@ -45,7 +55,7 @@ vecDraw is based on the leaflet draw plugin. It provides a bunch of leaflet maps
 Yu can either save the digitized object to a json file or you ma grab the json string via the clipboard
 }
 \examples{
-
+\dontrun{
 # all features
 vecDraw()
 
@@ -58,5 +68,5 @@ uavRmp::vecDraw(overlay = me, preset = "uav")
   
 # preset for digitizing extents
 vecDraw(preset="ext",overlay = me)
-
+}
 }
