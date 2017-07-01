@@ -4,13 +4,13 @@ Unmanned Aerial Vehicle R based Mission Planning
 
 The [uavRmp](https://github.com/gisma/uavRmp) package is designed 
 for uav autonomous mission planning. In the first place it is a simple and open source planning tool for monitoring flights of low budget drones based on ```R```. It provide an easy workflow for planning autonomous 
-surveys including battery-dependend task splitting and save departures and approches of each monitoring chunks. It belongs to the ```uavR``` package family that provides more functionality for the pre- and post-processing as well as the analysis of the derived data.
+surveys including battery-dependent task splitting and save departures and approaches of each monitoring chunks. It belongs to the ```uavR``` package family that provides more functionality for the pre- and post-processing as well as the analysis of the derived data.
 
 ## Supported UAV platforms
 
 Up to now it has been dedicated to low budget rtf-UAVs as the DJI Phantom series and the 3DR Solo. However the current and future support will cover all Pixhawk based UAVs.
 
-The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://ardupilot.org/planner/) or [APM Planner 2](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or an terrain following autonomous flight planning tool, that is also dealing with battery-dependend task splitting and save departures and approches (MissionPlanner) yet. Other commmerical competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced feature for generating smooth and save  surface following flights with low AGL flights.
+The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://ardupilot.org/planner/) or [APM Planner 2](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or an terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmerical competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced feature for generating smooth and save  surface following flights for low AGL flights.
 
 The ```uavRmd``` bridges this gap  and  generates  ```MAVLINK``` format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.
 
