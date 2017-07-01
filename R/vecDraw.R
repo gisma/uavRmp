@@ -89,7 +89,7 @@ vecDraw <- function(mapCenter=NULL,
     } else if  (class(overlay)=="SpatialPolygonsDataFrame") {
       overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+proj=longlat +datum=WGS84 +no_defs"))
       #overlay <- sp::SpatialPolygonsDataFrame(overlay, data.frame(ID="overlay"))
-    }
+    } else if  (class(overlay == "character")){stop("overlay has to be a sp* object") }
     
     rgdal::writeOGR(overlay, paste(tmpPath, "jsondata", sep=.Platform$file.sep), "OGRGeoJSON", driver="GeoJSON")
     

@@ -1,5 +1,6 @@
 # edit task using the results from former run
-leafDraw()
+vecDraw(mapCenter = c(51.1322252,8.976860),
+        preset = "uav", overlay =  "~/uav/gentree/Traddelkopf/data/Traddelkopf_2017_02_paralell.json")
 
 # typical flight plan
 depa09_60_1 <- uavRmd::makeFP(projectDir="~/uav/gentree/",

@@ -2,7 +2,7 @@
 % Please edit documentation in R/picsAPos.R
 \name{picsAtPos}
 \alias{picsAtPos}
-\title{calculates a ostacle free flight path for a defined list of target positions}
+\title{calculates a obstacle free flight path for a defined list of target positions}
 \usage{
 picsAtPos(projectDir = "~", locationName = "autoflightcontrol",
   missionTrackList = NULL, launchPos = NULL, demFn = NULL,

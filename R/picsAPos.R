@@ -2,8 +2,7 @@ if (!isGeneric('picsAtPos')) {
   setGeneric('picsAtPos', function(x, ...)
     standardGeneric('picsAtPos'))
 }
-#' calculates a ostacle free flight path for a defined list of target positions
-#'
+#' calculates a obstacle free flight path for a defined list of target positions
 #' @description  picsAtPos generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. 
 #' @param projectDir path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999
 #' @param demFn  filename of the used DSM data file
@@ -32,8 +31,6 @@ if (!isGeneric('picsAtPos')) {
 #' @param launchAltitude altitude of launch position. If set to -9999 a DEM is required for extracting the MSL. Default is -9999
 #' @param followSurfaceRes followSurfaceRes
 #' @param maxFL maxFL
-
-#'
 #' @examples
 #'\dontrun{
 #' requires(mapview)
