@@ -3,7 +3,7 @@
 export(grass2shape)
 export(line_extract_maxpos)
 export(makeFP)
-export(picapos)
+export(picsAtPos)
 export(poly_extract_maxpos)
 export(r2saga)
 export(read_gpx)

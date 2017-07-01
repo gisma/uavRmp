@@ -33,7 +33,7 @@ t3p<-t3p(projectDir ="/home/creu/uav/bayerwald",
          followSurfaceRes=5,
          launchPos = c(13.409114897133804,48.92039612988935))
 
-t3<-picapos(projectDir ="/home/creu/uav/gentree/Traddelkopf",
+t3<-picAtPos(projectDir ="/home/creu/uav/gentree/Traddelkopf",
            locationName = "traddeltree_2017_0509",
            missionTrackList="~/uav/gentree/Traddelkopf/data/Traddelkopf_NEU_sorted_core_1.csv",
            demFn = "~/proj/uav/gentree/Traddelkopf/data/basic/DGM1_kellerwald.tif",
@@ -44,7 +44,7 @@ t3<-picapos(projectDir ="/home/creu/uav/gentree/Traddelkopf",
            aboveTreeAlt = 40,
            launchPos = c(8.979992866516115,51.13024583390035))
 
-t3<-picapos(projectDir ="/home/creu/uav/gentree/Hagenstein",
+t3<-picAtPos(projectDir ="/home/creu/uav/gentree/Hagenstein",
            locationName = "hagentree_2017_0506",
            missionTrackList="~/uav/gentree/Hagenstein/data/tree_positions_hagenstein_handheld-gps.csv",
            demFn = "~/uav/gentree/Traddelkopf/data/DGM1_kellerwald.tif",
@@ -54,7 +54,7 @@ t3<-picapos(projectDir ="/home/creu/uav/gentree/Hagenstein",
            launchPos = c(8.905967,51.161932))
 #8.905491828918459,51.1581923912853
 
-t3<-picapos(projectDir ="/home/creu/uav/test/",
+t3<-picAtPos(projectDir ="/home/creu/uav/test/",
            locationName = "treeTree",
            missionTrackList="~/Schreibtisch/mr/drei.csv",
            demFn = "~/uav/test/data/mrbiko.tif",

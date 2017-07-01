@@ -1,4 +1,4 @@
-h1<-picapos(projectDir ="/home/creu/uav/gentree/Hagenstein",
+h1<-picsatPos(projectDir ="/home/creu/uav/gentree/Hagenstein",
            locationName = "hagentree_2017_0509_c1",
            missionTrackList="~/uav/gentree/Hagenstein/data/Hagenstein_NEU_sorted_North.csv",
            demFn = "~/proj/uav/gentree/Traddelkopf/data/basic/DGM1_kellerwald.tif",
@@ -8,7 +8,7 @@ h1<-picapos(projectDir ="/home/creu/uav/gentree/Hagenstein",
            aboveTreeAlt = 45,
            launchPos = c(8.905967,51.161932))
 
-h2<-picapos(projectDir ="/home/creu/uav/gentree/Hagenstein",
+h2<-picsatPos(projectDir ="/home/creu/uav/gentree/Hagenstein",
            locationName = "hagentree_2017_0509_c2",
            missionTrackList="~/uav/gentree/Hagenstein/data/Hagenstein_NEU_sorted_South.csv",
            demFn = "~/proj/uav/gentree/Traddelkopf/data/basic/DGM1_kellerwald.tif",
@@ -18,7 +18,7 @@ h2<-picapos(projectDir ="/home/creu/uav/gentree/Hagenstein",
            aboveTreeAlt = 45,
            launchPos = c(8.905967,51.161932))
 
-t1<-picapos(projectDir ="/home/creu/uav/gentree/Traddelkopf",
+t1<-picsatPos(projectDir ="/home/creu/uav/gentree/Traddelkopf",
            locationName = "traddeltree_2017_0509_c1",
            missionTrackList="~/uav/gentree/Traddelkopf/data/Traddelkopf_NEU_sorted_core_1.csv",
            demFn = "~/proj/uav/gentree/Traddelkopf/data/basic/DGM1_kellerwald.tif",
@@ -28,7 +28,7 @@ t1<-picapos(projectDir ="/home/creu/uav/gentree/Traddelkopf",
            aboveTreeAlt = 45,
            launchPos = c(8.976860,51.1322252))
 
-t2<-picapos(projectDir ="/home/creu/uav/gentree/Traddelkopf",
+t2<-picsatPos(projectDir ="/home/creu/uav/gentree/Traddelkopf",
            locationName = "traddeltree_2017_0509_c2",
            missionTrackList="~/uav/gentree/Traddelkopf/data/Traddelkopf_NEU_sorted_core_2.csv",
            demFn = "~/proj/uav/gentree/Traddelkopf/data/basic/DGM1_kellerwald.tif",
