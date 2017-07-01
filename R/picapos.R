@@ -1,10 +1,10 @@
-if (!isGeneric('fp_t3p')) {
-  setGeneric('fp_t3p', function(x, ...)
-    standardGeneric('fp_t3p'))
+if (!isGeneric('picapos')) {
+  setGeneric('picapos', function(x, ...)
+    standardGeneric('picapos'))
 }
-#' fp_t3p take tree top pictures
+#' picapos take  pictures at a given position
 #'
-#' @description  fp_t3p generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles for taking top down pictures.
+#' @description  picapos generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles for taking top down pictures.
 #'
 #' @note basic idea is to fly in a serie to object positions with respect to the surface model for taking high resolution pics
 #' @param projectDir path to the main folder where several projects can be hosted
@@ -47,7 +47,7 @@ if (!isGeneric('fp_t3p')) {
 
 #'
 #' @examples
-#' t3<-fp_t3p(projectDir ="/home/creu/uav/bayerwald",
+#' t3<-picapos(projectDir ="/home/creu/uav/bayerwald",
 #' locationName = "filzmoosTree",
 #' missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
 #' demFn = "~/uav/grossfilz/grosserfilz.tif",
@@ -58,10 +58,10 @@ if (!isGeneric('fp_t3p')) {
 #' 
 #' mapview(t3$wp,zcol = "altitude",lwd=1,cex=5)+mapview(t3$lp,color="red",cex=5)
 #' 
-#' @export fp_t3p 
+#' @export picapos 
 #'               
 
-fp_t3p<- function(projectDir="~",
+picapos<- function(projectDir="~",
                 locationName="autoflightcontrol",
                missionTrackList=NULL,
                launchPos=NULL,

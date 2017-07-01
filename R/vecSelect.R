@@ -26,22 +26,22 @@
 #' 
 #' 
 #' # select some points
-#'  sp_sel(overlay = meuse, zoom = 13,position = "bottomright", cex = 2, color = "green")
+#'  vecSelect(overlay = meuse, zoom = 13,position = "bottomright", cex = 2, color = "green")
 #'  
 #'  # re-import selection saved as "test.json"
 #'  import <-rgdal::readOGR(dsn = path.expand("~/test.json"), layer = "OGRGeoJSON")
 #'  
 #'  # select some polygons
-#'  uavRmp::sp_sel(overlay = gadmCHE,zoom = 7)
+#'  uavRmp::vecSelect(overlay = gadmCHE,zoom = 7)
 #'  
 #'  #'  # re-import selection saved as "ch_sel.json"
 #'  import <-rgdal::readOGR(dsn = path.expand("~/ch_sel.json"), layer = "OGRGeoJSON")
 
 #' 
-#' @export sp_sel
+#' @export vecSelect
 #'               
 
-sp_sel <- function(mapCenter=c(50.80801,8.72993),
+vecSelect <- function(mapCenter=c(50.80801,8.72993),
                    zoom=15, 
                    line = TRUE, 
                    rectangle = FALSE, 
@@ -155,7 +155,7 @@ sp_sel <- function(mapCenter=c(50.80801,8.72993),
             hidemenu=hidemenu
             
   )
-  sp_selInternal(tmpPath, x = x)  
+  vecSelectInternal(tmpPath, x = x)  
 }
 
 
@@ -194,7 +194,7 @@ createTempDataTransfer <- function (){
   return(tmpPath)
 }
 
-sp_selInternal <- function(tmpPath, x = NULL) {
+vecSelectInternal <- function(tmpPath, x = NULL) {
   deps<-digiDependencies(tmpPath) 
   sizing = htmlwidgets::sizingPolicy(
     browser.fill = TRUE,
@@ -203,7 +203,7 @@ sp_selInternal <- function(tmpPath, x = NULL) {
   )
   # create widget
   htmlwidgets::createWidget(
-    name = 'sp_sel',
+    name = 'vecSelect',
     x,
     dependencies = deps,
     sizingPolicy = sizing,
@@ -213,13 +213,13 @@ sp_selInternal <- function(tmpPath, x = NULL) {
 
 ### Widget output function for use in Shiny =================================================
 #
-sp_selOutput <- function(outputId, width = '100%', height = '800px') {
-  htmlwidgets::shinyWidgetOutput(outputId, 'sp_sel', width, height, package = 'uavRst')
+vecSelectOutput <- function(outputId, width = '100%', height = '800px') {
+  htmlwidgets::shinyWidgetOutput(outputId, 'vecSelect', width, height, package = 'uavRmd')
 }
 
 ### Widget render function for use in Shiny =================================================
 #
-rendersp_sel<- function(expr, env = parent.frame(), quoted = FALSE) {
+rendervecSelect<- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted

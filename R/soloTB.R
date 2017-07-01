@@ -159,7 +159,7 @@ soloLog <- function(logFiles="solo.t*",
     i=1
     flights <- list()
     for (flight in f) {
-      f <- h_read_gpx(path.expand(paste0(logDir,"/",flight)))
+      f <- read_gpx(path.expand(paste0(logDir,"/",flight)))
       flights[[i]]<-f
       firstTime<-as.character(flights[[i]]$track_points@data$time)[1]
       lastTime<-as.character(flights[[i]]$track_points@data$time)[length(flights[[i]]$track_points@data$time)]

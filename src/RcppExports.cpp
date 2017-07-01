@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // gsubC
 std::string gsubC(const std::string& pattern, const std::string& replacement, std::string x);
-RcppExport SEXP uavRst_gsubC(SEXP patternSEXP, SEXP replacementSEXP, SEXP xSEXP) {
+RcppExport SEXP uavRmp_gsubC(SEXP patternSEXP, SEXP replacementSEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // brewPopupRowC
 std::string brewPopupRowC(std::string colname, std::string value);
-RcppExport SEXP uavRst_brewPopupRowC(SEXP colnameSEXP, SEXP valueSEXP) {
+RcppExport SEXP uavRmp_brewPopupRowC(SEXP colnameSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,7 +32,7 @@ END_RCPP
 }
 // brewPopupRowAltC
 std::string brewPopupRowAltC(std::string colname, std::string value);
-RcppExport SEXP uavRst_brewPopupRowAltC(SEXP colnameSEXP, SEXP valueSEXP) {
+RcppExport SEXP uavRmp_brewPopupRowAltC(SEXP colnameSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -44,7 +44,7 @@ END_RCPP
 }
 // brewPopupCoords
 std::string brewPopupCoords(std::string colname, std::string value);
-RcppExport SEXP uavRst_brewPopupCoords(SEXP colnameSEXP, SEXP valueSEXP) {
+RcppExport SEXP uavRmp_brewPopupCoords(SEXP colnameSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -56,7 +56,7 @@ END_RCPP
 }
 // mergePopupRows
 std::string mergePopupRows(CharacterVector names, CharacterVector values);
-RcppExport SEXP uavRst_mergePopupRows(SEXP namesSEXP, SEXP valuesSEXP) {
+RcppExport SEXP uavRmp_mergePopupRows(SEXP namesSEXP, SEXP valuesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -68,7 +68,7 @@ END_RCPP
 }
 // createTemplate
 std::string createTemplate(std::string tmpPath);
-RcppExport SEXP uavRst_createTemplate(SEXP tmpPathSEXP) {
+RcppExport SEXP uavRmp_createTemplate(SEXP tmpPathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -79,7 +79,7 @@ END_RCPP
 }
 // listPopupTemplates
 List listPopupTemplates(CharacterMatrix x, CharacterVector names, std::string tmpPath);
-RcppExport SEXP uavRst_listPopupTemplates(SEXP xSEXP, SEXP namesSEXP, SEXP tmpPathSEXP) {
+RcppExport SEXP uavRmp_listPopupTemplates(SEXP xSEXP, SEXP namesSEXP, SEXP tmpPathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -92,7 +92,7 @@ END_RCPP
 }
 // df2String
 CharacterMatrix df2String(DataFrame x);
-RcppExport SEXP uavRst_df2String(SEXP xSEXP) {
+RcppExport SEXP uavRmp_df2String(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -103,7 +103,7 @@ END_RCPP
 }
 // one2JSON
 std::string one2JSON(CharacterVector x);
-RcppExport SEXP uavRst_one2JSON(SEXP xSEXP) {
+RcppExport SEXP uavRmp_one2JSON(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -114,7 +114,7 @@ END_RCPP
 }
 // all2JSONlist
 List all2JSONlist(CharacterMatrix x);
-RcppExport SEXP uavRst_all2JSONlist(SEXP xSEXP) {
+RcppExport SEXP uavRmp_all2JSONlist(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -125,20 +125,20 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"uavRst_gsubC", (DL_FUNC) &uavRst_gsubC, 3},
-    {"uavRst_brewPopupRowC", (DL_FUNC) &uavRst_brewPopupRowC, 2},
-    {"uavRst_brewPopupRowAltC", (DL_FUNC) &uavRst_brewPopupRowAltC, 2},
-    {"uavRst_brewPopupCoords", (DL_FUNC) &uavRst_brewPopupCoords, 2},
-    {"uavRst_mergePopupRows", (DL_FUNC) &uavRst_mergePopupRows, 2},
-    {"uavRst_createTemplate", (DL_FUNC) &uavRst_createTemplate, 1},
-    {"uavRst_listPopupTemplates", (DL_FUNC) &uavRst_listPopupTemplates, 3},
-    {"uavRst_df2String", (DL_FUNC) &uavRst_df2String, 1},
-    {"uavRst_one2JSON", (DL_FUNC) &uavRst_one2JSON, 1},
-    {"uavRst_all2JSONlist", (DL_FUNC) &uavRst_all2JSONlist, 1},
+    {"uavRmp_gsubC", (DL_FUNC) &uavRmp_gsubC, 3},
+    {"uavRmp_brewPopupRowC", (DL_FUNC) &uavRmp_brewPopupRowC, 2},
+    {"uavRmp_brewPopupRowAltC", (DL_FUNC) &uavRmp_brewPopupRowAltC, 2},
+    {"uavRmp_brewPopupCoords", (DL_FUNC) &uavRmp_brewPopupCoords, 2},
+    {"uavRmp_mergePopupRows", (DL_FUNC) &uavRmp_mergePopupRows, 2},
+    {"uavRmp_createTemplate", (DL_FUNC) &uavRmp_createTemplate, 1},
+    {"uavRmp_listPopupTemplates", (DL_FUNC) &uavRmp_listPopupTemplates, 3},
+    {"uavRmp_df2String", (DL_FUNC) &uavRmp_df2String, 1},
+    {"uavRmp_one2JSON", (DL_FUNC) &uavRmp_one2JSON, 1},
+    {"uavRmp_all2JSONlist", (DL_FUNC) &uavRmp_all2JSONlist, 1},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_uavRst(DllInfo *dll) {
+RcppExport void R_init_uavRmp(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

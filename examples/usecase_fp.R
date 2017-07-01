@@ -1,4 +1,4 @@
-traddelkopf60 <- uavRst::makeFP(projectDir="~/proj/uav/gentree/Traddelkopf/",
+traddelkopf60 <- uavRmd::makeFP(projectDir="~/proj/uav/gentree/Traddelkopf/",
                                 missionName = "65msolo",
                                 surveyArea="~/proj/uav/gentree/Traddelkopf/data/task_areas/Traddelkopf_2017_02_paralell.json",
                                 followSurface = TRUE,
@@ -20,7 +20,7 @@ traddelkopf60 <- uavRst::makeFP(projectDir="~/proj/uav/gentree/Traddelkopf/",
 library(mapedit)
 library(leaflet)
 library(mapview)
-library(uavRst)
+library(uavRmd)
 leafDraw(overlay = traddelkopf60$demA)
 fA <- edit_map(mapview(traddelkopf60$demA)@map)
 

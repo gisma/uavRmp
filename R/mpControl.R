@@ -17,7 +17,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     levellog(logger, 'WARN', "CAUTION!!! no DEM file provided I try to download SRTM data... SRTM DATA has a poor resolution for UAVs!!! ")
     cat("\nCAUTION! No DEM data is provided.\n trying to download SRTM data... \n Be aware that the resulution of SRTM is NOT sufficient for terrain following flights!")
     # download corresponding srtm data
-    dem <- uavRmp::t_getgeodata(name = "SRTM",
+    dem <- uavRmp::ggeodata(name = "SRTM",
                                 xtent = extent(p$lon1,p$lon3,p$lat1,p$lat3), 
                                 zone = 1.5 ,
                                 merge = TRUE)
@@ -81,7 +81,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   }  # end of loading DEM data
   
   # check if at least a projection string exist 
-  crsString <- h_comp_ll_proj4((as.character(dem@crs)))
+  crsString <- comp_ll_proj4((as.character(dem@crs)))
   
   if (!crsString) {
     # stop("the DEM/DSM is not georeferencend - please provide a correct georeferenced raster object or GeoTiff file\n")
@@ -287,8 +287,8 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
     # depending on DEM/DSM sometimes there are no data Values
     if (!is.na(endLat) & !is.na(endLon)) {
       # generate flight lines from lanch to start and launch to end point of splitted task
-      home  <- h_sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home")
-      start <- h_sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start")
+      home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home")
+      start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start")
       
       # calculate minimum rth altitude for each line by identifing max altitude
       homeRth  <- raster::extract(dem,home, fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
@@ -299,8 +299,8 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       startRth <- startRth + 0.1 * startRth
       
       # get the max position of the flightlines
-      homemaxpos  <- h_line_extract_maxpos(dem,home)
-      startmaxpos <- h_line_extract_maxpos(dem,start)
+      homemaxpos  <- line_extract_maxpos(dem,home)
+      startmaxpos <- line_extract_maxpos(dem,start)
       
       # calculate heading 
       homeheading  <- geosphere::bearing(c(endLon,endLat),c(launchLon,launchLat), a = 6378137, f = 1/298.257223563)
@@ -461,8 +461,8 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     endLon <- df@data[maxPoints,2]
     
     # generate flight lines from lanch to start and launch to end point of splitted task
-    home  <- h_sp_line(c(launchLon,endLon),c(launchLat,endLat),"home")
-    start <- h_sp_line(c(launchLon,startLon),c(launchLat,startLat),"start")
+    home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"home")
+    start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"start")
     
     # calculate minimum rth altitude for each line by identifing max altitude
     #homeRth<-max(unlist(raster::extract(dem,home)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
@@ -471,8 +471,8 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     maxAltStartFlight <- raster::extract(dem,start,fun = max, na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
     
     # get the max position of the flightlines
-    homemaxpos  <- h_line_extract_maxpos(dem,home)
-    startmaxpos <- h_line_extract_maxpos(dem,start)
+    homemaxpos  <- line_extract_maxpos(dem,home)
+    startmaxpos <- line_extract_maxpos(dem,start)
     
     # log the positions
     levellog(logger, 'INFO', paste("maxaltPos    rth : ", paste0("mission file: ",i," ",homemaxpos[2]," ",homemaxpos[1])))
@@ -992,8 +992,8 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
     
     # depending on DEM/DSM sometimes there are no data Values
     # generate flight lines from lanch to start and launch to end point of splitted task
-    home  <- h_sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home")
-    start <- h_sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start")
+    home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home")
+    start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start")
     
     # calculate minimum rth altitude for each line by identifing max altitude
     homeRth  <- raster::extract(dem,home, fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
@@ -1010,8 +1010,8 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
     }
     
     # get the max position of the flightlines
-    homemaxpos  <- h_line_extract_maxpos(dem,home)
-    startmaxpos <- h_line_extract_maxpos(dem,start)
+    homemaxpos  <- line_extract_maxpos(dem,home)
+    startmaxpos <- line_extract_maxpos(dem,start)
     
     # calculate heading 
     homeheading  <- geosphere::bearing(c(endLon,endLat),c(launchLon,launchLat), a = 6378137, f = 1/298.257223563)
@@ -1191,7 +1191,7 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
     }
     else if (uavType == "solo") {
       cat("calculating flight corridors according to position ",i," of ",nrow(treeList),"\r")
-      lp <- h_sp_point(p$launchLon,p$launchLat,"LaunchPos")
+      lp <- sp_point(p$launchLon,p$launchLat,"LaunchPos")
       
       if (p$launchAltitude == -9999){
         tmpalt <- raster::extract(dem,lp,layer = 1, nl = 1)  
@@ -1241,20 +1241,20 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
       }
       
       
-      seg_max_toDown <- h_get_seg_fparams(demll,
+      seg_max_toDown <- get_seg_fparams(demll,
                                           start = c(down_smtlon,down_smtlat),
                                           target = c(treeList@coords[i,][1],treeList@coords[i,][2]),
                                           p)
       
       
-      tree_Alt <- h_get_point_fparams(demll,
+      tree_Alt <- get_point_fparams(demll,
                                       point = c(treeList@coords[i,][1],treeList@coords[i,][2]),
                                       p,
                                       radius =circleRadius
       )      
       
       
-      seg_max_toNext <- h_get_seg_fparams(demll,
+      seg_max_toNext <- get_seg_fparams(demll,
                                           start = c(posDown[1],posDown[2]),
                                           target = c(up_smtlon,up_smtlat),
                                           p)      
@@ -1602,13 +1602,13 @@ mavCmd <- function(id,wp=0,cf="3",cmd="82",p1="0.000000",p2="0.000000",p3="0.000
 is.odd <- function(x) x %% 2 != 0
 
 # extract highest altitude position and agl of a single track
-h_get_seg_fparams <- function(dem,
+get_seg_fparams <- function(dem,
                               start,
                               target,
                               p){
   # depending on DEM/DSM sometimes there are no data Values
   startAlt<-p$launchAltitude
-  seg  <- h_sp_line(c(start[1],target[1]),c(start[2],target[2]),"seg")
+  seg  <- sp_line(c(start[1],target[1]),c(start[2],target[2]),"seg")
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))
   seg_buf<-rgeos::gBuffer(spgeom = seg_utm,width = 5.0)
   seg_buf <- sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
@@ -1620,7 +1620,7 @@ h_get_seg_fparams <- function(dem,
   
   
   # get the max position of the flightlines
-  seg_max_pos  <- h_line_extract_maxpos(dem,seg)
+  seg_max_pos  <- line_extract_maxpos(dem,seg)
   
   
   # calculate heading 
@@ -1631,13 +1631,13 @@ h_get_seg_fparams <- function(dem,
 }
 
 # extract highest altitude position and agl of a position with  a defined radius
-h_get_point_fparams <- function(dem,
+get_point_fparams <- function(dem,
                                 point,
                                 p, 
                                 radius= 5.0){
   # depending on DEM/DSM sometimes there are no data Values
   startAlt<-p$launchAltitude
-  seg  <- h_sp_point(point[1],point[2],"point")
+  seg  <- sp_point(point[1],point[2],"point")
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))
   seg_buf<-rgeos::gBuffer(spgeom = seg_utm,width = radius)
   seg_buf <- sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )

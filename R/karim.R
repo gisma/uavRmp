@@ -1,7 +1,7 @@
 # karim is the blue djinn
-if (!isGeneric('h_read_gpx ')) {
-  setGeneric('h_read_gpx ', function(x, ...)
-    standardGeneric('h_read_gpx '))
+if (!isGeneric('read_gpx ')) {
+  setGeneric('read_gpx ', function(x, ...)
+    standardGeneric('read_gpx '))
 }
 
 #' Read GPX file
@@ -11,11 +11,11 @@ if (!isGeneric('h_read_gpx ')) {
 #' @param file a GPX filename (including directory)
 #' @param layers vector of GPX layers. Possible options are \code{"waypoints"}, \code{"tracks"}, \code{"routes"}, \code{"track_points"}, \code{"route_points"}. By dedault, all those layers are read.
 #' @return  if the layer has any features a sp object is returned.
-#' @export h_read_gpx
+#' @export read_gpx
 #' @note cloned from tmap
 #' 
 
-h_read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_points", "route_points")) {
+read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_points", "route_points")) {
   if (!all(layers %in% c("waypoints", "tracks", "routes", "track_points", "route_points"))) stop("Incorrect layer(s)", call. = FALSE)
   
   # check if features exist per layer
@@ -38,9 +38,9 @@ h_read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_po
 }
 
 
-if (!isGeneric('h_xyz2tif')) {
-  setGeneric('h_xyz2tif', function(x, ...)
-    standardGeneric('h_xyz2tif'))
+if (!isGeneric('xyz2tif')) {
+  setGeneric('xyz2tif', function(x, ...)
+    standardGeneric('xyz2tif'))
 }
 #' Read and Convert xyz DEM/DSM Data as typically provided by the Authorities
 #' 
@@ -49,27 +49,22 @@ if (!isGeneric('h_xyz2tif')) {
 #' 
 #' @param txtFn ASCII tect file with xyz values
 
-#' @return 
-#' a geoT
 #' 
 #' 
-
-#' @examples
-
 #' 
 #' # get some typical data as provided by the authority
 #' url<-"http://www.ldbv.bayern.de/file/zip/10430/DGM_1_ascii.zip"
 #' res <- curl::curl_download(url, "testdata.zip")
 #' unzip(res,files = grep(".tif", unzip(res,list = TRUE)$Name,value = TRUE),junkpaths = TRUE,overwrite = TRUE)
 #' 
-#' h_xyz2tif(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))
+#' xyz2tif(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))
 #' 
 #' plot(raster(paste0(getwd(),"/",tools::file_path_sans_ext(basename(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))),".tif")))
 #' 
-#' @export h_xyz2tif
+#' @export xyz2tif
 #' 
 
-h_xyz2tif <- function(xyzFN=NUL,  epsgCode ="25832"){
+xyz2tif <- function(xyzFN=NUL,  epsgCode ="25832"){
   # read data 
   xyz<-data.table::fread(xyzFN)
   cat("write it to",paste0(dirname(xyzFN),"/",tools::file_path_sans_ext(basename(xyzFN)),".tif"),"\n")
@@ -83,7 +78,7 @@ h_xyz2tif <- function(xyzFN=NUL,  epsgCode ="25832"){
 
 
 
-h_raster_adjust_projection <- function(x) {
+raster_adjust_projection <- function(x) {
   llcrs <- "+proj=longlat +datum=WGS84 +no_defs"
   
   is.fact <- raster::is.factor(x)[1]
@@ -109,7 +104,7 @@ h_raster_adjust_projection <- function(x) {
 
 # Check projection of objects according to their keywords -------
 
-h_comp_ll_proj4 <- function(x) {
+comp_ll_proj4 <- function(x) {
   proj <- datum <- nodefs <- "FALSE"
   allWGS84 <- as.vector(c("+init=epsg:4326", "+proj=longlat", "+datum=WGS84", "+no_defs", "+ellps=WGS84", "+towgs84=0,0,0"))
   s <- as.vector(strsplit(x," "))
@@ -148,7 +143,7 @@ h_comp_ll_proj4 <- function(x) {
 #' @param export write shafefile default = F 
 #' @export
 #' 
-h_sp_line <- function(p1,
+sp_line <- function(p1,
                       p2,
                       ID,
                       proj4="+proj=longlat +datum=WGS84 +no_defs",
@@ -168,7 +163,7 @@ h_sp_line <- function(p1,
 #' @param export write shafefile default = F 
 #' @export
 #' 
-h_sp_point <- function(lon,
+sp_point <- function(lon,
                        lat,
                        ID="point",
                        proj4="+proj=longlat +datum=WGS84 +no_defs",
@@ -190,7 +185,7 @@ h_sp_point <- function(lon,
 #' @param line  sp object
 #' @export
 #' 
-h_line_extract_maxpos <- function(dem,line){
+line_extract_maxpos <- function(dem,line){
   mask <- dem
   raster::values(mask) <- NA
   #...update it with the altitude information of the flightline
@@ -211,7 +206,7 @@ h_line_extract_maxpos <- function(dem,line){
 #' extract for all polygons the position of the maximum value
 #' @export
 #' 
-h_poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
+poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
   # read raster input data 
   if (poly_split) {system(paste0("rm -rf ",paste0(path_tmp,"split")))}
   dem <- raster::raster(x)
@@ -314,7 +309,7 @@ h_poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
 
 #' @export
 #' 
-h_grass2tif <- function(runDir = NULL, layer = NULL, returnRaster = FALSE) {
+grass2tif <- function(runDir = NULL, layer = NULL, returnRaster = FALSE) {
   
   rgrass7::execGRASS("r.out.gdal",
                      flags     = c("c","overwrite","quiet"),
@@ -330,7 +325,7 @@ h_grass2tif <- function(runDir = NULL, layer = NULL, returnRaster = FALSE) {
 #' @param runDir path of working directory
 #' @param layer name GRASS raster
 #' @export
-h_grass2tif <- function(runDir = NULL, layer = NULL) {
+grass2tif <- function(runDir = NULL, layer = NULL) {
   rgrass7::execGRASS('r.external',
                      flags  = c('o',"overwrite","quiet"),
                      input  = paste0(layer,".tif"),
@@ -344,7 +339,7 @@ h_grass2tif <- function(runDir = NULL, layer = NULL) {
 #' @param runDir path of working directory
 #' @param layer name GRASS raster
 #' @export
-h_shape2grass <- function(runDir = NULL, layer = NULL) {
+shape2grass <- function(runDir = NULL, layer = NULL) {
   # import point locations to GRASS
   rgrass7::execGRASS('v.in.ogr',
                      flags  = c('o',"overwrite","quiet"),
@@ -358,7 +353,7 @@ h_shape2grass <- function(runDir = NULL, layer = NULL) {
 #' @param runDir path of working directory
 #' @param layer name GRASS raster
 #' @export
-h_grass2shape <- function(runDir = NULL, layer = NULL){
+grass2shape <- function(runDir = NULL, layer = NULL){
   rgrass7::execGRASS("v.out.ogr",
                      flags  = c("overwrite","quiet"),
                      input  = layer,
@@ -393,12 +388,12 @@ h_grass2shape <- function(runDir = NULL, layer = NULL){
 #' @examples
 #' \dontrun{
 #' ## when in a package directory, e.g. '~/satellite' 
-#' h_umr_build()
+#' umr_build()
 #' }
 #' 
-#' @export h_umr_build
-#' @name h_umr_build
-h_umr_build <- function(dsn = getwd(), pkgDir="H:/Dokumente",document = TRUE, ...) {
+#' @export umr_build
+#' @name umr_build
+umr_build <- function(dsn = getwd(), pkgDir="H:/Dokumente",document = TRUE, ...) {
   
   ## reset 'dsn' to 'H:/...'  
   if (length(grep("students_smb", dsn)) > 0) {
@@ -436,7 +431,7 @@ h_umr_build <- function(dsn = getwd(), pkgDir="H:/Dokumente",document = TRUE, ..
 #' @param fn filname without extension
 #' @param ext extent of the raster in R notation
 #' @export
-h_saga2r<- function(fn,ext) {
+saga2r<- function(fn,ext) {
   gdalUtils::gdalwarp(paste0(path_run,fn,".sdat"), 
                       paste0(path_run,fn,".tif"), 
                       overwrite = TRUE,  
@@ -452,7 +447,7 @@ h_saga2r<- function(fn,ext) {
 #' @param x raster object
 #' @param fn filname without extension
 #' @export
-h_r2saga <- function(x,fn) {
+r2saga <- function(x,fn) {
   
   raster::writeRaster(x,paste0(path_run,fn,".tif"),overwrite = TRUE)
   # convert to SAGA
@@ -463,7 +458,7 @@ h_r2saga <- function(x,fn) {
                       verbose = FALSE)
 }
 
-h_fun_multiply <- function(x)
+fun_multiply <- function(x)
 {
   # Note that x is received by the function as a 3-d array:
   band1 <- x[,,1]
@@ -475,6 +470,6 @@ h_fun_multiply <- function(x)
   
   return(result)
 }
-	h_fun_whichmax <- function(mask,value) { 
+	fun_whichmax <- function(mask,value) { 
 raster::xyFromCell(value,which.max(mask * value))
 }

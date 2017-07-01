@@ -1,6 +1,6 @@
 #' digitizing vector features using leaflet draw
 #'
-#' @description  leafDraw is based on the leaflet draw plugin. It provides a bunch of leaflet maps as base layers for digitizing vector features. 
+#' @description  vecDraw is based on the leaflet draw plugin. It provides a bunch of leaflet maps as base layers for digitizing vector features. 
 #'
 #' @note Yu can either save the digitized object to a json file or you ma grab the json string via the clipboard
 #' @param mapcenter c(lat,lon) central point of the leaflet map
@@ -21,21 +21,21 @@
 #' @examples
 #' 
 #' # all features
-#' leafDraw()
+#' vecDraw()
 #' 
 #' # preset for digitizing uav flight areas in Meuse
 #' data(meuse) 
 #' coordinates(meuse) <- ~x+y 
 #' proj4string(meuse) <-CRS("+init=epsg:28992") 
 #' me<-sp::spTransform(meuse,CRSobj = sp::CRS("+init=epsg:4326"))
-#' uavRmp::leafDraw(overlay = me, preset = "uav")
+#' uavRmp::vecDraw(overlay = me, preset = "uav")
 #'   
 #' # preset for digitizing extents
-#' leafDraw(preset="ext",overlay = me)
+#' vecDraw(preset="ext",overlay = me)
 #' 
-#' @export leafDraw
+#' @export vecDraw
 
-leafDraw <- function(mapCenter=NULL,
+vecDraw <- function(mapCenter=NULL,
                      zoom=15, 
                      line = TRUE, 
                      rectangle = TRUE, 
@@ -199,7 +199,7 @@ leafDraw <- function(mapCenter=NULL,
             overlay=jsondata
             
   )
-  leafDrawInternal(tmpPath, x = x)  
+  vecDrawInternal(tmpPath, x = x)  
 }
 
 
@@ -238,7 +238,7 @@ createTempDataTransfer <- function (){
   return(tmpPath)
 }
 
-leafDrawInternal <- function(tmpPath, x = NULL) {
+vecDrawInternal <- function(tmpPath, x = NULL) {
   deps<-digiDependencies(tmpPath) 
   sizing = htmlwidgets::sizingPolicy(
     browser.fill = TRUE,
@@ -247,7 +247,7 @@ leafDrawInternal <- function(tmpPath, x = NULL) {
   )
   # create widget
   htmlwidgets::createWidget(
-    name = 'leafDraw',
+    name = 'vecDraw',
     x,
     dependencies = deps,
     sizingPolicy = sizing,
@@ -257,13 +257,13 @@ leafDrawInternal <- function(tmpPath, x = NULL) {
 
 ### Widget output function for use in Shiny =================================================
 #
-leafDrawOutput <- function(outputId, width = '100%', height = '800px') {
-  htmlwidgets::shinyWidgetOutput(outputId, 'leafDraw', width, height, package = 'uavRmp')
+vecDrawOutput <- function(outputId, width = '100%', height = '800px') {
+  htmlwidgets::shinyWidgetOutput(outputId, 'vecDraw', width, height, package = 'uavRmp')
 }
 
 ### Widget render function for use in Shiny =================================================
 #
-renderleafDraw<- function(expr, env = parent.frame(), quoted = FALSE) {
+rendervecDraw<- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
