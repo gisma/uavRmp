@@ -4,13 +4,20 @@
 \name{uavRmp}
 \alias{uavRmp}
 \alias{uavRmp-package}
-\title{Unmanned Aerial Vehicle R based Mission Planner  - awesome Mission Planner for complex monitoring flights
-\cr
-\emph{Maintainer:} Chris Reudenbach \email{reudenbach@uni-marburg.de}}
+\title{Unmanned Aerial Vehicle R Based Mission Planner}
 \description{
-Unmanned Aerial Vehicle R based Mission Planner
+The package provides some mission planning functionality for dealing #' with Unmanned Aerial Vehicles
 }
 \details{
 The package provides some mission planning functionality for dealing with Unmanned Aerial Vehicles
+}
+\note{
+It is important to keep in mind that all binaries need to be installed 
+correctly on your system.
+}
+\author{
+Chris Reudenbach Lars Opgenoorth Sebastian Schneider
+\cr
+\emph{Maintainer:} Chris Reudenbach \email{reudenbach@uni-marburg.de}
 }
 \keyword{package}

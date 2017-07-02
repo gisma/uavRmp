@@ -328,8 +328,7 @@ grass2shape <- function(runDir = NULL, layer = NULL){
 #' @description 
 #' This function was specifically designed to build a package from local source 
 #' files manually, i.e., without using the package building functionality 
-#' offered e.g. by RStudio. 
-#' @details NOTE the default setting are focussing HRZ environment at Marburg University
+#' offered e.g. by RStudio.  NOTE the default setting are focussing HRZ environment at Marburg University
 #' 
 #' 
 #' @param dsn 'character'. Target folder containing source files; defaults to 

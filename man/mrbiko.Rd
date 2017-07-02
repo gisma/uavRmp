@@ -5,6 +5,13 @@
 \alias{mrbiko}
 \title{DEM data set of Marburg-Biedenkopf}
 \format{\code{"raster::raster"}}
+\source{
+\code{uav flight marburg universitsy forest}
+}
 \description{
 DEM data set resampled to 20 m resolution
 }
+\details{
+DEM data set of Marburg-Biedenkopf
+}
+\keyword{datasets}

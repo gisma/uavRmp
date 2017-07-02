@@ -1,14 +1,38 @@
-#' Unmanned Aerial Vehicle R based Mission Planner
-#'
 #' The package provides some mission planning functionality for dealing with Unmanned Aerial Vehicles
 #'
+#' @description The package provides some mission planning functionality for dealing #' with Unmanned Aerial Vehicles
+#' @note It is important to keep in mind that all binaries need to be installed 
+#' correctly on your system. 
 #' @name uavRmp
 #' @docType package
-#' @title Unmanned Aerial Vehicle R based Mission Planner  - awesome Mission Planner for complex monitoring flights
+#' @title Unmanned Aerial Vehicle R Based Mission Planner
+#' @author Chris Reudenbach Lars Opgenoorth Sebastian Schneider
 #' \cr
 #' \emph{Maintainer:} Chris Reudenbach \email{reudenbach@@uni-marburg.de}
+#' 
+#' 
 #'
-#' @import stringr zoo foreach sp raster htmlwidgets htmltools rgeos rgdal gdalUtils tools maptools mapview parallel velox log4r rgrass7 devtools roxygen2 sf methods
+#' @import stringr 
+#' @import zoo
+#' @import foreach
+#' @import sp
+#' @import raster
+#' @import htmlwidgets
+#' @import htmltools
+#' @import rgeos
+#' @import rgdal
+#' @import gdalUtils
+#' @import tools
+#' @import maptools
+#' @import mapview
+#' @import parallel
+#' @import velox
+#' @import log4r
+#' @import rgrass7
+#' @import devtools
+#' @import roxygen2
+#' @import sf methods
+#' @import devtools
 #' @importFrom geosphere bearing
 #' @importFrom geosphere distGeo
 #' @importFrom geosphere destPoint
@@ -19,18 +43,18 @@
 #' @importFrom spatial.tools create_blank_raster 
 #' @import log4r
 #' @import caret
-#'  
 #'
-#' @useDynLib uavRmp
 #' @keywords package
 #' 
 NULL
-#'
+#' DEM data set of Marburg-Biedenkopf
 #' @docType data
 #' @name mrbiko
 #' @title DEM data set of Marburg-Biedenkopf
 #' @description DEM data set resampled to 20 m resolution
 #' @format \code{"raster::raster"}
-#'
+#' @keywords datasets
+#' @source \code{uav flight marburg universitsy forest}
 NULL
+#'
 

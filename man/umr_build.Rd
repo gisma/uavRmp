@@ -20,10 +20,7 @@ the current working directory.}
 \description{
 This function was specifically designed to build a package from local source 
 files manually, i.e., without using the package building functionality 
-offered e.g. by RStudio.
-}
-\details{
-NOTE the default setting are focussing HRZ environment at Marburg University
+offered e.g. by RStudio.  NOTE the default setting are focussing HRZ environment at Marburg University
 }
 \examples{
 \dontrun{

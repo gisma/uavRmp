@@ -2,71 +2,68 @@
 % Please edit documentation in R/vecDraw.R
 \name{vecDraw}
 \alias{vecDraw}
-\title{digitizing vector features using leaflet draw}
+\title{digitizing vector features using a simple leaflet base map}
 \usage{
 vecDraw(mapCenter = NULL, zoom = 15, line = TRUE, rectangle = TRUE,
   poly = TRUE, circle = TRUE, point = TRUE, remove = TRUE,
   position = "topright", maplayer = c("CartoDB.Positron", "OpenStreetMap",
   "Esri.WorldImagery", "Thunderforest.Landscape", "OpenTopoMap"),
-  overlay = NULL, features = NULL, preset = "all", locPreset = "muf",
-  cex = 10, lwd = 2, alpha = 0.6, opacity = 0.7)
+  overlay = NULL, preset = "all", locPreset = "muf", cex = 10,
+  lwd = 2, opacity = 0.7)
 }
 \arguments{
-\item{mapCenter}{mapcenter}
+\item{mapCenter}{center of the leaflet map}
 
-\item{zoom}{initial zoom level}
+\item{zoom}{set initial zoom level of leaflet map}
 
-\item{line}{enable the draw tool line tool}
+\item{line}{enable/disable line tool}
 
-\item{rectangle}{rectangle}
+\item{rectangle}{enable/disable polygon tool}
 
-\item{poly}{enable the draw polygon tool}
+\item{poly}{enable/disable polygon tool}
 
-\item{circle}{enable the draw circle tool}
+\item{circle}{enable/disable circle tool}
 
-\item{point}{enable the draw point tool}
+\item{point}{enable/disable point tool}
 
 \item{remove}{enable/disable the remove feature of the draw tool}
 
-\item{position}{place to put the toolbar (topright, topleft, bottomright, bottomleft)}
+\item{position}{toolbar layout (topright, topleft, bottomright, bottomleft)}
 
 \item{maplayer}{string as provided by leaflet-provider}
 
-\item{overlay}{optional sp object}
+\item{overlay}{optional sp* object may used for orientation}
 
-\item{features}{features}
+\item{preset}{character default is "uav" for line based mission digitizing, "ext" for rectangles, NULL for all drawing items}
 
-\item{preset}{character defaut is "NULL" full draw version, "uav" for flightarea digitizing, "ext" for rectangles}
+\item{locPreset}{character location preset, default is "muf" for Marburg University Forest,  "tra" Traddelstein, "hag" Hagenstein, "baw" Bayerwald.}
 
-\item{locPreset}{character default is "muf" for Marburg University Forest, others are "tra" Traddelstein, "hag" Hagenstein, "baw" Bayerwald.}
+\item{cex}{size of item}
 
-\item{cex}{cex}
+\item{lwd}{line width of item}
 
-\item{lwd}{lwd}
-
-\item{alpha}{alpha}
-
-\item{opacity}{opacity}
+\item{opacity}{opacity of item}
 }
 \description{
-vecDraw is based on the leaflet draw plugin. It provides a bunch of leaflet maps as base layers for digitizing vector features.
+vecDraw is designed for straightforward digitizing of simple geometries without adding attributes. It provides a bunch of leaflet base maps and optionally a sf* object can be loaded for orientation.
 }
 \note{
-Yu can either save the digitized object to a json file or you ma grab the json string via the clipboard
+Yu can either save the digitized object to a json (JS) or kml (KML) file.
 }
 \examples{
 \dontrun{
-# all features
+# fully featured without overlay
 vecDraw()
 
-# preset for digitizing uav flight areas in Meuse
+# preset for digitizing uav flight areas using Meuse data set as overlay
+require(sp)
 data(meuse) 
 coordinates(meuse) <- ~x+y 
 proj4string(meuse) <-CRS("+init=epsg:28992") 
-me<-sp::spTransform(meuse,CRSobj = sp::CRS("+init=epsg:4326"))
-uavRmp::vecDraw(overlay = me, preset = "uav")
+m<-sp::spTransform(meuse,CRSobj = sp::CRS("+init=epsg:4326"))
+uavRmp::vecDraw(overlay = m, preset = "uav")
   
-# preset for digitizing extents
-vecDraw(preset="ext",overlay = me)
+# preset for digitizing simple rectangles extents
+vecDraw(preset="ext",overlay = m)
 }
 }

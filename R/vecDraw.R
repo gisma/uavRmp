@@ -50,14 +50,15 @@ vecDraw <- function(mapCenter=NULL,
                      position= "topright", 
                      maplayer=c("CartoDB.Positron","OpenStreetMap","Esri.WorldImagery","Thunderforest.Landscape","OpenTopoMap"),
                      overlay=NULL,
-                     features=NULL,
+
                      preset = "all",
                      locPreset = "muf",
                      cex = 10,
                      lwd = 2,
-                     alpha = 0.6,
+
                      opacity = 0.7) {
-  
+  alpha = 0.6  
+  features=NULL
   if (is.null(mapCenter)) {
     if ( locPreset == "muf") {
       mapCenter<-c(50.84,8.68)

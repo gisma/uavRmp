@@ -1,9 +1,9 @@
 Package: uavRmp
 Type: Package
-Title: Unmanned Aerial Vehicle R based Mission Planner
+Title: Unmanned Aerial Vehicle R Based Mission Planner
 Version: 0.5
 Date: 2017-07-01
-Authors@R: c(person("Christoph", "Reudenbach", email = "reudenbach@geo.uni-marburg.de", role = c("cre", "aut")),
+Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Lars", "Opgenoorth", email = "opgenoorth@uni-marburg.de", role = c("ctb")),
              person("Richter", "Sebastian", role = c("ctb"))
              )
