@@ -42,7 +42,7 @@ if (!isGeneric('xyz2tif')) {
   setGeneric('xyz2tif', function(x, ...)
     standardGeneric('xyz2tif'))
 }
-#' Read and Convert xyz DEM/DSM Data as typically provided by the Authorities
+#' Read and Convert xyz DEM/DSM Data as typically provided by the public authorities
 #' 
 #' @description
 #' Read xyz data and generate a raster  \code{Raster*} object.  
@@ -52,16 +52,17 @@ if (!isGeneric('xyz2tif')) {
 
 #' 
 #' 
-#' 
+#' @examples 
+#'\dontrun{
 #' # get some typical data as provided by the authority
 #' url<-"http://www.ldbv.bayern.de/file/zip/10430/DGM_1_ascii.zip"
 #' res <- curl::curl_download(url, "testdata.zip")
 #' unzip(res,files = grep(".tif", unzip(res,list = TRUE)$Name,value = TRUE),junkpaths = TRUE,overwrite = TRUE)
-#' 
+#' # convert it 
 #' xyz2tif(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))
 #' 
 #' plot(raster(paste0(getwd(),"/",tools::file_path_sans_ext(basename(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))),".tif")))
-#' 
+#'} 
 #' @export xyz2tif
 #' 
 

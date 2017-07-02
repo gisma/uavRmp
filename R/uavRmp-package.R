@@ -6,7 +6,7 @@
 #' @name uavRmp
 #' @docType package
 #' @title Unmanned Aerial Vehicle R Based Mission Planner
-#' @author Chris Reudenbach Lars Opgenoorth Sebastian Schneider
+#' @author Chris Reudenbach Lars Opgenoorth Sebastian Richter
 #' \cr
 #' \emph{Maintainer:} Chris Reudenbach \email{reudenbach@@uni-marburg.de}
 #' 

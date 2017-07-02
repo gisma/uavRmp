@@ -2,26 +2,27 @@
 % Please edit documentation in R/karim.R
 \name{xyz2tif}
 \alias{xyz2tif}
-\title{Read and Convert xyz DEM/DSM Data as typically provided by the Authorities}
+\title{Read and Convert xyz DEM/DSM Data as typically provided by the public authorities}
 \usage{
 xyz2tif(xyzFN = NULL, epsgCode = "25832")
 }
 \arguments{
 \item{xyzFN}{ASCII tect file with xyz values}
 
-\item{epsgCode}{EPSG Code default is  "25832"
-
-
-
+\item{epsgCode}{EPSG Code default is  "25832"}
+}
+\description{
+Read xyz data and generate a raster  \code{Raster*} object.
+}
+\examples{
+\dontrun{
 # get some typical data as provided by the authority
 url<-"http://www.ldbv.bayern.de/file/zip/10430/DGM_1_ascii.zip"
 res <- curl::curl_download(url, "testdata.zip")
 unzip(res,files = grep(".tif", unzip(res,list = TRUE)$Name,value = TRUE),junkpaths = TRUE,overwrite = TRUE)
-
+# convert it 
 xyz2tif(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))
 
-plot(raster(paste0(getwd(),"/",tools::file_path_sans_ext(basename(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))),".tif")))}
-}
-\description{
-Read xyz data and generate a raster  \code{Raster*} object.
+plot(raster(paste0(getwd(),"/",tools::file_path_sans_ext(basename(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))),".tif")))
+} 
 }

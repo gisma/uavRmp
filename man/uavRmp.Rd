@@ -16,7 +16,7 @@ It is important to keep in mind that all binaries need to be installed
 correctly on your system.
 }
 \author{
-Chris Reudenbach Lars Opgenoorth Sebastian Schneider
+Chris Reudenbach Lars Opgenoorth Sebastian Richter
 \cr
 \emph{Maintainer:} Chris Reudenbach \email{reudenbach@uni-marburg.de}
 }

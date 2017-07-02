@@ -2,8 +2,7 @@
 % Please edit documentation in R/makeFP.R
 \name{makeFP}
 \alias{makeFP}
-\title{make flight plans (makeFP) is a tool to generate autonomous flight plans for
-an optimal picture retrieval with respect to DSM/DEM and orthophoto
+\title{Flight Mission Planning tool for generating a set of control files for autonomous data retrieval with respect to DSM/DEM and orthophoto generation
 calculation.}
 \usage{
 makeFP(projectDir = "~", locationName = "dummylocation",
