@@ -378,7 +378,7 @@ makeAP <- function(projectDir = "~",
   if (!is.null(surveyArea)) {
     file.copy(surveyArea, paste0(file.path(projectDir,locationName, "data")))
     surveyArea <- paste0(file.path(projectDir,locationName, "data"), "/", basename(surveyArea))
-      
+    
   }
   
   if (!is.null(demFn) & copy ) {
@@ -711,9 +711,9 @@ makeAP <- function(projectDir = "~",
   else if (uavType == "solo") {
     writeLines(unlist(lns), fileConn)
     mavDF <- utils::read.csv("tmp.csv", colClasses=c("V4"="character",
-                                              "V5"="character",
-                                              "V6"="character",
-                                              "V7"="character"),sep = "\t", header = FALSE)
+                                                     "V5"="character",
+                                                     "V6"="character",
+                                                     "V7"="character"),sep = "\t", header = FALSE)
     names(mavDF) <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","j","lat","lon")
     sp::coordinates(mavDF) <- ~ lon + lat
     sp::proj4string(mavDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
@@ -746,7 +746,7 @@ makeAP <- function(projectDir = "~",
   
   # call rcShed
   ##if (!is.null(rcRange)) {
-    
+  
   ##  cat("calculating RC-range\n")
   ##  rcCover <-
   ##    rcShed(
@@ -756,7 +756,7 @@ makeAP <- function(projectDir = "~",
   ##      dem = result[[4]]
   ##    )
   ##} else {
-    rcCover = "NULL"
+  rcCover = "NULL"
   ##}
   
   
@@ -772,35 +772,37 @@ makeAP <- function(projectDir = "~",
   log4r::levellog(logger, 'INFO', paste("horizonFilter   : ", horizonFilter))
   log4r::levellog(logger, 'INFO', paste("flightPlanMode  : ", flightPlanMode))
   log4r::levellog(logger, 'INFO', paste("flightAltitude  : ", flightAltitude))
-  log4r::levellog(logger,
-           'INFO',
-           paste("presetFlightTask: ", presetFlightTask))
+  log4r::levellog(logger, 'INFO', paste("presetFlightTask: ", presetFlightTask))
   log4r::levellog(logger, 'INFO', paste("curvesize       : ", p$curvesize))
-  log4r::levellog(logger, 'INFO', paste("rotationdir     : ", p$rotationdir))
-  log4r::levellog(logger, 'INFO', paste("gimbalmode      : ", p$gimbalmode))
-  log4r::levellog(logger,'INFO',paste("gimbalpitchangle: ", p$gimbalpitchangle))
+  if (uavType == "djiP3"){
+    log4r::levellog(logger, 'INFO', paste("rotationdir     : ", p$rotationdir))
+    log4r::levellog(logger, 'INFO', paste("gimbalmode      : ", p$gimbalmode))
+    log4r::levellog(logger, 'INFO',paste("gimbalpitchangle: ", p$gimbalpitchangle))
+    }
   log4r::levellog(logger, 'INFO', paste("overlap         : ", overlap))
   log4r::levellog(logger, 'INFO', paste("uavViewDir      : ", uavViewDir))
   log4r::levellog(logger, 'INFO', paste("picFootprint    : ", picFootprint))
   log4r::levellog(logger,'INFO',paste("followSurfaceRes: ", followSurfaceRes))
-  log4r::levellog(logger, 'INFO', paste("surveyAreaCoords: ", surveyArea))
+  log4r::levellog(logger, 'INFO', paste("surveyAreaCoords: ", list(surveyArea)))
   log4r::levellog(logger, 'INFO', paste("windCondition   : ", windCondition))
-  log4r::levellog(logger, 'INFO', "-")
-  log4r::levellog(logger,'INFO',"----- use the following task params! --------------")
-  log4r::levellog(logger,'INFO',paste("set RTH flight altitude to    : ", round(result[[6]], digits = 0), " (m)"))
-  log4r::levellog(logger,'INFO',paste("set flight speed to a max of: ",round(maxSpeed, digits = 1),"  (km/h)      "))
-  log4r::levellog(logger,'INFO',paste("set pic rate to at least : ", picIntervall, "  (sec/pic) "))
   log4r::levellog(logger,'INFO',paste("calculated mission time    : ", rawTime,      "  (min)      "))
   log4r::levellog(logger,'INFO',paste("estimated battery lifetime  : ", maxFlightTime,      "  (min)      "))
   log4r::levellog(logger,'INFO',paste("Area covered               : ", surveyAreaUTM / 10000,      "  (ha)"))
+  log4r::levellog(logger, 'INFO', "-")
+  log4r::levellog(logger,'INFO',"----- use the following task params! --------------")
+  log4r::levellog(logger,'INFO',paste("RTH flight altitude: ", round(result[[6]], digits = 0), " (m)"))
+  log4r::levellog(logger,'INFO',paste("max flight speed   : ",round(maxSpeed, digits = 1),"  (km/h)      "))
+  log4r::levellog(logger,'INFO',paste("picture lapse rate : ", picIntervall, "  (sec/pic) "))
+
+  
   # return params for visualisation and main results for overview
   if ((flightPlanMode == 'track' | flightPlanMode == 'terrainTrack') & rawTime > maxFlightTime)  {
-    note <- "flighttime > battery lifetime! control files have been splitted. Have Fun..."
+    note <- "flighttime > battery lifetime! control files have been splitted. \n Fly save and have Fun..."
   }
   else if (flightPlanMode == 'waypoints') {
     note <- "control files are splitted after max 98 waypoints (litchi control file restricted number)"
   }
-  else { note <- " Have Fun " }
+  else { note <- " Fly save and have Fun..." }
   dumpFile(paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
   cat("\n ",
       "\n NOTE 1:",as.character(note),"",

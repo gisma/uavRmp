@@ -9,7 +9,8 @@ makeTP(projectDir = "~", locationName = "autoflightcontrol",
   flightAltitude = 75, climbDist = 7.5, aboveTreeAlt = 15,
   circleRadius = 5, takeOffAlt = 50, presetFlightTask = "remote",
   maxSpeed = 25, followSurfaceRes = 5, altFilter = 1, maxFL = 10,
-  windCondition = 1, launchAltitude = -9999, uavType = "solo")
+  windCondition = 1, launchAltitude = -9999, uavType = "solo",
+  cameraType = "MAPIR2", copy = FALSE)
 }
 \arguments{
 \item{projectDir}{path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999}
@@ -63,7 +64,7 @@ makeTP generates a flight track chaining up point objects with respect to a hete
 \examples{
 \dontrun{
 requires(mapview)
-targetPosPics  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
+makeTP  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
                            locationName = "filzmoosTree",
                            missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
                            demFn = "~/uav/grossfilz/grosserfilz.tif",
@@ -72,7 +73,7 @@ targetPosPics  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
                            followSurfaceRes=5,
                            launchPos = c(8.772055,50.814689))
 # view result
-mapview(targetPosPics$wp,zcol = "altitude",lwd=1,cex=5)+
+mapview(makeTP$wp,zcol = "altitude",lwd=1,cex=5)+
 mapview(t3$lp,color="red",cex=5)
 }
 

@@ -34,7 +34,7 @@ if (!isGeneric('makeTP')) {
 #' @examples
 #'\dontrun{
 #' requires(mapview)
-#' targetPosPics  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
+#' makeTP  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
 #'                            locationName = "filzmoosTree",
 #'                            missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
 #'                            demFn = "~/uav/grossfilz/grosserfilz.tif",
@@ -43,7 +43,7 @@ if (!isGeneric('makeTP')) {
 #'                            followSurfaceRes=5,
 #'                            launchPos = c(8.772055,50.814689))
 #' # view result
-#' mapview(targetPosPics$wp,zcol = "altitude",lwd=1,cex=5)+
+#' mapview(makeTP$wp,zcol = "altitude",lwd=1,cex=5)+
 #' mapview(t3$lp,color="red",cex=5)
 #' }
 #' 
@@ -67,40 +67,70 @@ makeTP <-  function(projectDir="~",
                     maxFL=10,               
                     windCondition=1,
                     launchAltitude=-9999,
-                    uavType="solo") {
+                    uavType="solo",
+                    cameraType = "MAPIR2",
+                    copy = FALSE) {
   # due to RMD Check Note
   task <- NULL
   demFn  <-  path.expand(demFn)
-  # assign flight mission name 
-  mission <- paste(locationName, sep=.Platform$file.sep)
   
-  workingDir <- locationName
+  workingDir <- format(Sys.time(), "%Y_%m_%d") 
+  taskName <-paste(paste0(locationName, "_",
+                          flightAltitude,"m_",
+                          uavType,"_", 
+                          cameraType,"_", 
+                          tools::file_path_sans_ext(basename(missionTrackList)),"_", 
+                          format(Sys.time(), "%Y_%m_%d_%H-%M")),
+                   sep = .Platform$file.sep)
+  
+  
+  
   # create directories if needed
-  if(!file.exists(file.path(projectDir, workingDir))){dir.create(file.path(projectDir, workingDir),recursive = TRUE)}
-  if(!file.exists(file.path(projectDir, workingDir,"tmp"))){  dir.create(file.path(projectDir, workingDir,"/tmp"),recursive = TRUE)}
-  if(!file.exists(file.path(projectDir, workingDir,"run"))){  dir.create(file.path(projectDir, workingDir,"/run"),recursive = TRUE)}
-  if(!file.exists(file.path(projectDir, workingDir,"control"))) { dir.create(file.path(projectDir, workingDir,"control"),recursive = TRUE)}
-  if(!file.exists(file.path(projectDir,"data"))){dir.create(file.path(projectDir,"data"),recursive = TRUE)}
+  if (!file.exists(file.path(projectDir, locationName, workingDir))) {
+    dir.create(file.path(projectDir, locationName, workingDir), recursive = TRUE)
+  }
+  if (!file.exists(file.path(projectDir, locationName, workingDir, "run"))) {
+    dir.create(file.path(projectDir, locationName,workingDir, "/run"), recursive = TRUE)
+  }
+  if (!file.exists(file.path(projectDir, locationName,workingDir, "control"))) {
+    dir.create(file.path(projectDir, locationName,workingDir, "control"), recursive = TRUE)
+  }
+  if (!file.exists(file.path(projectDir, locationName,workingDir, "log"))) {
+    dir.create(file.path(projectDir, locationName,workingDir, "log"), recursive = TRUE)
+  }
+  if (!file.exists(file.path(projectDir,locationName, "data"))) {
+    dir.create(file.path(projectDir,locationName, "data"), recursive = TRUE)
+  }
+  # if (!is.null(missionTrackList)) {
+  #   file.copy(missionTrackList, paste0(file.path(projectDir,locationName, "data")))
+  #   missionTrackList <- paste0(file.path(projectDir,locationName, "data"), "/", basename(missionTrackList))
+  # }
+  
+  if (!is.null(demFn) & copy ) {
+    file.copy(demFn, paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn)))
+    demFn <- paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn))
+    
+  }
   # setting R environ temp folder to the current working directory
-  Sys.setenv(TMPDIR=file.path(projectDir, workingDir,"run"))
+  Sys.setenv(TMPDIR = file.path(projectDir, locationName, workingDir, "run"))
   
   # set R working directory
-  setwd(file.path(projectDir, workingDir,"run"))
+  setwd(file.path(projectDir,locationName, workingDir, "run"))
+  
   
   Sys.chmod(list.dirs("../.."), "777")
   
   # create log file
-  logger  <-  log4r::create.logger(logfile = paste0(file.path(projectDir, workingDir,"control/"),strsplit(basename(mission), "\\.")[[1]][1],'.log'))
-  log4r::level(logger)  <-  "INFO"
-  log4r::levellog(logger, 'INFO',"                                                           ")
-  log4r::levellog(logger, 'INFO',"                                                           ")
-  log4r::levellog(logger, 'INFO',"--------------------- START RUN ---------------------------")
-  log4r::levellog(logger, 'INFO',paste("Working folder: ",file.path(projectDir, workingDir)))
-  
+  # create log file
+  logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
+  log4r::level(logger) <- "INFO"
+  log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
+  log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, workingDir)))
   
   
   # create misson filename
-  csvFn <-  paste(file.path(projectDir, workingDir,"control"), paste0(mission,".csv"), sep=.Platform$file.sep)
+  # generate misson control filename
+  csvFn <-paste(file.path(projectDir, locationName, workingDir, "control"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
   
   # import flight area if provided by an external vector file
   #file.copy(overwrite = TRUE, from = missionTrackList, to = file.path(projectDir,"data"))
@@ -140,4 +170,32 @@ makeTP <-  function(projectDir="~",
   p$task <-  fp_getPresetTask("treetop")
   
   fullTreeList <- makeFlightPathT3(flightList,p,uavType,task,demFn,logger,projectDir,locationName,circleRadius,flightArea)
+  
+  # write log file status and params
+  log4r::levellog(logger, 'INFO', paste("taskName     : ", taskName))
+  log4r::levellog(logger, 'INFO', paste("DEM filename    : ", demFn))
+  log4r::levellog(logger, 'INFO', paste("launchAltitude  : ", launchAltitude))
+  log4r::levellog(logger, 'INFO', paste("followSurface   : ", followSurfaceRes))
+  log4r::levellog(logger, 'INFO', paste("altfilter       : ", altFilter))
+  log4r::levellog(logger, 'INFO', paste("flightAltitude  : ", flightAltitude))
+  log4r::levellog(logger, 'INFO', paste("flightAltitude  : ", aboveTreeAlt))  
+  log4r::levellog(logger, 'INFO', paste("flightAltitude  : ", circleRadius))
+  log4r::levellog(logger, 'INFO', paste("flightAltitude  : ", takeOffAlt))    
+  log4r::levellog(logger, 'INFO', paste("presetFlightTask: ", presetFlightTask))
+  
+  if (uavType == "djiP3"){
+    log4r::levellog(logger, 'INFO', paste("curvesize       : ", p$curvesize))
+    log4r::levellog(logger, 'INFO', paste("rotationdir     : ", p$rotationdir))
+    log4r::levellog(logger, 'INFO', paste("gimbalmode      : ", p$gimbalmode))
+    log4r::levellog(logger, 'INFO',paste("gimbalpitchangle: ", p$gimbalpitchangle))
+  }
+  
+  log4r::levellog(logger,'INFO',paste("max flight speed   : ",round(maxSpeed, digits = 1),"  (km/h)      "))
+
+
+  note <- " Fly save and have Fun..." 
+  dumpFile(paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
+  cat("\n NOTE: You will find all parameters in the logfile:",paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ",
+      "\n Fly save and have Fun...")
+  
 }
