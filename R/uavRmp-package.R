@@ -14,7 +14,6 @@
 #'
 #' @import stringr 
 #' @import zoo
-#' @import foreach
 #' @import sp
 #' @import raster
 #' @import htmlwidgets
@@ -25,12 +24,11 @@
 #' @import tools
 #' @import maptools
 #' @import mapview
-#' @import parallel
-#' @import velox
 #' @import log4r
 #' @import devtools
 #' @import roxygen2
-#' @import sf methods
+#' @import sf 
+#' @import methods
 #' @import devtools
 #' @importFrom geosphere bearing
 #' @importFrom geosphere distGeo
@@ -42,7 +40,7 @@
 #' @importFrom spatial.tools create_blank_raster 
 #' @import log4r
 #' @import caret
-#'
+#' @useDynLib uavRmp
 #' @keywords package
 #' 
 NULL

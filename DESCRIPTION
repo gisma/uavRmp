@@ -11,12 +11,14 @@ Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", 
 Encoding: UTF-8
 Maintainer: Chris Reudenbach <reudenbach@uni-marburg.de>
 Description: The Unmanned Aerial Vehicle R based Mission Planner is designed to simplify the planning of surface following flight missions.
+URL: https://github.com/gisma/uavRmp
+BugReports: https://https://github.com/gisma/uavRmp/issues
+LazyData: TRUE
 License: GPL (>= 3) | file LICENSE
 Depends:
     R (>= 3.1.0)
 Imports:
     stringr,
-    foreach,
         sp,
     raster,
     htmlwidgets,
@@ -38,7 +40,6 @@ Imports:
     devtools,
     sf,
     roxygen2,
-    velox,
     link2GI,
     methods
 LinkingTo: Rcpp
