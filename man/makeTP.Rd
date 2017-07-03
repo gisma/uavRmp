@@ -8,9 +8,9 @@ makeTP(projectDir = "~", locationName = "autoflightcontrol",
   missionTrackList = NULL, launchPos = NULL, demFn = NULL,
   flightAltitude = 75, climbDist = 7.5, aboveTreeAlt = 15,
   circleRadius = 5, takeOffAlt = 50, presetFlightTask = "remote",
-  maxSpeed = 25, followSurfaceRes = 5, altFilter = 1, maxFL = 10,
-  windCondition = 1, launchAltitude = -9999, uavType = "solo",
-  cameraType = "MAPIR2", copy = FALSE)
+  maxSpeed = 25, followSurfaceRes = 5, altFilter = 1, windCondition = 1,
+  launchAltitude = -9999, uavType = "solo", cameraType = "MAPIR2",
+  copy = FALSE)
 }
 \arguments{
 \item{projectDir}{path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999}
@@ -50,13 +50,13 @@ For \code{flightPlanMode = "waypoint"} camera actions are DISABLED during curve 
 
 \item{altFilter}{allowed altitude differences in meter}
 
-\item{maxFL}{maxFL}
-
 \item{windCondition}{1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h}
 
 \item{launchAltitude}{altitude of launch position. If set to -9999 a DEM is required for extracting the MSL. Default is -9999}
 
 \item{uavType}{type of uav. currently "djip3" and "solo" are supported}
+
+\item{copy}{copy used file to data folder default is FALSE}
 }
 \description{
 makeTP generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures.

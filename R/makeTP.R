@@ -30,7 +30,7 @@ if (!isGeneric('makeTP')) {
 #' @param altFilter allowed altitude differences in meter
 #' @param launchAltitude altitude of launch position. If set to -9999 a DEM is required for extracting the MSL. Default is -9999
 #' @param followSurfaceRes followSurfaceRes
-#' @param maxFL maxFL
+#' @param copy copy used file to data folder default is FALSE
 #' @examples
 #'\dontrun{
 #' requires(mapview)
@@ -64,7 +64,6 @@ makeTP <-  function(projectDir="~",
                     maxSpeed=25.0,
                     followSurfaceRes=5,
                     altFilter=1.0,
-                    maxFL=10,               
                     windCondition=1,
                     launchAltitude=-9999,
                     uavType="solo",
@@ -156,7 +155,6 @@ makeTP <-  function(projectDir="~",
   p$presetFlightTask <- presetFlightTask
   p$maxSpeed <- maxSpeed
   p$followSurfaceRes <- followSurfaceRes
-  p$maxFL=maxFL
   p$windCondition <- windCondition
   p$uavType <- uavType
   p$curvesize <- 0
