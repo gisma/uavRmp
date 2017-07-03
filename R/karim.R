@@ -54,14 +54,16 @@ if (!isGeneric('xyz2tif')) {
 #' 
 #' @examples 
 #'\dontrun{
-#' # get some typical data as provided by the authority
+#' # get some typical data as provided by the public authority of Bavaria
+#' setwd(tempdir())
 #' url<-"http://www.ldbv.bayern.de/file/zip/10430/DGM_1_ascii.zip"
 #' res <- curl::curl_download(url, "testdata.zip")
-#' unzip(res,files = grep(".tif", unzip(res,list = TRUE)$Name,value = TRUE),junkpaths = TRUE,overwrite = TRUE)
+#' unzip("testdata.zip",junkpaths = TRUE,overwrite = TRUE)
 #' # convert it 
-#' xyz2tif(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))
-#' 
-#' plot(raster(paste0(getwd(),"/",tools::file_path_sans_ext(basename(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))),".tif")))
+#' xyz2tif("DGM_1.g01dgm","25832")
+#' # plot it
+#' r<-raster::raster("DGM_1.tif")
+#' raster::plot(r)
 #'} 
 #' @export xyz2tif
 #' 
@@ -147,10 +149,10 @@ comp_ll_proj4 <- function(x) {
 #' @export
 #' 
 sp_line <- function(p1,
-                      p2,
-                      ID,
-                      proj4="+proj=longlat +datum=WGS84 +no_defs",
-                      export=FALSE) {   
+                    p2,
+                    ID,
+                    proj4="+proj=longlat +datum=WGS84 +no_defs",
+                    export=FALSE) {   
   line <- SpatialLines(list(Lines(Line(cbind(p1,p2)), ID = ID)))
   sp::proj4string(line) <- CRS(proj4)
   if (export) {
@@ -169,10 +171,10 @@ sp_line <- function(p1,
 #' @export
 #' 
 sp_point <- function(lon,
-                       lat,
-                       ID="point",
-                       proj4="+proj=longlat +datum=WGS84 +no_defs",
-                       export=FALSE) {
+                     lat,
+                     ID="point",
+                     proj4="+proj=longlat +datum=WGS84 +no_defs",
+                     export=FALSE) {
   point = cbind(lon,lat)
   point = sp::SpatialPoints(point)
   point = SpatialPointsDataFrame(point, as.data.frame(ID))
@@ -225,7 +227,7 @@ poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
   # read vector input data the sf way
   sf_dcs <- sf::st_read(paste0(path_run,lN,".shp"),quiet = TRUE)
   dcs <- as(sf_dcs, "Spatial")
-
+  
   # retrieve unique NAME 
   ids <- unique(dcs@data$NAME)
   
@@ -253,9 +255,9 @@ poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
     # assign vars
     #maskx <- velox::velox(mask)
     #chmx <- velox::velox(dem)
-     
+    
     rn <- as.character(x)
-
+    
     # create temp folder and assign it to raster
     dir.create(paste0(path_tmp,rn),recursive=TRUE)
     raster::rasterOptions(tmpdir=paste0(path_tmp,rn)) 
@@ -285,7 +287,7 @@ poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
     
     # write it to a df
     df <- data.frame(x = max_pos[1], y = max_pos[2], id = rn)
-   
+    
     # get rid of temp raster files
     system(paste0("rm -rf ",paste0(path_tmp,rn)))
     
@@ -315,13 +317,13 @@ poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
 #' @export
 grass2shape <- function(runDir = NULL, layer = NULL){
   
-    rgrass7::execGRASS("v.out.ogr",
-                       flags  = c("overwrite","quiet"),
-                       input  = layer,
-                       type   = "line",
-                       output = paste0(layer,".shp")
-    )
-
+  rgrass7::execGRASS("v.out.ogr",
+                     flags  = c("overwrite","quiet"),
+                     input  = layer,
+                     type   = "line",
+                     output = paste0(layer,".shp")
+  )
+  
 }
 
 #' Build package manually
@@ -355,7 +357,7 @@ grass2shape <- function(runDir = NULL, layer = NULL){
 #' @export umr_build
 #' @name umr_build
 umr_build <- function(dsn = getwd(), pkgDir="H:/Dokumente",document = TRUE, ...) {
-
+  
   ## reset 'dsn' to 'H:/...'  
   if (length(grep("students_smb", dsn)) > 0) {
     lst_dsn <- strsplit(dsn, "/")
@@ -433,32 +435,31 @@ fun_multiply <- function(x)
   
   return(result)
 }
-	fun_whichmax <- function(mask,value) { 
-raster::xyFromCell(value,which.max(mask * value))
+fun_whichmax <- function(mask,value) { 
+  raster::xyFromCell(value,which.max(mask * value))
 }
 
-	### getPopupStyle creates popup style =================================================
-	getPopupStyle <- function() {
-	  # htmlTemplate <- paste(
-	  #   "<html>",
-	  #   "<head>",
-	  #   "<style>",
-	  #   "#popup",
-	  #   "{font-family: Arial, Helvetica, sans-serif;width: 20%;border-collapse: collapse;}",
-	  #   "#popup td {font-size: 1em;border: 0px solid #85ADFF;padding: 3px 20px 3px 3px;}",
-	  #   "#popup tr.alt td {color: #000000;background-color: #F0F5FF;}",
-	  #   "#popup tr.coord td {color: #000000;background-color: #A8E6A8;}",
-	  #   "div.scrollableContainer {max-height: 200px;max-width: 100%;overflow-y: auto;overflow-x: auto;margin: 0px;background: #D1E0FF;}",
-	  #   "</style>",
-	  #   "</head>",
-	  #   "<body>",
-	  #   "<div class='scrollableContainer'>",
-	  #   "<table class='popup scrollable'>",
-	  #   "<table id='popup'>")
-	  # return(htmlTemplate)
-	  fl <- system.file("templates/popup.brew", package = "mapview")
-	  pop <- readLines(fl)
-	  end <- grep("<%=pop%>", pop)
-	  return(paste(pop[1:(end-2)], collapse = ""))
-	}
-	
+### getPopupStyle creates popup style =================================================
+getPopupStyle <- function() {
+  # htmlTemplate <- paste(
+  #   "<html>",
+  #   "<head>",
+  #   "<style>",
+  #   "#popup",
+  #   "{font-family: Arial, Helvetica, sans-serif;width: 20%;border-collapse: collapse;}",
+  #   "#popup td {font-size: 1em;border: 0px solid #85ADFF;padding: 3px 20px 3px 3px;}",
+  #   "#popup tr.alt td {color: #000000;background-color: #F0F5FF;}",
+  #   "#popup tr.coord td {color: #000000;background-color: #A8E6A8;}",
+  #   "div.scrollableContainer {max-height: 200px;max-width: 100%;overflow-y: auto;overflow-x: auto;margin: 0px;background: #D1E0FF;}",
+  #   "</style>",
+  #   "</head>",
+  #   "<body>",
+  #   "<div class='scrollableContainer'>",
+  #   "<table class='popup scrollable'>",
+  #   "<table id='popup'>")
+  # return(htmlTemplate)
+  fl <- system.file("templates/popup.brew", package = "mapview")
+  pop <- readLines(fl)
+  end <- grep("<%=pop%>", pop)
+  return(paste(pop[1:(end-2)], collapse = ""))
+}

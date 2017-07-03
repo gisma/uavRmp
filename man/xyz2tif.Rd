@@ -16,13 +16,15 @@ Read xyz data and generate a raster  \code{Raster*} object.
 }
 \examples{
 \dontrun{
-# get some typical data as provided by the authority
+# get some typical data as provided by the public authority of Bavaria
+setwd(tempdir())
 url<-"http://www.ldbv.bayern.de/file/zip/10430/DGM_1_ascii.zip"
 res <- curl::curl_download(url, "testdata.zip")
-unzip(res,files = grep(".tif", unzip(res,list = TRUE)$Name,value = TRUE),junkpaths = TRUE,overwrite = TRUE)
+unzip("testdata.zip",junkpaths = TRUE,overwrite = TRUE)
 # convert it 
-xyz2tif(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))
-
-plot(raster(paste0(getwd(),"/",tools::file_path_sans_ext(basename(file.path(getwd(),basename(grep(".g01dgm", unzip(res,list = TRUE)$Name,value = TRUE))))),".tif")))
+xyz2tif("DGM_1.g01dgm","25832")
+# plot it
+r<-raster::raster("DGM_1.tif")
+raster::plot(r)
 } 
 }
