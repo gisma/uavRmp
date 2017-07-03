@@ -3,7 +3,7 @@ vecDraw(mapCenter = c(51.1322252,8.976860),
         preset = "uav", overlay =  "~/uav/gentree/Traddelkopf/data/Traddelkopf_2017_02_paralell.json")
 
 # typical flight plan
-depa09_60_1 <- uavRmd::makeFP(projectDir="~/uav/gentree/",
+depa09_60_1 <- uavRmd::makeMP(projectDir="~/uav/gentree/",
                               locationName = "DEPA01",
                               surveyArea="~/uav/gentree/Traddelkopf/data/Traddelkopf_2017_core2.json",
                               followSurface = TRUE,
@@ -64,7 +64,7 @@ t3<-picAtPos(projectDir ="/home/creu/uav/test/",
            followSurfaceRes=20,flightAltitude = 50,aboveTreeAlt = 20,
            launchPos = c(8.73427,50.79488))
 
-fp <- makeFP(projectDir ="/home/creu/uav/uniwald",
+fp <- makeMP(projectDir ="/home/creu/uav/uniwald",
            locationName = "habi_stein",
            surveyArea = "/home/creu/uav/uniwald/data/habitat_steinbruch.json",
            followSurface = TRUE,
@@ -76,7 +76,7 @@ fp <- makeFP(projectDir ="/home/creu/uav/uniwald",
            uavType = "solo"
 )
 
-fp <- makeFP(projectDir ="/home/creu/uav/uniwald",
+fp <- makeMP(projectDir ="/home/creu/uav/uniwald",
              locationName = "steinbruch",
              surveyArea = "/home/creu/uav/uniwald/test/data/test.json",
              followSurface = TRUE,

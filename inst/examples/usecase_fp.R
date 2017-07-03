@@ -1,4 +1,4 @@
-traddelkopf60 <- uavRmd::makeFP(projectDir="~/proj/uav/gentree/Traddelkopf/",
+traddelkopf60 <- uavRmd::makeMP(projectDir="~/proj/uav/gentree/Traddelkopf/",
                                 missionName = "65msolo",
                                 surveyArea="~/proj/uav/gentree/Traddelkopf/data/task_areas/Traddelkopf_2017_02_paralell.json",
                                 followSurface = TRUE,
@@ -26,7 +26,7 @@ fA <- edit_map(mapview(traddelkopf60$demA)@map)
 
 
 
-fp<-makeFP(projectDir="~/uav/hasenkopf",
+fp<-makeMP(projectDir="~/uav/hasenkopf",
            missionName = "hase50",
            surveyArea = "hase50.json", 
            followSurface = TRUE, 
@@ -37,7 +37,7 @@ fp<-makeFP(projectDir="~/uav/hasenkopf",
            maxSpeed = 30,
            windCondition = 2)
 
-fp<-makeFP(projectDir="~/uav/npbw",
+fp<-makeMP(projectDir="~/uav/npbw",
            missionName = "npbw100m_nord",
            surveyArea="bw100_nord.json", 
            followSurface = TRUE, 
@@ -47,7 +47,7 @@ fp<-makeFP(projectDir="~/uav/npbw",
            maxSpeed = 40,
            windCondition = 3)
 
-fp<-makeFP(projectDir ="/home/creu/uav/",
+fp<-makeMP(projectDir ="/home/creu/uav/",
            missionName = "grossfilz100m_nord",
            surveyArea="grossfilz100_nord.json", 
            followSurface = TRUE, 
@@ -58,7 +58,7 @@ fp<-makeFP(projectDir ="/home/creu/uav/",
            maxSpeed = 40,
            windCondition = 3)
 
-fpdata<-makeFP(projectDir ="/home/creu/uav/",
+fpdata<-makeMP(projectDir ="/home/creu/uav/",
                missionName = "grossfilz100m_sued",
                surveyArea="/home/creu/uav/grossfilz/grossfilz100m_sued3.json", 
                followSurface = TRUE, 
@@ -71,7 +71,7 @@ fpdata<-makeFP(projectDir ="/home/creu/uav/",
 
 
 
-fp<-makeFP(projectDir ="/home/creu/uav/kellerwald",
+fp<-makeMP(projectDir ="/home/creu/uav/kellerwald",
            missionName = "hagenstein100",
            surveyArea="~/proj/uav_basics/hagenstein.json",
            followSurface = TRUE,
@@ -81,7 +81,7 @@ fp<-makeFP(projectDir ="/home/creu/uav/kellerwald",
            uavType = "djip3"
 )
 
-fp<-makeFP(projectDir ="/home/creu/uav/kellerwald",
+fp<-makeMP(projectDir ="/home/creu/uav/kellerwald",
            missionName = "hagenstein100",
            surveyArea="~/uav/hagenstein.json",
            followSurface = TRUE,
@@ -98,7 +98,7 @@ fp<-t3p(projectDir ="/home/creu/uav/bayerwald",
         uavType = "solo",
         followSurfaceRes=5)
 
-fp<-makeFP(projectDir ="/home/creu/uav/kellerwald",
+fp<-makeMP(projectDir ="/home/creu/uav/kellerwald",
            missionName = "hagenstein100",
            surveyArea="~/uav/hagenstein.json",
            followSurface = TRUE,
@@ -109,7 +109,7 @@ fp<-makeFP(projectDir ="/home/creu/uav/kellerwald",
            altFilter = 3
 )
 
-fp<-makeFP(projectDir ="~/uav/cookbook",
+fp<-makeMP(projectDir ="~/uav/cookbook",
            missionName = "firstSurvey",
            surveyArea="~/proj/drone/uniwald/myFirstSurvey.json",
            followSurface = TRUE,
@@ -122,7 +122,7 @@ fp<-makeFP(projectDir ="~/uav/cookbook",
 
 data(mrbiko)
 writeRaster(mrbiko,"~/dem.tif")
-fp<-makeFP(projectDir ="~/uav/cookbook",
+fp<-makeMP(projectDir ="~/uav/cookbook",
            missionName = "firstSurvey",
            surveyArea="~/proj/drone/uniwald/myFirstSurvey.json",
            flightAltitude = 100,
@@ -138,7 +138,7 @@ t3p<-t3p(projectDir ="/home/creu/uav/bayerwald",
          followSurfaceRes=5,
          launchPos = c(13.409114897133804,48.92039612988935))
 
-fp<-makeFP(projectDir ="/home/creu/uav/kellerwald",
+fp<-makeMP(projectDir ="/home/creu/uav/kellerwald",
            missionName = "traddelkopf30",
            surveyArea="~/uav/traddelkopf/Traddelkopf2016_09_19_30.json",
            followSurface = TRUE,
@@ -150,7 +150,7 @@ fp<-makeFP(projectDir ="/home/creu/uav/kellerwald",
 
 
 
-fp<-makeFP(projectDir ="/home/creu/uav/uniwald",
+fp<-makeMP(projectDir ="/home/creu/uav/uniwald",
            missionName = "uniwald_75_watershed1",
            surveyArea="~/tmp/uniwald.json",
            followSurface = TRUE,
@@ -162,7 +162,7 @@ fp<-makeFP(projectDir ="/home/creu/uav/uniwald",
            
 )
 
-hagenstein75_full<-makeFP(projectDir ="/home/creu/uav/gentree/hagenstein",
+hagenstein75_full<-makeMP(projectDir ="/home/creu/uav/gentree/hagenstein",
                           missionName = "hagenstein75_full",
                           surveyArea="~/uav/gentree/hagenstein/hagesteinall.json",
                           followSurface = TRUE,
@@ -181,7 +181,7 @@ hagenstein75_full<-makeFP(projectDir ="/home/creu/uav/gentree/hagenstein",
 )
 
 
-hagenstein50_full<-makeFP(projectDir ="/home/creu/uav/gentree/hagenstein",
+hagenstein50_full<-makeMP(projectDir ="/home/creu/uav/gentree/hagenstein",
                           missionName = "hagenstein50_full",
                           surveyArea=c(51.16435558686152,8.909043073654177,51.15986111067753,8.91019105911255,51.159491036988726,8.907798528671266,51.15936992131852,8.906350135803224),
                           followSurface = TRUE,

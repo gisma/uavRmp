@@ -1,9 +1,9 @@
-if (!isGeneric('picsAtCoords')) {
-  setGeneric('picsAtCoords', function(x, ...)
-    standardGeneric('picsAtCoords'))
+if (!isGeneric('makeTP')) {
+  setGeneric('makeTP', function(x, ...)
+    standardGeneric('makeTP'))
 }
 #' calculates a obstacle free flight path for a defined list of target positions
-#' @description  picsAtCoords generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. 
+#' @description  makeTP generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. 
 #' @param projectDir path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999
 #' @param demFn  filename of the used DSM data file
 #' @param locationName base name string of the mission
@@ -34,7 +34,7 @@ if (!isGeneric('picsAtCoords')) {
 #' @examples
 #'\dontrun{
 #' requires(mapview)
-#' targetPosPics  <-  picsAtCoords(projectDir ="/home/creu/uav/bayerwald",
+#' targetPosPics  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
 #'                            locationName = "filzmoosTree",
 #'                            missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
 #'                            demFn = "~/uav/grossfilz/grosserfilz.tif",
@@ -47,27 +47,27 @@ if (!isGeneric('picsAtCoords')) {
 #' mapview(t3$lp,color="red",cex=5)
 #' }
 #' 
-#' @export picsAtCoords 
+#' @export makeTP 
 #'               
 
-picsAtCoords <-  function(projectDir="~",
-                     locationName="autoflightcontrol",
-                     missionTrackList=NULL,
-                     launchPos=NULL,
-                     demFn=NULL,
-                     flightAltitude=75,
-                     climbDist=7.5,
-                     aboveTreeAlt=15,
-                     circleRadius = 5.0,
-                     takeOffAlt = 50.0,
-                     presetFlightTask="remote",
-                     maxSpeed=25.0,
-                     followSurfaceRes=5,
-                     altFilter=1.0,
-                     maxFL=10,               
-                     windCondition=1,
-                     launchAltitude=-9999,
-                     uavType="solo") {
+makeTP <-  function(projectDir="~",
+                    locationName="autoflightcontrol",
+                    missionTrackList=NULL,
+                    launchPos=NULL,
+                    demFn=NULL,
+                    flightAltitude=75,
+                    climbDist=7.5,
+                    aboveTreeAlt=15,
+                    circleRadius = 5.0,
+                    takeOffAlt = 50.0,
+                    presetFlightTask="remote",
+                    maxSpeed=25.0,
+                    followSurfaceRes=5,
+                    altFilter=1.0,
+                    maxFL=10,               
+                    windCondition=1,
+                    launchAltitude=-9999,
+                    uavType="solo") {
   # due to RMD Check Note
   task <- NULL
   demFn  <-  path.expand(demFn)
