@@ -1,5 +1,5 @@
 # planning two different target tasks
-hagen_c1 <- picsAtPos(projectDir ="~/proj/uav/gentree/Hagenstein",
+hagen_c1 <- picsAtCoords(projectDir ="~/proj/uav/gentree/Hagenstein",
                       locationName = "hagen_c1",
                       missionTrackList="~/proj/uav/gentree/Hagenstein/data/Hagenstein_NEU_sorted_North.csv",
                       demFn = "~/proj/uav/gentree/Traddelkopf/data/basic/DGM1_kellerwald.tif",
@@ -13,7 +13,7 @@ hagen_c1 <- picsAtPos(projectDir ="~/proj/uav/gentree/Hagenstein",
 soloLog(logDir = "/home/creu/temp3",
         downloadOnly = TRUE,logFiles = "solo.tlog")
 
-traddel_c1 <- picsAtPos(projectDir ="~/proj/uav/gentree/Traddelkopf",
+traddel_c1 <- picsAtCoords(projectDir ="~/proj/uav/gentree/Traddelkopf",
                         locationName = "traddel_c1",
                         missionTrackList="~/proj/uav/gentree/Traddelkopf/data/Traddelkopf_NEU_sorted_core_1.csv",
                         demFn = "~/proj/uav/gentree/Traddelkopf/data/basic/DGM1_kellerwald.tif",

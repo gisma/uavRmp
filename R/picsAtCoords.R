@@ -1,9 +1,9 @@
-if (!isGeneric('picsAtPos')) {
-  setGeneric('picsAtPos', function(x, ...)
-    standardGeneric('picsAtPos'))
+if (!isGeneric('picsAtCoords')) {
+  setGeneric('picsAtCoords', function(x, ...)
+    standardGeneric('picsAtCoords'))
 }
 #' calculates a obstacle free flight path for a defined list of target positions
-#' @description  picsAtPos generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. 
+#' @description  picsAtCoords generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. 
 #' @param projectDir path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999
 #' @param demFn  filename of the used DSM data file
 #' @param locationName base name string of the mission
@@ -34,7 +34,7 @@ if (!isGeneric('picsAtPos')) {
 #' @examples
 #'\dontrun{
 #' requires(mapview)
-#' targetPosPics  <-  picsAtPos(projectDir ="/home/creu/uav/bayerwald",
+#' targetPosPics  <-  picsAtCoords(projectDir ="/home/creu/uav/bayerwald",
 #'                            locationName = "filzmoosTree",
 #'                            missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
 #'                            demFn = "~/uav/grossfilz/grosserfilz.tif",
@@ -47,10 +47,10 @@ if (!isGeneric('picsAtPos')) {
 #' mapview(t3$lp,color="red",cex=5)
 #' }
 #' 
-#' @export picsAtPos 
+#' @export picsAtCoords 
 #'               
 
-picsAtPos <-  function(projectDir="~",
+picsAtCoords <-  function(projectDir="~",
                      locationName="autoflightcontrol",
                      missionTrackList=NULL,
                      launchPos=NULL,
