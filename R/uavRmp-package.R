@@ -40,7 +40,6 @@
 #' @importFrom spatial.tools create_blank_raster 
 #' @import log4r
 #' @import caret
-#' @useDynLib uavRmp
 #' @keywords package
 #' 
 NULL
