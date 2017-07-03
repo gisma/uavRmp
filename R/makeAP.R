@@ -398,7 +398,6 @@ makeAP <- function(projectDir = "~",
   # create log file
   logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
   log4r::level(logger) <- "INFO"
-  log4r::levellog(logger, 'INFO', "                                                           ")
   log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
   log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, workingDir)))
   
