@@ -4,7 +4,7 @@
 \name{uavRmp}
 \alias{uavRmp}
 \alias{uavRmp-package}
-\title{Unmanned Aerial Vehicle R Based Mission Planner}
+\title{UAV R Based Mission Planner}
 \description{
 The package provides some mission planning functionality for dealing #' with Unmanned Aerial Vehicles
 }

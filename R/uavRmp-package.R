@@ -5,7 +5,7 @@
 #' correctly on your system. 
 #' @name uavRmp
 #' @docType package
-#' @title Unmanned Aerial Vehicle R Based Mission Planner
+#' @title UAV R Based Mission Planner
 #' @author Chris Reudenbach Lars Opgenoorth Sebastian Richter
 #' \cr
 #' \emph{Maintainer:} Chris Reudenbach \email{reudenbach@@uni-marburg.de}
