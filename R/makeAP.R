@@ -354,7 +354,8 @@ makeAP <- function(projectDir = "~",
                           uavType,"_", 
                           cameraType,"_", 
                           tools::file_path_sans_ext(basename(surveyArea)),"_", 
-                          format(Sys.time(), "%Y_%m_%d_%H-%M")),
+                          format(Sys.time(), "%Y_%m_%d_%H-%M"),
+                          "_area-flight"),
                    sep = .Platform$file.sep)
   
   
@@ -778,7 +779,7 @@ makeAP <- function(projectDir = "~",
     log4r::levellog(logger, 'INFO', paste("rotationdir     : ", p$rotationdir))
     log4r::levellog(logger, 'INFO', paste("gimbalmode      : ", p$gimbalmode))
     log4r::levellog(logger, 'INFO',paste("gimbalpitchangle: ", p$gimbalpitchangle))
-    }
+  }
   log4r::levellog(logger, 'INFO', paste("overlap         : ", overlap))
   log4r::levellog(logger, 'INFO', paste("uavViewDir      : ", uavViewDir))
   log4r::levellog(logger, 'INFO', paste("picFootprint    : ", picFootprint))

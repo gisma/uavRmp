@@ -80,7 +80,8 @@ makeTP <-  function(projectDir="~",
                           uavType,"_", 
                           cameraType,"_", 
                           tools::file_path_sans_ext(basename(missionTrackList)),"_", 
-                          format(Sys.time(), "%Y_%m_%d_%H-%M")),
+                          format(Sys.time(), "%Y_%m_%d_%H-%M"),
+                          "_track-flight"),
                    sep = .Platform$file.sep)
   
   
