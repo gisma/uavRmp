@@ -28,7 +28,6 @@
 #' @import parallel
 #' @import velox
 #' @import log4r
-#' @import rgrass7
 #' @import devtools
 #' @import roxygen2
 #' @import sf methods

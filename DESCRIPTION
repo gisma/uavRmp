@@ -35,7 +35,6 @@ Imports:
     zoo,
     data.table,
     spatial.tools,
-    rgrass7,
     devtools,
     sf,
     roxygen2,
