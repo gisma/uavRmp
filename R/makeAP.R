@@ -793,7 +793,7 @@ makeAP <- function(projectDir = "~",
   log4r::levellog(logger,'INFO',paste("RTH flight altitude: ", round(result[[6]], digits = 0), " (m)"))
   log4r::levellog(logger,'INFO',paste("max flight speed   : ",round(maxSpeed, digits = 1),"  (km/h)      "))
   log4r::levellog(logger,'INFO',paste("picture lapse rate : ", picIntervall, "  (sec/pic) "))
-
+  log4r::levellog(logger,'INFO',"--------------------- END RUN -----------------------------")
   
   # return params for visualisation and main results for overview
   if ((flightPlanMode == 'track' | flightPlanMode == 'terrainTrack') & rawTime > maxFlightTime)  {

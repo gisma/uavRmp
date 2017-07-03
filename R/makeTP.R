@@ -191,11 +191,11 @@ makeTP <-  function(projectDir="~",
   }
   
   log4r::levellog(logger,'INFO',paste("max flight speed   : ",round(maxSpeed, digits = 1),"  (km/h)      "))
-
+  log4r::levellog(logger,'INFO',"--------------------- END RUN -----------------------------")
 
   note <- " Fly save and have Fun..." 
   dumpFile(paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
-  cat("\n NOTE: You will find all parameters in the logfile:",paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ",
+  cat("\n NOTE: You will find all parameters in the logfile:\n",paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ",
       "\n Fly save and have Fun...")
   
 }
