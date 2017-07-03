@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeTP.R
 \name{makeTP}
 \alias{makeTP}
-\title{calculates a obstacle free flight path for a defined list of target positions}
+\title{Track Planning tool for generating a control file for autonomous picture retrieval with respect to an obstacle free flight path for a defined list of target positions}
 \usage{
 makeTP(projectDir = "~", locationName = "autoflightcontrol",
   missionTrackList = NULL, launchPos = NULL, demFn = NULL,

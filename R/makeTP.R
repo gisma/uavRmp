@@ -2,7 +2,7 @@ if (!isGeneric('makeTP')) {
   setGeneric('makeTP', function(x, ...)
     standardGeneric('makeTP'))
 }
-#' calculates a obstacle free flight path for a defined list of target positions
+#' Track Planning tool for generating a control file for autonomous picture retrieval with respect to an obstacle free flight path for a defined list of target positions
 #' @description  makeTP generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. 
 #' @param projectDir path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999
 #' @param demFn  filename of the used DSM data file
