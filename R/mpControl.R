@@ -1553,48 +1553,6 @@ makeUavPointMAV<- function(lat=0.000000,lon=0.000000,alt=100.0,head=0,wp=0,cf=3,
 #  # create the header
 #}
 
-# DEPRECEATED  optimizing the DSM for low altitude flights...
-DEM2FlSurface<- function(p,dem,logger){
-  
-  cat("\n optimizing the DSM for low altitude flights...\n")
-  
-  # resample dem to followTerrainRes to do so it  is easier to use a projection like UTM
-  tmpdem<-gdalwarp(srcfile = "demll.tif", dstfile = "tmpdem.tif",  overwrite=TRUE,  t_srs=paste0("+proj=utm +zone=",long2UTMzone(p$lon1)," +datum=WGS84"),output_Raster = TRUE ,tr=c(as.numeric(p$followSurfaceRes),as.numeric(p$followSurfaceRes)))
-  
-  # deproject it again to latlon
-  demll<-gdalwarp(srcfile = "tmpdem.tif", dstfile = "demll.tif", overwrite=TRUE,  t_srs="+proj=longlat +datum=WGS84 +no_defs",output_Raster = TRUE )
-  
-  
-  # export it to SAGA
-  gdalwarp("demll.tif","demll.sdat", overwrite=TRUE,  of='SAGA')
-  
-  # fill sinks (clearings) that are 0-30 meters deep
-  ret<-system2("saga_cmd", c("ta_preprocessor 2", "-DEM=demll.sgrd", "-SINKROUTE=NULL", "-DEM_PREPROC='flightdem.sdat'", "-METHOD=1", "-THRESHOLD=1", "-THRSHEIGHT=30.000000"),stdout=TRUE, stderr=TRUE)
-  if (grep("%okay",ret)){
-    cat("filling clearings performs okay\n")}
-  else {
-    stop("Crucial Error in filling flight surface")
-  }
-  
-  # filter the result
-  ret<-system2("saga_cmd", c("grid_filter 0","-INPUT='flightdem.sgrd'", "-RESULT='flightsurface.sdat'" ,"-METHOD=0", "-MODE=0" ,paste0("-RADIUS=",p$followSurfaceRes)),stdout=TRUE, stderr=TRUE)
-  if (grep("%okay",ret)){ 
-    cat("filtering flight surface performs okay\n")}
-  else {
-    stop("Crucial Error in filtering flight surface")}
-  # make a raster object
-  demll <- raster::raster(rgdal::readGDAL("flightsurface.sdat",OVERRIDE_PROJ_DATUM_WITH_TOWGS84 = TRUE))
-  demll<-setMinMax(demll)
-  dem<-setMinMax(dem)
-  
-  # take the maximum alt difference of boths DEMs as a correction value
-  altCor<-ceiling(maxValue(dem)-maxValue(demll))
-  demll=demll+altCor
-  writeRaster(demll,"flightDEM.tif", overwrite=TRUE)
-  levellog(logger, 'INFO', paste("altitude shift              : ",altCor,      "  (meter)")) 
-  return(demll)
-  
-}
 
 mavCmd <- function(id,wp=0,cf="3",cmd="82",p1="0.000000",p2="0.000000",p3="0.000000",p4="0.000000",lon="0.000000",lat="0.000000",alt="0.000000",autocont="1"){
   sep <- "\t"

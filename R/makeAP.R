@@ -1,13 +1,13 @@
-if (!isGeneric('makeMP')) {
-  setGeneric('makeMP', function(x, ...)
-    standardGeneric('makeMP'))
+if (!isGeneric('makeAP')) {
+  setGeneric('makeAP', function(x, ...)
+    standardGeneric('makeAP'))
 }
 #' Mission Planning tool for generating a set of control files for autonomous data retrieval with respect to DSM/DEM and orthophoto generation
 #' calculation.
 #'
 #' @description The basic idea is to provide an easy to use workflow for
 #'   controlling rtf UAVs from planning and flying autonomous surveys to
-#'   derivation and post classification of the data. makeMP (Make UAV Remote
+#'   derivation and post classification of the data. makeAP (Make UAV Remote
 #'   Controlled Survey) creates either intermediate flight control files for the
 #'   DJI phantom x UAVs or ready to upload control files for the 3DR Solo. The
 #'   dji control files are designed for using with the proprietary litchi flight
@@ -21,7 +21,7 @@ if (!isGeneric('makeMP')) {
 #'   the Phantom.\cr\cr PixHawk/3DR Solo:\cr The open uav community is focused
 #'   on the PixHawk autopilot unit and the Mission Planner software. It is well
 #'   documented and several APIs are provided. Nevertheless a terrain following
-#'   autonomous flight planning tool is not available. makeMP creates static
+#'   autonomous flight planning tool is not available. makeAP creates static
 #'   implementation of the MAV format that is ready to be uploaded directly on
 #'   the Pixhawk controller using the upload2Solo function.\cr\cr
 #' @section Warning: Take care! There are still a lot of construction zones
@@ -247,7 +247,7 @@ if (!isGeneric('makeMP')) {
 #' ##     assuming a flat topography,
 #' ##     generating a heatmap to estimate overlapping
 #'
-#' fp<-makeMP(surveyArea = c(50.80801,8.72993,50.80590,8.731153,50.80553,8.73472,50.8055,8.734),
+#' fp<-makeAP(surveyArea = c(50.80801,8.72993,50.80590,8.731153,50.80553,8.73472,50.8055,8.734),
 #'               demFn = "~/dem.tif",
 #'               heatMap = TRUE)
 #'
@@ -265,7 +265,7 @@ if (!isGeneric('makeMP')) {
 #' ##     U have to use a high resulution DSM
 #' ##     (here simulated with a standard DEM)
 #'
-#' fp<-makeMP(projectDir ="~/uav/test",
+#' fp<-makeAP(projectDir ="~/uav/test",
 #'            locationName = "DEPA01",
 #'            surveyArea=c(50.80801,8.72993,50.80590,8.731153,50.80553,8.73472,50.80709,8.734),
 #'            followSurface = TRUE,
@@ -287,7 +287,7 @@ if (!isGeneric('makeMP')) {
 #' ## assuming resulting file is named "uav.json"
 #' ## use it for planning
 #'
-#' fp<-makeMP(projectDir="~/uav/test",
+#' fp<-makeAP(projectDir="~/uav/test",
 #'                    locationName = "DEPA01",
 #'                    surveyArea="~/uav.json",
 #'                    followSurface = TRUE,
@@ -311,11 +311,11 @@ if (!isGeneric('makeMP')) {
 #'}
 
 
-#' @export makeMP
+#' @export makeAP
 #'
 
 
-makeMP <- function(projectDir = "~",
+makeAP <- function(projectDir = "~",
                    locationName = "dummylocation",
                    surveyArea = NULL,
                    flightAltitude = 100,
