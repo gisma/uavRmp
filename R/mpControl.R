@@ -300,8 +300,8 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       startRth <- startRth + 0.1 * startRth
       
       # get the max position of the flightlines
-      homemaxpos  <- line_extract_maxpos(dem,home)
-      startmaxpos <- line_extract_maxpos(dem,start)
+      homemaxpos  <- maxpos_on_line(dem,home)
+      startmaxpos <- maxpos_on_line(dem,start)
       
       # calculate heading 
       homeheading  <- geosphere::bearing(c(endLon,endLat),c(launchLon,launchLat), a = 6378137, f = 1/298.257223563)
@@ -472,8 +472,8 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     maxAltStartFlight <- raster::extract(dem,start,fun = max, na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
     
     # get the max position of the flightlines
-    homemaxpos  <- line_extract_maxpos(dem,home)
-    startmaxpos <- line_extract_maxpos(dem,start)
+    homemaxpos  <- maxpos_on_line(dem,home)
+    startmaxpos <- maxpos_on_line(dem,start)
     
     # log the positions
     levellog(logger, 'INFO', paste("maxaltPos    rth : ", paste0("mission file: ",i," ",homemaxpos[2]," ",homemaxpos[1])))
@@ -1011,8 +1011,8 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
     }
     
     # get the max position of the flightlines
-    homemaxpos  <- line_extract_maxpos(dem,home)
-    startmaxpos <- line_extract_maxpos(dem,start)
+    homemaxpos  <- maxpos_on_line(dem,home)
+    startmaxpos <- maxpos_on_line(dem,start)
     
     # calculate heading 
     homeheading  <- geosphere::bearing(c(endLon,endLat),c(launchLon,launchLat), a = 6378137, f = 1/298.257223563)
@@ -1624,7 +1624,7 @@ get_seg_fparams <- function(dem,
   
   
   # get the max position of the flightlines
-  seg_max_pos  <- line_extract_maxpos(dem,seg)
+  seg_max_pos  <- maxpos_on_line(dem,seg)
   
   
   # calculate heading 

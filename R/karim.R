@@ -192,7 +192,7 @@ sp_point <- function(lon,
 #' @param line  sp object
 #' @export
 #' 
-line_extract_maxpos <- function(dem,line){
+maxpos_on_line <- function(dem,line){
   mask <- dem
   raster::values(mask) <- NA
   #...update it with the altitude information of the flightline
@@ -204,127 +204,6 @@ line_extract_maxpos <- function(dem,line){
   return(maxPos)
 }
 
-#' extract for all polygons the position of the maximum value of the applied raster(s)
-#' @description
-#' extract for all polygons the position of the maximum value
-#' @param x path and name of a GDAL raster file  
-#' @param lN layer name of shape file
-#' @param poly_split split polygon in single file default is TRUE
-#' extract for all polygons the position of the maximum value
-#' @export
-#' 
-poly_extract_maxpos <- function(x,lN, poly_split=TRUE){
-  # due to RMD Check Note
-  path_tmp<-path_run<-as<-NULL
-  # read raster input data 
-  if (poly_split) {system(paste0("rm -rf ",paste0(path_tmp,"split")))}
-  dem <- raster::raster(x)
-  fn <- spatial.tools::create_blank_raster(reference_raster=dem,filename = paste0(path_tmp,lN,"raw"))
-  mask <- raster::raster(fn)
-  maskx <- velox::velox(mask)
-  # chmx <- velox::velox(dem)
-  
-  # read vector input data the sf way
-  sf_dcs <- sf::st_read(paste0(path_run,lN,".shp"),quiet = TRUE)
-  dcs <- as(sf_dcs, "Spatial")
-  
-  # retrieve unique NAME 
-  ids <- unique(dcs@data$NAME)
-  
-  if (poly_split) {
-    cat("split polygons...\n")
-    dir.create(paste0(path_tmp,"split"),recursive=TRUE)
-    
-    # split polygon with respect to the NAME attribute
-    parallel::mclapply(ids,function(x){
-      rn <- as.character(x)
-      gdalUtils::ogr2ogr(src_datasource_name = paste0(path_run,lN,".shp"),
-                         dst_datasource_name = paste0(path_tmp,"split/",lN,"_",rn,".shp"),
-                         where = paste0("NAME='",rn,"'")
-                         , nln = rn)
-    },
-    mc.cores = parallel::detectCores())
-  }
-  # parallel retrival of maxpos
-  
-  cat("max height coords search...\n")
-  cat("you anaylize",length(ids) ,"polygons\n")
-  cat("assuming 5 cm resolution and an average of 15 sqm per polygon\n the analysis will approx run until",format(Sys.time() + length(ids), " %X "),"\n")
-  ret_max_pos <-  parallel::mclapply(ids,function(x) {
-    
-    # assign vars
-    #maskx <- velox::velox(mask)
-    #chmx <- velox::velox(dem)
-    
-    rn <- as.character(x)
-    
-    # create temp folder and assign it to raster
-    dir.create(paste0(path_tmp,rn),recursive=TRUE)
-    raster::rasterOptions(tmpdir=paste0(path_tmp,rn)) 
-    
-    # read single polygon sf is even in this construct times faster
-    sf_shp <- sf::st_read(paste0(path_tmp,"split/",lN,"_",rn,".shp"),quiet = TRUE)
-    shp <- as(sf_shp, "Spatial")
-    
-    # reclass VALUE to 1
-    shp@data$VALUE <-1
-    
-    # crop raster acccording to the polygon
-    #maskx$crop(c(sp::bbox(shp)[1],sp::bbox(shp)[3],sp::bbox(shp)[2],sp::bbox(shp)[4]))
-    #chmx$crop(c(sp::bbox(shp)[1],sp::bbox(shp)[3],sp::bbox(shp)[2],sp::bbox(shp)[4]))
-    
-    # rastrize mask
-    maskx$rasterize(shp,field = "VALUE",band = 1)
-    
-    # re-convert to raster format
-    m1 <- maskx$as.RasterLayer(band=1)
-    #d1 <- chmx$as.RasterLayer(band=1)
-    # TODO which(mat == max(mat), arr.ind=TRUE)
-    # get maxpos of crown area
-    m1 <-raster::crop(m1,c(sp::bbox(shp)[1],sp::bbox(shp)[3],sp::bbox(shp)[2],sp::bbox(shp)[4]))
-    d1 <-raster::crop(m1,c(sp::bbox(shp)[1],sp::bbox(shp)[3],sp::bbox(shp)[2],sp::bbox(shp)[4]))
-    max_pos <- raster::xyFromCell(d1,which.max(m1 * dem))
-    
-    # write it to a df
-    df <- data.frame(x = max_pos[1], y = max_pos[2], id = rn)
-    
-    # get rid of temp raster files
-    system(paste0("rm -rf ",paste0(path_tmp,rn)))
-    
-    
-    return(df)},    mc.cores = parallel::detectCores()
-  )
-  
-  # create a spatial point data frame
-  max_pos <- as.data.frame(do.call("rbind", ret_max_pos))
-  sp::coordinates(max_pos) <- ~x+y
-  sp::proj4string(max_pos) <- as.character(dem@crs)
-  max_pos@data$id<- as.numeric(max_pos@data$id)
-  # create seeds file for rasterizing max_pos
-  # re-convert to raster format
-  fn <- spatial.tools::create_blank_raster(reference_raster=dem,filename = paste0(path_tmp,lN,"raw"))
-  mask <- raster::raster(fn)
-  seeds <- raster::rasterize(max_pos,mask,field="id")
-  seeds[seeds >= 0] <- 1
-  raster::writeRaster(seeds,paste0(path_run,"seeds.tif"))
-  return(list(seeds,max_pos))
-}
-
-#' converts GRASS vector to shape file
-#' @description converts GRASS vector to shape file
-#' @param runDir path of working directory
-#' @param layer name GRASS raster
-#' @export
-grass2shape <- function(runDir = NULL, layer = NULL){
-  
-  rgrass7::execGRASS("v.out.ogr",
-                     flags  = c("overwrite","quiet"),
-                     input  = layer,
-                     type   = "line",
-                     output = paste0(layer,".shp")
-  )
-  
-}
 
 #' Build package manually
 #' 
