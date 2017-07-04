@@ -30,10 +30,11 @@ if (!isGeneric('makeTP')) {
 #' @param altFilter allowed altitude differences in meter
 #' @param launchAltitude altitude of launch position. If set to -9999 a DEM is required for extracting the MSL. Default is -9999
 #' @param followSurfaceRes followSurfaceRes
+#' @param cameraType \code{character}, defaults to \code{"MAPIR2"}.
 #' @param copy copy used file to data folder default is FALSE
 #' @examples
 #'\dontrun{
-#' requires(mapview)
+#' require(mapview)
 #' makeTP  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
 #'                            locationName = "filzmoosTree",
 #'                            missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
