@@ -56,6 +56,8 @@ For \code{flightPlanMode = "waypoint"} camera actions are DISABLED during curve 
 
 \item{uavType}{type of uav. currently "djip3" and "solo" are supported}
 
+\item{cameraType}{\code{character}, defaults to \code{"MAPIR2"}.}
+
 \item{copy}{copy used file to data folder default is FALSE}
 }
 \description{
@@ -63,7 +65,7 @@ makeTP generates a flight track chaining up point objects with respect to a hete
 }
 \examples{
 \dontrun{
-requires(mapview)
+require(mapview)
 makeTP  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
                            locationName = "filzmoosTree",
                            missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",

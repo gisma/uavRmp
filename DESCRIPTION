@@ -12,7 +12,7 @@ Encoding: UTF-8
 Maintainer: Chris Reudenbach <reudenbach@uni-marburg.de>
 Description: The Unmanned Aerial Vehicle R based Mission Planner is designed to simplify the planning of surface following flight missions.
 URL: https://github.com/gisma/uavRmp
-BugReports: https://https://github.com/gisma/uavRmp/issues
+BugReports: https://github.com/gisma/uavRmp/issues
 LazyData: TRUE
 License: GPL (>= 3) | file LICENSE
 Depends:
@@ -42,6 +42,5 @@ Imports:
     roxygen2,
     link2GI,
     methods
-LinkingTo: Rcpp
 RoxygenNote: 6.0.1
 SystemRequirements: GNU make
