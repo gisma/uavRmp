@@ -2,47 +2,48 @@ if (!isGeneric('makeTP')) {
   setGeneric('makeTP', function(x, ...)
     standardGeneric('makeTP'))
 }
-#' Track Planning tool for generating a control file for autonomous picture retrieval with respect to an obstacle free flight path for a defined list of target positions
-#' @description  makeTP generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. 
-#' @param projectDir path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999
-#' @param demFn  filename of the used DSM data file
-#' @param locationName base name string of the mission
-#' @param presetFlightTask (DJI only experimental) strongly recommended to use "remote" \cr
-#'  Options are: \cr
+#' Flight Track Planning tool 
+#' @description  makeTP generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. It creates  a single control file for autonomous picture retrieval flights. 
+#' @param projectDir \code{character} path to the main folder where several projects can be hosted, default is \code{"~"}
+#' @param demFn  \code{character} filename of the used DSM data file, default is \code{NULL}
+#' @param locationName \code{character} base name string of the mission, default is \code{"treePos"}
+#' @param presetFlightTask \code{character} (DJI only EXPERIMENTAL). NOTE: it is strongly recommended to use the default \code{"remote"} \cr
+#'  Further options are: \cr
 #' \code{"simple_ortho"} takes one picture/waypoint,
 #' \code{"multi_ortho"} takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angele of -60deg,
 #' \code{"simple_pano"} takes a 360 deg panorama picture and 
 #' \code{"remote"} which assumes that the camera is controlled by the remote control (RC)
-#' @param flightAltitude set the default flight altitude (note AGL while the provided raster model represents this surface) of the mission. You have to defined the position of launching.
-#' By default it is set to (\code{= 0.0}). If set to \code{-99} it will be 
+#' @param flightAltitude \code{numeric} set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is \code{100}
+#' default is (\code{= 0.0}). If set to \code{-99} it will be 
 #' calculated from the swath width of the pictures. NOTE This makes only sense for 
 #' \code{followingTerrain = TRUE} to smooth curves.
-#' For \code{flightPlanMode = "waypoint"} camera actions are DISABLED during curve flights.
-#' @param maxSpeed  cruising speed
-#' @param windCondition 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h
-#' @param uavType type of uav. currently "djip3" and "solo" are supported
-#' @param missionTrackList mission tracklist (target positions)
-#' @param launchPos launch position c(lon,lat), c(8.772055,50.814689)
-#' @param climbDist distance within the uav will climb on the caluclated save flight altitude in meter
-#' @param aboveTreeAlt minum height above target trees in meter
-#' @param circleRadius radius to circle around above target trees in meter
-#' @param takeOffAlt altitude (MSL) of take off position in meter
-#' @param altFilter allowed altitude differences in meter
-#' @param launchAltitude altitude of launch position. If set to -9999 a DEM is required for extracting the MSL. Default is -9999
-#' @param followSurfaceRes followSurfaceRes
-#' @param cameraType \code{character}, defaults to \code{"MAPIR2"}.
-#' @param copy copy used file to data folder default is FALSE
+#' For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.
+#' @param maxSpeed \code{numeric}  cruising speed, default is \code{25.0}
+#' @param windCondition \code{numeric}options are 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h, default is \code{1}
+#' @param uavType \code{character}  type of UAV. currently "djip3" and "solo" are supported, default is \code{"solo"}
+#' @param missionTrackList \code{character} filename of the mission tracklist (target positions), default is \code{NULL}
+#' @param launchPos \code{list} launch position c(longitude,latitude), default is \code{c(8.772055,50.814689)}
+#' @param climbDist \code{numeric} distance within the uav will climb on the caluclated save flight altitude in meter, default is \code{7.5}
+#' @param aboveTreeAlt \code{numeric} minimum flight height above target trees in meter, default is \code{15.0}
+#' @param circleRadius \code{numeric} radius to circle around above target trees in meter, default is \code{1.0}
+#' @param takeOffAlt altitude \code{numeric} climb altitude of the uav at take off position in meter, default is \code{50.0}
+#' @param altFilter \code{numeric} allowed altitude differences bewteen two waypoints in meter, default is \code{0.5}
+#' @param launchAltitude \code{numeric} altitude of launch position. If set to \code{-9999} a DEM is required for extracting the MSL, default is \code{-9999}
+#' @param followSurfaceRes \code{numeric}, default is \code{5} meter.
+#' @param cameraType \code{character}, default is \code{"MAPIR2"}.
+#' @param copy \code{boolean} copy used file to data folder default is \code{FALSE}
+#' 
 #' @examples
 #'\dontrun{
 #' require(mapview)
 #' makeTP  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
-#'                            locationName = "filzmoosTree",
-#'                            missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
-#'                            demFn = "~/uav/grossfilz/grosserfilz.tif",
-#'                            windCondition = 2,
-#'                            uavType = "solo",
-#'                            followSurfaceRes=5,
-#'                            launchPos = c(8.772055,50.814689))
+#'                    locationName = "filzmoosTree",
+#'                    missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
+#'                    demFn = "~/uav/grossfilz/grosserfilz.tif",
+#'                    windCondition = 2,
+#'                    uavType = "solo",
+#'                    followSurfaceRes=5,
+#'                    launchPos = c(8.772055,50.814689))
 #' # view result
 #' mapview(makeTP$wp,zcol = "altitude",lwd=1,cex=5)+
 #' mapview(t3$lp,color="red",cex=5)
@@ -52,19 +53,19 @@ if (!isGeneric('makeTP')) {
 #'               
 
 makeTP <-  function(projectDir="~",
-                    locationName="autoflightcontrol",
+                    locationName="treePos",
                     missionTrackList=NULL,
-                    launchPos=NULL,
+                    launchPos=c(8.772055,50.814689),
                     demFn=NULL,
-                    flightAltitude=75,
+                    flightAltitude=100,
                     climbDist=7.5,
                     aboveTreeAlt=15,
-                    circleRadius = 5.0,
+                    circleRadius = 1.0,
                     takeOffAlt = 50.0,
                     presetFlightTask="remote",
                     maxSpeed=25.0,
                     followSurfaceRes=5,
-                    altFilter=1.0,
+                    altFilter=0.5,
                     windCondition=1,
                     launchAltitude=-9999,
                     uavType="solo",
@@ -192,7 +193,7 @@ makeTP <-  function(projectDir="~",
   
   log4r::levellog(logger,'INFO',paste("max flight speed   : ",round(maxSpeed, digits = 1),"  (km/h)      "))
   log4r::levellog(logger,'INFO',"--------------------- END RUN -----------------------------")
-
+  
   note <- " Fly save and have Fun..." 
   dumpFile(paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
   cat("\n NOTE: You will find all parameters in the logfile:\n",paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ",

@@ -2,78 +2,78 @@
 % Please edit documentation in R/makeTP.R
 \name{makeTP}
 \alias{makeTP}
-\title{Track Planning tool for generating a control file for autonomous picture retrieval with respect to an obstacle free flight path for a defined list of target positions}
+\title{Flight Track Planning tool}
 \usage{
-makeTP(projectDir = "~", locationName = "autoflightcontrol",
-  missionTrackList = NULL, launchPos = NULL, demFn = NULL,
-  flightAltitude = 75, climbDist = 7.5, aboveTreeAlt = 15,
-  circleRadius = 5, takeOffAlt = 50, presetFlightTask = "remote",
-  maxSpeed = 25, followSurfaceRes = 5, altFilter = 1, windCondition = 1,
-  launchAltitude = -9999, uavType = "solo", cameraType = "MAPIR2",
-  copy = FALSE)
+makeTP(projectDir = "~", locationName = "treePos",
+  missionTrackList = NULL, launchPos = c(8.772055, 50.814689),
+  demFn = NULL, flightAltitude = 100, climbDist = 7.5,
+  aboveTreeAlt = 15, circleRadius = 1, takeOffAlt = 50,
+  presetFlightTask = "remote", maxSpeed = 25, followSurfaceRes = 5,
+  altFilter = 0.5, windCondition = 1, launchAltitude = -9999,
+  uavType = "solo", cameraType = "MAPIR2", copy = FALSE)
 }
 \arguments{
-\item{projectDir}{path to the main folder where several projects can be hosted It will overwrite the DEM based estimation if any other value than -9999}
+\item{projectDir}{\code{character} path to the main folder where several projects can be hosted, default is \code{"~"}}
 
-\item{locationName}{base name string of the mission}
+\item{locationName}{\code{character} base name string of the mission, default is \code{"treePos"}}
 
-\item{missionTrackList}{mission tracklist (target positions)}
+\item{missionTrackList}{\code{character} filename of the mission tracklist (target positions), default is \code{NULL}}
 
-\item{launchPos}{launch position c(lon,lat), c(8.772055,50.814689)}
+\item{launchPos}{\code{list} launch position c(longitude,latitude), default is \code{c(8.772055,50.814689)}}
 
-\item{demFn}{filename of the used DSM data file}
+\item{demFn}{\code{character} filename of the used DSM data file, default is \code{NULL}}
 
-\item{flightAltitude}{set the default flight altitude (note AGL while the provided raster model represents this surface) of the mission. You have to defined the position of launching.
-By default it is set to (\code{= 0.0}). If set to \code{-99} it will be 
+\item{flightAltitude}{\code{numeric} set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is \code{100}
+default is (\code{= 0.0}). If set to \code{-99} it will be 
 calculated from the swath width of the pictures. NOTE This makes only sense for 
 \code{followingTerrain = TRUE} to smooth curves.
-For \code{flightPlanMode = "waypoint"} camera actions are DISABLED during curve flights.}
+For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.}
 
-\item{climbDist}{distance within the uav will climb on the caluclated save flight altitude in meter}
+\item{climbDist}{\code{numeric} distance within the uav will climb on the caluclated save flight altitude in meter, default is \code{7.5}}
 
-\item{aboveTreeAlt}{minum height above target trees in meter}
+\item{aboveTreeAlt}{\code{numeric} minimum flight height above target trees in meter, default is \code{15.0}}
 
-\item{circleRadius}{radius to circle around above target trees in meter}
+\item{circleRadius}{\code{numeric} radius to circle around above target trees in meter, default is \code{1.0}}
 
-\item{takeOffAlt}{altitude (MSL) of take off position in meter}
+\item{takeOffAlt}{altitude \code{numeric} climb altitude of the uav at take off position in meter, default is \code{50.0}}
 
-\item{presetFlightTask}{(DJI only experimental) strongly recommended to use "remote" \cr
- Options are: \cr
+\item{presetFlightTask}{\code{character} (DJI only EXPERIMENTAL). NOTE: it is strongly recommended to use the default \code{"remote"} \cr
+ Further options are: \cr
 \code{"simple_ortho"} takes one picture/waypoint,
 \code{"multi_ortho"} takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angele of -60deg,
 \code{"simple_pano"} takes a 360 deg panorama picture and 
 \code{"remote"} which assumes that the camera is controlled by the remote control (RC)}
 
-\item{maxSpeed}{cruising speed}
+\item{maxSpeed}{\code{numeric}  cruising speed, default is \code{25.0}}
 
-\item{followSurfaceRes}{followSurfaceRes}
+\item{followSurfaceRes}{\code{numeric}, default is \code{5} meter.}
 
-\item{altFilter}{allowed altitude differences in meter}
+\item{altFilter}{\code{numeric} allowed altitude differences bewteen two waypoints in meter, default is \code{0.5}}
 
-\item{windCondition}{1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h}
+\item{windCondition}{\code{numeric}options are 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h, default is \code{1}}
 
-\item{launchAltitude}{altitude of launch position. If set to -9999 a DEM is required for extracting the MSL. Default is -9999}
+\item{launchAltitude}{\code{numeric} altitude of launch position. If set to \code{-9999} a DEM is required for extracting the MSL, default is \code{-9999}}
 
-\item{uavType}{type of uav. currently "djip3" and "solo" are supported}
+\item{uavType}{\code{character}  type of UAV. currently "djip3" and "solo" are supported, default is \code{"solo"}}
 
-\item{cameraType}{\code{character}, defaults to \code{"MAPIR2"}.}
+\item{cameraType}{\code{character}, default is \code{"MAPIR2"}.}
 
-\item{copy}{copy used file to data folder default is FALSE}
+\item{copy}{\code{boolean} copy used file to data folder default is \code{FALSE}}
 }
 \description{
-makeTP generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures.
+makeTP generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. It creates  a single control file for autonomous picture retrieval flights.
 }
 \examples{
 \dontrun{
 require(mapview)
 makeTP  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
-                           locationName = "filzmoosTree",
-                           missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
-                           demFn = "~/uav/grossfilz/grosserfilz.tif",
-                           windCondition = 2,
-                           uavType = "solo",
-                           followSurfaceRes=5,
-                           launchPos = c(8.772055,50.814689))
+                   locationName = "filzmoosTree",
+                   missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
+                   demFn = "~/uav/grossfilz/grosserfilz.tif",
+                   windCondition = 2,
+                   uavType = "solo",
+                   followSurfaceRes=5,
+                   launchPos = c(8.772055,50.814689))
 # view result
 mapview(makeTP$wp,zcol = "altitude",lwd=1,cex=5)+
 mapview(t3$lp,color="red",cex=5)
