@@ -364,7 +364,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = 6, 
                                                  cmd = 115, 
                                                  p1 = round(abs(uavViewDir),1))
-      lc <- 7
+      lc <- 8
       # task WP & task speed
       for (j in  seq(1,(addmax - 1)*2)) {
         if (is.odd(j)){

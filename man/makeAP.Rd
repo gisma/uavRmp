@@ -5,20 +5,20 @@
 \title{Mission Planning tool for generating a set of control files for autonomous data retrieval with respect to DSM/DEM and orthophoto generation
 calculation.}
 \usage{
-makeAP(projectDir = "~", locationName = "dummylocation",
-  surveyArea = NULL, flightAltitude = 100, launchAltitude = NULL,
-  followSurface = FALSE, followSurfaceRes = NULL, demFn = NULL,
-  altFilter = 1, horizonFilter = 30, terrainSmooth = FALSE,
-  flightPlanMode = "track", presetFlightTask = "remote", overlap = 0.8,
-  maxSpeed = 20, maxFlightTime = 10, picRate = 2, windCondition = 0,
-  uavType = "solo", cameraType = "MAPIR2", cmd = 16, uavViewDir = 0,
-  djiBasic = c(0, 0, 0, -90, 0), dA = FALSE, heatMap = FALSE,
-  picFootprint = FALSE, rcRange = NULL, copy = FALSE)
+makeAP(projectDir = "~", locationName = "flightArea", surveyArea = NULL,
+  flightAltitude = 100, launchAltitude = NULL, followSurface = FALSE,
+  followSurfaceRes = NULL, demFn = NULL, altFilter = 1,
+  horizonFilter = 30, terrainSmooth = FALSE, flightPlanMode = "track",
+  presetFlightTask = "remote", overlap = 0.8, maxSpeed = 20,
+  maxFlightTime = 10, picRate = 2, windCondition = 0, uavType = "solo",
+  cameraType = "MAPIR2", cmd = 16, uavViewDir = 0, djiBasic = c(0, 0, 0,
+  -90, 0), dA = FALSE, heatMap = FALSE, picFootprint = FALSE,
+  rcRange = NULL, copy = FALSE)
 }
 \arguments{
-\item{projectDir}{path to the main folder where several locations can be hosted}
+\item{projectDir}{\code{character} path to the main folder where several locations can be hosted, default is \code{"~"}}
 
-\item{locationName}{path to the location folder where all tasks of this plot are hosted}
+\item{locationName}{\code{character} path to the location folder where all tasks of this plot are hosted, default is \code{"flightArea"}}
 
 \item{surveyArea}{you may provide either the coordinates by
 c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or

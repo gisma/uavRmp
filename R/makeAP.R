@@ -151,8 +151,8 @@ if (!isGeneric('makeAP')) {
 #'   }
 #'   }
 
-#' @param projectDir path to the main folder where several locations can be hosted
-#' @param locationName path to the location folder where all tasks of this plot are hosted
+#' @param projectDir \code{character} path to the main folder where several locations can be hosted, default is \code{"~"}
+#' @param locationName \code{character} path to the location folder where all tasks of this plot are hosted, default is \code{"flightArea"} 
 #' @param surveyArea  you may provide either the coordinates by
 #' c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or
 #' an OGR compatible file (preferably geoJSON or KML) with
@@ -316,7 +316,7 @@ if (!isGeneric('makeAP')) {
 
 
 makeAP <- function(projectDir = "~",
-                   locationName = "dummylocation",
+                   locationName = "flightArea",
                    surveyArea = NULL,
                    flightAltitude = 100,
                    launchAltitude = NULL,
