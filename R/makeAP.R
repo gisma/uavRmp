@@ -10,13 +10,13 @@ if (!isGeneric('makeAP')) {
 #'   derivation and post classification of the data. makeAP (Make UAV Remote
 #'   Controlled Survey) creates either intermediate flight control files for the
 #'   DJI phantom x UAVs or ready to upload control files for the 3DR Solo. The
-#'   dji control files are designed for using with the proprietary litchi flight
+#'   DJI control files are designed for using with the proprietary litchi flight
 #'   control app exchange format, while the 3DR Solo files are using the MAVLINK
 #'   common message set, that is used by the PixHawk flight controller family.
-#'   Both are implemented very rudimentary.\cr\cr DJI:\cr The reason using DJI
+#'   Both are implemented very rudimentarily.\cr\cr DJI:\cr The reason using DJI
 #'   is their absolute straightforward usage. Everybody can fly with a DJI but
 #'   the price is a hermetically closed system. Only the  litchi app provides
-#'   additionally to a cloud based mission planer an offline/standalone
+#'   additionally to a cloud based mission planner an offline/standalone
 #'   interface to upload a CSV formated way point file for autonomous flights to
 #'   the Phantom.\cr\cr PixHawk/3DR Solo:\cr The open uav community is focused
 #'   on the PixHawk autopilot unit and the Mission Planner software. It is well
@@ -30,7 +30,7 @@ if (!isGeneric('makeAP')) {
 #'   flight plans and missions. You will have a lot of chances to make a small
 #'   mistake what may yield in a damage of your uav or even worse in involving
 #'   people, animals or non-cash assets. Check your risk use parachute systems
-#'   and even if it is running like a charm keep alert!
+#'   and even if it is running like a charm, keep alert!
 
 #'
 #'
@@ -53,11 +53,11 @@ if (!isGeneric('makeAP')) {
 #'   |  /             / /
 #'   x1/             x3/
 #'   }
-#'   This coordinates the length of the line and the angle are used to calculate extend and parallels
+#'   The coordinates of the length of the line and the angle are used to calculate extent and parallels
 #'   of the flight plan according to the flight altitude, overlap etc. Note the flight direction depends on
 #'   the order of the points. If the \code{flightPlanMode} is equal \code{tracks}.
 #'   \cr\cr
-#'   The result look like this.
+#'   The results look like this.
 #'
 #'  \preformatted{
 #'
@@ -82,8 +82,8 @@ if (!isGeneric('makeAP')) {
 #'   \code{waypoints} is optimal for autonomous flights under calm conditions in complex terrain
 #'   because the camera takes a picture at every way point\cr
 #'   \code{track} is optimal for relatively plain areas and automatically triggered picture capturing
-#'   Note: Automatically picture capturing in a time interval works only within the range of the remote control.
-#'   because the the uav needs a trigger signal for taking pictures.
+#'   Note: Automatical picture capturing in a time interval works only within the range of the remote control,
+#'   because the uav needs a trigger signal for taking pictures.
 #'   }
 #'   \subsection{Terrain Following flight plan}{
 
@@ -92,7 +92,7 @@ if (!isGeneric('makeAP')) {
 #'   ----------------------------------------------------------------------------------------------------------\cr
 #'   NOTE: You have to be aware that the DJI uav is calibrating the altitude at the launch position in the field!
 #'   So you need either a correct coordinate altitude or a high resolution DEM to get a good! estimation of the launch position and altitude.
-#'   You must choose a clearly defined and reliable launching position both in the map and the field. If you fail I made the experience that the aircraft
+#'   You must choose a clearly defined and reliable launching position both in the map and the field. If one fails, we have made the experience that the aircraft
 #'   probably will hit the terrain...\cr
 #'   ----------------------------------------------------------------------------------------------------------\cr\cr
 #'
@@ -101,7 +101,7 @@ if (!isGeneric('makeAP')) {
 #'
 #' \preformatted{
 #'
-#'   ............... x_(uav)_x ........... uav started at 30 m altitude results in
+#'   ............... x_(uav)_x ........... uav starting at 30 m altitude results in
 #'                                            a "real" flight altitude of 30m + 50m => 80m
 #'
 #'
@@ -114,7 +114,7 @@ if (!isGeneric('makeAP')) {
 #'
 #'
 #'                  ___60m____
-#'       ..........|          |............ uav started at 0 m altitude results in
+#'       ..........|          |............ uav starting at 0 m altitude results in
 #'              ___|          |___          "real" flight altitude of 50m above 0m
 #'         ____|                  |
 #'     ___|                       |__x__ 0m
@@ -136,7 +136,7 @@ if (!isGeneric('makeAP')) {
 #'     ___|                       |______
 #
 #'   }
-#'  To get a fixed scale flight the launch altitude is used to correct the flight altitude according to   maximumAltitude of surveyArea + altitude of launch position. With the setting of terrainfollowing = true tis is calculated for each way point.  . So the adapted flight altitude looks like:
+#'  To get a fixed scale flight, the launch altitude is used to correct the flight altitude according to maximumAltitude of surveyArea + altitude of launch position With the setting of terrainfollowing = true this is calculated for each way point.  So the adapted flight altitude looks like:
 #'   \preformatted{
 #'
 #'                  ..........
@@ -161,17 +161,16 @@ if (!isGeneric('makeAP')) {
 #'  You will find further explanation under seealso.
 #' @param launchAltitude absolute altitude of launching position.
 #' It will overwrite the DEM based estimation if any other value than -9999
-#' @param demFn  filename of the corresponding DEM data file
+#' @param demFn  filename of the corresponding DEM data file.
 
 #' @param followSurface  \code{boolean}  TRUE performs an altitude correction
-#' of the missions flight altitude using additional DEM data.
+#' of the mission's flight altitude using additional DEM data.
 #' If no DEM data is provided and \code{followSurface} is TRUE,
-#' SRTM data will be downloaded and used
+#' SRTM data will be downloaded and used.
 #' Further explanation at seealso
 #' @param altFilter if \code{followingTerrain} is equal \code{TRUE} then
 #' \code{altFilter} is the threshold value of accepted altitude difference (m) between two way points.
-#'  If this value is not exceeded the way point is omitted due to the fact that only 99 way points per mission are allowed.
-#'  If this value is not exceeded the way point is omitted due to the fact that only 99 way points per mission are allowed.
+#'  If this value is not exceeded, the way point is omitted due to the fact that only 99 way points per mission are allowed.
 #' @param horizonFilter integer filter size of the rolling filter kernel for the flight track. Must be multiplied by the \code{followSurfaceRes} to get the spatial extent
 #' @param flightPlanMode type of flight plan. Available are: \code{"waypoints"},
 #'   \code{"track"}, \code{"manual"}.
