@@ -7,8 +7,9 @@ output:
   pdf_document:
     toc: yes
 vignette: |
-  %\VignetteIndexEntry{Link GIS to R} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
+
 
 ```{r echo=FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
