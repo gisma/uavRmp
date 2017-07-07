@@ -10,6 +10,7 @@ vignette: |
   %\VignetteIndexEntry{Link GIS to R} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
 
+
 ```{r echo=FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
 ```
