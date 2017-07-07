@@ -44,3 +44,6 @@ Imports:
     methods
 RoxygenNote: 6.0.1
 SystemRequirements: GNU make
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

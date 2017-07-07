@@ -1,13 +1,18 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
+author: "Chris Reudenbach"
+date: '`r Sys.Date()`'
 output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
   html_document:
     theme: united
     toc: yes
-  pdf_document:
+  word_document:
     toc: yes
 vignette: |
-  %\VignetteIndexEntry{Link GIS to R} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning}  %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
 
 ```{r echo=FALSE}
