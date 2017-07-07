@@ -107,7 +107,10 @@ By default it is set to (\code{= 0.0}).
 \description{
 The basic idea is to provide an easy to use workflow for
   controlling rtf UAVs from planning and flying autonomous surveys to
-  derivation and post classification of the data. makeAP (Make UAV Remote
+  retrieve aerial or spot data.
+}
+\details{
+makeAP (Make UAV Remote
   Controlled Survey) creates either intermediate flight control files for the
   DJI phantom x UAVs or ready to upload control files for the 3DR Solo. The
   DJI control files are designed for using with the proprietary litchi flight
@@ -126,7 +129,8 @@ The basic idea is to provide an easy to use workflow for
   the Pixhawk controller using the upload2Solo function.\cr\cr
 }
 \note{
-To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at NASA EarthData project: \href{http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro}{uav based Remote Sensing at giswerk.org}).
+To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: \href{http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro}{uav based Remote Sensing at giswerk.org}).
+https://gisma.github.io/
 }
 \section{Warning}{
  Take care! There are still a lot of construction zones
@@ -136,118 +140,6 @@ To use the script you need to install quite a lot of R-packages and at least the
   mistake what may yield in a damage of your uav or even worse in involving
   people, animals or non-cash assets. Check your risk use parachute systems
   and even if it is running like a charm, keep alert!
-}
-
-\section{Basic Introduction}{
-
-\subsection{Survey Area}{
-
-  To define a flight area you have to provide either 4 Points (or 3 lines).
-  You may take more complex vectors like a multi point polygon,
-  but only the first 4 coordinates x1, x2, x3 and x4 (for the launching position)
-  are used in exactly this order.
-  If you take a rectangle the 4th corner coordinate will be the launching point!
-  \cr\cr
-  The concept is looking like the following sketch.
- \preformatted{
-  x2------x3           x2-------x1
-  | a                 /
-  |                  /
-  |   x4            / x4
-  |  /             / /
-  x1/             x3/
-  }
-  The coordinates of the length of the line and the angle are used to calculate extent and parallels
-  of the flight plan according to the flight altitude, overlap etc. Note the flight direction depends on
-  the order of the points. If the \code{flightPlanMode} is equal \code{tracks}.
-  \cr\cr
-  The results look like this.
-
- \preformatted{
-
-  #--#  #-->             #-----#
-  |  |  |               /    
-  |  |  |              #-----#
-  |  |  |                   /
-  #  #--#         <--#-----#
-  }
- If \code{flightPlanMode} is equal \code{waypoints} the result is an equal spatial distribution of way points:
- \preformatted{
-
-  #--#  #-->             #--#--#
-  |  |  |               /    
-  #  #  #              #--#--#
-  |  |  |                   /
-  #  #--#         <--#--#--#
-  }
-
-
-  \code{waypoints} is optimal for autonomous flights under calm conditions in complex terrain
-  because the camera takes a picture at every way point\cr
-  \code{track} is optimal for relatively plain areas and automatically triggered picture capturing
-  Note: Automatical picture capturing in a time interval works only within the range of the remote control,
-  because the uav needs a trigger signal for taking pictures.
-  }
-  \subsection{Terrain Following flight plan}{
-
-  The \code{followSurface} switch is used to adapt the fixed flight altitude into a terrain following flight altitude.\cr
-  ----------------------------------------------------------------------------------------------------------\cr
-  NOTE: You have to be aware that the DJI uav is calibrating the altitude at the launch position in the field!
-  So you need either a correct coordinate altitude or a high resolution DEM to get a good! estimation of the launch position and altitude.
-  You must choose a clearly defined and reliable launching position both in the map and the field. If one fails, we have made the experience that the aircraft
-  probably will hit the terrain...\cr
-  ----------------------------------------------------------------------------------------------------------\cr\cr
-
- How it works. Let us assume a defined flight altitude of 50 m.
- According to the launching point altitude the uav will act like the following sketch shows:
-
-\preformatted{
-
-  ............... x_(uav)_x ........... uav starting at 30 m altitude results in
-                                           a "real" flight altitude of 30m + 50m => 80m
-
-
-                  ___60m____
-                 |          |
-         30m _x__|          |
-        ____|               |___
-    ___|                        |____
-
-
-                 ___60m____
-      ..........|          |............ uav starting at 0 m altitude results in
-             ___|          |___          "real" flight altitude of 50m above 0m
-        ____|                  |
-    ___|                       |__x__ 0m
-  }
- To avoid negative impacts from the P3 auto calibration, the launch altitude is used to
- correct the flight altitude according to: \cr
- maximumAltitude_of_surveyArea + altitude_of_launchposition\cr
- So the adapted flight altitude is always seen as the flight altitude above the highest terrain altitude:
-  \preformatted{
-
- ...................................... real altitude of uav 110 m
-
-
-                 ___60m____
-                |          |
-         30m _x_|          |___
-        ____|                  |
-    ___|                       |______
-  }
- To get a fixed scale flight, the launch altitude is used to correct the flight altitude according to maximumAltitude of surveyArea + altitude of launch position With the setting of terrainfollowing = true this is calculated for each way point.  So the adapted flight altitude looks like:
-  \preformatted{
-
-                 ..........
-                |          |
-            ....|          |....
-       ....|     ___60m____    |
-  ....|         |          |   |....... real altitude of uav 50m
-         30m _x_|          |___
-        ____|                  |
-    ___|                       |___x___ 0m
-  }
-  }
 }
 
 \examples{
@@ -339,4 +231,8 @@ mapview::mapview(fp2$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
 mapview(fp2$oDEM,col=terrain.colors(256))+
 mapview::mapview(fp2$demA,color="black", alpha.regions = 0.1,lwd=0.5)
 }
+}
+\seealso{
+A the underlying concept , a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
+  "uavRmp")} or at \href{https://gisma.github.io/uavRmp/uavRmp_1.html}{Github uavRmp manual}).
 }
