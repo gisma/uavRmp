@@ -234,5 +234,6 @@ mapview::mapview(fp2$demA,color="black", alpha.regions = 0.1,lwd=0.5)
 }
 \seealso{
 A the underlying concept , a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
-  "uavRmp")} or at \href{https://gisma.github.io/uavRmp/uavRmp_1.html}{Github uavRmp manual}).
+  "uavRmp")} or 
+  at \href{https://gisma.github.io/uavRmp/uavRmp_1.html}{Github uavRmp manual}).
 }
