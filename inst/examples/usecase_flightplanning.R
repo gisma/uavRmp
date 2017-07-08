@@ -25,8 +25,8 @@ fA <- edit_map(mapview(traddelkopf60$demA)@map)
 
 
 # track flight 
-t3p<-t3p(projectDir ="/home/creu/uav/bayerwald",
-         missionName = "filzmoosTree",
+fp<-makeTP(projectDir ="/home/creu/uav/bayerwald",
+         locationName = "filzmoosTree",
          missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
          demFn = "~/uav/grossfilz/grosserfilz.tif",
          windCondition = 2,
