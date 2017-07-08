@@ -1567,17 +1567,10 @@ is.odd <- function(x) x %% 2 != 0
 
 # extract highest altitude position and agl of a single track
 get_seg_fparams <- function(dem,
-<<<<<<< HEAD
-                            start,
-                            target,
-                            p){
-  # depending on DEM/DSM sometimes there are no data Values
-=======
                               start,
                               target,
                               p){
   # depending on DEM/DSM sometimes there are no data values
->>>>>>> 7c4f41030c3da477adcfffc8b227eee9da76e44e
   startAlt<-p$launchAltitude
   seg  <- sp_line(c(start[1],target[1]),c(start[2],target[2]),"seg")
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))
@@ -1603,17 +1596,11 @@ get_seg_fparams <- function(dem,
 
 # extract highest altitude position and agl of a position with a defined radius
 get_point_fparams <- function(dem,
-<<<<<<< HEAD
-                              point,
-                              p, 
-                              radius= 5.0){
-  # depending on DEM/DSM sometimes there are no data Values
-=======
+
                                 point,
                                 p, 
                                 radius= 5.0){
   # depending on DEM/DSM sometimes there are no data values
->>>>>>> 7c4f41030c3da477adcfffc8b227eee9da76e44e
   startAlt<-p$launchAltitude
   seg  <- sp_point(point[1],point[2],"point")
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))

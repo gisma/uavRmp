@@ -25,7 +25,7 @@ makeTP(projectDir = "~", locationName = "treePos",
 
 \item{flightAltitude}{\code{numeric} set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is \code{100}
 default is (\code{= 0.0}). If set to \code{-99} it will be 
-calculated from the swath width of the pictures. NOTE This makes only sense for 
+calculated from the swath width of the pictures. NOTE: This makes only sense for 
 \code{followingTerrain = TRUE} to smooth curves.
 For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.}
 
@@ -54,14 +54,14 @@ For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) ar
 
 \item{launchAltitude}{\code{numeric} altitude of launch position. If set to \code{-9999} a DEM is required for extracting the MSL, default is \code{-9999}}
 
-\item{uavType}{\code{character}  type of UAV. currently "djip3" and "solo" are supported, default is \code{"solo"}}
+\item{uavType}{\code{character}  type of UAV. Currently "djip3" and "solo" are supported, default is \code{"solo"}}
 
 \item{cameraType}{\code{character}, default is \code{"MAPIR2"}.}
 
 \item{copy}{\code{boolean} copy used file to data folder default is \code{FALSE}}
 }
 \description{
-makeTP generates a flight track chaining up point objects with respect to a heterogenous Surface and known obstacles as documented by an DSM for taking top down pictures. It creates  a single control file for autonomous picture retrieval flights.
+makeTP generates a flight track chaining up point objects with respect to a heterogenous surface and known obstacles as documented by an DSM for taking top down pictures. It creates a single control file for autonomous picture retrieval flights.
 }
 \examples{
 \dontrun{
