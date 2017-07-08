@@ -5,12 +5,11 @@ date: '`r Sys.Date()`'
 output:
   pdf_document:
     latex_engine: xelatex
-    toc: yes
+    toc: no
   html_document:
     theme: united
     toc: yes
-  word_document:
-    toc: yes
+
 vignette: >
   %\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning}   
   %\VignetteEngine{knitr::rmarkdown} 
