@@ -24,7 +24,7 @@ Unmanned Aerial Vehicle R based Mission Planning
 
 
 The [uavRmp](https://github.com/gisma/uavRmp) package is designed 
-for uav autonomous mission planning. In the first place it is a simple and open source planning tool for operating flights of low budget drones based on ```R```. It provide an easy workflow for planning autonomous 
+for UAV autonomous mission planning. In the first place it is a simple and open source planning tool for operating flights of low budget drones based on ```R```. It provide an easy workflow for planning autonomous 
 surveys including battery-dependent task splitting and save departures and approaches of each monitoring chunks.
 
 The range is widespread from Digital Surface Models (DSM), Digital Elevation Models (DEM), orthophotos, altitude point clouds to landuse/landscape classification, NDVI forest structure classifications and so on… 
@@ -32,7 +32,7 @@ The range is widespread from Digital Surface Models (DSM), Digital Elevation Mod
 It belongs to the ```uavR``` package family that provides more functionality for the pre- and post-processing as well as the analysis of the derived data.
 
 ## Note
-Warning: Take care! There are still a lot of construction zones around. This package is far beyond to be in a mature state. Please implement a double check systems while planning and performing autonomous flight missions. You will have a lot of chances to make a small mistake what may yield in a damage of your UAV or even worse in involving people, animals or non-cash assets. 
+WARNING: Take care! There are still a lot of construction zones around. This package is far beyond to be in a mature state. Please implement a double check systems while planning and performing autonomous flight missions. You will have a lot of chances to make a small mistake what may yield in a damage of your UAV or even worse in involving people, animals or non-cash assets. 
 
 Check your risk - use parachute systems and, even if it is running like a charm, keep alert!
 
@@ -40,7 +40,7 @@ Check your risk - use parachute systems and, even if it is running like a charm,
 
 Up to now it has been dedicated to low budget rtf-UAVs as the DJI Phantom series and the 3DR Solo. However the current and future support will cover all Pixhawk based UAVs.
 
-The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://ardupilot.org/planner/) or [APM Planner 2](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or an terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmerical competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.
+The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://ardupilot.org/planner/) or [APM Planner 2](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmercial competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.
 
 The ```uavRmd``` bridges this gap and generates ```MAVLINK``` format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.
 
@@ -60,7 +60,7 @@ The package family consists of 4 parts:
 ## Installation
 Please note that uavRmp is making strong use of CLI tools like GDAL. The setup  of the correct linkage to these APIs can be cumbersome. For using the ```uavRmp``` package you need to install the  ```link2GI``` package. Because the CRAN version is a bit outdated you should get the actual github hosted version of the [link2GI](https://github.com/gisma/link2GI/blob/master/README.md) package. 
 
-Nevertheless all mentioned software packages have to be installed correctly on your the OS. It is just in parts tested under Windows but should run....The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux and then  use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the [dronekit](http://python.dronekit.io/develop/installation.html) python libs in addition.
+Nevertheless all mentioned software packages have to be installed correctly on your the OS. It is just in parts tested under Windows (10) but should run... The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux and then use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the [dronekit](http://python.dronekit.io/develop/installation.html) python libs in addition.
 
 A full list of necessary libaries and binaries beyond ```R``` will soon be provided.
 
@@ -81,13 +81,13 @@ devtools::install_github("gisma/uavRmp", ref = "master", dependencies = TRUE)
 
 ## Introduction
 
-The core planning tools ```makeAP``` (make area plan) and ```makeTP``` (make target plan) are creating either intermediate flight control files for the DJI Phantom 3x UAVs or ready to upload control files for the Pixhawk based UAVs like the 3DR Solo . The intermediate DJI control files are expected to be used with the proprietary [Litchi](https://flylitchi.com/) flight control app, while the Pixhawk/3DR Solo files are using the ```MAVLINK``` common message format.
+The core planning tools ```makeAP``` (make area plan) and ```makeTP``` (make target plan) are creating either intermediate flight control files for the DJI Phantom 3x UAVs or ready to upload control files for the Pixhawk based UAVs like the 3DR Solo. The intermediate DJI control files are expected to be used with the proprietary [Litchi](https://flylitchi.com/) flight control app, while the Pixhawk/3DR Solo files are using the ```MAVLINK``` common message format.
 
 The basic idea is to provide an easy to use workflow for controlling rtf UAVs on autonomous survey missions.  
 
 DJI: The reason using DJI UAVs is because of their absolute straightforward usage. Everybody can fly with a DJI but the price for this simplicity is a hermetically closed system. Only the Litchi app provides in addition to a cloud based mission planer an offline/standalone interface to upload a CSV formated way point file for autonomous flights to the Phantom.
 
-PixHawk/3DR Solo: The open uav community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. '''uavRst''' supports the ```MAVLINK``` common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the ```upload2Solo``` function.
+PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. '''uavRst''' supports the ```MAVLINK``` common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the ```upload2Solo``` function.
 
 ## The types of mission tasks
  
@@ -111,7 +111,7 @@ If ```flightPlanMode = "tracks"```. The result look like below.
     #  #--#         <--#-----#
 
    
-If ```flightPlanMode = "waypoints"``` the result is an equal spatial distribution of way points:
+If ```flightPlanMode = "waypoints"``` The result is an equal spatial distribution of way points:
  
     #--#  #-->             #--#--#
     |  |  |               /    
@@ -124,22 +124,22 @@ If ```flightPlanMode = "waypoints"``` the result is an equal spatial distributio
 ```waypoints``` is optimal for autonomous flights under calm conditions in complex terrain because the camera takes a picture at every way point.
 
 ```track``` is optimal for relatively plain areas and automatically triggered picture capturing 
- DJI only: Automatically picture capturing in a time interval works only within the range of the remote control because the uav needs a trigger signal for taking  pictures.
+ DJI only: Automatically picture capturing in a time interval works only within the range of the remote control because the UAV needs a trigger signal for taking pictures.
  
 ## Terrain following task
 
  The argument ```followSurface = TRUE``` will switch from fixed AGL flight altitude into a terrain following flight altitude.
 
-NOTE: You have to be aware that the DJI uav is calibrating the altitude at the launch position in the field! So you need either a correct coordinate altitude or a high resolution DEM to get a good(!) estimation of the launch position and altitude.
+NOTE: You have to be aware that the DJI UAV is calibrating the altitude at the launch position in the field! So you need either a correct coordinate altitude or a high resolution DEM to get a good(!) estimation of the launch position and altitude.
  
-You must choose a clearly defined and reliable launching position both in the map and the field. If you fail I made the experience that the aircraft probably will hit the terrain...
+You must choose a clearly defined and reliable launching position both in the map and the field. If one fails, we made the experience that the aircraft probably will hit the terrain...
 
  
-Let us assume a defined flight altitude of 50m. According to the launching point altitude the uav will act like the following sketch shows:
+Let us assume a defined flight altitude of 50m. According to the launching point altitude the UAV will act like the following sketch shows:
  
   
  
-     ............... x_(uav)_x ........... uav started at 30 m altitude results in
+     ............... x_(uav)_x ........... UAV started at 30m altitude results in
                                              a "real" flight altitude of 30m + 50m => 80m
  
  
@@ -152,13 +152,13 @@ Let us assume a defined flight altitude of 50m. According to the launching point
  
  
                    ___60m____
-        ..........|          |............ uav started at 0 m altitude results in
+        ..........|          |............ UAV started at 0 m altitude results in
                ___|          |___          "real" flight altitude of 50m above 0m
           ____|                  |
       ___|                       |__x__ 0m
 
 
-To avoid negative impacts from the PHantom 3 auto-calibration, the launch altitude is used to correct the flight altitude according to:
+To avoid negative impacts from the Phantom 3 auto-calibration, the launch altitude is used to correct the flight altitude according to:
 
  
      maximumAltitude_of_surveyArea + altitude_of_launchposition
@@ -166,7 +166,7 @@ To avoid negative impacts from the PHantom 3 auto-calibration, the launch altitu
 So the adapted flight altitude is always seen as the flight altitude above the highest terrain altitude:
 
  
-     ...................................... real altitude of uav 110 m
+     ...................................... real altitude of UAV: 110m
       
       
                    ___60m____
@@ -187,7 +187,7 @@ With the setting of ```terrainfollowing = true``` this is calculated for each wa
                   |          |
               ....|          |....
          ....|     ___60m____    |
-    ....|         |          |   |....... real altitude of uav 50m
+    ....|         |          |   |....... real altitude of UAV: 50m
            30m _x_|          |___
           ____|                  |
       ___|                       |___x___ 0m
@@ -231,7 +231,7 @@ Even if you can assume the use of uavs for autonomous flights as somehow “oper
 The first example will introduce you to the basic usage and folder structure.
 
 
-     Purpose: Survey flight over flat terrain to generate DSM and orthophoto. It is described for the Phantom3 and Litchi only. 
+     Purpose: Survey flight over flat terrain to generate DSM and orthophoto. It is described for the Phantom 3 and Litchi only. 
 
 Addressed issues:
 
@@ -240,7 +240,7 @@ Addressed issues:
 
 ## The short way 
 
-Digitize the 3 corner points of an area you want to map and in addition as fourth point the position of the planned uav launch.  Save it to  //firstSurvey.kml//. 
+Digitize the 3 corner points of an area you want to map and in addition as fourth point the position of the planned UAV launch.  Save it to  //firstSurvey.kml//. 
 
 ```{R, eval=FALSE}
  library(uavRmp)
@@ -380,11 +380,11 @@ Front Overlap 80%,  Side Overlap 60%
 
 Depending on the product and manufactor of the cameras you have to deal with different speeds. NOTE: Only the speed that can be continously achieved is taken into account. Currently a picture rate of 2 sconds is the maximum in speed.
 
-**It is strongly recommended that you use (if available) the autonoumous camera timer for controlling the take of pictures.**
+**It is strongly recommended that you use (if available) an autonoumous camera timer (time lapse) for controlling the pictures interval.**
 
 ## Flight Speed
 
-On average the fasted SD Cards will be able to achieve an average speed of about 2 seconds/JPEG (Raw + JPEG 3.5 seconds) image. As a result taking pictures every 2 seconds will be a sporty attempt. The Flight speed recommodations are meeting this needs. Let us assume you fly a task with the field of view (FOV) of the DJI 4K camera at 35 meters above level (agl). To derive the maximum flight distance from picture to picture in meter for the given overlap you have to calculate:
+On average the fasted SD Cards will be able to achieve an average speed of about 2 seconds/JPEG (Raw + JPEG 3.5 seconds) image. As a result taking pictures every 2 seconds will be a sporty attempt. The Flight speed recommodations are meeting this needs. Let us assume you fly a task with the field of view (FOV) of the DJI 4K camera at 35 meters above ground level (AGL). To derive the maximum flight distance from picture to picture in meter for the given overlap you have to calculate:
 
 $FOV*agl*(1-overlap) = 1,71*35*0,2 = 12 m$ 
 
@@ -395,7 +395,7 @@ If you can take a picture every 2 seconds your max speed is: $12 m / 2 s  = 6 m/
 For  JPG pictures: $0,15 * agl (RAW; 0,07 * agl)$
 For a 100 meter AGL flight you should set the speed to a maximum of:
  $0,15 * 100 = 15 m/s (54 km/h)$ 
-For a flight of 35 m agl this is will be roughly 5,25 m/s
+For a flight of 35m agl this is will be roughly 5,25 m/s
 ## DEM/DSM Data
 If you fly in an wide open flat area you do not need additional data. But if you fly in middle range mountains, forests or similar complex structures you will need a digtal surface model (DSM/DEM) for retrieving an optimal and safe flight path. 
 
@@ -415,13 +415,13 @@ Forget about flying with wind speed above 4 Beaufort - the UAV is **not** a falc
 9. Start Camera 
 10. Load Task 
 11. Fly Task
-As simple this seems it is full of pitffalls. Therefore we provide some checklist:
+As simple this seems it is full of pitfalls. Therefore we would like to provide some checklist:
 
 ## Pretask Check
 * UAV 
-    + Batteries fully charged
-    + remote control (charged) 
-    + Props 
+    + batteries fully charged
+    + remote control charged 
+    + props 
     + cables
     + parachute
     + cleanup MicroSD cards
@@ -429,7 +429,7 @@ As simple this seems it is full of pitffalls. Therefore we provide some checklis
     + configure camera(s)
     + charger
     + minute book
-    + Power Pack
+    + power bank
 
 * Tools
     + Tools for the UAV
