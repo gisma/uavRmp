@@ -191,10 +191,10 @@ if (!isGeneric('makeAP')) {
 #'mapview::mapview(fp3$oDEM,col=terrain.colors(256))
 #'
 #' ## (4) digitize flight area using leafDraw()
-#' ##     save vectors as "kml" files
-#' ##     provide full filename+upper extensions!
+#' ##     save vectors as "kml" or "json" files
+#' ##     provide full filename +  extension!
 #'
-#' leafDraw(preset="uav")
+#' vecDraw(preset="uav")
 #'
 
 

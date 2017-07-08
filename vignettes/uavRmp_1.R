@@ -19,7 +19,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 #  library(uavRmp)
 #  
 #  # start digitizing tool with preset = "uav" for a reduced toolbar
-#  # see ?leafDraw for more information
+#  # see ?vecDraw for more information
 #  vecDraw(mapCenter = c(50.855,8.691),preset="uav")
 
 ## ---- eval=FALSE---------------------------------------------------------

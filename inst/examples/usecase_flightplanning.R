@@ -19,7 +19,7 @@ depa09_60_1 <- uavRmd::makeAP(projectDir="~/uav/gentree/",
                               windCondition = 2)
 
   # edit task using the results from former run
-leafDraw(overlay = traddelkopf60$demA)
+vecDraw(overlay = traddelkopf60$demA)
 fA <- edit_map(mapview(traddelkopf60$demA)@map)
 
 

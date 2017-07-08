@@ -21,7 +21,7 @@ library(mapedit)
 library(leaflet)
 library(mapview)
 library(uavRmd)
-leafDraw(overlay = traddelkopf60$demA)
+vec(overlay = traddelkopf60$demA)
 fA <- edit_map(mapview(traddelkopf60$demA)@map)
 
 
