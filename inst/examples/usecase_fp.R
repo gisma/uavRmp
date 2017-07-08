@@ -1,5 +1,5 @@
 traddelkopf60 <- uavRmd::makeAP(projectDir="~/proj/uav/gentree/Traddelkopf/",
-                                missionName = "65msolo",
+                                locationName = "65msolo",
                                 surveyArea="~/proj/uav/gentree/Traddelkopf/data/task_areas/Traddelkopf_2017_02_paralell.json",
                                 followSurface = TRUE,
                                 followSurfaceRes = 1,
@@ -27,7 +27,7 @@ fA <- edit_map(mapview(traddelkopf60$demA)@map)
 
 
 fp<-makeAP(projectDir="~/uav/hasenkopf",
-           missionName = "hase50",
+           locationName = "hase50",
            surveyArea = "hase50.json", 
            followSurface = TRUE, 
            flightAltitude = 50,
@@ -38,7 +38,7 @@ fp<-makeAP(projectDir="~/uav/hasenkopf",
            windCondition = 2)
 
 fp<-makeAP(projectDir="~/uav/npbw",
-           missionName = "npbw100m_nord",
+           locationName = "npbw100m_nord",
            surveyArea="bw100_nord.json", 
            followSurface = TRUE, 
            flightAltitude = 100,
@@ -48,7 +48,7 @@ fp<-makeAP(projectDir="~/uav/npbw",
            windCondition = 3)
 
 fp<-makeAP(projectDir ="/home/creu/uav/",
-           missionName = "grossfilz100m_nord",
+           locationName = "grossfilz100m_nord",
            surveyArea="grossfilz100_nord.json", 
            followSurface = TRUE, 
            flightAltitude = 100,
@@ -59,7 +59,7 @@ fp<-makeAP(projectDir ="/home/creu/uav/",
            windCondition = 3)
 
 fpdata<-makeAP(projectDir ="/home/creu/uav/",
-               missionName = "grossfilz100m_sued",
+               locationName = "grossfilz100m_sued",
                surveyArea="/home/creu/uav/grossfilz/grossfilz100m_sued3.json", 
                followSurface = TRUE, 
                flightAltitude = 100,
@@ -72,7 +72,7 @@ fpdata<-makeAP(projectDir ="/home/creu/uav/",
 
 
 fp<-makeAP(projectDir ="/home/creu/uav/kellerwald",
-           missionName = "hagenstein100",
+           locationName = "hagenstein100",
            surveyArea="~/proj/uav_basics/hagenstein.json",
            followSurface = TRUE,
            flightAltitude = 100,
@@ -82,7 +82,7 @@ fp<-makeAP(projectDir ="/home/creu/uav/kellerwald",
 )
 
 fp<-makeAP(projectDir ="/home/creu/uav/kellerwald",
-           missionName = "hagenstein100",
+           locationName = "hagenstein100",
            surveyArea="~/uav/hagenstein.json",
            followSurface = TRUE,
            flightAltitude = 100,
@@ -90,8 +90,8 @@ fp<-makeAP(projectDir ="/home/creu/uav/kellerwald",
            uavType = "djip3"
 )
 
-fp<-t3p(projectDir ="/home/creu/uav/bayerwald",
-        missionName = "filzmoosTree",
+fp<-makeTP(projectDir ="/home/creu/uav/bayerwald",
+        locationName = "filzmoosTree",
         missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
         demFn = "~/uav/grossfilz/grosserfilz_latlon.tif",
         windCondition = 2,
@@ -99,7 +99,7 @@ fp<-t3p(projectDir ="/home/creu/uav/bayerwald",
         followSurfaceRes=5)
 
 fp<-makeAP(projectDir ="/home/creu/uav/kellerwald",
-           missionName = "hagenstein100",
+           locationName = "hagenstein100",
            surveyArea="~/uav/hagenstein.json",
            followSurface = TRUE,
            flightAltitude = 100,
@@ -110,7 +110,7 @@ fp<-makeAP(projectDir ="/home/creu/uav/kellerwald",
 )
 
 fp<-makeAP(projectDir ="~/uav/cookbook",
-           missionName = "firstSurvey",
+           locationName = "firstSurvey",
            surveyArea="~/proj/drone/uniwald/myFirstSurvey.json",
            followSurface = TRUE,
            flightAltitude = 100,
@@ -123,14 +123,14 @@ fp<-makeAP(projectDir ="~/uav/cookbook",
 data(mrbiko)
 writeRaster(mrbiko,"~/dem.tif")
 fp<-makeAP(projectDir ="~/uav/cookbook",
-           missionName = "firstSurvey",
+           locationName = "firstSurvey",
            surveyArea="~/proj/drone/uniwald/myFirstSurvey.json",
            flightAltitude = 100,
            demFn ="~/dem.tif")
 
 
-t3p<-t3p(projectDir ="/home/creu/uav/bayerwald",
-         missionName = "filzmoosTree",
+fp<-makeTP(projectDir ="/home/creu/uav/bayerwald",
+         locationName = "filzmoosTree",
          missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
          demFn = "~/uav/grossfilz/grosserfilz.tif",
          windCondition = 2,
@@ -139,7 +139,7 @@ t3p<-t3p(projectDir ="/home/creu/uav/bayerwald",
          launchPos = c(13.409114897133804,48.92039612988935))
 
 fp<-makeAP(projectDir ="/home/creu/uav/kellerwald",
-           missionName = "traddelkopf30",
+           locationName = "traddelkopf30",
            surveyArea="~/uav/traddelkopf/Traddelkopf2016_09_19_30.json",
            followSurface = TRUE,
            flightAltitude = 30,
@@ -151,7 +151,7 @@ fp<-makeAP(projectDir ="/home/creu/uav/kellerwald",
 
 
 fp<-makeAP(projectDir ="/home/creu/uav/uniwald",
-           missionName = "uniwald_75_watershed1",
+           locationName = "uniwald_75_watershed1",
            surveyArea="~/tmp/uniwald.json",
            followSurface = TRUE,
            flightAltitude = 75,
@@ -163,7 +163,7 @@ fp<-makeAP(projectDir ="/home/creu/uav/uniwald",
 )
 
 hagenstein75_full<-makeAP(projectDir ="/home/creu/uav/gentree/hagenstein",
-                          missionName = "hagenstein75_full",
+                          locationName = "hagenstein75_full",
                           surveyArea="~/uav/gentree/hagenstein/hagesteinall.json",
                           followSurface = TRUE,
                           flightAltitude = 75,
@@ -182,7 +182,7 @@ hagenstein75_full<-makeAP(projectDir ="/home/creu/uav/gentree/hagenstein",
 
 
 hagenstein50_full<-makeAP(projectDir ="/home/creu/uav/gentree/hagenstein",
-                          missionName = "hagenstein50_full",
+                          locationName = "hagenstein50_full",
                           surveyArea=c(51.16435558686152,8.909043073654177,51.15986111067753,8.91019105911255,51.159491036988726,8.907798528671266,51.15936992131852,8.906350135803224),
                           followSurface = TRUE,
                           flightAltitude = 50,

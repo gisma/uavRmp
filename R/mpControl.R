@@ -1,8 +1,8 @@
 #DEM related preprocessing and basic analysis stuff
 # 
-# (1) it imports and deproject different kind of input DEM/DSM data
+# (1)  it imports and deproject different kind of input DEM/DSM data
 # (2)  extracting the launching point altitude
-# (3)  extracting all altitudes at the waypointsand the "real" agl flight altitude
+# (3)  extracting all altitudes at the waypoints and the "real" agl flight altitude
 # (4)  calculating the overall RTH 
 # (5)  filtering in line waypoints according to an altitude difference treshold
 # (6)  preprocessing of an highest resolution DSM dealing with clearings and other artefacts
@@ -154,7 +154,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   
   levellog(logger, 'INFO', paste("rthFlightAlt : ", rthFlightAlt," m"))
   
-  # if terrainfollowing filter the waypoints by using the altFilter Value
+  # if terrain following filter the waypoints by using the altFilter Value
   if (followSurface) {
     cat("start followSurface data...\n")
     
@@ -244,7 +244,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
 }
 
 # export data to MAV xchange format 
-# (1) controls with respect to  waypoint number and/or batterylifetime  the splitting of the mission files to seperate task files
+# (1) controls with respect to waypoint number and/or battery lifetime the splitting of the mission files to seperate task files
 # (2) calculate and insert rth and fts waypoints with respect to the terrain obstacles to generate a save start and end of a task
 
 calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,batteryTime,logger,p,len,multiply,tracks,param,speed,uavType,dem,maxAlt,projectDir, workingDir,locationName,uavViewDir,cmd){
@@ -255,11 +255,11 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
   
   if (maxPoints > nrow(df@data)) {maxPoints <- nrow(df@data)}
   
-  # set original counter according to battery or number of points (708)
+  # set original counter according to battery lifetime or number of points (708)
   addmax <- maxPoints
   cat(paste0("create ",nofiles, " control files...\n"))
   
-  # store launchposition and coordinates necessary for the rth calculations
+  # store launch position and coordinates necessary for the rth calculations
   #row1 <- df@data[1,1:(ncol(df@data))]
   launchLat <- df@data[1,8]
   launchLon <- df@data[1,9]
@@ -285,13 +285,13 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
     endLat <- df@data[maxPoints,8]
     endLon <- df@data[maxPoints,9]
     
-    # depending on DEM/DSM sometimes there are no data Values
+    # depending on DEM/DSM sometimes there are no data values
     if (!is.na(endLat) & !is.na(endLon)) {
-      # generate flight lines from lanch to start and launch to end point of splitted task
+      # generate flight lines from launch to start and launch to end point of splitted task
       home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home")
       start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start")
       
-      # calculate minimum rth altitude for each line by identifing max altitude
+      # calculate minimum rth altitude for each line by identifying max altitude
       homeRth  <- raster::extract(dem,home, fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
       startRth <- raster::extract(dem,start,fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
       
@@ -299,7 +299,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       homeRth  <- homeRth  + 0.1 * homeRth
       startRth <- startRth + 0.1 * startRth
       
-      # get the max position of the flightlines
+      # get the max position of the flight lines
       homemaxpos  <- maxpos_on_line(dem,home)
       startmaxpos <- maxpos_on_line(dem,start)
       
@@ -429,20 +429,20 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
   }
 }
 
-# export data to DJI xchange format 
-# (1) controls with respect to  waypoint number and/or batterylifetime  the splitting of the mission files to seperate task files
+# export data to DJI exchange format 
+# (1) controls with respect to waypoint number and/or battery lifetime the splitting of the mission files to seperate task files
 # (2) checking the return to home and fly to start of the misson tracks with respect to the obstacles to generate a save start and end of a task
 calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSwitch=FALSE, dem, maxAlt, projectDir, workingDir,locationName) {
   minPoints <- 1
   addmax    <- maxPoints
   if (maxPoints > nrow(df@data)) {maxPoints <- nrow(df@data)}
-  # store launchposition and coordinates we need them for the rth calculations
+  # store launch position and coordinates we need them for the rth calculations
   row1      <- df@data[1,1:(ncol(df@data))]
   launchLat <- df@data[1,1]
   launchLon <- df@data[1,2]
   dem       <- raster(dem)
   
-  # due to reprojection recalculate teh launchposition and altitude
+  # due to reprojection recalculate teh launch position and altitude
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
   sp::proj4string(launch_pos) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
@@ -461,11 +461,11 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     endLat <- df@data[maxPoints,1]
     endLon <- df@data[maxPoints,2]
     
-    # generate flight lines from lanch to start and launch to end point of splitted task
+    # generate flight lines from launch to start and launch to end point of splitted task
     home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"home")
     start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"start")
     
-    # calculate minimum rth altitude for each line by identifing max altitude
+    # calculate minimum rth altitude for each line by identifying max altitude
     #homeRth<-max(unlist(raster::extract(dem,home)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
     #startRth<-max(unlist(raster::extract(dem,start)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
     maxAltHomeFlight  <- raster::extract(dem,home, fun = max, na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
@@ -530,7 +530,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     longitude      <- pos[1]
     startascentrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
     
-    # extract the dataframe from the sp pint object
+    # extract the dataframe from the sp point object
     DF <- df@data[(as.numeric(minPoints) + 1):maxPoints,]
     
     # add the 6 safety points to each dataframe (i.e. task)
@@ -736,7 +736,7 @@ calcFovHeatmap <- function(footprint,dem) {
   return(fovhm)
 }
 
-# create a sppolygon to estimate the pictures footprint 
+# create a sp polygon to estimate the pictures footprint 
 taskarea <- function(p, csvFn) {
   # construct the 4th corner
   crossdir <- geosphere::bearing(c(p$lon2,p$lat2),c(p$lon3,p$lat3), a = 6378137, f = 1/298.257223563)
@@ -791,7 +791,7 @@ fp_getPresetTask <- function(param="remote") {
     flightParams <- actiontype
     task <- makeTaskParamList(flightParams[1:length(flightParams)])
   }
-  # preset waypoints  take vertical picture at wp
+  # preset waypoints take vertical picture at wp
   else if (param == "simple_ortho") { 
     actiontype = c(5,-90,1,0)
     flightParams <- actiontype 
@@ -899,7 +899,7 @@ calcTrackDistance <- function(fliAltRatio,flightAltitude,factor=1.71) {
 }
 
 calculateFlightTime <- function(maxFlightTime, windCondition, maxSpeed, uavOptimumspeed, flightLength, totalTrackdistance, picRate, logger) {
-  # wind speed adaption for reducing the lifetime of the battery Roughly the Beaufort scale is used
+  # wind speed adaption for reducing the lifetime of the battery - roughly the Beaufort scale is used
   
   if (windCondition == 0) {
     windConditionFactor <- 1.0
@@ -929,7 +929,7 @@ calculateFlightTime <- function(maxFlightTime, windCondition, maxSpeed, uavOptim
   # calculate time need to fly the task
   rawTime <- round(((flightLength/1000)/maxSpeed)*60,digits = 1)
   
-  # calculate the corresponding (raW)  timeintevall for each picture
+  # calculate the corresponding (raW)  time intevall for each picture
   picIntervall <- round(rawTime*60/(flightLength/totalTrackdistance), digits = 1)
   levellog(logger, 'INFO', paste("initial speed estimation  : ", round(maxSpeed, digits = 1),   "  (km/h)      "))
   while (picIntervall < picRate) {
@@ -994,7 +994,7 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
     endLon <- df@data[maxPoints - 1,9]
     
     # depending on DEM/DSM sometimes there are no data Values
-    # generate flight lines from lanch to start and launch to end point of splitted task
+    # generate flight lines from launch to start and launch to end point of splitted task
     home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home")
     start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start")
     
@@ -1134,7 +1134,7 @@ readTreeTrack<- function(treeTrack){
   return(tTkDF)
 }
 
-# calculate a obstacle free flight path for  a given list of coordinates
+# calculate a obstacle free flight path for a given list of coordinates
 
 makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,locationName,circleRadius,flightArea,takeOffAlt){
   # due to RMD Check Note
@@ -1369,7 +1369,7 @@ getAltitudes <- function(demll ,df,p,followSurfaceRes,logger,projectDir,location
   taltitude <- as.data.frame(rawAltitude + as.numeric(p$aboveTreeAlt) - maxAlt)
   taltitude$id <- df@data$id
   
-  #TODO flightaltitude treealtitude
+  #TODO flight altitude tree altitude
   tmp <- df@data
   tmp$altitude[tmp$id == 99 ] <- taltitude$altitude[taltitude$id == 99 ]
   #tmp$altitude[tmp$id == 1 ] <- taltitude$altitude[taltitude$id == 1 ]
@@ -1398,7 +1398,7 @@ readLaunchPos <- function(fN,extend=FALSE){
   return(launchPos)
 }
 
-# export data to xternal format deals with the splitting of the mission files
+# export data to external format deals with the splitting of the mission files
 writeDjiTreeCsv <-function(df,mission){
   # max numbers of waypoints is 99
   nofiles<-ceiling(nrow(df@data)/96)
@@ -1433,7 +1433,7 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     # take current end position of split task
     endLat<-df@data[maxPoints,1]
     endLon<-df@data[maxPoints,2]
-    # generate flight lines from lanch to start and launch to end point of splitted task
+    # generate flight lines from launch to start and launch to end point of splitted task
     yhome <- c(launchLat,endLat)
     xhome <- c(launchLon,endLon)
     ystart <- c(launchLat,startLat)
@@ -1443,7 +1443,7 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     sp::proj4string(home) <-CRS("+proj=longlat +datum=WGS84 +no_defs")
     sp::proj4string(start) <-CRS("+proj=longlat +datum=WGS84 +no_defs")
     
-    # calculate minimum rth altitude for each line by identifing max altitude
+    # calculate minimum rth altitude for each line by identifying max altitude
     homeRth<-max(unlist(raster::extract(dem,home,layer = 1, nl = 1)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
     startRth<-max(unlist(raster::extract(dem,start,layer = 1, nl = 1)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
     
@@ -1567,10 +1567,17 @@ is.odd <- function(x) x %% 2 != 0
 
 # extract highest altitude position and agl of a single track
 get_seg_fparams <- function(dem,
+<<<<<<< HEAD
                             start,
                             target,
                             p){
   # depending on DEM/DSM sometimes there are no data Values
+=======
+                              start,
+                              target,
+                              p){
+  # depending on DEM/DSM sometimes there are no data values
+>>>>>>> 7c4f41030c3da477adcfffc8b227eee9da76e44e
   startAlt<-p$launchAltitude
   seg  <- sp_line(c(start[1],target[1]),c(start[2],target[2]),"seg")
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))
@@ -1594,12 +1601,19 @@ get_seg_fparams <- function(dem,
   return (c(seg_flight_altitude,seg_max_pos,seg_heading,seg))
 }
 
-# extract highest altitude position and agl of a position with  a defined radius
+# extract highest altitude position and agl of a position with a defined radius
 get_point_fparams <- function(dem,
+<<<<<<< HEAD
                               point,
                               p, 
                               radius= 5.0){
   # depending on DEM/DSM sometimes there are no data Values
+=======
+                                point,
+                                p, 
+                                radius= 5.0){
+  # depending on DEM/DSM sometimes there are no data values
+>>>>>>> 7c4f41030c3da477adcfffc8b227eee9da76e44e
   startAlt<-p$launchAltitude
   seg  <- sp_point(point[1],point[2],"point")
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))
