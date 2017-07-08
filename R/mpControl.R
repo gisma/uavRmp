@@ -60,10 +60,10 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       # project the  extent to the current input ref system 
       tmpproj <- grep(gdalinfo(path.expand(demFn),proj4 = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
-      xmn  <- min(p$lon1,p$lon3) - 0.0083
-      xmx  <- max(p$lon1,p$lon3) + 0.0083
-      ymn  <- min(p$lat1,p$lat3) - 0.0083
-      ymx  <- max(p$lat1,p$lat3) + 0.0083
+      xmn  <- min(p$lon1,p$lon3) - 0.003
+      xmx  <- max(p$lon1,p$lon3) + 0.003
+      ymn  <- min(p$lat1,p$lat3) - 0.003
+      ymx  <- max(p$lat1,p$lat3) + 0.003
       cut  <- data.frame(y = c(ymn,ymx), x = c(xmn,xmx))
       coordinates(cut) <- ~x+y
       sp::proj4string(cut) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
@@ -630,13 +630,15 @@ calcSurveyArea <- function(surveyArea,projectDir,logger) {
 # imports the survey area from a json or kml file
 importSurveyArea <- function(fN) {
   # read shapefile
-  if (path.expand(extension(fN)) == ".json") 
-    flightBound <- rgdal::readOGR(dsn = path.expand(fN), layer = "OGRGeoJSON",verbose = FALSE)
-  else if (path.expand(extension(fN)) != ".kml" ) 
-    flightBound <- rgdal::readOGR(dsn = path.expand(dirname(fN)), layer = tools::file_path_sans_ext(basename(fN)), pointDropZ = TRUE, verbose = FALSE)
-  else if (path.expand(extension(fN)) == ".kml" ) {
-    flightBound <- rgdal::readOGR(dsn = path.expand(fN), layer = tools::file_path_sans_ext(basename(fN)), pointDropZ = TRUE, verbose = FALSE)    
-  }
+  #if (path.expand(extension(fN)) == ".json") 
+  #  flightBound <- rgdal::readOGR(dsn = path.expand(fN), layer = "OGRGeoJSON",verbose = FALSE)
+  # else if (path.expand(extension(fN)) != ".kml" ) 
+  #    flightBound <- rgdal::readOGR(dsn = path.expand(dirname(fN)), layer = tools::file_path_sans_ext(basename(fN)), pointDropZ = TRUE, verbose = FALSE)
+  #else if (path.expand(extension(fN)) == ".kml" ) {
+  tmp <- sf::st_read(path.expand(fN))
+  flightBound = as(tmp, "Spatial")
+  #flightBound <- rgdal::readOGR(dsn = path.expand(fN), layer = tools::file_path_sans_ext(basename(fN)), pointDropZ = TRUE, verbose = FALSE)    
+  #  }
   flightBound@data <- as.data.frame(cbind(1,1,1,1,1,-1,0,-1,1,1,1))
   names(flightBound@data) <- c("Name", "description", "timestamp", "begin", "end", "altitudeMode", "tessellate", "extrude", "visibility", "drawOrder", "icon")
   return(flightBound)
@@ -741,7 +743,7 @@ taskarea <- function(p, csvFn) {
   crosslen <- geosphere::distGeo(c(p$lon2,p$lat2),c(p$lon3,p$lat3), a = 6378137, f = 1/298.257223563)
   p4       <- geosphere::destPoint(c(p$lon1,p$lat1), crossdir,crosslen)
   # create SPDF
-  ID = paste0("FlightTask_",basename(csvFn))
+  ID = paste0("FlightTask_",basename(csvFn[1]))
   rawPolygon <- sp::Polygon(cbind(c(p$lon1,p$lon2,p$lon3,p4[[1]],p$lon1),c(p$lat1,p$lat2,p$lat3,p4[[2]],p$lat1)))
   areaExtent <- sp::Polygons(list(rawPolygon), ID = ID)
   areaExtent <- sp::SpatialPolygons(list(areaExtent))
@@ -1103,12 +1105,12 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
     
     # write the control file
     utils::write.table(lnsnew, 
-                paste0(strsplit(getwd(),"/run")[[1]][1],"/control/",mission,"_",i,"_solo.txt"), 
-                sep="\t", 
-                row.names=FALSE, 
-                col.names=FALSE, 
-                quote = FALSE,
-                na = "")
+                       paste0(strsplit(getwd(),"/run")[[1]][1],"/control/",mission,"_",i,"_solo.txt"), 
+                       sep="\t", 
+                       row.names=FALSE, 
+                       col.names=FALSE, 
+                       quote = FALSE,
+                       na = "")
     
     # log event 
     levellog(logger, 'INFO', paste("created : ", paste0(mission,"-",i,".csv")))
@@ -1246,22 +1248,22 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
       
       
       seg_max_toDown <- get_seg_fparams(demll,
-                                          start = c(down_smtlon,down_smtlat),
-                                          target = c(treeList@coords[i,][1],treeList@coords[i,][2]),
-                                          p)
+                                        start = c(down_smtlon,down_smtlat),
+                                        target = c(treeList@coords[i,][1],treeList@coords[i,][2]),
+                                        p)
       
       
       tree_Alt <- get_point_fparams(demll,
-                                      point = c(treeList@coords[i,][1],treeList@coords[i,][2]),
-                                      p,
-                                      radius =circleRadius
+                                    point = c(treeList@coords[i,][1],treeList@coords[i,][2]),
+                                    p,
+                                    radius =circleRadius
       )      
       
       
       seg_max_toNext <- get_seg_fparams(demll,
-                                          start = c(posDown[1],posDown[2]),
-                                          target = c(up_smtlon,up_smtlat),
-                                          p)      
+                                        start = c(posDown[1],posDown[2]),
+                                        target = c(up_smtlon,up_smtlat),
+                                        p)      
       
       # create DOWN WP
       lns[length(lns) + 1] <- makeUavPointMAV(lat = posDown[2],
@@ -1330,7 +1332,7 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
 
 # get altitudes for dji flightpath
 getAltitudes <- function(demll ,df,p,followSurfaceRes,logger,projectDir,locationName,flightArea) {
-
+  
   # extract all waypoint altitudes
   altitude <- as.data.frame(raster::extract(demll,df,layer = 1, nl = 1))
   names(altitude) <- "altitude"
@@ -1565,9 +1567,9 @@ is.odd <- function(x) x %% 2 != 0
 
 # extract highest altitude position and agl of a single track
 get_seg_fparams <- function(dem,
-                              start,
-                              target,
-                              p){
+                            start,
+                            target,
+                            p){
   # depending on DEM/DSM sometimes there are no data Values
   startAlt<-p$launchAltitude
   seg  <- sp_line(c(start[1],target[1]),c(start[2],target[2]),"seg")
@@ -1594,9 +1596,9 @@ get_seg_fparams <- function(dem,
 
 # extract highest altitude position and agl of a position with  a defined radius
 get_point_fparams <- function(dem,
-                                point,
-                                p, 
-                                radius= 5.0){
+                              point,
+                              p, 
+                              radius= 5.0){
   # depending on DEM/DSM sometimes there are no data Values
   startAlt<-p$launchAltitude
   seg  <- sp_point(point[1],point[2],"point")

@@ -145,9 +145,7 @@ https://gisma.github.io/
 \examples{
 
 \dontrun{
-# Please keep in mind that there is a bunch of interdependent parameter settings.
-
-# The following spatial data sets are returned
+# Depending on the arguments, the following spatial data sets can returned
 
 # lp      the planned launching position of the uav.
 # wp      waypoints inclusive all information
@@ -159,28 +157,25 @@ https://gisma.github.io/
 # hm      a heatmap abundance of pictures/pixel (VERY SLOW, only if heatMap = TRUE)
 
 
-# load example DEM data
-data(mrbiko) # to use the example data it's easier to write same in tif format
-writeRaster(mrbiko,"~/dem.tif")
-
-#
-
+## (1) get example DEM data
+demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutorial.kml", package = "uavRmp")
 
 ## (2) simple flight, 50 meters above ground
 ##     assuming a flat topography,
 ##     generating a heatmap to estimate overlapping
 
-fp<-makeAP(surveyArea = c(50.80801,8.72993,50.80590,8.731153,50.80553,8.73472,50.8055,8.734),
-              demFn = "~/dem.tif",
+fp<-makeAP(surveyArea = tutorial_flightArea,
+              demFn = demFn,
               heatMap = TRUE)
 
 ## view results
-mapview(fp$lp,color="red",cex=5)+
-mapview(fp$wp,zcol = "altitude",lwd=1,cex=4)+
-mapview(fp$oDEM,col=terrain.colors(256))+
-mapview(fp$fA,color="red", alpha.regions = 0.1,lwd=1.0)+
-mapview(fp$hm)+
-fp$demA
+mapview::mapview(fp$lp,color="red",cex=5)+
+mapview::mapview(fp$wp,zcol = "altitude",lwd=1,cex=4)+
+mapview::mapview(fp$oDEM,col=terrain.colors(256))+
+mapview::mapview(fp$fA,color="red", alpha.regions = 0.1,lwd=1.0)+
+mapview::mapview(fp$hm)+
+mapview::mapview(fp$demA)
 
 
 ## (2) typical real case scenario
@@ -188,48 +183,50 @@ fp$demA
 ##     U have to use a high resulution DSM
 ##     (here simulated with a standard DEM)
 
-fp<-makeAP(projectDir ="~/uav/test",
-           locationName = "DEPA01",
-           surveyArea=c(50.80801,8.72993,50.80590,8.731153,50.80553,8.73472,50.80709,8.734),
+fp2<-makeAP(projectDir ="~/uav/test",
+           locationName = "examples",
+           surveyArea=tutorial_flightArea,
            followSurface = TRUE,
-           flightAltitude = 30,
-           demFn = "~/dem.tif",
-           windCondition = 3,
-           uavType = "djip3",
+           flightAltitude = 90,
+           demFn = demFn,
+           windCondition = 1,
+           uavType = "solo",
            followSurfaceRes = 5,
            altFilter = .75)
+# view results
+mapview::mapview(fp2$wp,zcol = "altitude",cex=4, lwd=0.5)+
+mapview::mapview(fp2$lp,color = "red", lwd=1,cex=4)+
+mapview::mapview(fp2$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
+mapview::mapview(fp2$oDEM,col=terrain.colors(256))
 
+## (3) use external vector data to define the surveyArea...
+## loading the tutorial data
 
-## (3) use of external vector data to define the surveyArea...
-##     digitize flight area using leafDraw()
-##     save vectors as JS "json" or "kml" files
+fp3<-makeAP(projectDir="~/uav/test",
+           locationName = "examples",
+           surveyArea=tutorial_flightArea,
+           followSurface = TRUE,
+           followSurfaceRes = 1,
+           flightAltitude = 100,
+           overlap = 0.8,
+           demFn = demFn,
+           altFilter = 1.5,
+           maxSpeed = 20,
+           uavType = "solo",
+           windCondition = 1)
+
+## view results
+mapview::mapview(fp3$wp,zcol = "altitude",cex=4, lwd=0.5)+
+mapview::mapview(fp3$lp,color = "red", lwd=1,cex=4)+
+mapview::mapview(fp3$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
+mapview::mapview(fp3$oDEM,col=terrain.colors(256))
+
+## (4) digitize flight area using leafDraw()
+##     save vectors as "kml" files
 ##     provide full filename+upper extensions!
 
 leafDraw(preset="uav")
 
-## assuming resulting file is named "uav.json"
-## use it for planning
-
-fp<-makeAP(projectDir="~/uav/test",
-                   locationName = "DEPA01",
-                   surveyArea="~/uav.json",
-                   followSurface = TRUE,
-                   followSurfaceRes = 1,
-                   flightAltitude = 50,
-                   overlap = 0.8,
-                   demFn = "~/mrbiko.tif",
-                   altFilter = 3.5,
-                   maxSpeed = 20,
-                   uavType = "djip3",
-                   dA = TRUE,
-                   windCondition = 3)
-
-## view results
-mapview::mapview(fp2$wp,zcol = "altitude",cex=4, lwd=0.5)+
-mapview(fp2$lp,color = "red", lwd=1,cex=4)+
-mapview::mapview(fp2$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
-mapview(fp2$oDEM,col=terrain.colors(256))+
-mapview::mapview(fp2$demA,color="black", alpha.regions = 0.1,lwd=0.5)
 }
 }
 \seealso{
