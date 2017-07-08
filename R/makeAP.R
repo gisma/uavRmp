@@ -28,7 +28,7 @@ if (!isGeneric('makeAP')) {
 #'   the Pixhawk controller using the upload2Solo function.\cr\cr
 #'   
 #' @seealso
-#'   A the underlying concept , a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
+#'   The underlying concept, a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
 #'   "uavRmp")} or 
 #'   at \href{https://gisma.github.io/uavRmp/uavRmp_1.html}{Github uavRmp manual}).
 #'
@@ -37,8 +37,8 @@ if (!isGeneric('makeAP')) {
 #'   around. This script is far beyond to be in a mature state. Please control
 #'   and backup all controls again while planning and performing autonomous
 #'   flight plans and missions. You will have a lot of chances to make a small
-#'   mistake what may yield in a damage of your uav or even worse in involving
-#'   people, animals or non-cash assets. Check your risk use parachute systems
+#'   mistake what may yield in a damage of your UAV or even worse in involving
+#'   people, animals or non-cash assets. Check your risk, use parachute systems
 #'   and even if it is running like a charm, keep alert!
 
 
@@ -116,7 +116,7 @@ if (!isGeneric('makeAP')) {
 #'
 #' # The following spatial data sets are returned
 #'
-#' # lp      the planned launching position of the uav.
+#' # lp      the planned launching position of the UAV.
 #' # wp      waypoints inclusive all information
 #' # oDEM    the original (input) digital surface model (DSM)
 #' # rDEM    the resampled (used) DSM
@@ -152,7 +152,7 @@ if (!isGeneric('makeAP')) {
 #'
 #' ## (2) typical real case scenario
 #' ##     a flight altitude BELOW 50 m is extreme
-#' ##     U have to use a high resulution DSM
+#' ##     You have to use a high resulution DSM
 #' ##     (here simulated with a standard DEM)
 #'
 #' fp<-makeAP(projectDir ="~/uav/test",
