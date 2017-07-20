@@ -2,12 +2,9 @@ if (!isGeneric('makeAP')) {
   setGeneric('makeAP', function(x, ...)
     standardGeneric('makeAP'))
 }
-#' Mission Planning tool for generating a set of control files for autonomous data retrieval with respect to DSM/DEM and orthophoto generation
-#' calculation.
+#'UAV Mission Planning tool for autonomous monitoring flight tasks with respect to DSM/DEM, orthophoto and single position data retrieval.
 #'
-#' @description The basic idea is to provide an easy to use workflow for
-#'   controlling rtf UAVs from planning and flying autonomous surveys to
-#'   retrieve aerial or spot data. 
+#' @description The basic idea is to provide an easy to use workflow for controlling rtf-UAVs for planning autonomous surveys to retrieve aerial or spot related data. 
 #'   
 #' @details makeAP (Make UAV Remote
 #'   Controlled Survey) creates either intermediate flight control files for the

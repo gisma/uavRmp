@@ -2,8 +2,7 @@
 % Please edit documentation in R/makeAP.R
 \name{makeAP}
 \alias{makeAP}
-\title{Mission Planning tool for generating a set of control files for autonomous data retrieval with respect to DSM/DEM and orthophoto generation
-calculation.}
+\title{UAV Mission Planning tool for autonomous monitoring flight tasks with respect to DSM/DEM, orthophoto and single position data retrieval.}
 \usage{
 makeAP(projectDir = "~", locationName = "flightArea", surveyArea = NULL,
   flightAltitude = 100, launchAltitude = NULL, followSurface = FALSE,
@@ -105,9 +104,7 @@ By default it is set to (\code{= 0.0}).
 \item{copy}{copy switch}
 }
 \description{
-The basic idea is to provide an easy to use workflow for
-  controlling rtf UAVs from planning and flying autonomous surveys to
-  retrieve aerial or spot data.
+The basic idea is to provide an easy to use workflow for controlling rtf-UAVs for planning autonomous surveys to retrieve aerial or spot related data.
 }
 \details{
 makeAP (Make UAV Remote

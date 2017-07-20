@@ -60,10 +60,10 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       # project the  extent to the current input ref system 
       tmpproj <- grep(gdalinfo(path.expand(demFn),proj4 = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
-      xmn  <- min(p$lon1,p$lon3) - 0.003
-      xmx  <- max(p$lon1,p$lon3) + 0.003
-      ymn  <- min(p$lat1,p$lat3) - 0.003
-      ymx  <- max(p$lat1,p$lat3) + 0.003
+      xmn  <- min(p$lon1,p$lon3) - 0.007
+      xmx  <- max(p$lon1,p$lon3) + 0.007
+      ymn  <- min(p$lat1,p$lat3) - 0.007
+      ymx  <- max(p$lat1,p$lat3) + 0.007
       cut  <- data.frame(y = c(ymn,ymx), x = c(xmn,xmx))
       coordinates(cut) <- ~x+y
       sp::proj4string(cut) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
