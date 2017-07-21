@@ -382,13 +382,13 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       }
       
       # ascent2home WP
-      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lns[,1]) + 5), 
+      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                                  cmd = 16,
                                                  lat = round(calcNextPos(endLon,endLat,homeheading,5)[2],6),
                                                  lon = round(calcNextPos(endLon,endLat,homeheading,5)[1],6),
                                                  alt = round(homeRth,0))
       # maxhomepos WP
-      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lns[,1]) + 6), 
+      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                                  cmd = 16,
                                                  lat = round(homemaxpos[1,2],6),
                                                  lon = round(homemaxpos[1,1],6),
@@ -396,15 +396,15 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       
       # MAV fly to launch sequence
       # RTH altitude TODO
-      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lns[,1]) + 7), 
+      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                                  cmd = 30,
                                                  alt = round(homeRth,0))
       # SPEED max return speed
-      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lns[,1]) + 8), 
+      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                                  cmd = 178,
                                                  p2 = round(speed*4.0,6))
       # trigger RTL event
-      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lns[,1]) + 9), 
+      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                                  cmd = 20)
       
       # write the control file
