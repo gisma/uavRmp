@@ -24,6 +24,7 @@
 #' @examples
 
 #' # fully featured without overlay
+#' require(mapview)
 #' vecDraw()
 #' 
 #' # preset for digitizing uav flight areas using Meuse data set as overlay
@@ -194,8 +195,8 @@ vecDraw <- function(mapCenter=NULL,
             remove=remove,
             position=position,
             scaleBar=TRUE,
-            color=mapviewGetOption("raster.palette")(256),
-            na.color=mapviewGetOption("na.color"),
+            color=mapview::mapviewGetOption("raster.palette")(256),
+            na.color=mapview::mapviewGetOption("na.color"),
             cex = cex,
             lwd = lwd,
             alpha = alpha,

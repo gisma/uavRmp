@@ -120,6 +120,8 @@ if (!isGeneric('makeAP')) {
 #' # rcA     area covered by the RC according to the range and line of sight
 #' # hm      a heatmap abundance of pictures/pixel (VERY SLOW, only if heatMap = TRUE)
 #'
+#' ## for visualisation and vecDraw load mapview
+#' require(mapview)
 #'
 #' ## (1) get example DEM data
 #' demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
@@ -159,7 +161,8 @@ if (!isGeneric('makeAP')) {
 #' ## (4) digitize flight area using leafDraw()
 #' ##     save vectors as "kml" or "json" files
 #' ##     provide full filename +  extension!
-#'
+#' 
+#' 
 #' vecDraw(preset="uav")
 #'
 

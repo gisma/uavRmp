@@ -2,7 +2,7 @@ Package: uavRmp
 Type: Package
 Title: UAV Mission Planner
 Version: 0.5
-Date: 2017-08-28
+Date: 2017-08-29
 Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Sebastian", "Richter", role = c("ctb")),
              person("Lars", "Opgenoorth",  role = c("ctb")),
@@ -31,9 +31,7 @@ Imports:
     geosphere,
     tools,
     maptools,
-    mapview,
     log4r,
-    caret,
     igraph,
     zoo,
     data.table,
@@ -46,5 +44,6 @@ Imports:
 RoxygenNote: 6.0.1
 SystemRequirements: GNU make
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    mapview
 VignetteBuilder: knitr

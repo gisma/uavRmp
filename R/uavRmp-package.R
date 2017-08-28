@@ -24,7 +24,6 @@
 #' @import gdalUtils
 #' @import tools
 #' @import maptools
-#' @import mapview
 #' @import log4r
 #' @import devtools
 #' @import roxygen2
@@ -40,7 +39,6 @@
 #' @importFrom data.table fread
 #' @importFrom spatial.tools create_blank_raster 
 #' @import log4r
-#' @import caret
 #' @keywords package
 #' 
 NULL

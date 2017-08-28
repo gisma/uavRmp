@@ -52,6 +52,7 @@ Yu can either save the digitized object to a json (JS) or kml (KML) file.
 }
 \examples{
 # fully featured without overlay
+require(mapview)
 vecDraw()
 
 # preset for digitizing uav flight areas using Meuse data set as overlay
