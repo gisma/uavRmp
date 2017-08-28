@@ -37,7 +37,8 @@ if (!isGeneric('upload2Solo')) {
 #'@note #' @note for using the solo stuff you need to install: sudo pip install pymavlink; sudo pip install dronekit-sitl; sudo pip install dronekit; sudo apt-get install sshpass
 #'
 #' @examples
-#' upload2Solo("export_1001_solo.waypoints")
+#' wp <- system.file("extdata", "solo_waypoints.txt", package = "uavRmp")
+#' upload2Solo( missionFile = wp)
 #' 
 #' @export upload2Solo
 #'               

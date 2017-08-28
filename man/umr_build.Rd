@@ -24,7 +24,7 @@ offered e.g. by RStudio.  NOTE the default setting are focussing HRZ environment
 }
 \examples{
 \dontrun{
-## when in a package directory, e.g. '~/satellite' 
+## when in a package directory, e.g. '~/uavRmp' 
 umr_build()
 }
 

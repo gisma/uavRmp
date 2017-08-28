@@ -21,7 +21,7 @@ makeAP(projectDir = "~", locationName = "flightArea", surveyArea = NULL,
 
 \item{surveyArea}{you may provide either the coordinates by
 c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or
-an OGR compatible file (preferably geoJSON or KML) with
+an OGR compatible file (prefunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’erably geoJSON or KML) with
 at least 4 coordinates that describe the flight area.
 The fourth coordinate is the launch position.
  You will find further explanation under seealso.}
@@ -58,7 +58,7 @@ Further explanation at seealso}
        \cr
  Options are:
 \code{"simple_ortho"} takes one picture/way point,
-\code{"multi_ortho"} takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an Angele of -60deg,
+\code{"multi_ortho"} takes 4 picture at a waunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’unable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’ypoint, two vertically down and two in forward and backward viewing direction and an Angele of -60deg,
 \code{"simple_pano"} takes a 360 deg panorama picture and
 \code{"remote"} which assumes that the camera is controlled by the remote control (RC)}
 
@@ -162,25 +162,15 @@ tutorial_flightArea <- system.file("extdata", "tutorial.kml", package = "uavRmp"
 ##     assuming a flat topography,
 ##     generating a heatmap to estimate overlapping
 
-fp<-makeAP(surveyArea = tutorial_flightArea,
+fp <- makeAP(surveyArea = tutorial_flightArea,
               demFn = demFn,
               heatMap = TRUE)
-
-## view results
-mapview::mapview(fp$lp,color="red",cex=5)+
-mapview::mapview(fp$wp,zcol = "altitude",lwd=1,cex=4)+
-mapview::mapview(fp$oDEM,col=terrain.colors(256))+
-mapview::mapview(fp$fA,color="red", alpha.regions = 0.1,lwd=1.0)+
-mapview::mapview(fp$hm)+
-mapview::mapview(fp$demA)
-
-
-## (2) typical real case scenario
+## (3) typical real case scenario
 ##     a flight altitude BELOW 50 m is extreme
 ##     You have to use a high resulution DSM
 ##     (here simulated with a standard DEM)
 
-fp2<-makeAP(projectDir ="~/uav/test",
+fp <- makeAP(projectDir ="~/uav/test",
            locationName = "examples",
            surveyArea=tutorial_flightArea,
            followSurface = TRUE,
@@ -190,29 +180,8 @@ fp2<-makeAP(projectDir ="~/uav/test",
            uavType = "solo",
            followSurfaceRes = 5,
            altFilter = .75)
-# view results
-mapview::mapview(fp2$wp,zcol = "altitude",cex=4, lwd=0.5)+
-mapview::mapview(fp2$lp,color = "red", lwd=1,cex=4)+
-mapview::mapview(fp2$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
-mapview::mapview(fp2$oDEM,col=terrain.colors(256))
 
-## (3) use external vector data to define the surveyArea...
-## loading the tutorial data
-
-fp3<-makeAP(projectDir="~/uav/test",
-           locationName = "examples",
-           surveyArea=tutorial_flightArea,
-           followSurface = TRUE,
-           followSurfaceRes = 1,
-           flightAltitude = 100,
-           overlap = 0.8,
-           demFn = demFn,
-           altFilter = 1.5,
-           maxSpeed = 20,
-           uavType = "solo",
-           windCondition = 1)
-
-## view results
+## (5) view results
 mapview::mapview(fp3$wp,zcol = "altitude",cex=4, lwd=0.5)+
 mapview::mapview(fp3$lp,color = "red", lwd=1,cex=4)+
 mapview::mapview(fp3$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+

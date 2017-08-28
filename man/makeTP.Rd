@@ -64,19 +64,16 @@ For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) ar
 makeTP generates a flight track chaining up point objects with respect to a heterogenous surface and known obstacles as documented by an DSM for taking top down pictures. It creates a single control file for autonomous picture retrieval flights.
 }
 \examples{
-\dontrun{
-require(mapview)
-makeTP  <-  makeTP(projectDir ="/home/creu/uav/bayerwald",
-                   locationName = "filzmoosTree",
-                   missionTrackList="~/uav/bayerwald/Selected_trees_Filz.txt",
-                   demFn = "~/uav/grossfilz/grosserfilz.tif",
-                   windCondition = 2,
+## (1) get example DEM data
+dsmFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutorial.csv", package = "uavRmp")
+
+## (2) make position flight plan
+makeTP  <-  makeTP(missionTrackList= tutorial_flightArea,
+                   demFn = dsmFn,
                    uavType = "solo",
                    followSurfaceRes=5,
-                   launchPos = c(8.772055,50.814689))
-# view result
-mapview(makeTP$wp,zcol = "altitude",lwd=1,cex=5)+
-mapview(t3$lp,color="red",cex=5)
-}
+                   launchPos = c(8.679,50.856))
+
 
 }

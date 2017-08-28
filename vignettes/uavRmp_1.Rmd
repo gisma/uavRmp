@@ -251,7 +251,7 @@ Digitize the 3 corner points of an area you want to map and in addition as fourt
  # Use the digitized data and the example DEM to calculate a flight control file
  fp <- makeAP(projectDir = "~/proj",
               locationName = "valleyWood",
-              surveyArea = "firstSurvey.kml",
+              surveyArea = "firstSurvey.json",
               flightAltitude = 100,
               demFn = data(mrbiko))
 ```
@@ -320,7 +320,7 @@ writeRaster(mrbiko,"~/dem.tif")
 
 fp<-makeFP(projectDir ="~/uav/proj",
            missionName ="firstSurvey",
-           surveyArea="~/myFirstSurvey.kml",
+           surveyArea="~/myFirstSurvey.json",
            flightAltitude =100,
            maxSpeed =35,
            demFn ="~/dem.tif")

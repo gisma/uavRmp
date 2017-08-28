@@ -22,7 +22,7 @@
 #' 
 #'
 #' @examples
-#'\dontrun{
+
 #' # fully featured without overlay
 #' vecDraw()
 #' 
@@ -36,7 +36,7 @@
 #'   
 #' # preset for digitizing simple rectangles extents
 #' vecDraw(preset="ext",overlay = m)
-#' }
+
 #' @export vecDraw
 
 vecDraw <- function(mapCenter=NULL,

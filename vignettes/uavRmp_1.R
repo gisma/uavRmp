@@ -10,7 +10,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 #   # Use the digitized data and the example DEM to calculate a flight control file
 #   fp <- makeAP(projectDir = "~/proj",
 #                locationName = "valleyWood",
-#                surveyArea = "firstSurvey.kml",
+#                surveyArea = "firstSurvey.json",
 #                flightAltitude = 100,
 #                demFn = data(mrbiko))
 
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 #  library(uavRmp)
 #  
 #  # start digitizing tool with preset = "uav" for a reduced toolbar
-#  # see ?vecDraw for more information
+#  # see ?leafDraw for more information
 #  vecDraw(mapCenter = c(50.855,8.691),preset="uav")
 
 ## ---- eval=FALSE---------------------------------------------------------
@@ -30,7 +30,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 #  
 #  fp<-makeFP(projectDir ="~/uav/proj",
 #             missionName ="firstSurvey",
-#             surveyArea="~/myFirstSurvey.kml",
+#             surveyArea="~/myFirstSurvey.json",
 #             flightAltitude =100,
 #             maxSpeed =35,
 #             demFn ="~/dem.tif")

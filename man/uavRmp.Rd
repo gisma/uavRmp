@@ -4,19 +4,19 @@
 \name{uavRmp}
 \alias{uavRmp}
 \alias{uavRmp-package}
-\title{UAV R Based Mission Planner}
+\title{UAV Mission Planner}
 \description{
-The package provides some mission planning functionality for dealing #' with Unmanned Aerial Vehicles
+The package provides some mission planning functionality for dealing with Unmanned Aerial Vehicles. The focus is set on an easy to use workflow for planning autonomous obstacle avoiding surveys of rtf-UAVs to retrieve aerial or spot related data. It provides either intermediate flight control files for the DJI phantom x UAVs or ready to upload control files for the pixhawk based flightcontroller as used in the 3DR Solo. Additionally it contains some useful tools for digitizing and data manipulation.
 }
 \details{
 The package provides some mission planning functionality for dealing with Unmanned Aerial Vehicles
 }
 \note{
-It is important to keep in mind that all binaries need to be installed 
+It is important to keep in mind that all auxilliary external binaries  like GDAL or SAGA need to be installed properly.
 correctly on your system.
 }
 \author{
-Chris Reudenbach Lars Opgenoorth Sebastian Richter
+Chris Reudenbach Lars Opgenoorth Sebastian Richter Florian Detsch Hanna Meyer
 \cr
 \emph{Maintainer:} Chris Reudenbach \email{reudenbach@uni-marburg.de}
 }

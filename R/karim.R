@@ -229,7 +229,7 @@ maxpos_on_line <- function(dem,line){
 #' 
 #' @examples
 #' \dontrun{
-#' ## when in a package directory, e.g. '~/satellite' 
+#' ## when in a package directory, e.g. '~/uavRmp' 
 #' umr_build()
 #' }
 #' 
