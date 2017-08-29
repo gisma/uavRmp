@@ -8,13 +8,11 @@ surveys including battery-dependent task splitting, save departures, and approac
 
 ## Supported UAV platforms
 
-Up to now it has been dedicated to low budget rtf-UAVs (ready-to-fly-UAVs) as the DJI Phantom series and the 3DR Solo. However the current and future support will cover all Pixhawk based UAVs.
+Up to now the ```uavRmp``` package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI Phantom series and Pixhawk based platforms as the 3DR Solo. However the future support will focus the Pixhawk based UAVs.
 
-The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://ardupilot.org/planner/) or [APM Planner 2](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless they are so far missing either planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner). Other groundstation software solutions like the powerful [UgCS](https://www.ugcs.com/) are supporting custom DEM/DSM (in the commercial Pro license) but are still lacking an adequate capability for dealing with highly complex surfaces combined with low above surface flight altitudes.
+The majority of the open UAV community is using the PixHawk autopilot unit and for planning probably the [MissionPlanner](http://ardupilot.org/planner/) ground station software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless it is has only a poor planning support for terrain following autonomous flights and no support for battery-dependent task splitting and save departures and approaches (MissionPlanner). Other ground station software solutions like the powerful [UgCS](https://www.ugcs.com/) is supporting custom DEM/DSM (in the commercial Pro license) but are still lacking an adequate capability for dealing with highly complex surfaces combined with low above surface flight altitudes and also does not provide task splitting according to the battery capacity.
 
 The ```uavRmd``` bridges this gap  and  generates  ```MAVLINK``` format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.
-
-The reason using DJI is their absolute straightforward usage. Everybody can fly with a DJI but the price to pay is a hermetically closed system. Only the litchi app provides additionally to a cloud based mission planner an offline/standalone interface that is up to date and facilitates the upload of a CSV formatted waypoint file to control autonomous flights with the the Phantom.
 
 
 ## Mission planning 
