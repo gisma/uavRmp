@@ -44,12 +44,46 @@
 NULL
 #' DEM data set of Marburg-Biedenkopf
 #' @docType data
-#' @name mrbiko
+#' @name tutdata_dem
 #' @title DEM data set of Marburg-Biedenkopf
 #' @description DEM data set resampled to 20 m resolution
 #' @format \code{"raster::raster"}
 #' @keywords datasets
-#' @source \code{uav flight marburg universitsy forest}
+#' @source \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
 NULL
 #'
+#' MAVLINK waypoint example data 
+#' @docType data
+#' @name tutdata_waypoints
+#' @title MAVLINK waypoint example data
+#' @description Waypoint file
+#' @keywords datasets
+#' @source \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+NULL
+#'
+#' Virtual object position  coordinates example data 
+#' @docType data
+#' @name tutdata_position
+#' @title position example data
+#' @description position data for planning a single flight task with focus on known objects
+#' @keywords datasets
+#' @source \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+NULL
+#'
+#' GPX example data 
+#' @docType data
+#' @name tutdata_flighttrack
+#' @title GPX example data 
+#' @description GPX example data as derived by a 3DR Solo flight
+#' @keywords datasets
+#' @source \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+NULL
 
+#' Flight area planning example data 
+#' @docType data
+#' @name tutdata_flightarea
+#' @title Flight area planning example data 
+#' @description Flight area planning example data as typically needed for planning an autonomous survey flight task
+#' @keywords datasets
+#' @source \code{Faculty of Geography Marburg}
+NULL

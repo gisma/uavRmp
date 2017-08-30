@@ -354,7 +354,7 @@ DJI:
 Open [Litchi Mission](https://flylitchi.com/hub) and click on the button ''Missions->Import'' and navigate to the control file firstSurvey_1001.csv. To export it click ''Missions->Save''. 
 
 Solo 
-```upload2Solo("export_1001_solo.waypoints")```
+```solo_upload("export_1001_solo.waypoints")```
 
 Ready to take off - that’s your first flight plan!
 

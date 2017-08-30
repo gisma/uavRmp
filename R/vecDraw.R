@@ -30,10 +30,10 @@
 #' # preset for digitizing uav flight areas using Meuse data set as overlay
 #' require(sp)
 #' data(meuse) 
-#' coordinates(meuse) <- ~x+y 
-#' proj4string(meuse) <-CRS("+init=epsg:28992") 
+#' sp::coordinates(meuse) <- ~x+y 
+#' sp::proj4string(meuse) <-CRS("+init=epsg:28992") 
 #' m<-sp::spTransform(meuse,CRSobj = sp::CRS("+init=epsg:4326"))
-#' uavRmp::vecDraw(overlay = m, preset = "uav")
+#' vecDraw(overlay = m, preset = "uav")
 #'   
 #' # preset for digitizing simple rectangles extents
 #' vecDraw(preset="ext",overlay = m)

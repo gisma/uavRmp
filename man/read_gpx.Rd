@@ -21,3 +21,16 @@ Read a GPX file. By default, it reads all possible GPX layers, and only returns 
 \note{
 cloned from tmap
 }
+\examples{
+## for visualisation we are using mapview
+require(mapview)
+## assign  GPX file
+gpxFN <- system.file("extdata", "flighttrack.gpx", package = "uavRmp")
+
+## read it
+gpx <- read_gpx(gpxFN, layers=c("tracks"))
+
+## plot it
+mapview::mapview(gpx)
+
+}

@@ -28,7 +28,8 @@ for using the solo stuff you need to install: \cr
 sudo pip install pymavlink  \cr 
 sudo pip install dronekit-sitl \cr 
 sudo pip install dronekit \cr 
-sudo apt-get install sshpass \cr
+sudo apt-get install sshpass \cr 
+\cr Additionally you need to be connected to a running 3DR Solo uav
 }
 \examples{
 \dontrun{

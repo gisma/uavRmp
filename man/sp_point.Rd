@@ -19,5 +19,13 @@ sp_point(lon, lat, ID = "point",
 \item{export}{write shafefile default = F}
 }
 \description{
-create an spatialpointobject from 1 points, optional export as shapefile
+create an spatial point object from 1 point and optionally export it as a shapefile
+}
+\examples{
+## creating sp spatial point object
+point <- sp_point(8.770362,50.815240,ID="Faculty of Geographie Marburg")
+
+## plot it
+raster::plot(point)
+
 }

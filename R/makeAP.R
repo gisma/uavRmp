@@ -2,9 +2,9 @@ if (!isGeneric('makeAP')) {
   setGeneric('makeAP', function(x, ...)
     standardGeneric('makeAP'))
 }
-#'UAV Mission Planning tool for autonomous monitoring flight tasks with respect to DSM/DEM, orthophoto and single position data retrieval.
+#'UAV Mission Planning tool for autonomous monitoring flight tasks with respect to DSM/DEM, orthophoto data retrieval.
 #'
-#' @description The basic idea is to provide an easy to use workflow for controlling rtf-UAVs for planning autonomous surveys to retrieve aerial or spot related data. 
+#' @description The basic idea is to provide an easy to use workflow for controlling rtf-UAVs for planning autonomous surveys to retrieve aerial data sets. 
 #'   
 #' @details makeAP (Make UAV Remote
 #'   Controlled Survey) creates either intermediate flight control files for the
@@ -22,7 +22,7 @@ if (!isGeneric('makeAP')) {
 #'   documented and several APIs are provided. Nevertheless a terrain following
 #'   autonomous flight planning tool is not available. makeAP creates static
 #'   implementation of the MAV format that is ready to be uploaded directly on
-#'   the Pixhawk controller using the upload2Solo function.\cr\cr
+#'   the Pixhawk controller using the \code{solo_upload} function.\cr\cr
 #'   
 #' @seealso
 #'   The underlying concept, a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
@@ -125,15 +125,14 @@ if (!isGeneric('makeAP')) {
 #'
 #' ## (1) get example DEM data
 #' demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-#' tutorial_flightArea <- system.file("extdata", "tutorial.kml", package = "uavRmp")
+#' tutorial_flightArea <- system.file("extdata", "flightarea.kml", package = "uavRmp")
 #' 
 #' ## (2) simple flight, 50 meters above ground
 #' ##     assuming a flat topography,
-#' ##     generating a heatmap to estimate overlapping
 #'
 #' fp <- makeAP(surveyArea = tutorial_flightArea,
-#'               demFn = demFn,
-#'               heatMap = TRUE)
+#'               demFn = demFn)
+#'               
 #' ## (3) typical real case scenario
 #' ##     a flight altitude BELOW 50 m is extreme
 #' ##     You have to use a high resulution DSM
@@ -153,7 +152,7 @@ if (!isGeneric('makeAP')) {
 
 #' ## (5) view results
 
-#'mapview::mapview(fp3$wp,zcol = "altitude",cex=4, lwd=0.5)+
+#'mapview::mapview(fp3$wp,cex=4, lwd=0.5)+
 #'mapview::mapview(fp3$lp,color = "red", lwd=1,cex=4)+
 #'mapview::mapview(fp3$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
 #'mapview::mapview(fp3$oDEM,col=terrain.colors(256))

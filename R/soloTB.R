@@ -8,7 +8,7 @@ sologetlog <- function(connection="udp:10.1.1.166:14550",prearm="-9"){
   
   option1<-'--connect'
   connection<-connection
-
+  
   args = c(option1, connection)
   
   # Add path to script as first arg
@@ -20,13 +20,13 @@ sologetlog <- function(connection="udp:10.1.1.166:14550",prearm="-9"){
 }
 
 
-if (!isGeneric('upload2Solo')) {
-  setGeneric('upload2Solo', function(x, ...)
-    standardGeneric('upload2Solo'))
+if (!isGeneric('solo_upload')) {
+  setGeneric('solo_upload', function(x, ...)
+    standardGeneric('solo_upload'))
 }
 #' upload mission file to solo
 #'
-#' @description  upload2Solo provides a crude interface to upload the Solo mission file to the 3dr SOLO
+#' @description  solo_upload provides a crude interface to upload the Solo mission file to the 3dr SOLO
 #'
 #' @param connection a valid connection string to the Solo default is "udp:10.1.1.166:14550"
 #' @param prearm controls the prearm status of the Solo prearm check 0=Disabled,1=Enabled,-3=Skip Baro,-5=Skip Compass,-9=Skip GPS,-17=Skip INS,-33=Skip Params/Rangefinder,-65=Skip RC,127=Skip Voltage 
@@ -34,16 +34,16 @@ if (!isGeneric('upload2Solo')) {
 #' 
 #'
 #'
-#'@note #' @note for using the solo stuff you need to install: sudo pip install pymavlink; sudo pip install dronekit-sitl; sudo pip install dronekit; sudo apt-get install sshpass
+#'@note for using the solo stuff you need to install: \cr sudo pip install pymavlink;\cr sudo pip install dronekit-sitl;\cr sudo pip install dronekit; \cr sudo apt-get install sshpass\cr Additionally you need to be connected to a running 3DR Solo uav 
 #'
 #' @examples
-#' wp <- system.file("extdata", "solo_waypoints.txt", package = "uavRmp")
-#' upload2Solo( missionFile = wp)
+#' wp <- system.file("extdata", "MAVLINK_waypoints.txt", package = "uavRmp")
+#' solo_upload( missionFile = wp)
 #' 
-#' @export upload2Solo
+#' @export solo_upload
 #'               
 
-upload2Solo <- function(missionFile=NULL,connection="udp:10.1.1.166:14550",prearm="-9"){
+solo_upload <- function(missionFile=NULL,connection="udp:10.1.1.166:14550",prearm="-9"){
   
   
   command ='python'
@@ -91,6 +91,7 @@ if (!isGeneric('soloLog')) {
 #' sudo pip install dronekit-sitl \cr 
 #' sudo pip install dronekit \cr 
 #' sudo apt-get install sshpass \cr 
+#' \cr Additionally you need to be connected to a running 3DR Solo uav 
 #' 
 #' @examples
 #' \dontrun{

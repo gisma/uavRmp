@@ -11,9 +11,20 @@ if (!isGeneric('read_gpx ')) {
 #' @param file a GPX filename (including directory)
 #' @param layers vector of GPX layers. Possible options are \code{"waypoints"}, \code{"tracks"}, \code{"routes"}, \code{"track_points"}, \code{"route_points"}. By dedault, all those layers are read.
 #' @return  if the layer has any features a sp object is returned.
-#' @export read_gpx
 #' @note cloned from tmap
+#' @examples 
+#' ## for visualisation we are using mapview
+#' require(mapview)
+#' ## assign  GPX file
+#' gpxFN <- system.file("extdata", "flighttrack.gpx", package = "uavRmp")
 #' 
+#' ## read it
+#' gpx <- read_gpx(gpxFN, layers=c("tracks"))
+#' 
+#' ## plot it
+#' mapview::mapview(gpx)
+#' 
+#' @export read_gpx
 
 read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_points", "route_points")) {
   if (!all(layers %in% c("waypoints", "tracks", "routes", "track_points", "route_points"))) stop("Incorrect layer(s)", call. = FALSE)
@@ -37,74 +48,6 @@ read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_poin
   }
 }
 
-
-if (!isGeneric('xyz2tif')) {
-  setGeneric('xyz2tif', function(x, ...)
-    standardGeneric('xyz2tif'))
-}
-#' Read and Convert xyz DEM/DSM Data as typically provided by the public authorities
-#' 
-#' @description
-#' Read xyz data and generate a raster  \code{Raster*} object.  
-#' 
-#' @param xyzFN ASCII tect file with xyz values
-#' @param epsgCode EPSG Code default is  "25832"
-
-#' 
-#' 
-#' @examples 
-#'\dontrun{
-#' # get some typical data as provided by the public authority of Bavaria
-#' setwd(tempdir())
-#' url<-"http://www.ldbv.bayern.de/file/zip/10430/DGM_1_ascii.zip"
-#' res <- curl::curl_download(url, "testdata.zip")
-#' unzip("testdata.zip",junkpaths = TRUE,overwrite = TRUE)
-#' # convert it 
-#' xyz2tif("DGM_1.g01dgm","25832")
-#' # plot it
-#' r<-raster::raster("DGM_1.tif")
-#' raster::plot(r)
-#'} 
-#' @export xyz2tif
-#' 
-
-xyz2tif <- function(xyzFN=NULL,  epsgCode ="25832"){
-  # read data 
-  xyz<-data.table::fread(xyzFN)
-  cat("write it to",paste0(dirname(xyzFN),"/",tools::file_path_sans_ext(basename(xyzFN)),".tif"),"\n")
-  cat("this will probably take a while...\n")
-  r <- raster::rasterFromXYZ(xyz,crs=sp::CRS(paste0("+init=epsg:",epsgCode)))
-  # write it to geotiff
-  raster::writeRaster(r, paste0(dirname(xyzFN),"/",tools::file_path_sans_ext(basename(xyzFN)),".tif"),overwrite=TRUE)
-  cat("...finished\n")
-}
-
-
-
-
-raster_adjust_projection <- function(x) {
-  llcrs <- "+proj=longlat +datum=WGS84 +no_defs"
-  
-  is.fact <- raster::is.factor(x)[1]
-  
-  non_proj_waning <-
-    paste("supplied", class(x)[1], "has no projection information!", "\n",
-          "provide a correctly georeferenced data raster object or 'GDAL File")
-  
-  if (is.fact) {
-    x <- raster::projectRaster(
-      x, raster::projectExtent(x, crs = sp::CRS(llcrs)),
-      method = "ngb")
-    x <- raster::as.factor(x)
-  } else {
-    x <- raster::projectRaster(
-      x, raster::projectExtent(x, crs = sp::CRS(llcrs)),
-      method = "bilinear")
-  }
-  
-  return(x)
-  
-}
 
 # Check projection of objects according to their keywords -------
 
@@ -141,19 +84,26 @@ comp_ll_proj4 <- function(x) {
 #' create an spatiallineobject from 2 points
 #' @description
 #' create an spatiallineobject from 2 points, optional export as shapefile
-#' @param p1 coordinate of first point
-#' @param p2 coordinate of second point
+#' @param Y_coords Y/lat coordinates 
+#' @param X_coords X/lon coordinates
 #' @param ID id of line
 #' @param proj4 projection
 #' @param export write shafefile default = F 
 #' @export
 #' 
-sp_line <- function(p1,
-                    p2,
+#' @examples 
+#' ## creating sp spatial point object
+#' line <- sp_line(c(8.770367,8.771161,8.771536),c(50.815172,50.814743,50.814875),ID="go for it")
+#' 
+#' ## plot it
+#' raster::plot(line)
+#' 
+sp_line <- function(Y_coords,
+                    X_coords,
                     ID,
                     proj4="+proj=longlat +datum=WGS84 +no_defs",
                     export=FALSE) {   
-  line <- SpatialLines(list(Lines(Line(cbind(p1,p2)), ID = ID)))
+  line <- SpatialLines(list(Lines(Line(cbind(Y_coords,X_coords)), ID = ID)))
   sp::proj4string(line) <- CRS(proj4)
   if (export) {
     writeLinesShape(line,paste0(ID,"home.shp"))
@@ -162,13 +112,19 @@ sp_line <- function(p1,
 }
 #' create an spatialpointobject from 1 points
 #' @description
-#' create an spatialpointobject from 1 points, optional export as shapefile
+#' create an spatial point object from 1 point and optionally export it as a shapefile
 #' @param lon lon
 #' @param lat lat
 #' @param proj4 projection
 #' @param ID name of point
 #' @param export write shafefile default = F 
 #' @export
+#' @examples 
+#' ## creating sp spatial point object
+#' point <- sp_point(8.770362,50.815240,ID="Faculty of Geographie Marburg")
+#' 
+#' ## plot it
+#' raster::plot(point)
 #' 
 sp_point <- function(lon,
                      lat,
@@ -191,7 +147,17 @@ sp_point <- function(lon,
 #' @param dem raster object
 #' @param line  sp object
 #' @export
+#' @examples 
+#' ## load DEM/DSM 
+#' dem <- raster::raster(system.file("extdata", "mrbiko.tif", package = "uavRmp"))
 #' 
+#' ## generate extraction line object
+#' line <- sp_line(c(8.66821,8.68212),c(50.83939,50.83267),ID="Highest Position")
+#' 
+#' ## extract highest position
+#' maxpos_on_line(dem,line)  
+#' 
+ 
 maxpos_on_line <- function(dem,line){
   mask <- dem
   raster::values(mask) <- NA
@@ -204,103 +170,6 @@ maxpos_on_line <- function(dem,line){
   return(maxPos)
 }
 
-
-#' Build package manually
-#' 
-#' @description 
-#' This function was specifically designed to build a package from local source 
-#' files manually, i.e., without using the package building functionality 
-#' offered e.g. by RStudio.  NOTE the default setting are focussing HRZ environment at Marburg University
-#' 
-#' 
-#' @param dsn 'character'. Target folder containing source files; defaults to 
-#' the current working directory.
-#' @param pkgDir 'character'. Target folder containing the result ing package of the invoked build process. According to Marburg University pools the default is set to pkgDir="H:/Dokumente". If you want to use it in a different setting you may set pkgDir to whatever you want.
-#' @param document 'logical'. Determines whether or not to invoke 
-#' \code{\link{roxygenize}} with default roclets for documentation purposes.  
-#' @param ... Further arguments passed on to \code{\link[devtools]{build}}. 
-#' 
-#' @seealso 
-#' \code{\link{roxygenize}}, \code{\link[devtools]{build}},\code{\link{install.packages}}.
-#' 
-#' @author 
-#' Florian Detsch, Chris Reudenbach
-#' 
-#' 
-#' @examples
-#' \dontrun{
-#' ## when in a package directory, e.g. '~/uavRmp' 
-#' umr_build()
-#' }
-#' 
-#' @export umr_build
-#' @name umr_build
-umr_build <- function(dsn = getwd(), pkgDir="H:/Dokumente",document = TRUE, ...) {
-  
-  ## reset 'dsn' to 'H:/...'  
-  if (length(grep("students_smb", dsn)) > 0) {
-    lst_dsn <- strsplit(dsn, "/")
-    chr_dsn <- unlist(lst_dsn)[3:5]
-    dsn <- paste0("H:/", paste(chr_dsn, collapse = "/"))
-  }
-  
-  ## if 'document = TRUE', create documentation 
-  if (document) {
-    cat("\nCreating package documentation...\n")
-    roxygen2::roxygenize(package.dir = dsn, 
-                         roclets = c('rd', 'collate', 'namespace'))
-  }
-  
-  ## build package
-  cat("\nBuilding package...\n")
-  
-  devtools::build(pkg = dsn, path = dirname(dsn), ...)
-  
-  
-  ## install package
-  cat("Installing package...\n")
-  pkg <- list.files(dirname(pkgDir), full.names = TRUE,
-                    pattern = paste0(basename(dsn), ".*.tar.gz$"))
-  pkg <- pkg[length(pkg)]
-  
-  utils::install.packages(pkg, repos = NULL)
-  
-  return(invisible(NULL))
-}
-
-#' converts SAGA raster to R raster object
-#' @description converts SAGA raster to R raster object
-#' @param fn filname without extension
-#' @param ext extent of the raster in R notation
-#' @export
-saga2r<- function(fn,ext) {
-  path_run<-NULL
-  gdalUtils::gdalwarp(paste0(path_run,fn,".sdat"), 
-                      paste0(path_run,fn,".tif"), 
-                      overwrite = TRUE,  
-                      verbose = FALSE)
-  x<-raster::raster(paste0(path_run,fn,".tif"))
-  x@extent <- ext
-  # convert to SAGA
-  return(x)
-}
-
-#' converts SAGA raster to R raster object
-#' @description converts SAGA raster to R raster object
-#' @param x raster object
-#' @param fn filname without extension
-#' @export
-r2saga <- function(x,fn) {
-  # due to RMD Check Note
-  path_run<-NULL
-  raster::writeRaster(x,paste0(path_run,fn,".tif"),overwrite = TRUE)
-  # convert to SAGA
-  gdalUtils::gdalwarp(paste0(path_run,fn,".tif"), 
-                      paste0(path_run,fn,".sdat"), 
-                      overwrite = TRUE,  
-                      of = 'SAGA',
-                      verbose = FALSE)
-}
 
 fun_multiply <- function(x)
 {

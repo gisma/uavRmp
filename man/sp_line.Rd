@@ -4,13 +4,13 @@
 \alias{sp_line}
 \title{create an spatiallineobject from 2 points}
 \usage{
-sp_line(p1, p2, ID, proj4 = "+proj=longlat +datum=WGS84 +no_defs",
+sp_line(Y_coords, X_coords, ID, proj4 = "+proj=longlat +datum=WGS84 +no_defs",
   export = FALSE)
 }
 \arguments{
-\item{p1}{coordinate of first point}
+\item{Y_coords}{Y/lat coordinates}
 
-\item{p2}{coordinate of second point}
+\item{X_coords}{X/lon coordinates}
 
 \item{ID}{id of line}
 
@@ -20,4 +20,12 @@ sp_line(p1, p2, ID, proj4 = "+proj=longlat +datum=WGS84 +no_defs",
 }
 \description{
 create an spatiallineobject from 2 points, optional export as shapefile
+}
+\examples{
+## creating sp spatial point object
+line <- sp_line(c(8.770367,8.771161,8.771536),c(50.815172,50.814743,50.814875),ID="go for it")
+
+## plot it
+raster::plot(line)
+
 }
