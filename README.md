@@ -21,7 +21,7 @@ The core planning tool ```makeFP``` (make flight plan) creates either intermedia
 
 ## The family
 
-The package family consists of 4 parts:
+The package family will consist of 4 parts:
 
   * flight planning ```uavRmp```
   * forest analysis ```uavRfa```
@@ -29,9 +29,8 @@ The package family consists of 4 parts:
   * archaeology ```uavRao```
   
 
-Please note that uavRmp is making strong use of CLI tools like GDAL. The setup  of the correct linkage to these APIs can be cumbersome. For using the ```uavRmp``` package you need to install the  ```link2GI``` package. Because the CRAN version is a bit outdated you should get the actual github hosted version of the [link2GI](https://github.com/gisma/link2GI/blob/master/README.md) package. 
 
-Nevertheless, all mentioned software packages have to be installed correctly on your OS. It is just in parts tested under Windows but should run....The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux you can use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the [dronekit](http://python.dronekit.io/develop/installation.html) python libs in addition.
+The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux you can use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the [dronekit](http://python.dronekit.io/develop/installation.html) python libs in addition.
 
 A full list of necessary libraries and binaries beyond ```R``` will soon be provided.
 

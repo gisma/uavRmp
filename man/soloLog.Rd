@@ -4,7 +4,7 @@
 \alias{soloLog}
 \title{Download, reorganize and export the telemetry (tlog) files from 3DR Solo (and Pixhawk)}
 \usage{
-soloLog(logFiles = "solo.t*", logDir = "~/soloLog", downloadOnly = FALSE,
+soloLog(logFiles = "solo.t*", logDir = tmpDir(), downloadOnly = FALSE,
   netWarn = TRUE, organize = TRUE, makeSP = FALSE)
 }
 \arguments{
@@ -34,12 +34,12 @@ sudo apt-get install sshpass \cr
 \examples{
 \dontrun{
 ## download current telemetry log file from controller and convert it to gpx
-soloLog(logDir="~/tmp/solo",logFiles = "solo.tlog")
+soloLog(logFiles = "solo.tlog")
 
 ## download all available telemetry logfiles from the controller
-soloLog(logDir="~/tmp/solo")
+soloLog()
 
 ## download ALL logfiles from the controller
-soloLog(logDir="~/tmp/solo", logFiles = "*")
+soloLog(logFiles = "*")
 }
 }

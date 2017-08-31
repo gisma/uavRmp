@@ -50,7 +50,7 @@ if (!isGeneric('makeTP')) {
 #' @export makeTP 
 #'               
 
-makeTP <-  function(projectDir="~",
+makeTP <-  function(projectDir=tempdir(),
                     locationName="treePos",
                     missionTrackList=NULL,
                     launchPos=c(8.772055,50.814689),

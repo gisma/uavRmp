@@ -127,22 +127,20 @@ if (!isGeneric('makeAP')) {
 #' demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 #' tutorial_flightArea <- system.file("extdata", "flightarea.kml", package = "uavRmp")
 #' 
-#' ## (2) simple flight, 50 meters above ground
+#' ## (2) simple flight, 100 meters above ground
 #' ##     assuming a flat topography,
 #'
 #' fp <- makeAP(surveyArea = tutorial_flightArea,
 #'               demFn = demFn)
 #'               
 #' ## (3) typical real case scenario
-#' ##     a flight altitude BELOW 50 m is extreme
-#' ##     You have to use a high resulution DSM
+#' ##     Flight altitudes BELOW 50 m is ambitious and risky
+#' ##     You have to use a high quality high resulution DSM
 #' ##     (here simulated with a standard DEM)
 #'
-#' fp <- makeAP(projectDir ="~/uav/test",
-#'            locationName = "examples",
-#'            surveyArea=tutorial_flightArea,
+#' fp <- makeAP(surveyArea=tutorial_flightArea,
 #'            followSurface = TRUE,
-#'            flightAltitude = 90,
+#'            flightAltitude = 45,
 #'            demFn = demFn,
 #'            windCondition = 1,
 #'            uavType = "solo",
@@ -174,7 +172,7 @@ if (!isGeneric('makeAP')) {
 #'
 
 
-makeAP <- function(projectDir = "~",
+makeAP <- function(projectDir = tempdir(),
                    locationName = "flightArea",
                    surveyArea = NULL,
                    flightAltitude = 100,
