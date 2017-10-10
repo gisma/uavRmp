@@ -4,7 +4,7 @@ if (!isGeneric('makeTP')) {
 }
 #' Flight Track Planning tool 
 #' @description  makeTP generates a flight track chaining up point objects with respect to a heterogenous surface and known obstacles as documented by an DSM for taking top down pictures. It creates a single control file for autonomous picture retrieval flights. 
-#' @param projectDir \code{character} path to the main folder where several projects can be hosted, default is \code{"~"}
+#' @param projectDir \code{character} path to the main folder where several projects can be hosted, default is \code{tempdir()}
 #' @param demFn  \code{character} filename of the used DSM data file, default is \code{NULL}
 #' @param locationName \code{character} base name string of the mission, default is \code{"treePos"}
 #' @param presetFlightTask \code{character} (DJI only EXPERIMENTAL). NOTE: it is strongly recommended to use the default \code{"remote"} \cr

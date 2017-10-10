@@ -13,7 +13,7 @@ makeTP(projectDir = tempdir(), locationName = "treePos",
   uavType = "solo", cameraType = "MAPIR2", copy = FALSE)
 }
 \arguments{
-\item{projectDir}{\code{character} path to the main folder where several projects can be hosted, default is \code{"~"}}
+\item{projectDir}{\code{character} path to the main folder where several projects can be hosted, default is \code{tempdir()}}
 
 \item{locationName}{\code{character} base name string of the mission, default is \code{"treePos"}}
 

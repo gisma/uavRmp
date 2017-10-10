@@ -5,7 +5,7 @@ date: '`r Sys.Date()`'
 output:
   pdf_document:
     latex_engine: xelatex
-    toc: no
+    toc: yes
   html_document:
     theme: united
     toc: yes
@@ -19,7 +19,7 @@ vignette: |
 ```{r echo=FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
 ```
-# uavRmp
+# Introduction
 Unmanned Aerial Vehicle R based Mission Planning
 
 
@@ -38,13 +38,15 @@ Check your risk - use parachute systems and, even if it is running like a charm,
 
 ## Supported UAV platforms
 
-Up to now it has been dedicated to low budget rtf-UAVs as the DJI Phantom series and the 3DR Solo. However the current and future support will cover all Pixhawk based UAVs.
+Up to now it has been dedicated to low budget rtf-UAVs as the DJI Phantom series and the 3DR Solo. However the current and future support will focus on all Green Cube and Pixhawk based UAVs.
 
 The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://ardupilot.org/planner/) or [APM Planner 2](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmercial competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.
 
 The ```uavRmd``` bridges this gap and generates ```MAVLINK``` format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.
 
-The reason using DJI is their absolute straightforward usage. Everybody can fly with a DJI but the price to pay off is a hermetically closed system. Only the litchi app provides additionally to a cloud based mission planer an offline/standalone interface that is up to date and facilitate the upload of a CSV formatted waypoint file to control autonomous flights with the the Phantom.
+DJI: The reason using DJI UAVs is because of their absolute straightforward usage. Everybody can fly with a DJI but the price for this simplicity is a hermetically closed system. Only the Litchi app provides in addition to a cloud based mission planer an offline/standalone interface to upload a CSV formated way point file for autonomous flights to the Phantom.
+
+PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. '''uavRst''' supports the ```MAVLINK``` common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the ```upload2Solo``` function.
 
 
 
@@ -53,9 +55,11 @@ The reason using DJI is their absolute straightforward usage. Everybody can fly 
 The package family consists of 4 parts:
 
   * flight planning ```uavRmp```
-  * forest analysis ```uavRfa```
-  * remote sensing ```uavRrs```
-  * archaeology ```uavRao```
+  * forest analysis ```uavRfa```*
+  * remote sensing ```uavRrs```*
+  * archaeology ```uavRao```*
+
+* not yet released
   
 ## Installation
 
@@ -76,17 +80,11 @@ If you want to install all dependencies use:
 devtools::install_github("gisma/uavRmp", ref = "master", dependencies = TRUE)
 ```
 
-# Mission planning 
-
-## Introduction
+# The core planning tools
 
 The core planning tools ```makeAP``` (make area plan) and ```makeTP``` (make target plan) are creating either intermediate flight control files for the DJI Phantom 3x UAVs or ready to upload control files for the Pixhawk based UAVs like the 3DR Solo. The intermediate DJI control files are expected to be used with the proprietary [Litchi](https://flylitchi.com/) flight control app, while the Pixhawk/3DR Solo files are using the ```MAVLINK``` common message format.
 
 The basic idea is to provide an easy to use workflow for controlling rtf UAVs on autonomous survey missions.  
-
-DJI: The reason using DJI UAVs is because of their absolute straightforward usage. Everybody can fly with a DJI but the price for this simplicity is a hermetically closed system. Only the Litchi app provides in addition to a cloud based mission planer an offline/standalone interface to upload a CSV formated way point file for autonomous flights to the Phantom.
-
-PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. '''uavRst''' supports the ```MAVLINK``` common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the ```upload2Solo``` function.
 
 ## The types of mission tasks
  
@@ -109,7 +107,6 @@ If ```flightPlanMode = "tracks"```. The result look like below.
     |  |  |                   /
     #  #--#         <--#-----#
 
-   
 If ```flightPlanMode = "waypoints"``` The result is an equal spatial distribution of way points:
  
     #--#  #-->             #--#--#
@@ -117,9 +114,7 @@ If ```flightPlanMode = "waypoints"``` The result is an equal spatial distributio
     #  #  #              #--#--#
     |  |  |                   /
     #  #--#         <--#--#--#
-    
- 
- 
+
 ```waypoints``` is optimal for autonomous flights under calm conditions in complex terrain because the camera takes a picture at every way point.
 
 ```track``` is optimal for relatively plain areas and automatically triggered picture capturing 
@@ -135,45 +130,35 @@ You must choose a clearly defined and reliable launching position both in the ma
 
  
 Let us assume a defined flight altitude of 50m. According to the launching point altitude the UAV will act like the following sketch shows:
- 
-  
- 
+
      ............... x_(uav)_x ........... UAV started at 30m altitude results in
                                              a "real" flight altitude of 30m + 50m => 80m
- 
- 
+
                     ___60m____
                    |          |
            30m _x__|          |
           ____|               |___
       ___|                        |____
 
- 
- 
                    ___60m____
         ..........|          |............ UAV started at 0 m altitude results in
                ___|          |___          "real" flight altitude of 50m above 0m
           ____|                  |
       ___|                       |__x__ 0m
 
-
 To avoid negative impacts from the Phantom 3 auto-calibration, the launch altitude is used to correct the flight altitude according to:
 
- 
      maximumAltitude_of_surveyArea + altitude_of_launchposition
    
 So the adapted flight altitude is always seen as the flight altitude above the highest terrain altitude:
 
- 
      ...................................... real altitude of UAV: 110m
-      
-      
+
                    ___60m____
                   |          |
            30m _x_|          |___
           ____|                  |
       ___|                       |______
-
 
 To get a fixed scale flight the launch altitude is used to correct the flight altitude according to:
 
@@ -181,7 +166,6 @@ To get a fixed scale flight the launch altitude is used to correct the flight al
 
 With the setting of ```terrainfollowing = true``` this is calculated for each way point. So the adapted flight altitude looks like:
 
- 
                    ..........
                   |          |
               ....|          |....
@@ -192,7 +176,7 @@ With the setting of ```terrainfollowing = true``` this is calculated for each wa
       ___|                       |___x___ 0m
 
 
-# Mission Planning Tutorial
+# Basic mission planning workflow
 
 ## Overview of the task
 
@@ -262,7 +246,7 @@ knitr::opts_knit$set(root.dir = tempdir())
 
 NOTE: The first two points determine the flight angle and direction the second and third coordinate determine the width of the area. 
 
-If you want so save it on your SD card, open the [Litchi Mission](https://flylitchi.com/hub|Litchi Mission) website and click on the button ```Missions->Import```. Next navigate to the control file ```firstsurvey_1001.csv``` (you’ll find it in the folder ```~/projectDir/mission/date/control```). For exporting it choose ```Missions->Save``` and navigate/upload it to your missions subfolder of the Litchi app. That’s it.
+If you want so save it on your SD card, open the [Litchi Mission](https://flylitchi.com/hub|Litchi Mission) website and click on the button ```Missions->Import```. Next navigate to the control file ```firstsurvey_1001.csv``` (you’ll find it in the folder ```projectDir/mission/date/control```). For exporting it choose ```Missions->Save``` and navigate/upload it to your missions subfolder of the Litchi app. That’s it.
 
 Even more simple is the option to connect with the litchi cloud. While you are logged in with the same account it is synchronizing the data as soon as you start the litchi app.
 

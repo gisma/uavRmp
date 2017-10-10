@@ -15,7 +15,7 @@ makeAP(projectDir = tempdir(), locationName = "flightArea",
   picFootprint = FALSE, rcRange = NULL, copy = FALSE)
 }
 \arguments{
-\item{projectDir}{\code{character} path to the main folder where several locations can be hosted, default is \code{"~"}}
+\item{projectDir}{\code{character} path to the main folder where several locations can be hosted, default is \code{tempdir()}}
 
 \item{locationName}{\code{character} path to the location folder where all tasks of this plot are hosted, default is \code{"flightArea"}}
 

@@ -13,6 +13,7 @@ if (!isGeneric('solo_upload')) {
 #' 
 #'
 #'
+#'
 #'@note for using the solo stuff you need to install: \cr sudo pip install pymavlink;\cr sudo pip install dronekit-sitl;\cr sudo pip install dronekit; \cr sudo apt-get install sshpass\cr Additionally you need to be connected to a running 3DR Solo uav 
 #'
 #' @examples
@@ -23,28 +24,27 @@ if (!isGeneric('solo_upload')) {
 #' @export solo_upload
 #'               
 
-solo_upload <- function(missionFile=NULL,connection="udp:10.1.1.10:14550",prearm="-9"){
+solo_upload <- function(missionFile = NULL, 
+                        connection = "udp:10.1.1.166:14550", 
+                        prearm = "-9"){
   
-  
-  command ='python'
-  
-  script <- paste(system.file(package="uavRmp"), "python/io_solo_mission.py", sep="/")
-  #script='~/proj/drone/scripte/io_solo_mission.py'
-  
-  option1<-'--connect'
-  connection<-connection
-  option2<-'--prearm'
-  prearm<-prearm
-  option3<-'--mission'
-  missionFile<-missionFile
-  
+  command <- 'python'
+  script <- paste(system.file(package="uavRmp"), "python/io_solo_mission.py", sep = "/")
+  option1 <- '--connect'
+  connection <- connection
+  option2 <- '--prearm'
+  prearm <- prearm
+  option3 <- '--mission'
+  missionFile <- missionFile
   args = c(option1, connection,option2,prearm,option3,missionFile)
   
   # Add path to script as first arg
   allArgs = c(script, args)
   
-  output = system2(command, args=allArgs, stdout=TRUE)
-  
+  output = system2(command, 
+                   args = allArgs, 
+                   stdout = TRUE)
+  option1<-paste0(logDir,"/",logFiles)
   print(paste("Solo returns:", output,"\n"))
 }
 
@@ -58,11 +58,11 @@ if (!isGeneric('soloLog')) {
 #'
 #' @description  Wraps the mavtogpx.py converter as provided by the dronkit library. It downloads and/ or converts the 3DR Solo logfiles. Otionally you may import the geometries and data as sp objects in R
 #'
-#' @param logSource defines if the logfiles are downloaded from the rc controller or the pixhawk, default is "pixhawk" for loading the files from the pixhawk, for the recent telemetry data files from the rc-controller choose "rc"
+#' @param logSource \code{rc} = logfiles from the radio control, \code{pixhawk} = logfiles from the flightcontroller, default is \code{rc}. The radio control is providing the last ten telemetry data files, while the flight controller provides the latest 50 binary logfiles.
 
-#' @param logFiles pattern of which kind of logs should be downloaded, default is "*.BIN" for all log files from the Pixhawk. If you want the telemetry logfiles from the radio control choose  "solo.t*" which means all log files...
+#' @param logFiles If logSource = "pixhawk" the argument "recent" will download the most recent logfile from the pixhawk, other options are "all" for all logfiles or a plain number i.e. "1" for a specific one.
 #' @param logDir (existing) destination path to which the logs should be downloaded to 
-#' @param downloadOnly default = FALSE, set to TRUE  if you ONLY want to download the log files from the solo controller to the logDir
+#' @param downloadOnly default = TRUE, set to FALSE  if you want to convert the log files from the solo remote controller to GPX files
 #' @param netWarn if true warns and waits before starting a connection to the controller to connect to the solo wifi
 #' @param organize renames the log and gpx files according to their timeperiod
 #' 
@@ -77,20 +77,27 @@ if (!isGeneric('soloLog')) {
 #' 
 #' @examples
 #' \dontrun{
-#' ## download current telemetry log file from controller and convert it to gpx
+#' ## download recent telemetry log file from controller and convert it to gpx
 #' soloLog(logFiles = "solo.tlog")
 #' 
-#' ## download all available telemetry logfiles from the controller
+#' ## download the last available logfile from the radio control
 #' soloLog()
 #' 
-#' ## download ALL logfiles from the controller
-#' soloLog(logFiles = "*")
+#' ## download ALL logfiles from the radio control
+#' soloLog(logFiles = "all")
+#' 
+#' ## download ALL telemetry logfiles from the flight controller
+#' soloLog(logSource = "pixhawk",logFiles = "all")
+#' 
+#' ## download telementry logfile number 5  from the remote control
+#' soloLog(logSource = "rc",logFiles = "5")
+
 #' }
 #' @export soloLog
 #'               
 
-soloLog <- function(logFiles="*.BIN*",
-                    logSource="pixhawk",
+soloLog <- function(logFiles="recent",
+                    logSource="rc",
                     logDir=tmpDir(), 
                     downloadOnly=FALSE,
                     netWarn=TRUE,
@@ -99,17 +106,41 @@ soloLog <- function(logFiles="*.BIN*",
   exit<-NULL
   logDir<- path.expand(logDir)
   command <-"mavtogpx.py"
-  option1<-paste0(logDir,"/",logFiles)
+ # option1<-paste0(logDir,"/",logFiles)
   
   if (!file.exists(file.path(logDir))) {
     dir.create(file.path(logDir), recursive = TRUE)
   }
-  
+  if (logSource=="pixhawk") downloadOnly=TRUE
   
   invisible(readline(prompt="Press [enter] to continue\n The controller shutdown after a while - check connection\n"))
   cat("downloading and converting will take a while without prompting anything...\n be patient in the end you will know.\n")
-  if (logSource == "rc")  log<-system( paste0("sshpass -p 'TjSDBkAu'  scp 'root@10.1.1.1:14550/log/",logFiles,"' ",logDir,"/. " ),wait=TRUE)
-  else log<-system( paste0("sshpass -p 'TjSDBkAu'  scp 'root@10.1.1.10:14550/log/flashdata",logFiles,"' ",logDir,"/. " ),wait=TRUE)
+  
+  if (logSource == "rc")  {
+    if (logFiles=="all") {logFiles<-"solo.t*"}
+    else if (logFiles=="recent") {logFiles<-"solo.tlog"}
+    else  logFiles<-paste("solo.tlog.",logFiles)
+    option1<-paste0(logDir,"/",logFiles)  
+      cat("you will download the following files:\n")
+      cat(system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.1 ls -l -h /log/",logFiles),intern = TRUE))
+    
+    log<-system( paste0("sshpass -p 'TjSDBkAu'  scp 'root@10.1.1.1:/log/",logFiles,"' ",logDir,"/. " ),wait = TRUE)
+  } else {
+    loglist <- system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.10 ls -h /log/dataflash"),intern = TRUE)
+    lastlog<-system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.10 cat /log/dataflash/LASTLOG.TXT"),intern = TRUE)
+    if (logFiles == "all"){
+      cat("you will download the following files:\n")
+      cat(system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.10 ls -l -h /log/dataflash"),intern = TRUE))
+      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/*.BIN ",logDir,"/. " ),wait=TRUE)
+    } else if (logFiles == "recent"){
+      cat("you will download the following files:\n")
+      cat(system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.10 ls -l -h /log/dataflash/",unlist(strsplit(lastlog, "\r")[[1]]),".BIN"),intern = TRUE))
+      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/",unlist(strsplit(lastlog, "\r")[[1]]),".BIN ",logDir,"/. " ),wait=TRUE)
+    } else {
+      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/",logFiles,".BIN ",logDir,"/. " ),wait=TRUE)
+    }
+  }
+
   if (log == 0) {
     f <- list.files(logDir, pattern=extension(logFiles))
     cat(f," downloaded...\n")
@@ -120,7 +151,7 @@ soloLog <- function(logFiles="*.BIN*",
   }  
   if (downloadOnly){
     cat("All logs downloaded...")
-    exit
+    return()
   } 
   
   test<-system2("mavtogpx.py","-h",stdout = TRUE)
@@ -135,7 +166,7 @@ soloLog <- function(logFiles="*.BIN*",
   
   
   if (organize) {
-    cat("rename files...\n")
+    cat("\nrename files...\n")
     f <- list.files(logDir, pattern="gpx")
     
     i=1

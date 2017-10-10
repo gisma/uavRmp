@@ -4,17 +4,17 @@
 \alias{soloLog}
 \title{Download, reorganize and export the log files from 3DR Solo and radio control unit}
 \usage{
-soloLog(logFiles = "*.BIN*", logSource = "pixhawk", logDir = tmpDir(),
+soloLog(logFiles = "recent", logSource = "rc", logDir = tmpDir(),
   downloadOnly = FALSE, netWarn = TRUE, organize = TRUE, makeSP = FALSE)
 }
 \arguments{
-\item{logFiles}{pattern of which kind of logs should be downloaded, default is "*.BIN" for all log files from the Pixhawk. If you want the telemetry logfiles from the radio control choose  "solo.t*" which means all log files...}
+\item{logFiles}{If logSource = "pixhawk" the argument "recent" will download the most recent logfile from the pixhawk, other options are "all" for all logfiles or a plain number i.e. "1" for a specific one.}
 
-\item{logSource}{defines if the logfiles are downloaded from the rc controller or the pixhawk, default is "pixhawk" for loading the files from the pixhawk, for the recent telemetry data files from the rc-controller choose "rc"}
+\item{logSource}{\code{rc} = logfiles from the radio control, \code{pixhawk} = logfiles from the flightcontroller, default is \code{rc}. The radio control is providing the last ten telemetry data files, while the flight controller provides the latest 50 binary logfiles.}
 
 \item{logDir}{(existing) destination path to which the logs should be downloaded to}
 
-\item{downloadOnly}{default = FALSE, set to TRUE  if you ONLY want to download the log files from the solo controller to the logDir}
+\item{downloadOnly}{default = TRUE, set to FALSE  if you want to convert the log files from the solo remote controller to GPX files}
 
 \item{netWarn}{if true warns and waits before starting a connection to the controller to connect to the solo wifi}
 
@@ -35,13 +35,19 @@ sudo apt-get install sshpass \cr
 }
 \examples{
 \dontrun{
-## download current telemetry log file from controller and convert it to gpx
+## download recent telemetry log file from controller and convert it to gpx
 soloLog(logFiles = "solo.tlog")
 
-## download all available telemetry logfiles from the controller
+## download the last available logfile from the radio control
 soloLog()
 
-## download ALL logfiles from the controller
-soloLog(logFiles = "*")
+## download ALL logfiles from the radio control
+soloLog(logFiles = "all")
+
+## download ALL telemetry logfiles from the flight controller
+soloLog(logSource = "pixhawk",logFiles = "all")
+
+## download telementry logfile number 5  from the remote control
+soloLog(logSource = "rc",logFiles = "5")
 }
 }

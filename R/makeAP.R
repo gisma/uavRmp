@@ -39,7 +39,7 @@ if (!isGeneric('makeAP')) {
 #'   and even if it is running like a charm, keep alert!
 
 
-#' @param projectDir \code{character} path to the main folder where several locations can be hosted, default is \code{"~"}
+#' @param projectDir \code{character} path to the main folder where several locations can be hosted, default is \code{tempdir()}
 #' @param locationName \code{character} path to the location folder where all tasks of this plot are hosted, default is \code{"flightArea"} 
 #' @param surveyArea  you may provide either the coordinates by
 #' c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or
