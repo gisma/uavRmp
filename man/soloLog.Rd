@@ -2,13 +2,15 @@
 % Please edit documentation in R/soloTB.R
 \name{soloLog}
 \alias{soloLog}
-\title{Download, reorganize and export the telemetry (tlog) files from 3DR Solo (and Pixhawk)}
+\title{Download, reorganize and export the log files from 3DR Solo and radio control unit}
 \usage{
-soloLog(logFiles = "solo.t*", logDir = tmpDir(), downloadOnly = FALSE,
-  netWarn = TRUE, organize = TRUE, makeSP = FALSE)
+soloLog(logFiles = "*.BIN*", logSource = "pixhawk", logDir = tmpDir(),
+  downloadOnly = FALSE, netWarn = TRUE, organize = TRUE, makeSP = FALSE)
 }
 \arguments{
-\item{logFiles}{pattern of which kind of logs should be downloaded for telemetry it is "solo.t*" which means all log files...}
+\item{logFiles}{pattern of which kind of logs should be downloaded, default is "*.BIN" for all log files from the Pixhawk. If you want the telemetry logfiles from the radio control choose  "solo.t*" which means all log files...}
+
+\item{logSource}{defines if the logfiles are downloaded from the rc controller or the pixhawk, default is "pixhawk" for loading the files from the pixhawk, for the recent telemetry data files from the rc-controller choose "rc"}
 
 \item{logDir}{(existing) destination path to which the logs should be downloaded to}
 

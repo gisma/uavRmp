@@ -1,24 +1,3 @@
-sologetlog <- function(connection="udp:10.1.1.166:14550",prearm="-9"){
-  
-  
-  command ='python'
-  
-  script <- paste(system.file(package="uavRmp"), "python/io_solo_params.py", sep="/")
-  #script='~/proj/drone/scripte/io_solo_mission.py'
-  
-  option1<-'--connect'
-  connection<-connection
-  
-  args = c(option1, connection)
-  
-  # Add path to script as first arg
-  allArgs = c(script, args)
-  
-  output = system2(command, args=allArgs, stdout=TRUE)
-  
-  print(paste("Solo returns:", output,"\n"))
-}
-
 
 if (!isGeneric('solo_upload')) {
   setGeneric('solo_upload', function(x, ...)
@@ -38,12 +17,13 @@ if (!isGeneric('solo_upload')) {
 #'
 #' @examples
 #' wp <- system.file("extdata", "MAVLINK_waypoints.txt", package = "uavRmp")
+#' \dontrun{
 #' solo_upload( missionFile = wp)
-#' 
+#' }
 #' @export solo_upload
 #'               
 
-solo_upload <- function(missionFile=NULL,connection="udp:10.1.1.166:14550",prearm="-9"){
+solo_upload <- function(missionFile=NULL,connection="udp:10.1.1.10:14550",prearm="-9"){
   
   
   command ='python'
@@ -74,11 +54,13 @@ if (!isGeneric('soloLog')) {
   setGeneric('soloLog', function(x, ...)
     standardGeneric('soloLog'))
 }
-#' Download, reorganize and export the telemetry (tlog) files from 3DR Solo (and Pixhawk) 
+#' Download, reorganize and export the log files from 3DR Solo and radio control unit
 #'
 #' @description  Wraps the mavtogpx.py converter as provided by the dronkit library. It downloads and/ or converts the 3DR Solo logfiles. Otionally you may import the geometries and data as sp objects in R
 #'
-#' @param logFiles pattern of which kind of logs should be downloaded for telemetry it is "solo.t*" which means all log files...
+#' @param logSource defines if the logfiles are downloaded from the rc controller or the pixhawk, default is "pixhawk" for loading the files from the pixhawk, for the recent telemetry data files from the rc-controller choose "rc"
+
+#' @param logFiles pattern of which kind of logs should be downloaded, default is "*.BIN" for all log files from the Pixhawk. If you want the telemetry logfiles from the radio control choose  "solo.t*" which means all log files...
 #' @param logDir (existing) destination path to which the logs should be downloaded to 
 #' @param downloadOnly default = FALSE, set to TRUE  if you ONLY want to download the log files from the solo controller to the logDir
 #' @param netWarn if true warns and waits before starting a connection to the controller to connect to the solo wifi
@@ -107,7 +89,8 @@ if (!isGeneric('soloLog')) {
 #' @export soloLog
 #'               
 
-soloLog <- function(logFiles="solo.t*",
+soloLog <- function(logFiles="*.BIN*",
+                    logSource="pixhawk",
                     logDir=tmpDir(), 
                     downloadOnly=FALSE,
                     netWarn=TRUE,
@@ -125,7 +108,8 @@ soloLog <- function(logFiles="solo.t*",
   
   invisible(readline(prompt="Press [enter] to continue\n The controller shutdown after a while - check connection\n"))
   cat("downloading and converting will take a while without prompting anything...\n be patient in the end you will know.\n")
-  log<-system( paste0("sshpass -p 'TjSDBkAu'  scp 'root@10.1.1.1:/log/",logFiles,"' ",logDir,"/. " ),wait=TRUE)
+  if (logSource == "rc")  log<-system( paste0("sshpass -p 'TjSDBkAu'  scp 'root@10.1.1.1:14550/log/",logFiles,"' ",logDir,"/. " ),wait=TRUE)
+  else log<-system( paste0("sshpass -p 'TjSDBkAu'  scp 'root@10.1.1.10:14550/log/flashdata",logFiles,"' ",logDir,"/. " ),wait=TRUE)
   if (log == 0) {
     f <- list.files(logDir, pattern=extension(logFiles))
     cat(f," downloaded...\n")

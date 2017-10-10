@@ -9,8 +9,11 @@ output:
   html_document:
     theme: united
     toc: yes
+  rmarkdown: default
 vignette: |
-  %\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning}    %\VignetteEngine{knitr::rmarkdown}  %\VignetteEncoding{UTF-8}{inputenc}
+  %\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning}
+  %\VignetteEngine{knitr::rmarkdown}   
+  %\VignetteEncoding{UTF-8}{inputenc}
 ---
 
 ```{r echo=FALSE}

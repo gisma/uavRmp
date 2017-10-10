@@ -2,7 +2,7 @@ Package: uavRmp
 Type: Package
 Title: UAV Mission Planner
 Version: 0.5.1
-Date: 2017-08-31
+Date: 2017-10-10
 Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Sebastian", "Richter", role = c("ctb")),
              person("Lars", "Opgenoorth",  role = c("ctb")),
@@ -32,7 +32,6 @@ Imports:
     tools,
     maptools,
     log4r,
-    igraph,
     zoo,
     data.table,
     spatial.tools,

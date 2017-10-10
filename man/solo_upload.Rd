@@ -4,7 +4,7 @@
 \alias{solo_upload}
 \title{upload mission file to solo}
 \usage{
-solo_upload(missionFile = NULL, connection = "udp:10.1.1.166:14550",
+solo_upload(missionFile = NULL, connection = "udp:10.1.1.10:14550",
   prearm = "-9")
 }
 \arguments{
@@ -22,6 +22,7 @@ for using the solo stuff you need to install: \cr sudo pip install pymavlink;\cr
 }
 \examples{
 wp <- system.file("extdata", "MAVLINK_waypoints.txt", package = "uavRmp")
+\dontrun{
 solo_upload( missionFile = wp)
-
+}
 }
