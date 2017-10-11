@@ -2,23 +2,24 @@
 % Please edit documentation in R/soloTB.R
 \name{solo_upload}
 \alias{solo_upload}
-\title{upload mission file to solo}
+\title{Upload MAV compliant mission File to a 3DR Solo}
 \usage{
 solo_upload(missionFile = NULL, connection = "udp:10.1.1.166:14550",
-  prearm = "-9")
+  prearm = "-1")
 }
 \arguments{
 \item{missionFile}{mission file to upload}
 
 \item{connection}{a valid connection string to the Solo default is "udp:10.1.1.166:14550"}
 
-\item{prearm}{controls the prearm status of the Solo prearm check 0=Disabled,1=Enabled,-3=Skip Baro,-5=Skip Compass,-9=Skip GPS,-17=Skip INS,-33=Skip Params/Rangefinder,-65=Skip RC,127=Skip Voltage}
+\item{prearm}{\code{character} controls the prearm status of the Solo prearm check\cr 0=Disabled\cr 1=Enabled\cr -3=Skip Baro\cr -5=Skip Compass\cr -9=Skip GPS\cr -17=Skip INS\cr -33=Skip Params/Rangefinder\cr -65=Skip RC\cr 127=Skip Voltage\cr
+default is \code{-1}\cr\cr Find more information at \href{http://ardupilot.org/copter/docs/prearm_safety_check.html}{prearm safety},\cr \href{http://python.dronekit.io/examples/mission_import_export.html}{Mission import export script}.}
 }
 \description{
 solo_upload provides a crude interface to upload the Solo mission file to the 3dr SOLO
 }
 \note{
-for using the solo stuff you need to install: \cr sudo pip install pymavlink;\cr sudo pip install dronekit-sitl;\cr sudo pip install dronekit; \cr sudo apt-get install sshpass\cr Additionally you need to be connected to a running 3DR Solo uav
+Becareful with fooling around with the prearm stuff. It is kind of VERY sensitive for the later autonomous flights!\cr For using the Solo stuff you need to install: \cr sudo pip install pymavlink;\cr sudo pip install dronekit-sitl;\cr sudo pip install dronekit; \cr sudo apt-get install sshpass\cr Additionally you need to be connected to a running 3DR Solo uav
 }
 \examples{
 wp <- system.file("extdata", "MAVLINK_waypoints.txt", package = "uavRmp")
