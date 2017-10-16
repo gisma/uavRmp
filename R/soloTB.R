@@ -46,7 +46,7 @@ solo_upload <- function(missionFile = NULL,
   output = system2(command, 
                    args = allArgs, 
                    stdout = TRUE)
-  option1<-paste0(logDir,"/",logFiles)
+ # option1<-paste0(logFolder,"/",logFiles)
   print(paste("Solo returns:", output,"\n"))
 }
 
@@ -62,9 +62,9 @@ if (!isGeneric('soloLog')) {
 #'
 #' @param logSource \code{character}, options are: \code{rc} = logfiles from the radio control, \code{pixhawk} = logfiles from the flightcontroller, default is set to  \code{rc}. The radio control is providing the last ten telemetry data files, while the flight controller provides the latest 50 binary logfiles.
 
-#' @param logFiles \code{character} , options are:  \code{recent} download the most recent logfile,  \code{all} downloads all logfiles, or a plain number e.g. \code{2} for a specific logfile. Note the telemetry logfiles are numbering from 1 to 9 only, the most recent one is not numbered. The binary logfiles from the pixhawk are numbering continously but only the last 50 files or so will exist. 
+#' @param logFileSample \code{character} , options are:  \code{recent} download the most recent logfile,  \code{all} downloads all logfiles, or a plain number e.g. \code{2} for a specific logfile. Note the telemetry logfiles are numbering from 1 to 9 only, the most recent one is not numbered. The binary logfiles from the pixhawk are numbering continously but only the last 50 files or so will exist. 
 #' 
-#' @param logDir \code{character} (existing) destination path to which the logs should be downloaded to 
+#' @param logDest \code{character} (existing) destination path to which the logs should be downloaded to 
 #' @param downloadOnly \code{logical} wether to only download the files or also convert and rename them, default is set FALSE
 #' @param netWarn \code{logical} wether to warn and waits before starting a connection to the controller. helps while testing due to occassional wifi shutdowns of the Solo, default is set to FALSE
 #' @param renameFiles  \code{logical} renames the log and gpx files according to the time period, default is set TRUE
@@ -100,53 +100,61 @@ if (!isGeneric('soloLog')) {
 #' @export soloLog
 #'               
 
-soloLog <- function(logFiles="recent",
-                    logSource="rc",
-                    logDir=tmpDir(), 
-                    downloadOnly=FALSE,
-                    netWarn=FALSE,
-                    renameFiles=TRUE,
-                    makeSP = FALSE){
-  exit<-NULL
-  logDir<- path.expand(logDir)
-  command <-"mavtogpx.py"
-  # option1<-paste0(logDir,"/",logFiles)
+soloLog <- function(logFileSample = "recent",
+                    logSource     = "rc",
+                    logDest       = tempdir(), 
+                    downloadOnly  = FALSE,
+                    netWarn       = FALSE,
+                    renameFiles   = TRUE,
+                    makeSP        = FALSE){
+
+  logFolder <- path.expand(logDest)
+  command <- "mavtogpx.py"
+  # option1<-paste0(logFolder,"/",logFileSample)
   
-  if (!file.exists(file.path(logDir))) {
-    dir.create(file.path(logDir), recursive = TRUE)
+  if (!file.exists(file.path(logFolder))) {
+    dir.create(file.path(logFolder), recursive = TRUE)
   }
-  if (logSource=="pixhawk") downloadOnly=TRUE
+  if (logSource=="pixhawk") {
+    downloadOnly <- TRUE
+    renameFiles <- FALSE
+    }
   
+  if (netWarn) {
   invisible(readline(prompt="Press [enter] to continue\n The controller shutdown after a while - check connection\n"))
-  cat("downloading and converting will take a while without prompting anything...\n be patient in the end you will know.\n")
+  }
+  cat("Downloading and converting will take a while without prompting a lot...\n so be patient!\n")
   
   if (logSource == "rc")  {
-    if (logFiles=="all") {logFiles<-"solo.tlo???"}
-    else if (logFiles=="recent") {logFiles<-"solo.tlog"}
+    if (logFileSample=="all") {logFiles<-"solo.tlo???"}
+    else if (logFileSample=="recent") {logFiles<-"solo.tlog"}
     else  logFiles<-paste("solo.tlog.",logFiles)
-    option1<-paste0(logDir,"/",logFiles)  
+    option1<-paste0(logFolder,"/",logFiles)  
     cat("you will download the following files:\n")
     cat(system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.1 ls -l -h /log/",logFiles),intern = TRUE))
     
-    log<-system( paste0("sshpass -p 'TjSDBkAu'  scp 'root@10.1.1.1:/log/",logFiles,"' ",logDir,"/. " ),wait = TRUE)
+    log<-system( paste0("sshpass -p 'TjSDBkAu'  scp 'root@10.1.1.1:/log/",logFiles,"' ",logFolder,"/. " ),wait = TRUE)
   } else {
+    if (logFileSample=="all") {logFiles<-"*.BIN"}
+    else if (logFileSample=="recent") {logFiles<-unlist(strsplit(lastlog, "\r")[[1]])}
+    else  logFiles<-paste("solo.tlog.",logFiles)
     loglist <- system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.10 ls -h /log/dataflash"),intern = TRUE)
     lastlog<-system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.10 cat /log/dataflash/LASTLOG.TXT"),intern = TRUE)
-    if (logFiles == "all"){
+    if (logFileSample == "all"){
       cat("you will download the following files:\n")
       cat(system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.10 ls -l -h /log/dataflash"),intern = TRUE))
-      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/*.BIN ",logDir,"/. " ),wait=TRUE)
-    } else if (logFiles == "recent"){
+      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/*.BIN ",logFolder,"/. " ),wait=TRUE)
+    } else if (logFileSample == "recent"){
       cat("you will download the following files:\n")
       cat(system(paste0("sshpass -p 'TjSDBkAu' ssh  root@10.1.1.10 ls -l -h /log/dataflash/",unlist(strsplit(lastlog, "\r")[[1]]),".BIN"),intern = TRUE))
-      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/",unlist(strsplit(lastlog, "\r")[[1]]),".BIN ",logDir,"/. " ),wait=TRUE)
+      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/",unlist(strsplit(lastlog, "\r")[[1]]),".BIN ",logFolder,"/. " ),wait=TRUE)
     } else {
-      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/",logFiles,".BIN ",logDir,"/. " ),wait=TRUE)
+      log<-system( paste0("sshpass -p 'TjSDBkAu'  scp -P 22 root@10.1.1.10:/log/dataflash/",logFiles,".BIN ",logFolder,"/. " ),wait=TRUE)
     }
   }
   
   if (log == 0) {
-    f <- list.files(logDir, pattern=extension(logFiles))
+    f <- list.files(logFolder, pattern=extension(logFiles))
     cat(f," downloaded...\n")
     cat("Download from Solo controllor seems to be ok\n")
   } else {
@@ -163,14 +171,14 @@ soloLog <- function(logFiles="recent",
   
   if (renameFiles) {
     # create filelists
-    tlogFiles <- Sys.glob(file.path(logDir, "*.tlog.?"))
-    tlogFiles <- c(Sys.glob(file.path(logDir, "*.tlog")),tlogFiles)
+    tlogFiles <- Sys.glob(file.path(logFolder, "*.tlog.?"))
+    tlogFiles <- c(Sys.glob(file.path(logFolder, "*.tlog")),tlogFiles)
     gpxLogFiles <- paste0(tlogFiles,".gpx")  
     test <- system2("mavtogpx.py","-h",stdout = TRUE)
     if (grep("usage: mavtogpx.py",test)) {
       cat("at least pymavlink is installed :-)\n")
       cat("converting log files to to gpx...\n")
-      if (logFiles == "all") {
+      if (logFileSample == "all") {
         for (log in tlogFiles) {
           test <- system2(command, log,stdout = TRUE)
         }
@@ -196,11 +204,11 @@ soloLog <- function(logFiles="recent",
       fi1 <- gsub(x = firstTime, pattern = "\\/",replacement = "")
       fi2 <- gsub(x = fi1, pattern = "\\ ",replacement = "_")
       fi3 <- substr(gsub(x = fi2, pattern = "\\:",replacement = "-"),1,17)
-      logName <- paste0(logDir,"/",fi3,"_",la3,"_solo.tlog")
-      gpxName <- paste0(logDir,"/",fi3,"_",la3,"_solo.gpx")      
-      #fNgpx <- paste0(logDir,"/",list.files(logDir, pattern="solo.tlog.*.gpx"))
-      #fNlog <- Sys.glob(file.path(logDir, "*.tlog.?"))
-      #fNlog<-c(Sys.glob(file.path(logDir, "*.tlog")),fNlog)
+      logName <- paste0(logFolder,"/",fi3,"_",la3,"_solo.tlog")
+      gpxName <- paste0(logFolder,"/",fi3,"_",la3,"_solo.gpx")      
+      #fNgpx <- paste0(logFolder,"/",list.files(logFolder, pattern="solo.tlog.*.gpx"))
+      #fNlog <- Sys.glob(file.path(logFolder, "*.tlog.?"))
+      #fNlog<-c(Sys.glob(file.path(logFolder, "*.tlog")),fNlog)
       if (!file.exists(logName)) {
         file.rename(tlogFiles[i],logName)
       } else {

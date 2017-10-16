@@ -24,7 +24,6 @@ Imports:
     raster,
     htmlwidgets,
     htmltools,
-    Rcpp,
     rgdal,
     rgeos,
     gdalUtils,

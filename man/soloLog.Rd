@@ -4,16 +4,16 @@
 \alias{soloLog}
 \title{Download, reorganize and export the binary log files from 3DR Solo Pixhawk controller or the telemetry log files from the Solo radio control unit}
 \usage{
-soloLog(logFiles = "recent", logSource = "rc", logDir = tmpDir(),
+soloLog(logFileSample = "recent", logSource = "rc", logDest = tempdir(),
   downloadOnly = FALSE, netWarn = FALSE, renameFiles = TRUE,
   makeSP = FALSE)
 }
 \arguments{
-\item{logFiles}{\code{character} , options are:  \code{recent} download the most recent logfile,  \code{all} downloads all logfiles, or a plain number e.g. \code{2} for a specific logfile. Note the telemetry logfiles are numbering from 1 to 9 only, the most recent one is not numbered. The binary logfiles from the pixhawk are numbering continously but only the last 50 files or so will exist.}
+\item{logFileSample}{\code{character} , options are:  \code{recent} download the most recent logfile,  \code{all} downloads all logfiles, or a plain number e.g. \code{2} for a specific logfile. Note the telemetry logfiles are numbering from 1 to 9 only, the most recent one is not numbered. The binary logfiles from the pixhawk are numbering continously but only the last 50 files or so will exist.}
 
 \item{logSource}{\code{character}, options are: \code{rc} = logfiles from the radio control, \code{pixhawk} = logfiles from the flightcontroller, default is set to  \code{rc}. The radio control is providing the last ten telemetry data files, while the flight controller provides the latest 50 binary logfiles.}
 
-\item{logDir}{\code{character} (existing) destination path to which the logs should be downloaded to}
+\item{logDest}{\code{character} (existing) destination path to which the logs should be downloaded to}
 
 \item{downloadOnly}{\code{logical} wether to only download the files or also convert and rename them, default is set FALSE}
 

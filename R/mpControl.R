@@ -347,12 +347,14 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       # ascent2start WP
       lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = 3, 
                                                  cmd = cmd,
+                                                 p4 = round(abs(uavViewDir),1),
                                                  lat = round(calcNextPos(launchLon,launchLat,startheading,5)[2],6),
                                                  lon = round(calcNextPos(launchLon,launchLat,startheading,5)[1],6),
                                                  alt = round(startRth,0))
       # maxStartPos WP
       lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = 4, 
                                                  cmd = 16,
+                                                 p4 = round(abs(uavViewDir),1),
                                                  lat = round(startmaxpos[1,2],6),
                                                  lon = round(startmaxpos[1,1],6),
                                                  alt = round(startRth,0))
@@ -371,25 +373,35 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
           sp<- str_split(pattern = "\t",string = lns[ceiling(j/2),])
           lnsnew[j + lc,1] <-   mavCmd(id = j + lc - 1, 
                                        cmd = 16,
+                                       p4 = round(abs(uavViewDir),1),
                                        lat = sp[[1]][1],
                                        lon = sp[[1]][2],
                                        alt = sp[[1]][3])}
         else {
-          lnsnew[j + lc,1] <- mavCmd(id = j + lc - 1, 
-                                     cmd = 178, 
-                                     p2 = round(speed,6))
+          
+          lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = 6, 
+                                                     cmd = 115, 
+                                                     p1 = round(abs(uavViewDir),1),
+                                                     p2 = 90,
+                                                     p4 = 0)
+          
+          # lnsnew[j + lc,1] <- mavCmd(id = j + lc - 1, 
+          #                            cmd = 178, 
+          #                            p2 = round(speed,6))
         }
       }
       
       # ascent2home WP
       lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                                  cmd = 16,
+                                                 p4 = round(abs(uavViewDir),1),
                                                  lat = round(calcNextPos(endLon,endLat,homeheading,5)[2],6),
                                                  lon = round(calcNextPos(endLon,endLat,homeheading,5)[1],6),
                                                  alt = round(homeRth,0))
       # maxhomepos WP
       lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                                  cmd = 16,
+                                                 p4 = round(abs(uavViewDir),1),
                                                  lat = round(homemaxpos[1,2],6),
                                                  lon = round(homemaxpos[1,1],6),
                                                  alt = round(homeRth,0))
@@ -1514,7 +1526,7 @@ insertRow <- function(existingDF, newrow, r) {
 makeUavPointMAV<- function(lat=0.000000,lon=0.000000,alt=100.0,head=0,wp=0,cf=3,cmd=16,p1=0.000000,p2=0.000000,p3=0.000000,p4=0.000000,autocont=1,dif=22,header=FALSE,sep="\t",speed="11.8",group,lf=FALSE,raw=TRUE){
   sep <- "\t"
   #<CURRENT WP> <COORD FRAME> <COMMAND> <PARAM1> <PARAM2> <PARAM3> <PARAM4> <PARAM5/X/LONGITUDE> <PARAM6/Y/LATITUDE> <PARAM7/Z/ALTITUDE> <AUTOCONTINUE>
-  
+  p4<-head
   id<-group
   dif<-dif
   heading<-head
