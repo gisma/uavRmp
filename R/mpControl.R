@@ -1651,8 +1651,8 @@ setProjStructure <- function(projectDir,
   if (!file.exists(file.path(projectDir, locationName, workingDir))) {
     dir.create(file.path(projectDir, locationName, workingDir), recursive = TRUE)
   }
-  if (!file.exists(file.path(projectDir, locationName, workingDir,"level0_data"))) {
-    dir.create(file.path(projectDir, locationName, workingDir,"level0_data"), recursive = TRUE)
+  if (!file.exists(file.path(projectDir, locationName, workingDir,"level0_data",taskName))) {
+    dir.create(file.path(projectDir, locationName, workingDir,"level0_data",taskName), recursive = TRUE)
   }
   if (!file.exists(file.path(projectDir, locationName, workingDir, "run"))) {
     dir.create(file.path(projectDir, locationName,workingDir, "/run"), recursive = TRUE)

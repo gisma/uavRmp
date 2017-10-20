@@ -204,7 +204,7 @@ makeAP <- function(projectDir = tempdir(),
   ###  setup environ and params
   cat("setup environ and params...\n")
   # assign flight mission name
-  locationName <- file.path(locationName,"missions")
+  #locationName <- file.path(locationName,"missions")
   if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "/")  projectDir <- substr(projectDir,1,nchar(projectDir)-1)
   else if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "\\") projectDir <- substr(projectDir,1,nchar(projectDir)-1)
   projstru <- setProjStructure (projectDir,
