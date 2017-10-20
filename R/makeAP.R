@@ -204,64 +204,79 @@ makeAP <- function(projectDir = tempdir(),
   ###  setup environ and params
   cat("setup environ and params...\n")
   # assign flight mission name
-  #workingDir <- format(Sys.time(), "%Y_%m_%d_%H-%M") 
-  workingDir <- format(Sys.time(), "%Y_%m_%d") 
-  taskName <-paste(paste0(locationName, "_",
-                          flightAltitude,"m_",
-                          uavType,"_", 
-                          cameraType,"_", 
-                          tools::file_path_sans_ext(basename(as.character(surveyArea))),"_", 
-                          format(Sys.time(), "%Y_%m_%d_%H-%M"),
-                          "_area-flight"),
-                   sep = .Platform$file.sep)
+  locationName <- file.path(locationName,"missions")
+  if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "/")  projectDir <- substr(projectDir,1,nchar(projectDir)-1)
+  else if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "\\") projectDir <- substr(projectDir,1,nchar(projectDir)-1)
+  projstru <- setProjStructure (projectDir,
+                    locationName, 
+                    flightAltitude,
+                    
+                    uavType,
+                    cameraType,
+                    surveyArea,
+                    demFn,
+                    copy)
   
-  
-  
-  # create directories if needed
-  if (!file.exists(file.path(projectDir, locationName, workingDir))) {
-    dir.create(file.path(projectDir, locationName, workingDir), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName, workingDir, "run"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "/run"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName,workingDir, "control"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "control"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName,workingDir, "log"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "log"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir,locationName, "data"))) {
-    dir.create(file.path(projectDir,locationName, "data"), recursive = TRUE)
-  }
-  if (!is.numeric(surveyArea)) {
-    file.copy(surveyArea, paste0(file.path(projectDir,locationName, "data")),overwrite = TRUE)
-    surveyArea <- paste0(file.path(projectDir,locationName, "data"), "/", basename(surveyArea))
-    
-  }
-  
-  if (!is.null(demFn) & copy ) {
-    file.copy(demFn, paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn)))
-    demFn <- paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn))
-    
-  }
-  # setting R environ temp folder to the current working directory
-  Sys.setenv(TMPDIR = file.path(projectDir, locationName, workingDir, "run"))
-  
-  # set R working directory
-  setwd(file.path(projectDir,locationName, workingDir, "run"))
-  
-  # set common read write permissions
-  #Sys.chmod(list.dirs("../.."), "777")
-  
+  dateString <- projstru[3]
+  taskName <- projstru[2]
+  csvFn <- projstru[1]
+  # dateString <- format(Sys.time(), "%Y_%m_%d") 
+  # taskName <-paste(paste0(locationName, "_",
+  #                         flightAltitude,"m_",
+  #                         uavType,"_", 
+  #                         cameraType,"_", 
+  #                         tools::file_path_sans_ext(basename(as.character(surveyArea))),"_", 
+  #                         format(Sys.time(), "%Y_%m_%d_%H-%M"),
+  #                         "_area-flight"),
+  #                  sep = .Platform$file.sep)
+  # 
+  # 
+  # 
+  # # create directories if needed
+  # if (!file.exists(file.path(projectDir, locationName, dateString))) {
+  #   dir.create(file.path(projectDir, locationName, dateString), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName, dateString, "run"))) {
+  #   dir.create(file.path(projectDir, locationName,dateString, "/run"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName,dateString, "control"))) {
+  #   dir.create(file.path(projectDir, locationName,dateString, "control"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName,dateString, "log"))) {
+  #   dir.create(file.path(projectDir, locationName,dateString, "log"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir,locationName, "data"))) {
+  #   dir.create(file.path(projectDir,locationName, "data"), recursive = TRUE)
+  # }
+  # if (!is.numeric(surveyArea)) {
+  #   file.copy(surveyArea, paste0(file.path(projectDir,locationName, "data")),overwrite = TRUE)
+  #   surveyArea <- paste0(file.path(projectDir,locationName, "data"), "/", basename(surveyArea))
+  #   
+  # }
+  # 
+  # if (!is.null(demFn) & copy ) {
+  #   file.copy(demFn, paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn)))
+  #   demFn <- paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn))
+  #   
+  # }
+  # # setting R environ temp folder to the current working directory
+  # Sys.setenv(TMPDIR = file.path(projectDir, locationName, dateString, "run"))
+  # 
+  # # set R working directory
+  # setwd(file.path(projectDir,locationName, dateString, "run"))
+  # 
+  # # set common read write permissions
+  # #Sys.chmod(list.dirs("../.."), "777")
+  # 
   # create log file
-  logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
-  log4r::level(logger) <- "INFO"
-  log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
-  log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, workingDir)))
-  
-  # generate misson control filename
-  csvFn <-paste(file.path(projectDir, locationName, workingDir, "control"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
-  
+   logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName[[1]]), "\\.")[[1]][1],'.log'))
+   log4r::level(logger) <- "INFO"
+   log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
+   log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, dateString)))
+  # 
+  # # generate misson control filename
+  # csvFn <-paste(file.path(projectDir, locationName, dateString, "control"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
+  # 
   # get survey area
   surveyArea <- calcSurveyArea(surveyArea, projectDir, logger)
   
@@ -526,6 +541,7 @@ makeAP <- function(projectDir = tempdir(),
                              totalTrackdistance,
                              picRate,
                              logger)
+
   rawTime <- ft[1]
   maxFlightTime <- ft[2]
   maxSpeed <- ft[3]
@@ -545,7 +561,7 @@ makeAP <- function(projectDir = tempdir(),
     sp::coordinates(djiDF) <- ~ lon + lat
     sp::proj4string(djiDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
-    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,workingDir,locationName)
+    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,dateString,locationName)
     # assign adapted dem to demFn
     demFn <- result[[3]]
     dfcor <- result[[2]]
@@ -565,7 +581,7 @@ makeAP <- function(projectDir = tempdir(),
     # start the creation of the control file(s)
     cat('generate control files...\n')
     # generate single tasks waypoint file for DJI Litchi import format
-    calcDjiTask( result[[2]],taskName,nofiles,maxPoints,p,logger, round(result[[6]], digits = 0), trackSwitch=FALSE,"flightDEM.tif",result[[8]], projectDir,workingDir,locationName)
+    calcDjiTask( result[[2]],taskName,nofiles,maxPoints,p,logger, round(result[[6]], digits = 0), trackSwitch=FALSE,"flightDEM.tif",result[[8]], projectDir,dateString,locationName)
   }
   else if (uavType == "solo") {
     writeLines(unlist(lns), fileConn)
@@ -579,7 +595,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if (is.null(launchAltitude)) {
       # analyze DEM related stuff
-      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir =projectDir,dA,workingDir = workingDir,locationName)
+      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,dateString,locationName)
       # assign adapted dem to demFn
       lauchPos <- result[[1]]
       dfcor <- result[[2]]
@@ -590,7 +606,7 @@ makeAP <- function(projectDir = tempdir(),
       
     }
     # generate single tasks waypoint file for MAV Solo format
-    calcMAVTask(result[[2]],taskName,nofiles,rawTime,mode,trackDistance,maxFlightTime,logger,p,len, multiply,tracks,result,maxSpeed / 3.6,uavType,"flightDEM.tif",maxAlt = result[[6]], projectDir,workingDir,locationName,uavViewDir,cmd)
+    calcMAVTask(result[[2]],taskName,nofiles,rawTime,mode,trackDistance,maxFlightTime,logger,p,len, multiply,tracks,result,maxSpeed / 3.6,uavType,"flightDEM.tif",maxAlt = result[[6]], projectDir,dateString,locationName,uavViewDir,cmd)
   }
   close(fileConn)
   
@@ -662,10 +678,10 @@ makeAP <- function(projectDir = tempdir(),
     note <- "control files are splitted after max 98 waypoints (litchi control file restricted number)"
   }
   else { note <- " Fly save and have Fun..." }
-  dumpFile(paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
+  dumpFile(paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
   cat("\n ",
       "\n NOTE 1:",as.character(note),"",
-      "\n NOTE 2: You will find all parameters in the logfile:",paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ")
+      "\n NOTE 2: You will find all parameters in the logfile:",paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ")
   x <- c(result[[1]], # launch Pos
          result[[2]], # waypoints
          result[[5]], # resampled dem contour
@@ -676,6 +692,6 @@ makeAP <- function(projectDir = tempdir(),
          rcCover,     # Estimated area that is covered by RC
          fovH)        # Heatmap of overlapping Pictures
   names(x) <- c("lp", "wp", "demA", "oDEM", "rDEM", "fp", "fA", "rcA", "hm")
-  system(paste0("rm -rf ",file.path(projectDir,locationName,workingDir,"run")))
+  system(paste0("rm -rf ",file.path(projectDir,locationName,dateString,"run")))
   return(x)
 }
