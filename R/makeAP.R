@@ -269,7 +269,7 @@ makeAP <- function(projectDir = tempdir(),
   # #Sys.chmod(list.dirs("../.."), "777")
   # 
   # create log file
-   logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName[[1]]), "\\.")[[1]][1],'.log'))
+   logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName[[1]]), "\\.")[[1]][1],'.log'))
    log4r::level(logger) <- "INFO"
    log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
    log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, dateString)))
@@ -678,10 +678,10 @@ makeAP <- function(projectDir = tempdir(),
     note <- "control files are splitted after max 98 waypoints (litchi control file restricted number)"
   }
   else { note <- " Fly save and have Fun..." }
-  dumpFile(paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
+  dumpFile(paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
   cat("\n ",
       "\n NOTE 1:",as.character(note),"",
-      "\n NOTE 2: You will find all parameters in the logfile:",paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ")
+      "\n NOTE 2: You will find all parameters in the logfile:",paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ")
   x <- c(result[[1]], # launch Pos
          result[[2]], # waypoints
          result[[5]], # resampled dem contour
@@ -692,6 +692,6 @@ makeAP <- function(projectDir = tempdir(),
          rcCover,     # Estimated area that is covered by RC
          fovH)        # Heatmap of overlapping Pictures
   names(x) <- c("lp", "wp", "demA", "oDEM", "rDEM", "fp", "fA", "rcA", "hm")
-  system(paste0("rm -rf ",file.path(projectDir,locationName,dateString,"run")))
+  system(paste0("rm -rf ",file.path(projectDir,locationName,dateString,"fp-data/run")))
   return(x)
 }

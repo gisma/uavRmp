@@ -52,7 +52,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
                         overwrite = TRUE,  
                         t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                         output_Raster = TRUE )  
-      file.copy(demFn, paste0(file.path(projectDir,locationName, workingDir,"run"),"/tmpdem.tif")) 
+      file.copy(demFn, paste0(file.path(projectDir,locationName, workingDir,"fp-data/run/"),"/tmpdem.tif")) 
       dem  <- demll
       # if GEOTIFF or other gdal type of data
     } else{
@@ -75,7 +75,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
                         overwrite = TRUE,  
                         t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                         output_Raster = TRUE )  
-      file.copy(demFn, paste0(file.path(projectDir,locationName,workingDir,"run"),"/tmpdem.tif")) 
+      file.copy(demFn, paste0(file.path(projectDir,locationName,workingDir,"fp-data/run/"),"/tmpdem.tif")) 
       demll <- setMinMax(demll)
       dem   <- demll
     }
@@ -420,7 +420,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
                                                  cmd = 20)
       
       # write the control file
-      utils::write.table(lnsnew, paste0(projectDir, "/",locationName , "/", workingDir,"/control/",i,"__",mission,"_solo.txt"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, na = "")
+      utils::write.table(lnsnew, paste0(projectDir, "/",locationName , "/", workingDir,"/fp-data/control/",i,"__",mission,"_solo.txt"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, na = "")
       
       # log event 
       log4r::levellog(logger, 'INFO', paste("created : ", paste0(mission,"-",i,".csv")))
@@ -554,7 +554,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     DF = rbind(DF,homerow)
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
-    utils::write.csv(DF[,1:(ncol(DF) - 2)],file = paste0(projectDir,"/",locationName ,"/", workingDir,"/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
+    utils::write.csv(DF[,1:(ncol(DF) - 2)],file = paste0(projectDir,"/",locationName ,"/", workingDir,"/fp-data/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
     
     log4r::levellog(logger, 'INFO', paste("created : ", paste0(strsplit(getwd(),"/tmp")[[1]][1],"/log/",mission,"-",i,".csv")))
     
@@ -1117,7 +1117,7 @@ MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed =
     
     # write the control file
     utils::write.table(lnsnew, 
-                       paste0(strsplit(getwd(),"/run")[[1]][1],"/control/",i,"__",mission,"_solo.txt"), 
+                       paste0(strsplit(getwd(),"/fp-data/run")[[1]][1],"/fp-data/control/",i,"__",mission,"_solo.txt"), 
                        sep="\t", 
                        row.names=FALSE, 
                        col.names=FALSE, 
@@ -1169,7 +1169,7 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
                                   flightArea@bbox[4] + 0.00421))
     raster::writeRaster(rundem,"tmpdem.tif",overwrite = TRUE)
     demll <- rundem 
-    #file.copy("tmpdem.tif", paste0(file.path(projectDir,locationName, workingDir,"run"),"/tmpdem.tif")) 
+    #file.copy("tmpdem.tif", paste0(file.path(projectDir,locationName, workingDir,"fp-data/run/"),"/tmpdem.tif")) 
     dem  <- demll
     
   } else {
@@ -1179,7 +1179,7 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
                              ymn = min(p$lat1,p$lat3) - 0.0083,
                              ymx = max(p$lat1,p$lat3) + 0.0083)
     
-    file.copy(demFn,  paste0(file.path(projectDir,locationName, workingDir,"run"),"/tmpdem.tif"))
+    file.copy(demFn,  paste0(file.path(projectDir,locationName, workingDir,"fp-data/run/"),"/tmpdem.tif"))
     dem <- rundem
   }
   
@@ -1420,7 +1420,7 @@ writeDjiTreeCsv <-function(df,mission){
   
   for (i in 1:nofiles) {
     if (maxPoints>nrow(df@data)){maxPoints<-nrow(df@data)}
-    utils::write.csv(df@data[minPoints:maxPoints,1:(ncol(df@data)-2)],file = paste0(strsplit(getwd(),"/run")[[1]][1],"/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
+    utils::write.csv(df@data[minPoints:maxPoints,1:(ncol(df@data)-2)],file = paste0(strsplit(getwd(),"/fp-data/run")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
     minPoints<-maxPoints
     maxPoints<-maxPoints+96
     
@@ -1494,8 +1494,8 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     DF = rbind(DF,homerow)
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
-    utils::write.csv(DF[,1:(ncol(DF)-2)],file = paste0(strsplit(getwd(),"/tmp")[[1]][1],"/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
-    log4r::levellog(logger, 'INFO', paste("created : ", paste0(strsplit(getwd(),"/tmp")[[1]][1],"/control/",i,"__",mission,"__dji.csv")))
+    utils::write.csv(DF[,1:(ncol(DF)-2)],file = paste0(strsplit(getwd(),"/tmp")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
+    log4r::levellog(logger, 'INFO', paste("created : ", paste0(strsplit(getwd(),"/tmp")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv")))
     minPoints<-maxPoints
     maxPoints<-maxPoints+94
     
@@ -1635,8 +1635,12 @@ setProjStructure <- function(projectDir,
                              copy,
                              ft="A"){
   workingDir <- tools::file_path_sans_ext(basename(as.character(surveyArea)))
+  
+  projRootDir <- file.path(projectDir, locationName, workingDir)
+  
   if (ft=="A") ftype <- "_AREA"
   if (ft=="P") ftype <- "_POSITION"
+  flight_date <- format(Sys.time(), "%Y_%m_%d")
   taskName <-paste0(format(Sys.time(), "%Y%m%d_%H%M"),
                           "__",
                           cameraType,"__", 
@@ -1645,50 +1649,61 @@ setProjStructure <- function(projectDir,
                    "__",
                     flightAltitude,"m")
   
+  initProj(projRootDir= projRootDir, projFolders=c("fp-data/",
+                                                   "fp-data/control/",
+                                                   "fp-data/run/",
+                                                   "fp-data/log/",
+                                                   "fp-data/data/",
+                                                   "img-data/FLIGHT1/log",
+                                                   "img-data/FLIGHT1/level0",
+                                                   "img-data/FLIGHT1/level1",
+                                                   "img-data/FLIGHT1/level2"))
   
   
   # create directories if needed
-  if (!file.exists(file.path(projectDir, locationName, workingDir))) {
-    dir.create(file.path(projectDir, locationName, workingDir), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName, workingDir,"level0_data",taskName))) {
-    dir.create(file.path(projectDir, locationName, workingDir,"level0_data",taskName), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName, workingDir, "run"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "/run"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName,workingDir, "control"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "control"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName,workingDir, "log"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "log"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir,locationName, "data"))) {
-    dir.create(file.path(projectDir,locationName, "data"), recursive = TRUE)
-  }
+  # if (!file.exists(file.path(projectDir, locationName, workingDir))) {
+  #   dir.create(file.path(projectDir, locationName, workingDir), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName, workingDir,"level0_data",taskName))) {
+  #   dir.create(file.path(projectDir, locationName, workingDir,"level0_data",taskName), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName, workingDir, "run"))) {
+  #   dir.create(file.path(projectDir, locationName,workingDir, "/run"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName,workingDir, "control"))) {
+  #   dir.create(file.path(projectDir, locationName,workingDir, "control"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName,workingDir, "log"))) {
+  #   dir.create(file.path(projectDir, locationName,workingDir, "log"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir,locationName, "data"))) {
+  #   dir.create(file.path(projectDir,locationName, "data"), recursive = TRUE)
+  # }
+  
+  # copy planning data: DSM and flightplanning area to projcet folder
   if (!is.numeric(surveyArea)) {
-    file.copy(surveyArea, paste0(file.path(projectDir,locationName, "data")),overwrite = TRUE)
-    surveyArea <- paste0(file.path(projectDir,locationName, "data"), "/", basename(surveyArea))
+    file.copy(surveyArea, paste0(file.path(projRootDir, "fp-data/data")),overwrite = TRUE)
+    surveyArea <- paste0(file.path(projRootDir, "fp-data/data"), "/", basename(surveyArea))
     
   }
   # copy DSM to datafolder
   if (!is.null(demFn) & copy ) {
-    file.copy(demFn, paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn)))
-    demFn <- paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn))
+    file.copy(demFn, paste0(file.path(projRootDir, "fp-data/data"), "/", basename(demFn)))
+    demFn <- paste0(file.path(projRootDir, "fp-data/data"), "/", basename(demFn))
     
   }
   # setting R environ temp folder to the current working directory
-  Sys.setenv(TMPDIR = file.path(projectDir, locationName, workingDir, "run"))
+  Sys.setenv(TMPDIR = file.path(projRootDir, "fp-data/run"))
   
   # set R working directory
-  setwd(file.path(projectDir,locationName, workingDir, "run"))
+  setwd(file.path(projRootDir, "fp-data/run"))
   
   # set common read write permissions
   Sys.chmod(list.dirs("../.."), "777")
   
   
   # generate misson control filename
-  csvFn <-paste(file.path(projectDir, locationName, workingDir, "control"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
+  csvFn <-paste(file.path(projRootDir, "fp-data/control/"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
   
   return(c(csvFn, taskName, workingDir))
 }

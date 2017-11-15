@@ -24,6 +24,7 @@ if (!isGeneric('read_gpx ')) {
 #' ## plot it
 #' mapview::mapview(gpx)
 #' 
+#' 
 #' @export read_gpx
 
 read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_points", "route_points")) {
@@ -210,4 +211,80 @@ getPopupStyle <- function() {
   pop <- readLines(fl)
   end <- grep("<%=pop%>", pop)
   return(paste(pop[1:(end-2)], collapse = ""))
+}
+
+if ( !isGeneric("initProj") ) {
+  setGeneric("initProj", function(x, ...)
+    standardGeneric("initProj"))
+}
+
+#'@title Defines and creates folders and variables
+#'@name initProj
+#'@description Defines and creates (if necessary) all folders variables
+#' set the SAGA path variables and other system variables
+#' exports all variables to the global environment
+#'
+#'@param projRootDir  project github root directory (your github name)
+#'@param projFolders list of subfolders in project
+#'
+#'@export initProj
+#'   
+
+
+initProj <- function(projRootDir=getwd(), projFolders=c("data/","result/","run/","log/")) {
+  
+  # switch backslash to slash and expand path to full path
+  projRootDir <- gsub("\\\\", "/", path.expand(projRootDir))  
+  
+  # check  tailing / and if not existing append
+  if (substr(projRootDir,nchar(projRootDir) - 1,nchar(projRootDir)) != "/") {
+    projRootDir <- paste0(projRootDir,"/")
+  }
+  
+  # create directories if needed
+  for (folder in projFolders) {
+    if (!file.exists(file.path(projRootDir,folder))) {
+      dir.create(file.path(projRootDir,folder), recursive = TRUE)
+      name <- paste0("path_",substr(folder,1,nchar(folder) ))
+      S<-strsplit(x =name ,split = "/")
+      varName<-paste0("path_",S[[1]][lengths(S)])
+      value <- paste0(projRootDir,varName)
+      makeGlobalVar(varName, value)
+    } else {
+      name <- paste0("path_",substr(folder,1,nchar(folder) ))
+      S<-strsplit(x =name ,split = "/")
+      varName<-paste0("path_",S[[1]][lengths(S)])
+      value <- paste0(projRootDir,varName)
+      makeGlobalVar(varName, value)
+    } 
+    
+  }
+}
+
+#'@title Generates a variable with a certain value in the R environment
+#'@name makeGlobalVar
+#' @description  Generates a variable with a certain value in the R environment
+#' @param name character string name of the variable
+#' @param value character string value of the variable
+#'@export makeGlobalVar 
+#'@examples
+#' \dontrun{
+#'
+#' # creates the global var \code{pathToData} with the value \code{~/home/data}
+#' makeGlobalVar("pathToData","~/home/data") 
+#' 
+#' }
+#' 
+makeGlobalVar <- function(name,value) {
+  if (!exists("GiEnv")) GiEnv <- new.env(parent=globalenv())  
+  if (exists(name, envir = GiEnv)) {
+    #warning(paste0("The variable '", name,"' already exist in .GlobalEnv"))
+    newname <- gsub("/", "_", name) 
+    assign(newname, value, envir = GiEnv, inherits = TRUE)
+    #cat("add variable ",name,"=",value," to global GiEnv\n")
+  } else {
+    newname <- gsub("/", "_", name) 
+    assign(newname, value, envir = GiEnv, inherits = TRUE)
+    #cat("add variable ",name,"=",value," to global GiEnv\n")
+  } 
 }

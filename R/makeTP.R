@@ -135,7 +135,7 @@ makeTP <-  function(projectDir=tempdir(),
   # 
   # # create log file
   # # create log file
-  logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
+  logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
   log4r::level(logger) <- "INFO"
   log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
   log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, dateString)))
@@ -206,8 +206,8 @@ makeTP <-  function(projectDir=tempdir(),
   log4r::levellog(logger,'INFO',"--------------------- END RUN -----------------------------")
   
   note <- " Fly save and have Fun..." 
-  dumpFile(paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
-  cat("\n NOTE: You will find all parameters in the logfile:\n",paste0(file.path(projectDir, locationName, dateString, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ",
+  dumpFile(paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
+  cat("\n NOTE: You will find all parameters in the logfile:\n",paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ",
       "\n Fly save and have Fun...")
   
 }
