@@ -1660,6 +1660,7 @@ setProjStructure <- function(projectDir,
                                                    "img-data/FLIGHT1/level2"))
   
   
+  
   # create directories if needed
   # if (!file.exists(file.path(projectDir, locationName, workingDir))) {
   #   dir.create(file.path(projectDir, locationName, workingDir), recursive = TRUE)
