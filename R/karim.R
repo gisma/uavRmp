@@ -305,9 +305,14 @@ writePSCmd <- function(goal = "ortho",
                        preset_PA = "10",
                        loop_RU = "5",
                        loop_RE = "10",
-                       loop_PA = "2") {
+                       loop_PA = "2",
+                       dc_quality ="MediumQuality",
+                       filter_mode = "AggressiveFiltering",
+                       passes = 15) {
   
   fn<-paste0(projRootDir,"fp-data/log/basicPSWorkflow.py")
+  if (goal == "ortho") goal <- "singleOrtho"
+  if (goal == "dense") goal <- "singleDense"
   
   flightname<-strsplit(projRootDir,split = "/")[[1]][lengths(strsplit(projRootDir,split = "/"))]
   
@@ -325,6 +330,10 @@ writePSCmd <- function(goal = "ortho",
   loop_RU = paste0("loop_RU = ",loop_RU)
   loop_RE = paste0("loop_RE = ",loop_RE)
   loop_PA = paste0("loop_PA = ",loop_PA)
+  filter_mode = paste0("filter_mode = ",paste0("PhotoScan.",filter_mode))
+  dc_quality = paste0("dc_quality = ",paste0("PhotoScan.",dc_quality))
+  passes = paste0("passes = ",passes)
+
   # now brew it
   brew::brew(script,fn)
   

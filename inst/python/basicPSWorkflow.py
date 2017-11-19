@@ -55,6 +55,7 @@ Full documentation is provided at https://github.com/gisma/uavRmp
 import PhotoScan
 import os
 import sys
+import re
 #import glob
 from os.path import expanduser
 
@@ -72,6 +73,9 @@ from os.path import expanduser
 <%=loop_RU%>
 <%=loop_RE%>
 <%=loop_PA%>
+<%=filter_mode%>
+<%=dc_quality%>
+<%=passes%>
 
 if sys.argv[1:]:
     goal = sys.argv[1]
@@ -98,6 +102,18 @@ if sys.argv[11:]:
 if sys.argv[12:]:
     projName = sys.argv[12]
     
+
+<%=crs%>
+doc = PhotoScan.app.document
+chunk = doc.addChunk()
+PSPCF = PhotoScan.PointCloud.Filter()
+
+#str1 = ''.join(sys.argv[:])
+#print(str1)
+#PhotoScan.app.messageBox("You are running the script:" + sys.argv[0] + "\n\n" +
+#						"Mode:                       " + goal +"\n" +
+#						"Image Path:                 " + imgPath + "\n" +
+#						"Project Name:               " + projName +"\n\n")
 
 def filterSparse(doc,chunk,PSPCF):
 #Definitions from the Agisoft Photoscan Manual, Professional Edition (version 1.3)
@@ -156,6 +172,7 @@ def filterSparse(doc,chunk,PSPCF):
 			chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
 			chunk.alignCameras()
 			doc.save()
+			ex = True
 			noPoints = True
 		if (noPoints):
 				# optimize Point Cloud by setting ReconstructionUncertainty
@@ -219,133 +236,212 @@ def filterSparse(doc,chunk,PSPCF):
 			                                          "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
 			                                          "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
 				print("Processing Reports were created and saved to " +report_path)
-  
 
 ### ortho creates an standarized optimized ortho image from uav imagery  
-if goal == "ortho":    
-	# define general short variables
-	<%=crs%>
-	doc = PhotoScan.app.document
-	chunk = doc.addChunk()
-	PSPCF = PhotoScan.PointCloud.Filter()
-	count = 0
-	# creating image list
-	image_list = glob.glob(imgPath + "/*.JPG")
-	print(image_list)
-	# load images
-	chunk.addPhotos(image_list)
-	# load exif data
-	chunk.loadReferenceExif()
-	# create project
-	doc.save(imgPath + "/" + projName)
-	# reopen it
-	doc.open(imgPath + "/" + projName)
-	chunk = doc.chunk
-	### align photos
-	#   matchPhotos(accuracy=HighAccuracy, preselection=NoPreselection, filter_mask=False, keypoint_limit=0, tiepoint_limit=0[, progress])
-	#   Alignment accuracy in [HighestAccuracy, HighAccuracy, MediumAccuracy, LowAccuracy, LowestAccuracy] ranging from [0-5]
-	#   Image pair preselection in [ReferencePreselection, GenericPreselection, NoPreselection]
-	chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
-	chunk.alignCameras()
-	doc.save()	
+def ortho(doc,chunk,PSPCF,goal):
+	cl = doc.chunks		# list of all chunks of a document
 	
-	### call filter sequence
-	filterSparse(doc,chunk,PSPCF)
-
-	### GENERATE MESH 
-	#   buildModel(surface=Arbitrary, interpolation=EnabledInterpolation, face_count=MediumFaceCount[, source ][, classes][, progress])
-	#   Surface type in [Arbitrary, HeightField]
-	#   Interpolation mode in [EnabledInterpolation, DisabledInterpolation, Extrapolated]
-	#   Face count in [HighFaceCount, MediumFaceCount, LowFaceCount]
-	#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
-	chunk.buildModel(surface=PhotoScan.SurfaceType.HeightField, source = PhotoScan.DataSource.PointCloudData, interpolation = PhotoScan.Interpolation.EnabledInterpolation, face_count = PhotoScan.FaceCount.LowFaceCount)
+	# get an overview of the chunks and if they are already aligned
+	print(cl)
+	print(len(cl))
+	ex = False
+	if goal == "singleOrtho":			
+		# creating image list
+		image_list = glob.glob(imgPath + "/*.JPG")
+		print(image_list)
+		# load images
+		chunk.addPhotos(image_list)
+		# load exif data
+		chunk.loadReferenceExif()
+		# create project
+		doc.save(imgPath + "/" + projName)
+		# reopen it
+		doc.open(imgPath + "/" + projName)
+		chunk = doc.chunk
+		### align photos
+		#   matchPhotos(accuracy=HighAccuracy, preselection=NoPreselection, filter_mask=False, keypoint_limit=0, tiepoint_limit=0[, progress])
+		#   Alignment accuracy in [HighestAccuracy, HighAccuracy, MediumAccuracy, LowAccuracy, LowestAccuracy] ranging from [0-5]
+		#   Image pair preselection in [ReferencePreselection, GenericPreselection, NoPreselection]
+		chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
+		chunk.alignCameras()
+		doc.save()
+		ex = True
+		goal = "allOrtho"	
 	
-	# save project before buildDem and buildOrthomosaic is called
-	doc.save()
-	
-	### GENERATE DEM
-	#   Build elevation model for the chunk.
-	#   buildDem(source=DenseCloudData, interpolation=EnabledInterpolation[, projection ][, region ][, classes][, progress])
-	#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
-	chunk.buildDem(source = PhotoScan.DataSource.ModelData, interpolation=PhotoScan.EnabledInterpolation)
+	if goal == "allOrtho":			
 		
-	### GENERATE ORTHOMOSAIC
-	#   buildOrthomosaic(surface=ElevationData, blending=MosaicBlending, color_correction=False[, projection ][, region ][, dx ][, dy ][, progress])
-	#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
-	#   Blending mode in [AverageBlending, MosaicBlending, MinBlending, MaxBlending, DisabledBlending]
-	chunk.buildOrthomosaic(surface=PhotoScan.ElevationData,projection=crs,dx=orthoRes,dy=orthoRes)
-	doc.save()
-
-	### create Processing Report path 
-	file_path = doc.path
-	file_path_cut = file_path[0:-4]		
-	report_path = (file_path_cut + "_reports")
-	if not os.path.exists(report_path):
-		os.makedirs(report_path)
+		for chunk in doc.chunks:
+			noPoints = False
+			print(chunk)
+			pc = chunk.point_cloud
+			print(pc)
+			m = re.search('PointCloud', str(pc))
+			if m:
+				noPoints = True
+			else:
+				noPoints = False
 			
-	### export Processing Report
-	chunk.exportReport(report_path + "/" + chunk.label + ".pdf")
+			print(noPoints)
+			if (noPoints == False):
+				### align photos
+				#   matchPhotos(accuracy=HighAccuracy, preselection=NoPreselection, filter_mask=False, keypoint_limit=0, tiepoint_limit=0[, progress])
+				#   Alignment accuracy in [HighestAccuracy, HighAccuracy, MediumAccuracy, LowAccuracy, LowestAccuracy] ranging from [0-5]
+				#   Image pair preselection in [ReferencePreselection, GenericPreselection, NoPreselection]
+				chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
+				chunk.alignCameras()
+				doc.save()
+				noPoints = True
 	
-	### print some information	
-	print("sparse point clouds optimized by setting:\n Reconstruction Uncertainty = " + "{:.0f}".format(preset_RU) + " >> " + "{:.0f}".format(loop_RU) + " loop(s)\n"+
-                                          "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
-                                          "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
-	print("Processing Reports were created and saved to " + report_path)
+			if (noPoints):    
+			
+				### call filter sequence
+				filterSparse(doc,chunk,PSPCF)
+			
+				### GENERATE MESH 
+				#   buildModel(surface=Arbitrary, interpolation=EnabledInterpolation, face_count=MediumFaceCount[, source ][, classes][, progress])
+				#   Surface type in [Arbitrary, HeightField]
+				#   Interpolation mode in [EnabledInterpolation, DisabledInterpolation, Extrapolated]
+				#   Face count in [HighFaceCount, MediumFaceCount, LowFaceCount]
+				#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
+				chunk.buildModel(surface=PhotoScan.SurfaceType.HeightField, source = PhotoScan.DataSource.PointCloudData, interpolation = PhotoScan.Interpolation.EnabledInterpolation, face_count = PhotoScan.FaceCount.LowFaceCount)
+				chunk.smoothModel(passes)				
+				# save project before buildDem and buildOrthomosaic is called
+				doc.save()
+				
+				### GENERATE DEM
+				#   Build elevation model for the chunk.
+				#   buildDem(source=DenseCloudData, interpolation=EnabledInterpolation[, projection ][, region ][, classes][, progress])
+				#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
+				chunk.buildDem(source = PhotoScan.DataSource.ModelData, interpolation=PhotoScan.EnabledInterpolation)
+					
+				### GENERATE ORTHOMOSAIC
+				#   buildOrthomosaic(surface=ElevationData, blending=MosaicBlending, color_correction=False[, projection ][, region ][, dx ][, dy ][, progress])
+				#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
+				#   Blending mode in [AverageBlending, MosaicBlending, MinBlending, MaxBlending, DisabledBlending]
+				chunk.buildOrthomosaic(surface=PhotoScan.ElevationData,projection=crs,dx=orthoRes,dy=orthoRes)
+				doc.save()
+			
+				### create Processing Report path 
+				file_path = doc.path
+				file_path_cut = file_path[0:-4]		
+				report_path = (file_path_cut + "_reports")
+				if not os.path.exists(report_path):
+					os.makedirs(report_path)
+						
+				### export Processing Report
+				chunk.exportReport(report_path + "/" + chunk.label + ".pdf")
+				
+				### print some information	
+				print("sparse point clouds optimized by setting:\n Reconstruction Uncertainty = " + "{:.0f}".format(preset_RU) + " >> " + "{:.0f}".format(loop_RU) + " loop(s)\n"+
+			                                          "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
+			                                          "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
+				print("Processing Reports were created and saved to " + report_path)
+				# define general short variables
+				count = 0
+				if (ex):
+					break
+### ortho creates an standarized optimized ortho image from uav imagery  
+def dense(doc,chunk,PSPCF,goal):
+	cl = doc.chunks		# list of all chunks of a document
+	
+	# get an overview of the chunks and if they are already aligned
+	print(cl)
+	print(len(cl))
+	ex = False
+	if goal == "singleDense":			
+		# creating image list
+		image_list = glob.glob(imgPath + "/*.JPG")
+		print(image_list)
+		# load images
+		chunk.addPhotos(image_list)
+		# load exif data
+		chunk.loadReferenceExif()
+		# create project
+		doc.save(imgPath + "/" + projName)
+		# reopen it
+		doc.open(imgPath + "/" + projName)
+		chunk = doc.chunk
+		print(chunk)
+		### align photos
+		#   matchPhotos(accuracy=HighAccuracy, preselection=NoPreselection, filter_mask=False, keypoint_limit=0, tiepoint_limit=0[, progress])
+		#   Alignment accuracy in [HighestAccuracy, HighAccuracy, MediumAccuracy, LowAccuracy, LowestAccuracy] ranging from [0-5]
+		#   Image pair preselection in [ReferencePreselection, GenericPreselection, NoPreselection]
+		chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
+		chunk.alignCameras()
+		doc.save()
+		ex = True
+		goal = "allDense"	
+	
+	if goal == "allDense":			
+		
+		for chunk in doc.chunks:
+			noPoints = False
+			print(chunk)
+			pc = chunk.point_cloud
+			print(pc)
+			m = re.search('PointCloud', str(pc))
+			if m:
+				noPoints = True
+			else:
+				noPoints = False
+			
+			print(noPoints)
+			if (noPoints == False and goal == "allDense"):
+				### align photos
+				#   matchPhotos(accuracy=HighAccuracy, preselection=NoPreselection, filter_mask=False, keypoint_limit=0, tiepoint_limit=0[, progress])
+				#   Alignment accuracy in [HighestAccuracy, HighAccuracy, MediumAccuracy, LowAccuracy, LowestAccuracy] ranging from [0-5]
+				#   Image pair preselection in [ReferencePreselection, GenericPreselection, NoPreselection]
+				chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
+				chunk.alignCameras()
+				doc.save()
+				ex = True
+				noPoints = True
+	
+			if (noPoints):    
+			
+				### call filter sequence
+				filterSparse(doc,chunk,PSPCF)
+			
+				# save project before buildDem and buildOrthomosaic is called
+				doc.save()
+				### dense cloud model
+				#    Generate depth maps for the chunk.
+				#    buildDenseCloud(quality=MediumQuality, filter=AggressiveFiltering[, cameras], keep_depth=False, reuse_depth=False[, progress])
+				#    Dense point cloud quality in [UltraQuality, HighQuality, MediumQuality, LowQuality, LowestQuality]
+				#    Depth filtering mode in [AggressiveFiltering, ModerateFiltering, MildFiltering, NoFiltering]
+				chunk.buildDenseCloud(quality=dc_quality, filter=filter_mode, keep_depth=True, reuse_depth=False)
+				doc.save()
 
-### dense creates an standarized optimized dense point cloud (depth map) from uav imagery	
-if goal == "dense":    
-	# define short variables
-	crs =  PhotoScan.CoordinateSystem("EPSG::32632")
-	doc = PhotoScan.app.document
-	chunk = doc.addChunk()
-	PSPCF = PhotoScan.PointCloud.Filter()
-	count = 0
-	# creating image list
-	image_list = glob.glob(imgPath + "/*.JPG")
-	print(image_list)
-	# load images
-	chunk.addPhotos(image_list)
-	# load exif data
-	chunk.loadReferenceExif()
-	# create project
-	doc.save(imgPath + "/" + projName)
-	# reopen it
-	doc.open(imgPath + "/" + projName)
-	chunk = doc.chunk
-	# align photos
-	chunk.matchPhotos(accuracy=alignQuality, preselection=refPre,keypoint_limit=0, tiepoint_limit=0)
-	chunk.alignCameras()
-	doc.save()	
+				### create Processing Report path 
+				file_path = doc.path
+				file_path_cut = file_path[0:-4]		
+				report_path = (file_path_cut + "_reports")
+				if not os.path.exists(report_path):
+					os.makedirs(report_path)
+						
+				### export Processing Report
+				chunk.exportReport(report_path + "/" + chunk.label + ".pdf")
+				
+				### print some information	
+				print("sparse point clouds optimized by setting:\n Reconstruction Uncertainty = " + "{:.0f}".format(preset_RU) + " >> " + "{:.0f}".format(loop_RU) + " loop(s)\n"+
+			                                          "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
+			                                          "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
+				print("Processing Reports were created and saved to " + report_path)
+				# define general short variables
+				count = 0
+				if (ex):
+					break
 	
-	### call filter sequence
-	filterSparse(doc,chunk,PSPCF)
-	
-	### dense cloud model
-	#    Generate depth maps for the chunk.
-	#    buildDenseCloud(quality=MediumQuality, filter=AggressiveFiltering[, cameras], keep_depth=False, reuse_depth=False[, progress])
-	#    Dense point cloud quality in [UltraQuality, HighQuality, MediumQuality, LowQuality, LowestQuality]
-	#    Depth filtering mode in [AggressiveFiltering, ModerateFiltering, MildFiltering, NoFiltering]
-	chunk.buildDenseCloud(quality=PhotoScan.HighQuality, filter=PhotoScan.AggressiveFiltering, keep_depth=True, reuse_depth=False)
-	doc.save()
-
-	### create Processing Report path 
-	file_path = doc.path
-	file_path_cut = file_path[0:-4]		
-	report_path = (file_path_cut + "_reports")
-	if not os.path.exists(report_path):
-		os.makedirs(report_path)
-	### export Processing Report
-	chunk.exportReport(report_path + "/" + chunk.label + ".pdf")
-	
-	### print some information	
-	print("sparse point clouds optimized by setting:\n Reconstruction Uncertainty = " + "{:.0f}".format(preset_RU) + " >> " + "{:.0f}".format(loop_RU) + " loop(s)\n"+
-                                          "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
-                                          "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
-	print("Processing Reports were created and saved to " + report_path)	
-
-### filter performs an standarized sparse point cloud filtering only 
 
 ### filter creates an standarized optimized sparse point cloud  from uav imagery	
 if goal == "filter":
 	### call filter sequence
 	filterSparse(doc,chunk,PSPCF)
+elif (goal == "allOrtho" or goal =="singleOrtho"):
+	### call filter sequence
+	ortho(doc,chunk,PSPCF,goal)
+### dense creates an standarized optimized dense point cloud (depth map) from uav imagery		
+elif (goal == "allDense" or goal =="singleDense"):    
+	### call filter sequence
+	print("JA")
+	dense(doc,chunk,PSPCF,goal)
