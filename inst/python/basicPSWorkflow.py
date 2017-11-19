@@ -4,17 +4,20 @@
 """
 © Copyright 2017, Chris Reudenbach, Sebastian Richter
 basicPSWorkflow.py: 
-User may use two arguments to override the default values
-goal = ["ortho","dense","filter"]
-imgPath = "path_to_the_image_data"
+User may use some arguments to override the default values
 
-ortho: performs a workflow for a standarized generation of ortho images 
+the first three most commonly used are:
+goal = ["singleOrtho","allOrtho","singleDense","allDense","filter"]
+imgPath = "path_to_the_image_data"
+projName "name_of_the_project_file.psx"
+
+xOrtho: performs a workflow for a standarized generation of ortho images 
 based on low altitude uav imagery over rugged surfaces. it adds
 images to a new chunk, align them and optimized iteratively by 
 filtering the resulting sparse point cloud. The ortho image is build by  
 constructing first a smoothed mesh model and second a DSM. 
 
-dense: performs a workflow for a standarized generation of a dense point 
+xDense: performs a workflow for a standarized generation of a dense point 
 cloud based on low altitude uav imagery over rugged surfaces. It adds
 images to a new chunk, align them and optimized iteratively by 
 filtering the resulting sparse point cloud. The dense point cloud is 
@@ -56,27 +59,29 @@ import PhotoScan
 import os
 import sys
 import re
-#import glob
+import glob
 from os.path import expanduser
 
 
 # preset parameters
-<%=goal%> 
-<%=imgPath%> 
-<%=projName%>
-<%=alignQuality%>
-<%=orthoRes%>
-<%=refPre%>
-<%=preset_RU%>
-<%=preset_RE%>
-<%=preset_PA%>
-<%=loop_RU%>
-<%=loop_RE%>
-<%=loop_PA%>
-<%=filter_mode%>
-<%=dc_quality%>
-<%=passes%>
+<%=goal%>          # script mode							sys.argv[1]
+<%=imgPath%>       # path to images							sys.argv[2]
+<%=projName%>      # project name with suffix ".psx"		sys.argv[3]
+<%=alignQuality%>  # alignment quality						sys.argv[4]
+<%=orthoRes%>      # resolution of the ortho image pixels	sys.argv[5]
+<%=refPre%>        # reference preselection mode			sys.argv[6]
+<%=preset_RU%>     # reconstruction  uncertainty threshold	sys.argv[7]
+<%=preset_RE%>     # Reprojection error threshold			sys.argv[8]
+<%=preset_PA%>     # Projection Accuracy treshold			sys.argv[9]
+<%=loop_RU%>       # loops reconstruction uncertainty		sys.argv[10]
+<%=loop_RE%>       # loops reprojection error				sys.argv[11]
+<%=loop_PA%>       # loops projection accuray				sys.argv[12]
+<%=filter_mode%>   # PhotoScan filtermode for dense cloud 	sys.argv[13]
+<%=dc_quality%>    # desne cloud quality 					sys.argv[14]
+<%=passes%>        # number of mesh grid smoothing passes	sys.argv[15]
 
+# you may change every of the arguments on th ecommandline
+# please keep in the right order and do not drop consecutively an argument  
 if sys.argv[1:]:
     goal = sys.argv[1]
 if sys.argv[2:]:
@@ -101,7 +106,12 @@ if sys.argv[11:]:
     projName = sys.argv[11]                            
 if sys.argv[12:]:
     projName = sys.argv[12]
-    
+if sys.argv[13:]:
+    projName = sys.argv[13]
+if sys.argv[14:]:
+    projName = sys.argv[14]
+if sys.argv[15:]:
+    projName = sys.argv[15]            
 
 <%=crs%>
 doc = PhotoScan.app.document
@@ -116,33 +126,34 @@ PSPCF = PhotoScan.PointCloud.Filter()
 #						"Project Name:               " + projName +"\n\n")
 
 def filterSparse(doc,chunk,PSPCF):
-#Definitions from the Agisoft Photoscan Manual, Professional Edition (version 1.3)
-#Reprojection error
-#High  reprojection  error  usually  indicates  poor  localization  accuracy  of  the  corresponding  point
-#projections at the point matching step. It is also typical for false matches. Removing such points can
-#improve accuracy of the subsequent optimization step.
+	
+#### Definitions taken from the Agisoft Photoscan Manual, Professional Edition (version 1.3)
+### Reprojection error
+# High  reprojection  error  usually  indicates  poor  localization  accuracy  of  the  corresponding  point
+# projections at the point matching step. It is also typical for false matches. Removing such points can
+# improve accuracy of the subsequent optimization step.
 
-#High  reconstruction  uncertainty  is  typical  for  points,  reconstructed  from  nearby  photos  with  small
-#baseline. Such points can noticeably deviate from the object surface, introducing noise in the point
-#cloud. While removal of such points should not affect the accuracy of optimization, it may be useful
-#to remove them before building geometry in Point Cloud mode or for better visual appearance of the
-#point cloud.
+### High  reconstruction  uncertainty  is  typical  for  points,  reconstructed  from  nearby  photos  with  small
+# baseline. Such points can noticeably deviate from the object surface, introducing noise in the point
+# cloud. While removal of such points should not affect the accuracy of optimization, it may be useful
+# to remove them before building geometry in Point Cloud mode or for better visual appearance of the
+# point cloud.
 
-#Image count
-#PhotoScan reconstruct all the points that are visible at least on two photos. However, points that are
-#visible only on two photos are likely to be located with poor accuracy. Image count filtering enables
-#to remove such unreliable points from the cloud.
+### Image count (not used so far)
+# PhotoScan reconstruct all the points that are visible at least on two photos. However, points that are
+# visible only on two photos are likely to be located with poor accuracy. Image count filtering enables
+# to remove such unreliable points from the cloud.
  
-#Projection Accuracy
-#This criterion allows to filter out points which projections were relatively poorer localised due to their
-#bigger size.
+### Projection Accuracy
+# This criterion allows to filter out points which projections were relatively poorer localised due to their
+# bigger size.
  
-#Calibration parameters list:
-#f = Focal length measured in pixels.
-#cx, cy = Principal point coordinates, i.e. coordinates of lens optical axis interception with sensor plane in pixels.
-#b1, b2 = Affinity and Skew (non-orthogonality) transformation coefficients.
-#k1, k2, k3, k4 = Radial distortion coefficients.
-#p1, p2, p3, p4 = Tangential distortion coefficients.
+### Calibration parameters list:
+# f = Focal length measured in pixels.
+# cx, cy = Principal point coordinates, i.e. coordinates of lens optical axis interception with sensor plane in pixels.
+# b1, b2 = Affinity and Skew (non-orthogonality) transformation coefficients.
+# k1, k2, k3, k4 = Radial distortion coefficients.
+# p1, p2, p3, p4 = Tangential distortion coefficients.
 	
 	count = 0
 	cl = doc.chunks		# list of all chunks of a document
@@ -238,6 +249,7 @@ def filterSparse(doc,chunk,PSPCF):
 				print("Processing Reports were created and saved to " +report_path)
 
 ### ortho creates an standarized optimized ortho image from uav imagery  
+#   you can call it with singleOrtho and allOrtho argument
 def ortho(doc,chunk,PSPCF,goal):
 	cl = doc.chunks		# list of all chunks of a document
 	
@@ -245,6 +257,8 @@ def ortho(doc,chunk,PSPCF,goal):
 	print(cl)
 	print(len(cl))
 	ex = False
+	
+	### if just one chunk is requested to be processed
 	if goal == "singleOrtho":			
 		# creating image list
 		image_list = glob.glob(imgPath + "/*.JPG")
@@ -268,6 +282,7 @@ def ortho(doc,chunk,PSPCF,goal):
 		ex = True
 		goal = "allOrtho"	
 	
+	### if all chunks are requested to be processed
 	if goal == "allOrtho":			
 		
 		for chunk in doc.chunks:
@@ -340,7 +355,8 @@ def ortho(doc,chunk,PSPCF,goal):
 				count = 0
 				if (ex):
 					break
-### ortho creates an standarized optimized ortho image from uav imagery  
+### ortho creates an standarized optimized dense point cloud from uav imagery  
+#   you can call it with singleDense and allDense argument
 def dense(doc,chunk,PSPCF,goal):
 	cl = doc.chunks		# list of all chunks of a document
 	
@@ -348,6 +364,8 @@ def dense(doc,chunk,PSPCF,goal):
 	print(cl)
 	print(len(cl))
 	ex = False
+	
+	### if just one chunk is requested to be processed
 	if goal == "singleDense":			
 		# creating image list
 		image_list = glob.glob(imgPath + "/*.JPG")
@@ -372,6 +390,7 @@ def dense(doc,chunk,PSPCF,goal):
 		ex = True
 		goal = "allDense"	
 	
+	### if more than one chunk is available and desired to be processed
 	if goal == "allDense":			
 		
 		for chunk in doc.chunks:
@@ -433,7 +452,8 @@ def dense(doc,chunk,PSPCF,goal):
 					break
 	
 
-### filter creates an standarized optimized sparse point cloud  from uav imagery	
+### Kind of Main 
+
 if goal == "filter":
 	### call filter sequence
 	filterSparse(doc,chunk,PSPCF)
