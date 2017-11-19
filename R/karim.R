@@ -314,7 +314,7 @@ writePSCmd <- function(goal = "ortho",
   script <- paste(system.file(package="uavRmp"), "python/basicPSWorkflow.py", sep = "/")
   goal <- paste0('goal = ','"',goal,'"')
   imgPath <- paste0('imgPath = ','"',projRootDir,imgPath,'"')
-  projName = paste0('projName = ','"',projRootDir,'level2/',flightname,'.psx"')
+  projName = paste0('projName = ','"',flightname,'.psx"')
   alignQuality = paste0("alignQuality = ",alignQuality)
   orthoRes = paste0("orthoRes = ",orthoRes)
   refPre = paste0("refPre = ",refPre)
@@ -331,11 +331,14 @@ writePSCmd <- function(goal = "ortho",
   }
 
 file_move <- function(from, to,pattern="*") {
-  todir <- dirname(to)
+  todir <- gsub("\\\\", "/", path.expand(to)) 
   todir <- path.expand(to)
   fromdir <- path.expand(from)
+  
   if (!isTRUE(file.info(todir)$isdir)) dir.create(todir, recursive=TRUE)
-  result<-file.rename(from = paste0(from,list),  to = to,overwrite = TRUE,recursive = TRUE)
+  list<-list.files(path.expand(fromdir),pattern = pattern)
+  result<-file.rename(from = paste0(from,"/",list),  to = todir)
+  
 }
 #' copyDir
 #' @description  copyDir copy all image data to the corresponding folder

@@ -30,6 +30,7 @@
 #' @import sf 
 #' @import methods
 #' @import devtools
+#' @import brew
 #' @importFrom geosphere bearing
 #' @importFrom geosphere distGeo
 #' @importFrom geosphere destPoint

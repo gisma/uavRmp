@@ -73,6 +73,7 @@ makeTP <-  function(projectDir=tempdir(),
   task <- NULL
   demFn  <-  path.expand(demFn)
   locationName <- file.path(locationName,"missions")
+  surveyArea <- missionTrackList
   projstru <- setProjStructure (projectDir,
                                 locationName, 
                                 

@@ -37,7 +37,8 @@ Imports:
     devtools,
     sf,
     roxygen2,
-    methods
+    methods,
+    brew
 RoxygenNote: 6.0.1
 SystemRequirements: GNU make
 Suggests: knitr,

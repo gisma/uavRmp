@@ -136,6 +136,7 @@ def filterSparse(doc,chunk,PSPCF):
 	print(len(cl))
 	
 	for chunk in doc.chunks:
+		noPoints = False
 		print(chunk)
 		pc = chunk.point_cloud
 		print(pc)
