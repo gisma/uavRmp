@@ -33,4 +33,5 @@ gpx <- read_gpx(gpxFN, layers=c("tracks"))
 ## plot it
 mapview::mapview(gpx)
 
+
 }

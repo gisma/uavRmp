@@ -10,10 +10,10 @@ output:
     theme: united
     toc: yes
   rmarkdown: default
-vignette: |
+vignette: >
   %\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning}
-  %\VignetteEngine{knitr::rmarkdown}   
-  %\VignetteEncoding{UTF-8}{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}{inputenc}\
 ---
 
 ```{r echo=FALSE}

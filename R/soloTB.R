@@ -228,3 +228,5 @@ soloLog <- function(logFileSample = "recent",
       return(flights)}
   }
 }
+
+

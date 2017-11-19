@@ -72,66 +72,81 @@ makeTP <-  function(projectDir=tempdir(),
   # due to RMD Check Note
   task <- NULL
   demFn  <-  path.expand(demFn)
+  locationName <- paste0(locationName,"_missions")
+  surveyArea <- missionTrackList
+  projstru <- setProjStructure (projectDir,
+                                locationName, 
+                                
+                                flightAltitude,
+                                uavType,
+                                cameraType,
+                                surveyArea,
+                                demFn,
+                                copy,
+                                "P")
+  dateString <- projstru[3]
+  taskName <- projstru[2]
+  csvFn <- projstru[1]
   
-  workingDir <- format(Sys.time(), "%Y_%m_%d") 
-  taskName <-paste(paste0(locationName, "_",
-                          flightAltitude,"m_",
-                          uavType,"_", 
-                          cameraType,"_", 
-                          tools::file_path_sans_ext(basename(missionTrackList)),"_", 
-                          format(Sys.time(), "%Y_%m_%d_%H-%M"),
-                          "_track-flight"),
-                   sep = .Platform$file.sep)
-  
-  
-  
-  # create directories if needed
-  if (!file.exists(file.path(projectDir, locationName, workingDir))) {
-    dir.create(file.path(projectDir, locationName, workingDir), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName, workingDir, "run"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "/run"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName,workingDir, "control"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "control"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir, locationName,workingDir, "log"))) {
-    dir.create(file.path(projectDir, locationName,workingDir, "log"), recursive = TRUE)
-  }
-  if (!file.exists(file.path(projectDir,locationName, "data"))) {
-    dir.create(file.path(projectDir,locationName, "data"), recursive = TRUE)
-  }
-  # if (!is.null(missionTrackList)) {
-  #   file.copy(missionTrackList, paste0(file.path(projectDir,locationName, "data")))
-  #   missionTrackList <- paste0(file.path(projectDir,locationName, "data"), "/", basename(missionTrackList))
+  # dateString <- format(Sys.time(), "%Y_%m_%d") 
+  # taskName <-paste(paste0(locationName, "_",
+  #                         flightAltitude,"m_",
+  #                         uavType,"_", 
+  #                         cameraType,"_", 
+  #                         tools::file_path_sans_ext(basename(missionTrackList)),"_", 
+  #                         format(Sys.time(), "%Y_%m_%d_%H-%M"),
+  #                         "_track-flight"),
+  #                  sep = .Platform$file.sep)
+  # 
+  # 
+  # 
+  # # create directories if needed
+  # if (!file.exists(file.path(projectDir, locationName, dateString))) {
+  #   dir.create(file.path(projectDir, locationName, dateString), recursive = TRUE)
   # }
-  
-  if (!is.null(demFn) & copy ) {
-    file.copy(demFn, paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn)))
-    demFn <- paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn))
-    
-  }
-  # setting R environ temp folder to the current working directory
-  Sys.setenv(TMPDIR = file.path(projectDir, locationName, workingDir, "run"))
-  
-  # set R working directory
-  setwd(file.path(projectDir,locationName, workingDir, "run"))
-  
-  
-  Sys.chmod(list.dirs("../.."), "777")
-  
-  # create log file
-  # create log file
-  logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
+  # if (!file.exists(file.path(projectDir, locationName, dateString, "run"))) {
+  #   dir.create(file.path(projectDir, locationName,dateString, "/run"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName,dateString, "control"))) {
+  #   dir.create(file.path(projectDir, locationName,dateString, "control"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir, locationName,dateString, "log"))) {
+  #   dir.create(file.path(projectDir, locationName,dateString, "log"), recursive = TRUE)
+  # }
+  # if (!file.exists(file.path(projectDir,locationName, "data"))) {
+  #   dir.create(file.path(projectDir,locationName, "data"), recursive = TRUE)
+  # }
+  # # if (!is.null(missionTrackList)) {
+  # #   file.copy(missionTrackList, paste0(file.path(projectDir,locationName, "data")))
+  # #   missionTrackList <- paste0(file.path(projectDir,locationName, "data"), "/", basename(missionTrackList))
+  # # }
+  # 
+  # if (!is.null(demFn) & copy ) {
+  #   file.copy(demFn, paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn)))
+  #   demFn <- paste0(file.path(projectDir,locationName, "/data"), "/", basename(demFn))
+  #   
+  # }
+  # # setting R environ temp folder to the current working directory
+  # Sys.setenv(TMPDIR = file.path(projectDir, locationName, dateString, "run"))
+  # 
+  # # set R working directory
+  # setwd(file.path(projectDir,locationName, dateString, "run"))
+  # 
+  # 
+  # Sys.chmod(list.dirs("../.."), "777")
+  # 
+  # # create log file
+  # # create log file
+  logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
   log4r::level(logger) <- "INFO"
   log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
-  log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, workingDir)))
-  
-  
-  # create misson filename
-  # generate misson control filename
-  csvFn <-paste(file.path(projectDir, locationName, workingDir, "control"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
-  
+  log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, dateString)))
+  # 
+  # 
+  # # create misson filename
+  # # generate misson control filename
+  # csvFn <-paste(file.path(projectDir, locationName, dateString, "control"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
+  # 
   # import flight area if provided by an external vector file
   #file.copy(overwrite = TRUE, from = missionTrackList, to = file.path(projectDir,"data"))
   flightList <- readTreeTrack(missionTrackList)
@@ -193,8 +208,8 @@ makeTP <-  function(projectDir=tempdir(),
   log4r::levellog(logger,'INFO',"--------------------- END RUN -----------------------------")
   
   note <- " Fly save and have Fun..." 
-  dumpFile(paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
-  cat("\n NOTE: You will find all parameters in the logfile:\n",paste0(file.path(projectDir, locationName, workingDir, "log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ",
+  dumpFile(paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
+  cat("\n NOTE: You will find all parameters in the logfile:\n",paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'),"","\n ",
       "\n Fly save and have Fun...")
   
 }
