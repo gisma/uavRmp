@@ -41,8 +41,8 @@ To install from ```github```  you need to have installed the ```devtools``` pack
 devtools::install_github("gisma/uavRmp", ref = "master")
 ```
 
-If you want to install all dependencies use:
+If you want to install the develop branch use:
 
 ```S
-devtools::install_github("gisma/uavRmp", ref = "master", dependencies = TRUE)
+devtools::install_github("gisma/uavRmp", ref = "develop", dependencies = TRUE)
 ```
