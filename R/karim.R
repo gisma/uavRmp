@@ -268,7 +268,7 @@ initProj <- function(projRootDir=getwd(), projFolders=c("log/","control/","run/"
 #'@examples
 #' \dontrun{
 #'
-#' # creates the global writePathes(varName, value,fn)var \code{pathToData} with the value \code{~/home/data}
+#' # creates the global var \code{pathToData} with the value \code{~/home/data}
 #' makeGlobalVar("pathToData","~/home/data") 
 #' 
 #' }
@@ -354,14 +354,16 @@ file_move <- function(from, to,pattern="*") {
 #'
 #' @param fromDir \code{character} a path to the image data
 #' @param toProjDir \code{character} a path to the projRootDir
+#' @param pattern  \code{character} a string pattern for filtering  file list 
 #' @export copyDir
-copyDir <- function(from, to, pattern="*") {
-  todir <- gsub("\\\\", "/", path.expand(to)) 
-  todir <- path.expand(to)
-  fromdir <- path.expand(from)
+#' 
+copyDir <- function(fromDir, toProjDir, pattern="*") {
+  toDir <- gsub("\\\\", "/", path.expand(toProjDir)) 
+  toDir <- path.expand(toDir)
+  fromDir <- path.expand(fromDir)
   
-  if (!isTRUE(file.info(todir)$isdir)) dir.create(todir, recursive=TRUE)
-  list<-list.files(path.expand(fromdir),pattern = pattern)
-  result<-file.copy(from = paste0(from,"/",list),  to = todir, overwrite = TRUE,recursive = TRUE,copy.date =TRUE)
+  if (!isTRUE(file.info(toDir)$isdir)) dir.create(toDir, recursive=TRUE)
+  list<-list.files(path.expand(fromDir),pattern = pattern)
+  result<-file.copy(from = paste0(fromDir,"/",list),  to = toDir, overwrite = TRUE,recursive = TRUE,copy.date =TRUE)
 }
 

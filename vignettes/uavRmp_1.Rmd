@@ -3,15 +3,17 @@ title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
 date: '`r Sys.Date()`'
 output:
-  html_document:
-    theme: united
-    toc: yes
   pdf_document:
     latex_engine: xelatex
     toc: yes
+  html_document:
+    theme: united
+    toc: yes
   rmarkdown: default
-vignette: "%\\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning}\n%\\VignetteEngine{knitr::rmarkdown}
-  \  \n%\\VignetteEncoding{UTF-8}{inputenc}\n"
+vignette: >
+  %\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}{inputenc}\
 ---
 
 ```{r echo=FALSE}

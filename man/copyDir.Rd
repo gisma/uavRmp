@@ -4,12 +4,14 @@
 \alias{copyDir}
 \title{copyDir}
 \usage{
-copyDir(from, to, pattern = "*")
+copyDir(fromDir, toProjDir, pattern = "*")
 }
 \arguments{
 \item{fromDir}{\code{character} a path to the image data}
 
 \item{toProjDir}{\code{character} a path to the projRootDir}
+
+\item{pattern}{\code{character} a string pattern for filtering  file list}
 }
 \description{
 copyDir copy all image data to the corresponding folder

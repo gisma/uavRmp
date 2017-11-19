@@ -971,7 +971,15 @@ launch2flightalt <- function(p, lns, uavViewDir, launch2startHeading, uavType) {
 }
 
 # generate raw mavtree list 
-MAVTreeCSV <- function(flightPlanMode, trackDistance, logger, p, dem, maxSpeed = maxSpeed/3.6,circleRadius,df,takeOffAlt){
+MAVTreeCSV <- function(flightPlanMode, 
+                       trackDistance, 
+                       logger, 
+                       p, 
+                       dem, 
+                       maxSpeed = maxSpeed/3.6, 
+                       circleRadius,
+                       df,
+                       takeOffAlt) {
   mission <- p$locationName
   
   minPoints <- 1

@@ -72,7 +72,7 @@ makeTP <-  function(projectDir=tempdir(),
   # due to RMD Check Note
   task <- NULL
   demFn  <-  path.expand(demFn)
-  locationName <- file.path(locationName,"missions")
+  locationName <- paste0(locationName,"_missions")
   surveyArea <- missionTrackList
   projstru <- setProjStructure (projectDir,
                                 locationName, 
@@ -82,7 +82,8 @@ makeTP <-  function(projectDir=tempdir(),
                                 cameraType,
                                 surveyArea,
                                 demFn,
-                                copy)
+                                copy,
+                                "P")
   dateString <- projstru[3]
   taskName <- projstru[2]
   csvFn <- projstru[1]
