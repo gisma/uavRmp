@@ -111,7 +111,9 @@ if sys.argv[1:]:
     goal = sys.argv[1]
 if sys.argv[2:]:
     imgPath = sys.argv[2]
-
+if sys.argv[3:]:
+    projName = sys.argv[3]
+    
 if goal == "ortho":    
 	# define short variables
 	crs =  PhotoScan.CoordinateSystem("EPSG::32632")
