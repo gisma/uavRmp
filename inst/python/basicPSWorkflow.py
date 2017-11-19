@@ -100,48 +100,54 @@ if sys.argv[12:]:
     
 
 def filterSparse(doc,chunk,PSPCF):
-"""
- Definitions from the Agisoft Photoscan Manual, Professional Edition (version 1.3)
- Reprojection error
- High  reprojection  error  usually  indicates  poor  localization  accuracy  of  the  corresponding  point
- projections at the point matching step. It is also typical for false matches. Removing such points can
- improve accuracy of the subsequent optimization step.
+#Definitions from the Agisoft Photoscan Manual, Professional Edition (version 1.3)
+#Reprojection error
+#High  reprojection  error  usually  indicates  poor  localization  accuracy  of  the  corresponding  point
+#projections at the point matching step. It is also typical for false matches. Removing such points can
+#improve accuracy of the subsequent optimization step.
 
- High  reconstruction  uncertainty  is  typical  for  points,  reconstructed  from  nearby  photos  with  small
- baseline. Such points can noticeably deviate from the object surface, introducing noise in the point
- cloud. While removal of such points should not affect the accuracy of optimization, it may be useful
- to remove them before building geometry in Point Cloud mode or for better visual appearance of the
- point cloud.
+#High  reconstruction  uncertainty  is  typical  for  points,  reconstructed  from  nearby  photos  with  small
+#baseline. Such points can noticeably deviate from the object surface, introducing noise in the point
+#cloud. While removal of such points should not affect the accuracy of optimization, it may be useful
+#to remove them before building geometry in Point Cloud mode or for better visual appearance of the
+#point cloud.
 
- Image count
- PhotoScan reconstruct all the points that are visible at least on two photos. However, points that are
- visible only on two photos are likely to be located with poor accuracy. Image count filtering enables
- to remove such unreliable points from the cloud.
+#Image count
+#PhotoScan reconstruct all the points that are visible at least on two photos. However, points that are
+#visible only on two photos are likely to be located with poor accuracy. Image count filtering enables
+#to remove such unreliable points from the cloud.
  
- Projection Accuracy
- This criterion allows to filter out points which projections were relatively poorer localised due to their
- bigger size.
+#Projection Accuracy
+#This criterion allows to filter out points which projections were relatively poorer localised due to their
+#bigger size.
  
- Calibration parameters list:
-   f = Focal length measured in pixels.
-   cx, cy = Principal point coordinates, i.e. coordinates of lens optical axis interception with sensor plane in pixels.
-   b1, b2 = Affinity and Skew (non-orthogonality) transformation coefficients.
-   k1, k2, k3, k4 = Radial distortion coefficients.
-   p1, p2, p3, p4 = Tangential distortion coefficients.
-"""	
+#Calibration parameters list:
+#f = Focal length measured in pixels.
+#cx, cy = Principal point coordinates, i.e. coordinates of lens optical axis interception with sensor plane in pixels.
+#b1, b2 = Affinity and Skew (non-orthogonality) transformation coefficients.
+#k1, k2, k3, k4 = Radial distortion coefficients.
+#p1, p2, p3, p4 = Tangential distortion coefficients.
 	
 	count = 0
 	cl = doc.chunks		# list of all chunks of a document
 	
-	# get an overview of the chunks
+	# get an overview of the chunks and if they are already aligned
 	print(cl)
 	print(len(cl))
 	
-	for chunk in cl[:]:
+	for chunk in doc.chunks:
 		print(chunk)
-		print(hasattr(chunk, 'point_cloud'))
+		pc = chunk.point_cloud
+		print(pc)
+		m = re.search('PointCloud', str(pc))
+		if m:
+			noPoints = True
+		else:
+			noPoints = False
 		
-		if not hasattr(chunk, 'point_cloud.meta'):
+		print(noPoints)
+
+		if (noPoints == False  and goal == "filter"):
 			### align photos
 			#   matchPhotos(accuracy=HighAccuracy, preselection=NoPreselection, filter_mask=False, keypoint_limit=0, tiepoint_limit=0[, progress])
 			#   Alignment accuracy in [HighestAccuracy, HighAccuracy, MediumAccuracy, LowAccuracy, LowestAccuracy] ranging from [0-5]
@@ -149,7 +155,8 @@ def filterSparse(doc,chunk,PSPCF):
 			chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
 			chunk.alignCameras()
 			doc.save()
-		if hasattr(chunk, 'point_cloud.meta'):
+			noPoints = True
+		if (noPoints):
 				# optimize Point Cloud by setting ReconstructionUncertainty
 			# Technical NOTE: the process runs several times as the optimizing of the camera results in points that have higher values again than the threshold value that was used before to limit the Reconstruction Uncertainty. 
 			# It was found that the more often this process runs the less points will be deleted in each step so that finally the point cloud has the choosen Reconstruction Uncertainty and keeps it after the cameras are optimized
@@ -196,7 +203,7 @@ def filterSparse(doc,chunk,PSPCF):
 				count=count+1  
 				continue
 			count = 0
-
+			doc.save()
         	### create Processing Report path 
 			if goal == "filter":
 				file_path = doc.path

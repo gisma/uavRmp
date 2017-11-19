@@ -245,23 +245,15 @@ initProj <- function(projRootDir=getwd(), projFolders=c("log/","control/","run/"
   if (file.exists(paste0(projRootDir,"fp-data/log/pathes.R"))) {file.remove(paste0(projRootDir,"fp-data/log/pathes.R"))}
   for (folder in projFolders) {
     if (!file.exists(file.path(projRootDir,folder))) {
-      dir.create(file.path(projRootDir,folder), recursive = TRUE)
-      value <- paste0(projRootDir,folder)
-      name <- substr(folder,1,nchar(folder) )
-      S<-strsplit(x =name ,split = "/")
-      varName<-paste0("pto_",S[[1]][lengths(S)])
-      
-      writePathes(varName, value,paste0(projRootDir,"fp-data/log/pathes.R"))
-      #makeGlobalVar(varName, value)
-    } else {
-      name <- paste0("path_",substr(folder,1,nchar(folder) ))
-      S<-strsplit(x =name ,split = "/")
-      varName<-paste0("path_",S[[1]][lengths(S)])
-      value <- paste0(projRootDir,varName)
-      writePathes(varName, value,paste0(projRootDir,"fp-data/log/pathes.R"))
-      #makeGlobalVar(varName, value)
-    } 
+      dir.create(file.path(projRootDir,folder), recursive = TRUE)}
+    value <- paste0(projRootDir,folder)
+    name <- substr(folder,1,nchar(folder) )
+    S<-strsplit(x =name ,split = "/")
+    varName<-paste0("pto_",S[[1]][lengths(S)])
     
+    writePathes(varName, value,paste0(projRootDir,"fp-data/log/pathes.R"))
+    
+
   }
   writePSCmd(projRootDir = projRootDir)
     
@@ -296,8 +288,8 @@ makeGlobalVar <- function(name,value) {
 }
 
 writePathes <- function(name,value,fn) {
-
-    utils::write.table(paste0(name," <- ", value),fn,quote = FALSE,row.names = FALSE, col.names = FALSE ,append = TRUE)
+  
+utils::write.table(paste0(name,' <- "', value,'"'),fn,quote = FALSE,row.names = FALSE, col.names = FALSE ,append = TRUE)
 }
 
 writePSCmd <- function(goal = "ortho",
@@ -317,12 +309,12 @@ writePSCmd <- function(goal = "ortho",
   
   fn<-paste0(projRootDir,"fp-data/log/basicPSWorkflow.py")
   
-  
+  flightname<-strsplit(projRootDir,split = "/")[[1]][lengths(strsplit(projRootDir,split = "/"))]
   
   script <- paste(system.file(package="uavRmp"), "python/basicPSWorkflow.py", sep = "/")
   goal <- paste0('goal = ','"',goal,'"')
   imgPath <- paste0('imgPath = ','"',projRootDir,imgPath,'"')
-  projName = paste0('projName = ','"',projName,'"')
+  projName = paste0('projName = ','"',projRootDir,'level2/',flightname,'.psx"')
   alignQuality = paste0("alignQuality = ",alignQuality)
   orthoRes = paste0("orthoRes = ",orthoRes)
   refPre = paste0("refPre = ",refPre)
@@ -352,10 +344,12 @@ file_move <- function(from, to,pattern="*") {
 #' @param toProjDir \code{character} a path to the projRootDir
 #' @export copyDir
 copyDir <- function(from, to, pattern="*") {
+  todir <- gsub("\\\\", "/", path.expand(to)) 
   todir <- path.expand(to)
   fromdir <- path.expand(from)
+  
   if (!isTRUE(file.info(todir)$isdir)) dir.create(todir, recursive=TRUE)
   list<-list.files(path.expand(fromdir),pattern = pattern)
-  result<-file.copy(from = paste0(from,list),  to = todir, overwrite = TRUE,recursive = TRUE,copy.date =TRUE)
+  result<-file.copy(from = paste0(from,"/",list),  to = todir, overwrite = TRUE,recursive = TRUE,copy.date =TRUE)
 }
 
