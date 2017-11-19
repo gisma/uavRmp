@@ -7,7 +7,7 @@
 # (5)  filtering in line waypoints according to an altitude difference treshold
 # (6)  preprocessing of an highest resolution DSM dealing with clearings and other artefacts
 # (7)  generates a sp object of the outer boundary of reliable DEM values
-# 
+#
 
 analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,workingDir,locationName){
   
@@ -1649,10 +1649,9 @@ setProjStructure <- function(projectDir,
                    "__",
                     flightAltitude,"m")
   
-  initProj(projRootDir= projRootDir, projFolders=c("fp-data/",
+  initProj(projRootDir= projRootDir, projFolders=c("fp-data/log/",
                                                    "fp-data/control/",
                                                    "fp-data/run/",
-                                                   "fp-data/log/",
                                                    "fp-data/data/",
                                                    "img-data/FLIGHT1/log",
                                                    "img-data/FLIGHT1/level0",

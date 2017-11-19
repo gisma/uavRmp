@@ -231,7 +231,7 @@ if ( !isGeneric("initProj") ) {
 #'   
 
 
-initProj <- function(projRootDir=getwd(), projFolders=c("data/","result/","run/","log/")) {
+initProj <- function(projRootDir=getwd(), projFolders=c("log/","control/","run/","data/")) {
   
   # switch backslash to slash and expand path to full path
   projRootDir <- gsub("\\\\", "/", path.expand(projRootDir))  
@@ -240,25 +240,31 @@ initProj <- function(projRootDir=getwd(), projFolders=c("data/","result/","run/"
   if (substr(projRootDir,nchar(projRootDir) - 1,nchar(projRootDir)) != "/") {
     projRootDir <- paste0(projRootDir,"/")
   }
-  
+
   # create directories if needed
+  if (file.exists(paste0(projRootDir,"fp-data/log/pathes.R"))) {file.remove(paste0(projRootDir,"fp-data/log/pathes.R"))}
   for (folder in projFolders) {
     if (!file.exists(file.path(projRootDir,folder))) {
       dir.create(file.path(projRootDir,folder), recursive = TRUE)
-      name <- paste0("path_",substr(folder,1,nchar(folder) ))
+      value <- paste0(projRootDir,folder)
+      name <- substr(folder,1,nchar(folder) )
       S<-strsplit(x =name ,split = "/")
-      varName<-paste0("path_",S[[1]][lengths(S)])
-      value <- paste0(projRootDir,varName)
-      makeGlobalVar(varName, value)
+      varName<-paste0("pto_",S[[1]][lengths(S)])
+      
+      writePathes(varName, value,paste0(projRootDir,"fp-data/log/pathes.R"))
+      #makeGlobalVar(varName, value)
     } else {
       name <- paste0("path_",substr(folder,1,nchar(folder) ))
       S<-strsplit(x =name ,split = "/")
       varName<-paste0("path_",S[[1]][lengths(S)])
       value <- paste0(projRootDir,varName)
-      makeGlobalVar(varName, value)
+      writePathes(varName, value,paste0(projRootDir,"fp-data/log/pathes.R"))
+      #makeGlobalVar(varName, value)
     } 
     
   }
+  writePSCmd(projRootDir = projRootDir)
+    
 }
 
 #'@title Generates a variable with a certain value in the R environment
@@ -270,7 +276,7 @@ initProj <- function(projRootDir=getwd(), projFolders=c("data/","result/","run/"
 #'@examples
 #' \dontrun{
 #'
-#' # creates the global var \code{pathToData} with the value \code{~/home/data}
+#' # creates the global writePathes(varName, value,fn)var \code{pathToData} with the value \code{~/home/data}
 #' makeGlobalVar("pathToData","~/home/data") 
 #' 
 #' }
@@ -288,3 +294,66 @@ makeGlobalVar <- function(name,value) {
     #cat("add variable ",name,"=",value," to global GiEnv\n")
   } 
 }
+
+writePathes <- function(name,value,fn) {
+
+    utils::write.table(paste0(name," <- ", value),fn,quote = FALSE,row.names = FALSE, col.names = FALSE ,append = TRUE)
+}
+
+writePSCmd <- function(goal = "ortho",
+                       projRootDir,
+                       imgPath = "img-data/FLIGHT1/level1/rgb",
+                       projName = "tmp.psx",
+                       alignQuality = "2",
+                       orthoRes = "0.025",
+                       EPSG = "32632",
+                       preset_RU = "50",
+                       preset_RE = "1",
+                       preset_PA = "10",
+                       loop_RU = "5",
+                       loop_RE = "10",
+                       loop_PA = "2") {
+  
+  fn<-paste0(projRootDir,"fp-data/log/basicPSWorkflow.py")
+  
+  
+  
+  script <- paste(system.file(package="uavRmp"), "python/basicPSWorkflow.py", sep = "/")
+  goal <- paste0('goal = ','"',goal,'"')
+  imgPath <- paste0('imgPath = ','"',projRootDir,imgPath,'"')
+  projName = paste0('projName = ','"',projName,'"')
+  alignQuality = paste0("alignQuality = ",alignQuality)
+  orthoRes = paste0("orthoRes = ",orthoRes)
+  crs = paste0('crs = ',' PhotoScan.CoordinateSystem(','"EPSG::', EPSG,'")')
+  preset_RU = paste0("preset_RU = ",preset_RU)
+  preset_RE = paste0("preset_RE = ",preset_RE)
+  preset_PA = paste0("preset_PA = ",preset_PA)
+  loop_RU = paste0("loop_RU = ",loop_RU)
+  loop_RE = paste0("loop_RE = ",loop_RE)
+  loop_PA = paste0("loop_PA = ",loop_PA)
+  # now brew it
+  brew::brew(script,fn)
+  
+  }
+
+file_move <- function(from, to,pattern="*") {
+  todir <- dirname(to)
+  todir <- path.expand(to)
+  fromdir <- path.expand(from)
+  if (!isTRUE(file.info(todir)$isdir)) dir.create(todir, recursive=TRUE)
+  result<-file.rename(from = paste0(from,list),  to = to,overwrite = TRUE,recursive = TRUE)
+}
+#' copyDir
+#' @description  copyDir copy all image data to the corresponding folder
+#'
+#' @param fromDir \code{character} a path to the image data
+#' @param toProjDir \code{character} a path to the projRootDir
+#' @export copyDir
+copyDir <- function(from, to, pattern="*") {
+  todir <- path.expand(to)
+  fromdir <- path.expand(from)
+  if (!isTRUE(file.info(todir)$isdir)) dir.create(todir, recursive=TRUE)
+  list<-list.files(path.expand(fromdir),pattern = pattern)
+  result<-file.copy(from = paste0(from,list),  to = todir, overwrite = TRUE,recursive = TRUE,copy.date =TRUE)
+}
+
