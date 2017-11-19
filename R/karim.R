@@ -305,8 +305,9 @@ writePSCmd <- function(goal = "ortho",
                        imgPath = "img-data/FLIGHT1/level1/rgb",
                        projName = "tmp.psx",
                        alignQuality = "2",
-                       orthoRes = "0.025",
-                       EPSG = "32632",
+                       orthoRes = "0.02",
+                       refPre= "PhotoScan.GenericPreselection",
+                       EPSG = "4326",
                        preset_RU = "50",
                        preset_RE = "1",
                        preset_PA = "10",
@@ -324,6 +325,7 @@ writePSCmd <- function(goal = "ortho",
   projName = paste0('projName = ','"',projName,'"')
   alignQuality = paste0("alignQuality = ",alignQuality)
   orthoRes = paste0("orthoRes = ",orthoRes)
+  refPre = paste0("refPre = ",refPre)
   crs = paste0('crs = ',' PhotoScan.CoordinateSystem(','"EPSG::', EPSG,'")')
   preset_RU = paste0("preset_RU = ",preset_RU)
   preset_RE = paste0("preset_RE = ",preset_RE)

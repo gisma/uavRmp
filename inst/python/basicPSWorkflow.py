@@ -51,41 +51,6 @@ Full documentation is provided at https://github.com/gisma/uavRmp
 # http://www.agisoft.com/forum/index.php?topic=2478.0  <- Reconstruction Uncertainty, Photoscan users explaining how they tested/experimented with values and giving advises in which range the single parameters give reasonable results
 
 
-### Technical Notes:
-
-# Definitions from the Agisoft Photoscan Manual, Professional Edition (version 1.3)
-# Reprojection error
-# High  reprojection  error  usually  indicates  poor  localization  accuracy  of  the  corresponding  point
-# projections at the point matching step. It is also typical for false matches. Removing such points can
-# improve accuracy of the subsequent optimization step.
- 
-# 
-# High  reconstruction  uncertainty  is  typical  for  points,  reconstructed  from  nearby  photos  with  small
-# baseline. Such points can noticeably deviate from the object surface, introducing noise in the point
-# cloud. While removal of such points should not affect the accuracy of optimization, it may be useful
-# to remove them before building geometry in Point Cloud mode or for better visual appearance of the
-# point cloud.
- 
-# Image count
-# PhotoScan reconstruct all the points that are visible at least on two photos. However, points that are
-# visible only on two photos are likely to be located with poor accuracy. Image count filtering enables
-# to remove such unreliable points from the cloud.
- 
-# Projection Accuracy
-# This criterion allows to filter out points which projections were relatively poorer localised due to their
-# bigger size.
- 
-
-
-# Calibration parameters list:
-# 
-# f = Focal length measured in pixels.
-# cx, cy = Principal point coordinates, i.e. coordinates of lens optical axis interception with sensor plane in pixels.
-# b1, b2 = Affinity and Skew (non-orthogonality) transformation coefficients.
-# k1, k2, k3, k4 = Radial distortion coefficients.
-# p1, p2, p3, p4 = Tangential distortion coefficients.
-
-
 
 import PhotoScan
 import os
@@ -100,6 +65,7 @@ from os.path import expanduser
 <%=projName%>
 <%=alignQuality%>
 <%=orthoRes%>
+<%=refPre%>
 <%=preset_RU%>
 <%=preset_RE%>
 <%=preset_PA%>
@@ -113,10 +79,144 @@ if sys.argv[2:]:
     imgPath = sys.argv[2]
 if sys.argv[3:]:
     projName = sys.argv[3]
+if sys.argv[4:]:
+    projName = sys.argv[4]
+if sys.argv[5:]:
+    projName = sys.argv[5]
+if sys.argv[6:]:
+    projName = sys.argv[6]
+if sys.argv[7:]:
+    projName = sys.argv[7]
+if sys.argv[8:]:
+    projName = sys.argv[8]
+if sys.argv[9:]:
+    projName = sys.argv[9]
+if sys.argv[10:]:
+    projName = sys.argv[10]                            
+if sys.argv[11:]:
+    projName = sys.argv[11]                            
+if sys.argv[12:]:
+    projName = sys.argv[12]
     
+
+def filterSparse(doc,chunk,PSPCF):
+"""
+ Definitions from the Agisoft Photoscan Manual, Professional Edition (version 1.3)
+ Reprojection error
+ High  reprojection  error  usually  indicates  poor  localization  accuracy  of  the  corresponding  point
+ projections at the point matching step. It is also typical for false matches. Removing such points can
+ improve accuracy of the subsequent optimization step.
+
+ High  reconstruction  uncertainty  is  typical  for  points,  reconstructed  from  nearby  photos  with  small
+ baseline. Such points can noticeably deviate from the object surface, introducing noise in the point
+ cloud. While removal of such points should not affect the accuracy of optimization, it may be useful
+ to remove them before building geometry in Point Cloud mode or for better visual appearance of the
+ point cloud.
+
+ Image count
+ PhotoScan reconstruct all the points that are visible at least on two photos. However, points that are
+ visible only on two photos are likely to be located with poor accuracy. Image count filtering enables
+ to remove such unreliable points from the cloud.
+ 
+ Projection Accuracy
+ This criterion allows to filter out points which projections were relatively poorer localised due to their
+ bigger size.
+ 
+ Calibration parameters list:
+   f = Focal length measured in pixels.
+   cx, cy = Principal point coordinates, i.e. coordinates of lens optical axis interception with sensor plane in pixels.
+   b1, b2 = Affinity and Skew (non-orthogonality) transformation coefficients.
+   k1, k2, k3, k4 = Radial distortion coefficients.
+   p1, p2, p3, p4 = Tangential distortion coefficients.
+"""	
+	
+	count = 0
+	cl = doc.chunks		# list of all chunks of a document
+	
+	# get an overview of the chunks
+	print(cl)
+	print(len(cl))
+	
+	for chunk in cl[:]:
+		print(chunk)
+		print(hasattr(chunk, 'point_cloud'))
+		
+		if not hasattr(chunk, 'point_cloud.meta'):
+			### align photos
+			#   matchPhotos(accuracy=HighAccuracy, preselection=NoPreselection, filter_mask=False, keypoint_limit=0, tiepoint_limit=0[, progress])
+			#   Alignment accuracy in [HighestAccuracy, HighAccuracy, MediumAccuracy, LowAccuracy, LowestAccuracy] ranging from [0-5]
+			#   Image pair preselection in [ReferencePreselection, GenericPreselection, NoPreselection]
+			chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
+			chunk.alignCameras()
+			doc.save()
+		if hasattr(chunk, 'point_cloud.meta'):
+				# optimize Point Cloud by setting ReconstructionUncertainty
+			# Technical NOTE: the process runs several times as the optimizing of the camera results in points that have higher values again than the threshold value that was used before to limit the Reconstruction Uncertainty. 
+			# It was found that the more often this process runs the less points will be deleted in each step so that finally the point cloud has the choosen Reconstruction Uncertainty and keeps it after the cameras are optimized
+			while count < loop_RU:
+				class ReconstructionUncertainty:
+					# select points by Reconstruction Uncertainty
+					PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ReconstructionUncertainty)		
+					PSPCF.selectPoints(preset_RU)
+					# remove points
+					if hasattr(chunk, 'removeSelectedPoints'):
+						chunk.point_cloud.removeSelectedPoints()
+						# optimize cameras			
+						chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
+				count=count+1  
+				continue
+			count = 0
+
+			# optimize Point Cloud by setting ReprojectionError
+			# See technical NOTE for Reconstruction Uncertainty why to repeat this process several times
+			while count < loop_RE:
+				class ReprojectionError:
+					# select points by Reprojection Error
+					PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ReprojectionError)		
+					PSPCF.selectPoints(preset_RE)
+					if hasattr(chunk, 'removeSelectedPoints'):
+						chunk.point_cloud.removeSelectedPoints()
+						# optimize cameras			
+						chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
+				count=count+1  
+				continue
+			count = 0
+			
+			# optimize Point Cloud by setting ProjectionAccuracy
+			# [TODO: No improve in the second run?? Then set runs to 1, or remove loop]
+			while count< loop_PA:
+				class ProjectionAccuracy:
+					# select points by Projection Accuracy
+					PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ProjectionAccuracy)		
+					PSPCF.selectPoints(preset_PA)
+					if hasattr(chunk, 'removeSelectedPoints'):
+						chunk.point_cloud.removeSelectedPoints()
+						# optimize cameras			
+						chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
+				count=count+1  
+				continue
+			count = 0
+
+        	### create Processing Report path 
+			if goal == "filter":
+				file_path = doc.path
+				file_path_cut = file_path[0:-4]		
+				report_path = (file_path_cut + "_reports")
+				if not os.path.exists(report_path):
+					os.makedirs(report_path)
+
+				### export Processing Report
+				chunk.exportReport(report_path + "/" + chunk.label + ".pdf")
+				print("sparse point clouds optimized by setting:\n Reconstruction Uncertainty = " + "{:.0f}".format(preset_RU) + " >> " + "{:.0f}".format(loop_RU) + " loop(s)\n"+
+			                                          "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
+			                                          "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
+				print("Processing Reports were created and saved to " +report_path)
+  
+
+### ortho creates an standarized optimized ortho image from uav imagery  
 if goal == "ortho":    
-	# define short variables
-	crs =  PhotoScan.CoordinateSystem("EPSG::32632")
+	# define general short variables
+	<%=crs%>
 	doc = PhotoScan.app.document
 	chunk = doc.addChunk()
 	PSPCF = PhotoScan.PointCloud.Filter()
@@ -133,99 +233,58 @@ if goal == "ortho":
 	# reopen it
 	doc.open(imgPath + "/" + projName)
 	chunk = doc.chunk
-	# align photos
-	chunk.matchPhotos(accuracy=alignQuality, preselection=PhotoScan.ReferencePreselection,keypoint_limit=0, tiepoint_limit=0)
+	### align photos
+	#   matchPhotos(accuracy=HighAccuracy, preselection=NoPreselection, filter_mask=False, keypoint_limit=0, tiepoint_limit=0[, progress])
+	#   Alignment accuracy in [HighestAccuracy, HighAccuracy, MediumAccuracy, LowAccuracy, LowestAccuracy] ranging from [0-5]
+	#   Image pair preselection in [ReferencePreselection, GenericPreselection, NoPreselection]
+	chunk.matchPhotos(accuracy=alignQuality, preselection=refPre, keypoint_limit=0, tiepoint_limit=0)
 	chunk.alignCameras()
 	doc.save()	
-
-
-	# optimize Point Cloud by setting ReconstructionUncertainty
-	# Technical NOTE: the process runs several times as the optimizing of the camera results in points that have higher values again than the threshold value that was used before to limit the Reconstruction Uncertainty. 
-	# It was found that the more often this process runs the less points will be deleted in each step so that finally the point cloud has the choosen Reconstruction Uncertainty and keeps it after the cameras are optimized
-
-	while count < loop_RU:
-
-		class ReconstructionUncertainty:
-
-			# select points by Reconstruction Uncertainty
-			PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ReconstructionUncertainty)		
-			PSPCF.selectPoints(float(preset_RU))
-		
-			# remove points
-			chunk.point_cloud.removeSelectedPoints()
-		
-			# optimize cameras			
-			chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-		
-		count=count+1  
-
-		continue
 	
-	count = 0
+	### call filter sequence
+	filterSparse(doc,chunk,PSPCF)
 
-
-	# optimize Point Cloud by setting ReprojectionError
-	# See technical NOTE for Reconstruction Uncertainty why to repeat this process several times
-	
-	while count < loop_RE:
-
-		class ReprojectionError:
-			# select points by Reprojection Error
-			PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ReprojectionError)		
-			PSPCF.selectPoints(preset_RE)
-			# remove points
-			chunk.point_cloud.removeSelectedPoints()
-			# optimize cameras			
-			chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-		count=count+1  
-		continue
-	count = 0
-	
-	
-	# optimize Point Cloud by setting ProjectionAccuracy
-	# [TODO: No improve in the second run?? Then set runs to 1, or remove loop]
-	
-	while count< loop_PA:
-
-		class ProjectionAccuracy:
-			# select points by Projection Accuracy
-			PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ProjectionAccuracy)		
-			PSPCF.selectPoints(preset_PA)
-			# remove points
-			chunk.point_cloud.removeSelectedPoints()
-			# optimize cameras			
-			chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-		count=count+1  
-		continue
-	count = 0
-	
-	# MESH model
+	### GENERATE MESH 
+	#   buildModel(surface=Arbitrary, interpolation=EnabledInterpolation, face_count=MediumFaceCount[, source ][, classes][, progress])
+	#   Surface type in [Arbitrary, HeightField]
+	#   Interpolation mode in [EnabledInterpolation, DisabledInterpolation, Extrapolated]
+	#   Face count in [HighFaceCount, MediumFaceCount, LowFaceCount]
+	#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
 	chunk.buildModel(surface=PhotoScan.SurfaceType.HeightField, source = PhotoScan.DataSource.PointCloudData, interpolation = PhotoScan.Interpolation.EnabledInterpolation, face_count = PhotoScan.FaceCount.LowFaceCount)
-	# save project before orthomosaicing
+	
+	# save project before buildDem and buildOrthomosaic is called
 	doc.save()
-	#build DEM
+	
+	### GENERATE DEM
+	#   Build elevation model for the chunk.
+	#   buildDem(source=DenseCloudData, interpolation=EnabledInterpolation[, projection ][, region ][, classes][, progress])
+	#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
 	chunk.buildDem(source = PhotoScan.DataSource.ModelData, interpolation=PhotoScan.EnabledInterpolation)
 		
-	# GENERATE ORTHOMOSAIC
+	### GENERATE ORTHOMOSAIC
+	#   buildOrthomosaic(surface=ElevationData, blending=MosaicBlending, color_correction=False[, projection ][, region ][, dx ][, dy ][, progress])
+	#   Data source in [PointCloudData, DenseCloudData, ModelData, ElevationData]
+	#   Blending mode in [AverageBlending, MosaicBlending, MinBlending, MaxBlending, DisabledBlending]
 	chunk.buildOrthomosaic(surface=PhotoScan.ElevationData,projection=crs,dx=orthoRes,dy=orthoRes)
 	doc.save()
 
-	# create Processing Report path 
+	### create Processing Report path 
 	file_path = doc.path
 	file_path_cut = file_path[0:-4]		
 	report_path = (file_path_cut + "_reports")
-
 	if not os.path.exists(report_path):
 		os.makedirs(report_path)
 			
-	# export Processing Report
+	### export Processing Report
 	chunk.exportReport(report_path + "/" + chunk.label + ".pdf")
-		
+	
+	### print some information	
 	print("sparse point clouds optimized by setting:\n Reconstruction Uncertainty = " + "{:.0f}".format(preset_RU) + " >> " + "{:.0f}".format(loop_RU) + " loop(s)\n"+
                                           "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
                                           "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
 	print("Processing Reports were created and saved to " + report_path)
-	
+
+### dense creates an standarized optimized dense point cloud (depth map) from uav imagery	
 if goal == "dense":    
 	# define short variables
 	crs =  PhotoScan.CoordinateSystem("EPSG::32632")
@@ -246,199 +305,39 @@ if goal == "dense":
 	doc.open(imgPath + "/" + projName)
 	chunk = doc.chunk
 	# align photos
-	chunk.matchPhotos(accuracy=alignQuality, preselection=PhotoScan.ReferencePreselection,keypoint_limit=0, tiepoint_limit=0)
+	chunk.matchPhotos(accuracy=alignQuality, preselection=refPre,keypoint_limit=0, tiepoint_limit=0)
 	chunk.alignCameras()
 	doc.save()	
-
-
-	# optimize Point Cloud by setting ReconstructionUncertainty
-	# Technical NOTE: the process runs several times as the optimizing of the camera results in points that have higher values again than the threshold value that was used before to limit the Reconstruction Uncertainty. 
-	# It was found that the more often this process runs the less points will be deleted in each step so that finally the point cloud has the choosen Reconstruction Uncertainty and keeps it after the cameras are optimized
-
-	while count < loop_RU:
-
-		class ReconstructionUncertainty:
-
-			# select points by Reconstruction Uncertainty
-			PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ReconstructionUncertainty)		
-			PSPCF.selectPoints(float(preset_RU))
-		
-			# remove points
-			chunk.point_cloud.removeSelectedPoints()
-		
-			# optimize cameras			
-			chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-		
-		count=count+1  
-
-		continue
 	
-	count = 0
-
-
-	# optimize Point Cloud by setting ReprojectionError
-	# See technical NOTE for Reconstruction Uncertainty why to repeat this process several times
+	### call filter sequence
+	filterSparse(doc,chunk,PSPCF)
 	
-	while count < loop_RE:
-
-		class ReprojectionError:
-			# select points by Reprojection Error
-			PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ReprojectionError)		
-			PSPCF.selectPoints(preset_RE)
-			# remove points
-			chunk.point_cloud.removeSelectedPoints()
-			# optimize cameras			
-			chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-		count=count+1  
-		continue
-	count = 0
-	
-	
-	# optimize Point Cloud by setting ProjectionAccuracy
-	# [TODO: No improve in the second run?? Then set runs to 1, or remove loop]
-	
-	while count< loop_PA:
-
-		class ProjectionAccuracy:
-			# select points by Projection Accuracy
-			PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ProjectionAccuracy)		
-			PSPCF.selectPoints(preset_PA)
-			# remove points
-			chunk.point_cloud.removeSelectedPoints()
-			# optimize cameras			
-			chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-		count=count+1  
-		continue
-	count = 0
-	
-	# dense cloud model
+	### dense cloud model
+	#    Generate depth maps for the chunk.
+	#    buildDenseCloud(quality=MediumQuality, filter=AggressiveFiltering[, cameras], keep_depth=False, reuse_depth=False[, progress])
+	#    Dense point cloud quality in [UltraQuality, HighQuality, MediumQuality, LowQuality, LowestQuality]
+	#    Depth filtering mode in [AggressiveFiltering, ModerateFiltering, MildFiltering, NoFiltering]
 	chunk.buildDenseCloud(quality=PhotoScan.HighQuality, filter=PhotoScan.AggressiveFiltering, keep_depth=True, reuse_depth=False)
-
-
 	doc.save()
 
-	# create Processing Report path 
+	### create Processing Report path 
 	file_path = doc.path
 	file_path_cut = file_path[0:-4]		
 	report_path = (file_path_cut + "_reports")
-
 	if not os.path.exists(report_path):
 		os.makedirs(report_path)
-			
-	# export Processing Report
+	### export Processing Report
 	chunk.exportReport(report_path + "/" + chunk.label + ".pdf")
-		
+	
+	### print some information	
 	print("sparse point clouds optimized by setting:\n Reconstruction Uncertainty = " + "{:.0f}".format(preset_RU) + " >> " + "{:.0f}".format(loop_RU) + " loop(s)\n"+
                                           "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
                                           "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
 	print("Processing Reports were created and saved to " + report_path)	
 
-if goal == "filter":    
+### filter performs an standarized sparse point cloud filtering only 
 
-	# define short variables
-	doc = PhotoScan.app.document
-	chunk = doc.chunk
-	PSPCF = PhotoScan.PointCloud.Filter()
-	count = 0
-	cl = doc.chunks		# list of all chunks of a document
-	
-	# get an overview of the chunks
-	print(cl)
-	print(len(cl))
-	
-	for chunk in cl[:]:
-	
-	
-		# optimize Point Cloud by setting ReconstructionUncertainty
-		# Technical NOTE: the process runs several times as the optimizing of the camera results in points that have higher values again than the threshold value that was used before to limit the Reconstruction Uncertainty. 
-		# It was found that the more often this process runs the less points will be deleted in each step so that finally the point cloud has the choosen Reconstruction Uncertainty and keeps it after the cameras are optimized
-	
-		while count < loop_RU:
-	
-			class ReconstructionUncertainty:
-	
-				# select points by Reconstruction Uncertainty
-				PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ReconstructionUncertainty)		
-				PSPCF.selectPoints(preset_RU)
-			
-				# remove points
-				chunk.point_cloud.removeSelectedPoints()
-			
-				# optimize cameras			
-				chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-			
-			count=count+1  
-	
-			continue
-		
-		count = 0
-	
-	
-		# optimize Point Cloud by setting ReprojectionError
-		# See technical NOTE for Reconstruction Uncertainty why to repeat this process several times
-		
-		while count < loop_RE:
-	
-			class ReprojectionError:
-	
-				# select points by Reprojection Error
-				PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ReprojectionError)		
-				PSPCF.selectPoints(preset_RE)
-			
-				# remove points
-				chunk.point_cloud.removeSelectedPoints()
-			
-				# optimize cameras			
-				chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-			
-				
-			count=count+1  
-	
-			continue
-		
-		count = 0
-		
-		
-		# optimize Point Cloud by setting ProjectionAccuracy
-		# [TODO: No improve in the second run?? Then set runs to 1, or remove loop]
-		
-		while count< loop_PA:
-	
-			class ProjectionAccuracy:
-	
-				# select points by Projection Accuracy
-				PSPCF.init(chunk, PhotoScan.PointCloud.Filter.ProjectionAccuracy)		
-				PSPCF.selectPoints(preset_PA)
-			
-				# remove points
-				chunk.point_cloud.removeSelectedPoints()
-			
-				# optimize cameras			
-				chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
-			
-			count=count+1  
-	
-			continue
-		
-		count = 0
-		
-	
-		# create Processing Report path 
-		file_path = doc.path
-		file_path_cut = file_path[0:-4]		
-		report_path = (file_path_cut + ".reports")
-	
-		if not os.path.exists(report_path):
-			os.makedirs(report_path)
-				
-		# export Processing Report
-		chunk.exportReport(report_path + "/" + chunk.label + ".pdf")
-			
-				
-	print("sparse point clouds optimized by setting:\n Reconstruction Uncertainty = " + "{:.0f}".format(preset_RU) + " >> " + "{:.0f}".format(loop_RU) + " loop(s)\n"+
-	                                          "         Reprojection Error = " + "{:.0f}".format(preset_RE) + " >> " + "{:.0f}".format(loop_RE) + " loop(s)\n"+ 
-	                                          "        Projection Accuracy = " + "{:.0f}".format(preset_PA) + " >> " + "{:.0f}".format(loop_PA) + " loop(s)\n")	
-	print("Processing Reports were created and saved to " +report_path)
-
-	
-
+### filter creates an standarized optimized sparse point cloud  from uav imagery	
+if goal == "filter":
+	### call filter sequence
+	filterSparse(doc,chunk,PSPCF)
