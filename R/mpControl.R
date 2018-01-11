@@ -9,7 +9,7 @@
 # (7)  generates a sp object of the outer boundary of reliable DEM values
 #
 
-analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,workingDir,locationName){
+analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName){
   
   cat("load DEM/DSM data...\n")
   ## load DEM data either from a local GDAL File or from a raster object or if nothing is provided tray to download SRTM data
@@ -17,20 +17,6 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   if (is.null(demFn)) {
     log4r::levellog(logger, 'WARN', "CAUTION!!! no DEM file provided I try to download SRTM data... SRTM DATA has a poor resolution for UAVs!!! ")
     stop("\nCAUTION! No DEM data is provided.\n Please download e.g. SRTM data... \n Be aware that the resulution of SRTM is NOT sufficient for terrain following flights!")
-    # download corresponding srtm data
-    #dem <- uavRmp::ggeodata(name = "SRTM",
-    #                            xtent = extent(p$lon1,p$lon3,p$lat1,p$lat3), 
-    #                            zone = 1.5 ,
-    #                            merge = TRUE)
-    #dem <- setMinMax(dem)
-    #rundem <- raster::crop(dem,
-    #                       extent(min(p$lon1,p$lon3) - 0.0083, 
-    #                              max(p$lon1,p$lon3) + 0.0083,
-    #                              min(p$lat1,p$lat3) - 0.0083,
-    #                              max(p$lat1,p$lat3) + 0.0083)
-    #)
-    #raster::writeRaster(dem,"tmpdem.tif",overwrite = TRUE)
-    # if demFN is NOT NULL
   } else {
     
     if (class(demFn)[1] %in% c("RasterLayer", "RasterStack", "RasterBrick")) {
@@ -95,26 +81,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   } 
   
   # preprocessing
-  if (terrainSmooth) {
-    cat("starting terrain smoothing...\n")
-    
-    # export it to SAGA
-    gdalUtils::gdalwarp("demll.tif","demll.sdat", overwrite = TRUE,  of = 'SAGA')
-    
-    # fill sinks (clearings) that are 0-30 meters deep
-    ret <- system2("saga_cmd", c("ta_preprocessor 2", "-DEM=demll.sgrd", "-SINKROUTE=NULL", "-DEM_PREPROC='flightdem.sdat'", "-METHOD=1", "-THRESHOLD=1", "-THRSHEIGHT=30.000000"),
-                   stdout = TRUE, 
-                   stderr = TRUE)
-    if (grep("%okay",ret)) {
-      cat("filling clearings performs okay\n")}
-    else {
-      stop("Crucial Error in filling flight surface")
-    }
-    # import it back to demll and set min max and projection
-    demll <- raster::raster(rgdal::readGDAL("flightsurface.sdat",OVERRIDE_PROJ_DATUM_WITH_TOWGS84 = TRUE))
-    demll <- setMinMax(demll)
-    dem   <- setMinMax(dem)
-  }  # end of terrainsmooth dem
+
   
   # extract all waypoint altitudes
   altitude <- raster::extract(demll,df,layer = 1, nl = 1)
@@ -156,7 +123,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   
   # if terrain following filter the waypoints by using the altFilter Value
   if (followSurface) {
-    cat("start followSurface data...\n")
+    cat("apply follow terrain filter...\n")
     
     # extract all waypoint altitudes
     altitude2 <- raster::extract(demll,df,layer = 1, nl = 1)
@@ -693,6 +660,20 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
     }
     if (class(flightBound) == "SpatialLinesDataFrame") {
       
+      tr<-try(lon3 <- flightBound@lines[[1]]@Lines[[1]]@coords[5,1],silent = TRUE)
+      if (class(tr)== "try-error"){
+        lon1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,1] 
+        lat1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,2] 
+        
+        lon2 <- flightBound@lines[[1]]@Lines[[1]]@coords[2,1] 
+        lat2 <- flightBound@lines[[1]]@Lines[[1]]@coords[2,2] 
+        
+        lon3 <- flightBound@lines[[1]]@Lines[[1]]@coords[3,1] 
+        lat3 <- flightBound@lines[[1]]@Lines[[1]]@coords[3,2]
+        
+        launchLon <- flightBound@lines[[1]]@Lines[[1]]@coords[4,1] 
+        launchLat <- flightBound@lines[[1]]@Lines[[1]]@coords[4,2]  
+      } else {
       lon1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,1] 
       lat1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,2] 
       
@@ -703,7 +684,7 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
       lat3 <- flightBound@lines[[1]]@Lines[[1]]@coords[5,2]
       
       launchLon <- flightBound@lines[[1]]@Lines[[1]]@coords[7,1] 
-      launchLat <- flightBound@lines[[1]]@Lines[[1]]@coords[7,2]
+      launchLat <- flightBound@lines[[1]]@Lines[[1]]@coords[7,2]}
     }
   }
   return(c(lat1,lon1,lat2,lon2,lat3,lon3,launchLat,launchLon))
@@ -1704,10 +1685,10 @@ setProjStructure <- function(projectDir,
   Sys.setenv(TMPDIR = file.path(projRootDir, "fp-data/run"))
   
   # set R working directory
-  setwd(file.path(projRootDir, "fp-data/run"))
+  #setwd(file.path(projRootDir, "fp-data/run"))
   
   # set common read write permissions
-  Sys.chmod(list.dirs("../.."), "777")
+  #Sys.chmod(list.dirs("../.."), "777")
   
   
   # generate misson control filename

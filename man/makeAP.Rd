@@ -7,12 +7,12 @@
 makeAP(projectDir = tempdir(), locationName = "flightArea",
   surveyArea = NULL, flightAltitude = 100, launchAltitude = NULL,
   followSurface = FALSE, followSurfaceRes = NULL, demFn = NULL,
-  altFilter = 1, horizonFilter = 30, terrainSmooth = FALSE,
-  flightPlanMode = "track", presetFlightTask = "remote", overlap = 0.8,
-  maxSpeed = 20, maxFlightTime = 10, picRate = 2, windCondition = 0,
-  uavType = "solo", cameraType = "MAPIR2", cmd = 16, uavViewDir = 0,
-  djiBasic = c(0, 0, 0, -90, 0), dA = FALSE, heatMap = FALSE,
-  picFootprint = FALSE, rcRange = NULL, copy = FALSE)
+  altFilter = 1, horizonFilter = 30, flightPlanMode = "track",
+  presetFlightTask = "remote", overlap = 0.8, maxSpeed = 20,
+  maxFlightTime = 10, picRate = 2, windCondition = 0, uavType = "solo",
+  cameraType = "MAPIR2", cmd = 16, uavViewDir = 0, djiBasic = c(0, 0, 0,
+  -90, 0), dA = FALSE, heatMap = FALSE, picFootprint = FALSE,
+  rcRange = NULL, copy = FALSE)
 }
 \arguments{
 \item{projectDir}{\code{character} path to the main folder where several locations can be hosted, default is \code{tempdir()}}
@@ -48,8 +48,6 @@ Further explanation at seealso}
  If this value is not exceeded, the way point is omitted due to the fact that only 99 way points per mission are allowed.}
 
 \item{horizonFilter}{integer filter size of the rolling filter kernel for the flight track. Must be multiplied by the \code{followSurfaceRes} to get the spatial extent}
-
-\item{terrainSmooth}{terrain smoothiiing switch}
 
 \item{flightPlanMode}{type of flight plan. Available are: \code{"waypoints"},
 \code{"track"}, \code{"manual"}.}

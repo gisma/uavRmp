@@ -92,7 +92,6 @@ if (!isGeneric('makeAP')) {
 #' @param picRate fastest stable interval (s) for shooting pictures
 #' @param windCondition 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h
 #' @param copy copy switch
-#' @param terrainSmooth terrain smoothiiing switch
 #' @param cmd mavlink command
 #' @param uavViewDir dview direction of uav
 #' @param maxFlightTime user defined estimation of the lipo lifetime (20 min default)
@@ -182,7 +181,6 @@ makeAP <- function(projectDir = tempdir(),
                    demFn = NULL,
                    altFilter = 1.0,
                    horizonFilter = 30,
-                   terrainSmooth= FALSE,
                    flightPlanMode = "track",
                    presetFlightTask = "remote",
                    overlap = 0.8,
@@ -561,7 +559,7 @@ makeAP <- function(projectDir = tempdir(),
     sp::coordinates(djiDF) <- ~ lon + lat
     sp::proj4string(djiDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
-    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,dateString,locationName)
+    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName)
     # assign adapted dem to demFn
     demFn <- result[[3]]
     dfcor <- result[[2]]
@@ -595,7 +593,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if (is.null(launchAltitude)) {
       # analyze DEM related stuff
-      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,dateString,locationName)
+      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName)
       # assign adapted dem to demFn
       lauchPos <- result[[1]]
       dfcor <- result[[2]]

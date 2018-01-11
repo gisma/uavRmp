@@ -199,6 +199,8 @@ def filterSparse(doc,chunk,PSPCF):
 						chunk.point_cloud.removeSelectedPoints()
 						# optimize cameras			
 						chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
+						chunk.resetRegion()
+				
 				count=count+1  
 				continue
 			count = 0
@@ -214,6 +216,7 @@ def filterSparse(doc,chunk,PSPCF):
 						chunk.point_cloud.removeSelectedPoints()
 						# optimize cameras			
 						chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
+						chunk.resetRegion()
 				count=count+1  
 				continue
 			count = 0
@@ -229,6 +232,7 @@ def filterSparse(doc,chunk,PSPCF):
 						chunk.point_cloud.removeSelectedPoints()
 						# optimize cameras			
 						chunk.optimizeCameras(fit_f=True, fit_cxcy=True, fit_aspect=True, fit_skew=True, fit_k1k2k3=True, fit_p1p2=True, fit_k4=False)
+						chunk.resetRegion()
 				count=count+1  
 				continue
 			count = 0
