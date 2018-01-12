@@ -5,7 +5,7 @@
 \title{create an spatiallineobject from 2 points}
 \usage{
 sp_line(Y_coords, X_coords, ID, proj4 = "+proj=longlat +datum=WGS84 +no_defs",
-  export = FALSE)
+  export = FALSE, runDir)
 }
 \arguments{
 \item{Y_coords}{Y/lat coordinates}
@@ -17,13 +17,18 @@ sp_line(Y_coords, X_coords, ID, proj4 = "+proj=longlat +datum=WGS84 +no_defs",
 \item{proj4}{projection}
 
 \item{export}{write shafefile default = F}
+
+\item{runDir}{\code{character} runtime folder}
 }
 \description{
 create an spatiallineobject from 2 points, optional export as shapefile
 }
 \examples{
 ## creating sp spatial point object
-line <- sp_line(c(8.770367,8.771161,8.771536),c(50.815172,50.814743,50.814875),ID="go for it")
+line <- sp_line(c(8.770367,8.771161,8.771536),
+                c(50.815172,50.814743,50.814875),
+                ID="go for it",
+                runDir=runDir)
 
 ## plot it
 raster::plot(line)

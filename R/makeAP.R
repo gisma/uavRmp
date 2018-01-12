@@ -6,8 +6,7 @@ if (!isGeneric('makeAP')) {
 #'
 #' @description The basic idea is to provide an easy to use workflow for controlling rtf-UAVs for planning autonomous surveys to retrieve aerial data sets. 
 #'   
-#' @details makeAP (Make UAV Remote
-#'   Controlled Survey) creates either intermediate flight control files for the
+#' @details makeAP (make aerial plan) creates either intermediate flight control files for the
 #'   DJI phantom x UAVs or ready to upload control files for the 3DR Solo. The
 #'   DJI control files are designed for using with the proprietary litchi flight
 #'   control app exchange format, while the 3DR Solo files are using the MAVLINK
@@ -19,10 +18,10 @@ if (!isGeneric('makeAP')) {
 #'   interface to upload a CSV formated way point file for autonomous flights to
 #'   the Phantom.\cr\cr PixHawk/3DR Solo:\cr The open uav community is focused
 #'   on the PixHawk autopilot unit and the Mission Planner software. It is well
-#'   documented and several APIs are provided. Nevertheless a terrain following
-#'   autonomous flight planning tool is not available. makeAP creates static
-#'   implementation of the MAV format that is ready to be uploaded directly on
-#'   the Pixhawk controller using the \code{solo_upload} function.\cr\cr
+#'   documented and several APIs are provided. Nevertheless a high resolution 
+#'   terrain following flight planning tool for  autonomous obstacle avoiding flight missions
+#'   is not available. \code{makeAP} creates a straightforward version of MAV format flight control
+#'   rules that are ready to be uploaded directly on the Pixhawk controller using the \code{solo_upload} function.\cr\cr
 #'   
 #' @seealso
 #'   The underlying concept, a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
@@ -92,7 +91,6 @@ if (!isGeneric('makeAP')) {
 #' @param picRate fastest stable interval (s) for shooting pictures
 #' @param windCondition 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h
 #' @param copy copy switch
-#' @param terrainSmooth terrain smoothiiing switch
 #' @param cmd mavlink command
 #' @param uavViewDir dview direction of uav
 #' @param maxFlightTime user defined estimation of the lipo lifetime (20 min default)
@@ -100,7 +98,7 @@ if (!isGeneric('makeAP')) {
 #' @param uavType type of uav. currently "djip3" and "solo" are supported
 #' @param dA if TRUE the real extent of the used DEM is returned helpful for low altitudes flight planning
 #' @param cameraType depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2
-#'
+#' @param runDir \code{character} runtime folder 
 #' @note
 #' To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: \href{http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro}{uav based Remote Sensing at giswerk.org}).
 #'https://gisma.github.io/
@@ -148,23 +146,23 @@ if (!isGeneric('makeAP')) {
 #'            altFilter = .75)
 #'
 
-#' ## (5) view results
+#' ## (4) view results
 
-#'mapview::mapview(fp3$wp,cex=4, lwd=0.5)+
-#'mapview::mapview(fp3$lp,color = "red", lwd=1,cex=4)+
-#'mapview::mapview(fp3$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
-#'mapview::mapview(fp3$oDEM,col=terrain.colors(256))
+#'mapview::mapview(fp$wp,cex=4, lwd=0.5)+
+#'mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
+#'mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
+#'mapview::mapview(fp$oDEM,col=terrain.colors(256))
 #'
-#' ## (4) digitize flight area using leafDraw()
+#' ## (5) digitize flight area using the small "onboard" tool vecDraw()
 #' ##     save vectors as "kml" or "json" files
-#' ##     provide full filename +  extension!
+#' ##     provide full filename  +  extension!
 #' 
 #' 
 #' vecDraw(preset="uav")
-#'
-
-
 #'}
+
+
+
 
 
 
@@ -182,7 +180,6 @@ makeAP <- function(projectDir = tempdir(),
                    demFn = NULL,
                    altFilter = 1.0,
                    horizonFilter = 30,
-                   terrainSmooth= FALSE,
                    flightPlanMode = "track",
                    presetFlightTask = "remote",
                    overlap = 0.8,
@@ -199,7 +196,8 @@ makeAP <- function(projectDir = tempdir(),
                    heatMap = FALSE,
                    picFootprint = FALSE,
                    rcRange = NULL,
-                   copy = FALSE)
+                   copy = FALSE,
+                   runDir=tempdir())
 {
   ###  setup environ and params
   cat("setup environ and params...\n")
@@ -220,6 +218,7 @@ makeAP <- function(projectDir = tempdir(),
   dateString <- projstru[3]
   taskName <- projstru[2]
   csvFn <- projstru[1]
+  #runDir<-projstru[5]
   # dateString <- format(Sys.time(), "%Y_%m_%d") 
   # taskName <-paste(paste0(locationName, "_",
   #                         flightAltitude,"m_",
@@ -549,19 +548,19 @@ makeAP <- function(projectDir = tempdir(),
   
   
   # postprocessing
-  fileConn <- file("tmp.csv")
+  fileConn <- file(file.path(runDir,"tmp.csv"))
   cat("preprocessing DEM related stuff...\n")
   if (uavType == "djip3") {
     # dump lns to file for read in as csv
     writeLines(unlist(lns[1:length(lns) - 1]), fileConn)
-    djiDF <- utils::read.csv("tmp.csv", sep = ",", header = FALSE)
+    djiDF <- utils::read.csv(file.path(runDir,"tmp.csv"), sep = ",", header = FALSE)
     # add correct header
     names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group = 99,p,header = TRUE,sep = ' '),split = " "))
     # make it spatial
     sp::coordinates(djiDF) <- ~ lon + lat
     sp::proj4string(djiDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
-    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,dateString,locationName)
+    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir)
     # assign adapted dem to demFn
     demFn <- result[[3]]
     dfcor <- result[[2]]
@@ -581,11 +580,11 @@ makeAP <- function(projectDir = tempdir(),
     # start the creation of the control file(s)
     cat('generate control files...\n')
     # generate single tasks waypoint file for DJI Litchi import format
-    calcDjiTask( result[[2]],taskName,nofiles,maxPoints,p,logger, round(result[[6]], digits = 0), trackSwitch=FALSE,"flightDEM.tif",result[[8]], projectDir,dateString,locationName)
+    calcDjiTask( result[[2]],taskName,nofiles,maxPoints,p,logger, round(result[[6]], digits = 0), trackSwitch=FALSE,"flightDEM.tif",result[[8]], projectDir,dateString,locationName,runDir)
   }
   else if (uavType == "solo") {
     writeLines(unlist(lns), fileConn)
-    mavDF <- utils::read.csv("tmp.csv", colClasses=c("V4"="character",
+    mavDF <- utils::read.csv(file.path(runDir,"tmp.csv"), colClasses=c("V4"="character",
                                                      "V5"="character",
                                                      "V6"="character",
                                                      "V7"="character"),sep = "\t", header = FALSE)
@@ -595,7 +594,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if (is.null(launchAltitude)) {
       # analyze DEM related stuff
-      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,terrainSmooth,logger,projectDir,dA,dateString,locationName)
+      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir)
       # assign adapted dem to demFn
       lauchPos <- result[[1]]
       dfcor <- result[[2]]
@@ -606,7 +605,29 @@ makeAP <- function(projectDir = tempdir(),
       
     }
     # generate single tasks waypoint file for MAV Solo format
-    calcMAVTask(result[[2]],taskName,nofiles,rawTime,mode,trackDistance,maxFlightTime,logger,p,len, multiply,tracks,result,maxSpeed / 3.6,uavType,"flightDEM.tif",maxAlt = result[[6]], projectDir,dateString,locationName,uavViewDir,cmd)
+    calcMAVTask(result[[2]],
+                taskName,
+                nofiles,
+                rawTime,
+                mode,
+                trackDistance,
+                maxFlightTime,
+                logger,
+                p,
+                len, 
+                multiply,
+                tracks,
+                result,
+                maxSpeed / 3.6,
+                uavType,
+                file.path(runDir,"flightDEM.tif"),
+                maxAlt = result[[6]], 
+                projectDir,
+                dateString,
+                locationName,
+                uavViewDir,
+                cmd,
+                runDir)
   }
   close(fileConn)
   
