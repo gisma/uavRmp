@@ -9,7 +9,7 @@
 # (7)  generates a sp object of the outer boundary of reliable DEM values
 #
 
-analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName){
+analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName,runDir){
   
   cat("load DEM/DSM data...\n")
   ## load DEM data either from a local GDAL File or from a raster object or if nothing is provided tray to download SRTM data
@@ -33,12 +33,12 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       cut <- spTransform(cut,CRS(proj))
       rundem <- demFn
       rundem <- raster::crop(rundem,extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))
-      raster::writeRaster(rundem,"tmpdem.tif",overwrite = TRUE)
-      demll <- gdalwarp(srcfile = "tmpdem.tif", dstfile = "demll.tif", 
+      raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
+      demll <- gdalwarp(srcfile =file.path(runDir, "tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
                         overwrite = TRUE,  
                         t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                         output_Raster = TRUE )  
-      file.copy(demFn, paste0(file.path(projectDir,locationName, workingDir,"fp-data/run/"),"/tmpdem.tif")) 
+      file.copy(demFn, paste0(file.path(runDir,"/"),"/tmpdem.tif")) 
       dem  <- demll
       # if GEOTIFF or other gdal type of data
     } else{
@@ -56,12 +56,12 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       cut <- spTransform(cut,CRS(proj))
       rundem <- raster::raster(demFn,band = 1)
       rundem <- raster::crop(rundem,extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))
-      raster::writeRaster(rundem,"tmpdem.tif",overwrite = TRUE)
-      demll <- gdalwarp(srcfile = "tmpdem.tif", dstfile = "demll.tif", 
+      raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
+      demll <- gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
                         overwrite = TRUE,  
                         t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                         output_Raster = TRUE )  
-      file.copy(demFn, paste0(file.path(projectDir,locationName,workingDir,"fp-data/run/"),"/tmpdem.tif")) 
+      file.copy(demFn, paste0(file.path(runDir,"/"),"/tmpdem.tif")) 
       demll <- setMinMax(demll)
       dem   <- demll
     }
@@ -73,7 +73,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   if (!crsString) {
     # stop("the DEM/DSM is not georeferencend - please provide a correct georeferenced raster object or GeoTiff file\n")
     # if so deproject DEM/DSM because all of the vector data is latlong WGS84
-    demll <- gdalwarp(srcfile = "tmpdem.tif", dstfile = "demll.tif", 
+    demll <- gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
                       overwrite = TRUE,  
                       t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                       output_Raster = TRUE )  
@@ -181,8 +181,8 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   }
   
   # dump flightDEM as it was used for agl prediction
-  writeRaster(demll,"tmpFlightDEM.tif",overwrite = TRUE)
-  gdalwarp(srcfile = "tmpFlightDEM.tif", dstfile = "tmpdem.tif",  
+  writeRaster(demll,file.path(runDir,"tmpFlightDEM.tif"),overwrite = TRUE)
+  gdalwarp(srcfile = file.path(runDir,"tmpFlightDEM.tif"), dstfile = file.path(runDir,"tmpdem.tif"),  
            overwrite = TRUE,  
            t_srs = paste0("+proj=utm +zone=",long2UTMzone(p$lon1)," +datum=WGS84"),
            tr = c(as.numeric(p$followSurfaceRes),as.numeric(p$followSurfaceRes))
@@ -190,7 +190,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   if (dA) outputras <- TRUE
   else outputras <- FALSE
   # deproject it again to latlon
-  tmpdemll <- gdalwarp(srcfile = "tmpdem.tif", dstfile = "flightDEM.tif", 
+  tmpdemll <- gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"flightDEM.tif"), 
                        t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                        overwrite = TRUE,  
                        output_Raster = outputras 
@@ -214,7 +214,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
 # (1) controls with respect to waypoint number and/or battery lifetime the splitting of the mission files to seperate task files
 # (2) calculate and insert rth and fts waypoints with respect to the terrain obstacles to generate a save start and end of a task
 
-calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,batteryTime,logger,p,len,multiply,tracks,param,speed,uavType,dem,maxAlt,projectDir, workingDir,locationName,uavViewDir,cmd){
+calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,batteryTime,logger,p,len,multiply,tracks,param,speed,uavType,dem,maxAlt,projectDir, workingDir,locationName,uavViewDir,cmd,runDir){
   fin <- FALSE
   minPoints <- 1
   # set number of waypoints per file
@@ -255,8 +255,8 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
     # depending on DEM/DSM sometimes there are no data values
     if (!is.na(endLat) & !is.na(endLon)) {
       # generate flight lines from launch to start and launch to end point of splitted task
-      home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home")
-      start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start")
+      home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home",runDir=runDir)
+      start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start",runDir=runDir)
       
       # calculate minimum rth altitude for each line by identifying max altitude
       homeRth  <- raster::extract(dem,home, fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
@@ -284,10 +284,10 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       keeps <- c("latitude","longitude","altitude")
       DF <- DF[keeps]
       DF[stats::complete.cases(DF),]
-      utils::write.table(DF[,1:(ncol(DF))],file = "tmp2.csv",quote = FALSE,row.names = FALSE,sep = "\t")
+      utils::write.table(DF[,1:(ncol(DF))],file = file.path(runDir,"tmp2.csv"),quote = FALSE,row.names = FALSE,sep = "\t")
       
       #read raw waypoint list
-      lns <- data.table::fread("tmp2.csv", skip = 1L, header = FALSE,sep = "\n", data.table = FALSE)
+      lns <- data.table::fread(file.path(runDir,"tmp2.csv"), skip = 1L, header = FALSE,sep = "\n", data.table = FALSE)
       
       # define output dataframe
       lnsnew <- data.frame()
@@ -411,7 +411,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
 # export data to DJI exchange format 
 # (1) controls with respect to waypoint number and/or battery lifetime the splitting of the mission files to seperate task files
 # (2) checking the return to home and fly to start of the misson tracks with respect to the obstacles to generate a save start and end of a task
-calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSwitch=FALSE, dem, maxAlt, projectDir, workingDir,locationName) {
+calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSwitch=FALSE, dem, maxAlt, projectDir, workingDir,locationName,runDir) {
   minPoints <- 1
   addmax    <- maxPoints
   if (maxPoints > nrow(df@data)) {maxPoints <- nrow(df@data)}
@@ -441,8 +441,8 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     endLon <- df@data[maxPoints,2]
     
     # generate flight lines from launch to start and launch to end point of splitted task
-    home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"home")
-    start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"start")
+    home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"home",runDir=runDir)
+    start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"start",runDir=runDir)
     
     # calculate minimum rth altitude for each line by identifying max altitude
     #homeRth<-max(unlist(raster::extract(dem,home)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
@@ -523,7 +523,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
     utils::write.csv(DF[,1:(ncol(DF) - 2)],file = paste0(projectDir,"/",locationName ,"/", workingDir,"/fp-data/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
     
-    log4r::levellog(logger, 'INFO', paste("created : ", paste0(strsplit(getwd(),"/tmp")[[1]][1],"/log/",mission,"-",i,".csv")))
+    log4r::levellog(logger, 'INFO', paste("created : ", paste0(strsplit(projectDir,"/tmp")[[1]][1],"/log/",mission,"-",i,".csv")))
     
     minPoints <- maxPoints - 2 # -2 for overlapping end of task WPs
     maxPoints <- maxPoints + addmax
@@ -960,7 +960,9 @@ MAVTreeCSV <- function(flightPlanMode,
                        maxSpeed = maxSpeed/3.6, 
                        circleRadius,
                        df,
-                       takeOffAlt) {
+                       takeOffAlt,
+                       projectDir,
+                       runDir) {
   mission <- p$locationName
   
   minPoints <- 1
@@ -996,8 +998,8 @@ MAVTreeCSV <- function(flightPlanMode,
     
     # depending on DEM/DSM sometimes there are no data Values
     # generate flight lines from launch to start and launch to end point of splitted task
-    home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home")
-    start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start")
+    home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"Home",runDir=runDir)
+    start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start",runDir=runDir)
     
     # calculate minimum rth altitude for each line by identifing max altitude
     homeRth  <- raster::extract(dem,home, fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
@@ -1026,8 +1028,8 @@ MAVTreeCSV <- function(flightPlanMode,
     sep<-"\t"
     keeps <- c("CURRENT_WP","COORD_FRAME","COMMAND","PARAM1","PARAM2","PARAM3","PARAM4","latitude","longitude","altitude","id")
     df@data<-df@data[keeps]
-    utils::write.table(df@data[minPoints:maxPoints,1:(ncol(df@data))],file = "tmp.csv",quote = FALSE,row.names = FALSE,sep = "\t")
-    lns <- data.table::fread("tmp.csv", skip=1L, header = FALSE,sep = "\n", data.table = FALSE)
+    utils::write.table(df@data[minPoints:maxPoints,1:(ncol(df@data))],file = file.path(runDir,"tmp.csv"),quote = FALSE,row.names = FALSE,sep = "\t")
+    lns <- data.table::fread(file.path(runDir,"tmp.csv"), skip=1L, header = FALSE,sep = "\n", data.table = FALSE)
     lnsnew<-data.frame()
     
     # create default header line  
@@ -1106,7 +1108,7 @@ MAVTreeCSV <- function(flightPlanMode,
     
     # write the control file
     utils::write.table(lnsnew, 
-                       paste0(strsplit(getwd(),"/fp-data/run")[[1]][1],"/fp-data/control/",i,"__",mission,"_solo.txt"), 
+                       paste0(strsplit(projectDir,"/fp-data/run")[[1]][1],"/fp-data/control/",i,"__",mission,"_solo.txt"), 
                        sep="\t", 
                        row.names=FALSE, 
                        col.names=FALSE, 
@@ -1137,7 +1139,18 @@ readTreeTrack<- function(treeTrack){
 
 # calculate a obstacle free flight path for a given list of coordinates
 
-makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,locationName,circleRadius,flightArea,takeOffAlt){
+makeFlightPathT3 <- function(treeList,
+                             p,
+                             uavType,
+                             task,
+                             demFn,
+                             logger,
+                             projectDir,
+                             locationName,
+                             circleRadius,
+                             flightArea,
+                             takeOffAlt,
+                             runDir){
   # due to RMD Check Note
   uavViewDir<-pos<-workingDir<-trackSwitch<-NULL
   if (is.null(demFn)) {
@@ -1149,40 +1162,29 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
   if (class(rst)[1] %in% c("RasterLayer", "RasterStack", "RasterBrick")) {
     rundem<-rst
     proj <- projection(rundem)
-    demll <- gdalwarp(srcfile = demFn, dstfile = "demll.tif", overwrite=TRUE,  t_srs = "+proj=longlat +datum=WGS84 +no_defs",output_Raster = TRUE ) 
+    demll <- gdalwarp(srcfile = demFn, dstfile = file.path(runDir,"demll.tif"), overwrite=TRUE,  t_srs = "+proj=longlat +datum=WGS84 +no_defs",output_Raster = TRUE ) 
     
     rundem <- raster::crop(demll,
                            extent(flightArea@bbox[1] - 0.00421,
                                   flightArea@bbox[3] + 0.00421,
                                   flightArea@bbox[2] - 0.00421,
                                   flightArea@bbox[4] + 0.00421))
-    raster::writeRaster(rundem,"tmpdem.tif",overwrite = TRUE)
-    demll <- rundem 
-    #file.copy("tmpdem.tif", paste0(file.path(projectDir,locationName, workingDir,"fp-data/run/"),"/tmpdem.tif")) 
+    raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
+    demll <- rundem
     dem  <- demll
-    
-  } else {
-    rundem <- raster::raster(demFn, 
-                             xmn = min(p$lon1,p$lon3) - 0.0083,
-                             xmx = max(p$lon1,p$lon3) + 0.0083,
-                             ymn = min(p$lat1,p$lat3) - 0.0083,
-                             ymx = max(p$lat1,p$lat3) + 0.0083)
-    
-    file.copy(demFn,  paste0(file.path(projectDir,locationName, workingDir,"fp-data/run/"),"/tmpdem.tif"))
-    dem <- rundem
   }
   
-  demll <- gdalwarp(srcfile = "tmpdem.tif", 
-                    dstfile = "demll.tif", 
-                    t_srs = "+proj=longlat +datum=WGS84 +no_defs",
-                    overwrite=TRUE,
-                    output_Raster = TRUE )  
+  # demll <- gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), 
+  #                   dstfile = file.path(runDir,"demll.tif"), 
+  #                   t_srs = "+proj=longlat +datum=WGS84 +no_defs",
+  #                   overwrite=TRUE,
+  #                   output_Raster = TRUE )  
   
-  demll <- setMinMax(demll)
+  #demll <- setMinMax(demll)
   
   
   lns <- list()
-  fileConn <- file("treepoints.csv")
+  fileConn <- file(file.path(runDir,"treepoints.csv"))
   for (i in 1:nrow(treeList) ) {
     if (uavType == "djip3") {
       forward <- geosphere::bearing(treeList@coords[i,], treeList@coords[i + 1,], a = 6378137, f = 1/298.257223563)
@@ -1251,7 +1253,8 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
       seg_max_toDown <- get_seg_fparams(demll,
                                         start = c(down_smtlon,down_smtlat),
                                         target = c(treeList@coords[i,][1],treeList@coords[i,][2]),
-                                        p)
+                                        p,
+                                        runDir=runDir)
       
       
       tree_Alt <- get_point_fparams(demll,
@@ -1264,7 +1267,8 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
       seg_max_toNext <- get_seg_fparams(demll,
                                         start = c(posDown[1],posDown[2]),
                                         target = c(up_smtlon,up_smtlat),
-                                        p)      
+                                        p,
+                                        runDir=runDir)      
       
       # create DOWN WP
       lns[length(lns) + 1] <- makeUavPointMAV(lat = posDown[2],
@@ -1296,17 +1300,17 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
   close(fileConn)
   if (uavType == "djip3") {
     cat("calculating DEM related stuff\n")
-    djiDF <- utils::read.csv("treepoints.csv",sep = ",",header = FALSE)
+    djiDF <- utils::read.csv(file.path(runDir,"treepoints.csv"),sep = ",",header = FALSE)
     names(djiDF) <- unlist(strsplit( makeUavPoint(pos,uavViewDir,group = 99,p,header = TRUE,sep = ' '),split = " "))
     sp::coordinates(djiDF) <- ~lon+lat
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     result <- getAltitudes(demll ,djiDF,p,followSurfaceRes = 5,logger,projectDir,locationName,flightArea)
-    writeDjiTreeCSV(result[[2]],p$locationName,1,94,p,logger,round(result[[4]],digits = 0),trackSwitch,result[[3]],result[[6]])
+    writeDjiTreeCSV(result[[2]],p$locationName,1,94,p,logger,round(result[[4]],digits = 0),trackSwitch,result[[3]],result[[6]],projectDir)
     return(result)
     
   } else if (uavType == "solo") {
     cat("getting altitudes...\n")
-    df <- utils::read.csv("treepoints.csv",sep = "\t",header = FALSE)
+    df <- utils::read.csv(file.path(runDir,"treepoints.csv"),sep = "\t",header = FALSE)
     names(df) <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","autocont","lat","lon")
     sp::coordinates(df) <- ~lon+lat
     sp::proj4string(df) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
@@ -1323,7 +1327,9 @@ makeFlightPathT3 <- function(treeList,p,uavType,task,demFn,logger,projectDir,loc
                maxSpeed = p$maxSpeed,
                circleRadius,
                df = df,
-               takeOffAlt)
+               takeOffAlt,
+               projectDir,
+               runDir)
     names(df) <- c("CURRENT_WP","COORD_FRAME","COMMAND","PARAM1","PARAM2","PARAM3","PARAM4","latitude","longitude","altitude","id", "AUTOCONTINUE")
     keeps<- c("CURRENT_WP","COORD_FRAME","COMMAND","PARAM1","PARAM2","PARAM3","PARAM4","latitude","longitude","altitude", "AUTOCONTINUE")
     df@data<-df@data[keeps]
@@ -1399,26 +1405,26 @@ readLaunchPos <- function(fN,extend=FALSE){
   return(launchPos)
 }
 
-# export data to external format deals with the splitting of the mission files
-writeDjiTreeCsv <-function(df,mission){
-  # max numbers of waypoints is 99
-  nofiles<-ceiling(nrow(df@data)/96)
-  maxPoints<-96
-  minPoints<-1
-  maxFlightLength <- 15
-  
-  for (i in 1:nofiles) {
-    if (maxPoints>nrow(df@data)){maxPoints<-nrow(df@data)}
-    utils::write.csv(df@data[minPoints:maxPoints,1:(ncol(df@data)-2)],file = paste0(strsplit(getwd(),"/fp-data/run")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
-    minPoints<-maxPoints
-    maxPoints<-maxPoints+96
-    
-    if (maxPoints>nrow(df@data)){maxPoints<-nrow(df@data)}
-  }
-}
+# # export data to external format deals with the splitting of the mission files
+# writeDjiTreeCsv <-function(df,mission){
+#   # max numbers of waypoints is 99
+#   nofiles<-ceiling(nrow(df@data)/96)
+#   maxPoints<-96
+#   minPoints<-1
+#   maxFlightLength <- 15
+#   
+#   for (i in 1:nofiles) {
+#     if (maxPoints>nrow(df@data)){maxPoints<-nrow(df@data)}
+#     utils::write.csv(df@data[minPoints:maxPoints,1:(ncol(df@data)-2)],file = paste0(strsplit(projectDir,"/fp-data/run")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
+#     minPoints<-maxPoints
+#     maxPoints<-maxPoints+96
+#     
+#     if (maxPoints>nrow(df@data)){maxPoints<-nrow(df@data)}
+#   }
+# }
 
 # export data to xternal format deals with the splitting of the mission files
-writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch=FALSE,dem,maxAlt){
+writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch=FALSE,dem,maxAlt,projectDir){
   minPoints<-1
   if (maxPoints > nrow(df@data)) {maxPoints<-nrow(df@data)}
   # store launchposition and coordinates we need them for the rth calculations
@@ -1483,8 +1489,8 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     DF = rbind(DF,homerow)
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
-    utils::write.csv(DF[,1:(ncol(DF)-2)],file = paste0(strsplit(getwd(),"/tmp")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
-    log4r::levellog(logger, 'INFO', paste("created : ", paste0(strsplit(getwd(),"/tmp")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv")))
+    utils::write.csv(DF[,1:(ncol(DF)-2)],file = paste0(strsplit(projectDir,"/tmp")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
+    log4r::levellog(logger, 'INFO', paste("created : ", paste0(strsplit(projectDir,"/tmp")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv")))
     minPoints<-maxPoints
     maxPoints<-maxPoints+94
     
@@ -1568,10 +1574,11 @@ is.odd <- function(x) x %% 2 != 0
 get_seg_fparams <- function(dem,
                               start,
                               target,
-                              p){
+                              p,
+                            runDir){
   # depending on DEM/DSM sometimes there are no data values
   startAlt<-p$launchAltitude
-  seg  <- sp_line(c(start[1],target[1]),c(start[2],target[2]),"seg")
+  seg  <- sp_line(c(start[1],target[1]),c(start[2],target[2]),"seg",runDir=runDir)
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))
   seg_buf<-rgeos::gBuffer(spgeom = seg_utm,width = 5.0)
   seg_buf <- sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
@@ -1622,7 +1629,8 @@ setProjStructure <- function(projectDir,
                              surveyArea,
                              demFn,
                              copy,
-                             ft="A"){
+                             ft="A",
+                             runDir){
   workingDir <- tools::file_path_sans_ext(basename(as.character(surveyArea)))
   
   projRootDir <- file.path(projectDir, locationName, workingDir)
@@ -1647,27 +1655,6 @@ setProjStructure <- function(projectDir,
                                                    "img-data/FLIGHT1/level1",
                                                    "img-data/FLIGHT1/level2"))
   
-  
-  
-  # create directories if needed
-  # if (!file.exists(file.path(projectDir, locationName, workingDir))) {
-  #   dir.create(file.path(projectDir, locationName, workingDir), recursive = TRUE)
-  # }
-  # if (!file.exists(file.path(projectDir, locationName, workingDir,"level0_data",taskName))) {
-  #   dir.create(file.path(projectDir, locationName, workingDir,"level0_data",taskName), recursive = TRUE)
-  # }
-  # if (!file.exists(file.path(projectDir, locationName, workingDir, "run"))) {
-  #   dir.create(file.path(projectDir, locationName,workingDir, "/run"), recursive = TRUE)
-  # }
-  # if (!file.exists(file.path(projectDir, locationName,workingDir, "control"))) {
-  #   dir.create(file.path(projectDir, locationName,workingDir, "control"), recursive = TRUE)
-  # }
-  # if (!file.exists(file.path(projectDir, locationName,workingDir, "log"))) {
-  #   dir.create(file.path(projectDir, locationName,workingDir, "log"), recursive = TRUE)
-  # }
-  # if (!file.exists(file.path(projectDir,locationName, "data"))) {
-  #   dir.create(file.path(projectDir,locationName, "data"), recursive = TRUE)
-  # }
   
   # copy planning data: DSM and flightplanning area to projcet folder
   if (!is.numeric(surveyArea)) {
@@ -1694,5 +1681,6 @@ setProjStructure <- function(projectDir,
   # generate misson control filename
   csvFn <-paste(file.path(projRootDir, "fp-data/control/"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
   
-  return(c(csvFn, taskName, workingDir))
+  makeGlobalVar(name = "runDir",value = file.path(projRootDir,"fp-data/run/"))
+  return(c(csvFn, taskName, workingDir,projRootDir))
 }

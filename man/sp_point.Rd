@@ -5,7 +5,8 @@
 \title{create an spatialpointobject from 1 points}
 \usage{
 sp_point(lon, lat, ID = "point",
-  proj4 = "+proj=longlat +datum=WGS84 +no_defs", export = FALSE)
+  proj4 = "+proj=longlat +datum=WGS84 +no_defs", export = FALSE,
+  runDir = runDir)
 }
 \arguments{
 \item{lon}{lon}
@@ -17,6 +18,8 @@ sp_point(lon, lat, ID = "point",
 \item{proj4}{projection}
 
 \item{export}{write shafefile default = F}
+
+\item{runDir}{\code{character} runtime folder}
 }
 \description{
 create an spatial point object from 1 point and optionally export it as a shapefile

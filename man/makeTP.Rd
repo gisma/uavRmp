@@ -10,7 +10,7 @@ makeTP(projectDir = tempdir(), locationName = "treePos",
   aboveTreeAlt = 15, circleRadius = 1, takeOffAlt = 50,
   presetFlightTask = "remote", maxSpeed = 25, followSurfaceRes = 5,
   altFilter = 0.5, windCondition = 1, launchAltitude = -9999,
-  uavType = "solo", cameraType = "MAPIR2", copy = FALSE)
+  uavType = "solo", cameraType = "MAPIR2", copy = FALSE, runDir = "")
 }
 \arguments{
 \item{projectDir}{\code{character} path to the main folder where several projects can be hosted, default is \code{tempdir()}}
@@ -59,21 +59,20 @@ For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) ar
 \item{cameraType}{\code{character}, default is \code{"MAPIR2"}.}
 
 \item{copy}{\code{boolean} copy used file to data folder default is \code{FALSE}}
+
+\item{runDir}{\code{character} runtime folder}
 }
 \description{
 makeTP generates a flight track chaining up point objects with respect to a heterogenous surface and known obstacles as documented by an DSM for taking top down pictures. It creates a single control file for autonomous picture retrieval flights.
 }
 \examples{
+\dontrun{
 ## (1) get example DEM data
 dsmFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "positions.csv", package = "uavRmp")
-
 ## (2) make position flight plan
 makeTP  <-  makeTP(missionTrackList= tutorial_flightArea,
-                   demFn = dsmFn,
-                   uavType = "solo",
-                   followSurfaceRes=5,
-                   launchPos = c(8.679,50.856))
-
-
+                  demFn = dsmFn,
+                  uavType = "solo",
+                  launchPos = c(8.679,50.856))
+}
 }

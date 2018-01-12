@@ -90,11 +90,15 @@ comp_ll_proj4 <- function(x) {
 #' @param ID id of line
 #' @param proj4 projection
 #' @param export write shafefile default = F 
+#' @param runDir \code{character} runtime folder 
 #' @export
 #' 
 #' @examples 
 #' ## creating sp spatial point object
-#' line <- sp_line(c(8.770367,8.771161,8.771536),c(50.815172,50.814743,50.814875),ID="go for it")
+#' line <- sp_line(c(8.770367,8.771161,8.771536),
+#'                 c(50.815172,50.814743,50.814875),
+#'                 ID="go for it",
+#'                 runDir=runDir)
 #' 
 #' ## plot it
 #' raster::plot(line)
@@ -103,11 +107,12 @@ sp_line <- function(Y_coords,
                     X_coords,
                     ID,
                     proj4="+proj=longlat +datum=WGS84 +no_defs",
-                    export=FALSE) {   
+                    export=FALSE,
+                    runDir) {   
   line <- SpatialLines(list(Lines(Line(cbind(Y_coords,X_coords)), ID = ID)))
   sp::proj4string(line) <- CRS(proj4)
   if (export) {
-    writeLinesShape(line,paste0(ID,"home.shp"))
+    writeLinesShape(line,file.path(runDir,paste0(ID,"home.shp")))
   }
   return(line)
 }
@@ -119,6 +124,7 @@ sp_line <- function(Y_coords,
 #' @param proj4 projection
 #' @param ID name of point
 #' @param export write shafefile default = F 
+#' @param runDir \code{character} runtime folder 
 #' @export
 #' @examples 
 #' ## creating sp spatial point object
@@ -131,13 +137,14 @@ sp_point <- function(lon,
                      lat,
                      ID="point",
                      proj4="+proj=longlat +datum=WGS84 +no_defs",
-                     export=FALSE) {
+                     export=FALSE,
+                     runDir=runDir) {
   point = cbind(lon,lat)
   point = sp::SpatialPoints(point)
   point = SpatialPointsDataFrame(point, as.data.frame(ID))
   sp::proj4string(point) <- CRS(proj4)
   if (export) {
-    writeLinesShape(ID,paste0(ID,".shp"))
+    writeLinesShape(ID,file.path(runDir,paste0(ID,".shp")))
   }
   return(point)
 }
@@ -153,7 +160,7 @@ sp_point <- function(lon,
 #' dem <- raster::raster(system.file("extdata", "mrbiko.tif", package = "uavRmp"))
 #' 
 #' ## generate extraction line object
-#' line <- sp_line(c(8.66821,8.68212),c(50.83939,50.83267),ID="Highest Position")
+#' line <- sp_line(c(8.66821,8.68212),c(50.83939,50.83267),ID="Highest Position",runDir=runDir)
 #' 
 #' ## extract highest position
 #' maxpos_on_line(dem,line)  
@@ -274,17 +281,11 @@ initProj <- function(projRootDir=getwd(), projFolders=c("log/","control/","run/"
 #' }
 #' 
 makeGlobalVar <- function(name,value) {
-  if (!exists("GiEnv")) GiEnv <- new.env(parent=globalenv())  
-  if (exists(name, envir = GiEnv)) {
-    #warning(paste0("The variable '", name,"' already exist in .GlobalEnv"))
+  
     newname <- gsub("/", "_", name) 
-    assign(newname, value, envir = GiEnv, inherits = TRUE)
+    assign(newname, value, inherits = TRUE)
     #cat("add variable ",name,"=",value," to global GiEnv\n")
-  } else {
-    newname <- gsub("/", "_", name) 
-    assign(newname, value, envir = GiEnv, inherits = TRUE)
-    #cat("add variable ",name,"=",value," to global GiEnv\n")
-  } 
+   
 }
 
 writePathes <- function(name,value,fn) {

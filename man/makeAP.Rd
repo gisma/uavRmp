@@ -12,7 +12,7 @@ makeAP(projectDir = tempdir(), locationName = "flightArea",
   maxFlightTime = 10, picRate = 2, windCondition = 0, uavType = "solo",
   cameraType = "MAPIR2", cmd = 16, uavViewDir = 0, djiBasic = c(0, 0, 0,
   -90, 0), dA = FALSE, heatMap = FALSE, picFootprint = FALSE,
-  rcRange = NULL, copy = FALSE)
+  rcRange = NULL, copy = FALSE, runDir = tempdir())
 }
 \arguments{
 \item{projectDir}{\code{character} path to the main folder where several locations can be hosted, default is \code{tempdir()}}
@@ -100,13 +100,14 @@ By default it is set to (\code{= 0.0}).
 \item{rcRange}{range of estimated range of remote control}
 
 \item{copy}{copy switch}
+
+\item{runDir}{\code{character} runtime folder}
 }
 \description{
 The basic idea is to provide an easy to use workflow for controlling rtf-UAVs for planning autonomous surveys to retrieve aerial data sets.
 }
 \details{
-makeAP (Make UAV Remote
-  Controlled Survey) creates either intermediate flight control files for the
+makeAP (make aerial plan) creates either intermediate flight control files for the
   DJI phantom x UAVs or ready to upload control files for the 3DR Solo. The
   DJI control files are designed for using with the proprietary litchi flight
   control app exchange format, while the 3DR Solo files are using the MAVLINK
@@ -118,10 +119,10 @@ makeAP (Make UAV Remote
   interface to upload a CSV formated way point file for autonomous flights to
   the Phantom.\cr\cr PixHawk/3DR Solo:\cr The open uav community is focused
   on the PixHawk autopilot unit and the Mission Planner software. It is well
-  documented and several APIs are provided. Nevertheless a terrain following
-  autonomous flight planning tool is not available. makeAP creates static
-  implementation of the MAV format that is ready to be uploaded directly on
-  the Pixhawk controller using the \code{solo_upload} function.\cr\cr
+  documented and several APIs are provided. Nevertheless a high resolution 
+  terrain following flight planning tool for  autonomous obstacle avoiding flight missions
+  is not available. \code{makeAP} creates a straightforward version of MAV format flight control
+  rules that are ready to be uploaded directly on the Pixhawk controller using the \code{solo_upload} function.\cr\cr
 }
 \note{
 To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: \href{http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro}{uav based Remote Sensing at giswerk.org}).
@@ -178,19 +179,18 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
            followSurfaceRes = 5,
            altFilter = .75)
 
-## (5) view results
-mapview::mapview(fp3$wp,cex=4, lwd=0.5)+
-mapview::mapview(fp3$lp,color = "red", lwd=1,cex=4)+
-mapview::mapview(fp3$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
-mapview::mapview(fp3$oDEM,col=terrain.colors(256))
+## (4) view results
+mapview::mapview(fp$wp,cex=4, lwd=0.5)+
+mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
+mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
+mapview::mapview(fp$oDEM,col=terrain.colors(256))
 
-## (4) digitize flight area using leafDraw()
+## (5) digitize flight area using the small "onboard" tool vecDraw()
 ##     save vectors as "kml" or "json" files
-##     provide full filename +  extension!
+##     provide full filename  +  extension!
 
 
 vecDraw(preset="uav")
-
 }
 }
 \seealso{
