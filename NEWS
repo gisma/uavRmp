@@ -1,4 +1,4 @@
-## mapview 0.5.3
+## uavRmp 0.5.3
 
 new features:
   * add common GEOJSON support for flightareas
@@ -6,7 +6,7 @@ new features:
 bugfixes:
   * fix CRAN issues
   
-## mapview 0.5.2
+## uavRmp 0.5.2
 
 new features:
   * add point flight mode
@@ -18,18 +18,19 @@ bugfixes:
   * fix turning of the UAV at turnpoints
   * fix several small bugs
 
-## uavrmp 0.5.1
+## uavRmp 0.5.1
 
-new features:
-
-changes:
-
+new features: 
+ * vecDraw overlay support
+ changes:
+* analyze track path instead of track line
 bugfixes:
+* fixing kml import
 
   * fix non CRAN compliant examples.
   * fix runtime errors
 
 
-## mapview 0.5.0
+## uavRmp 0.5.0
 
 * Initial release

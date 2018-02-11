@@ -1,3 +1,10 @@
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) 
+[![Travis-CI Build Status](https://travis-ci.org/gisma/uavRmp.svg?branch=master)](https://travis-ci.org/gisma/uavRmp)
+<a href="https://cran.r-project.org/web/checks/check_results_uavRmp.html"><img border="0" src="http://www.r-pkg.org/badges/version/uavRmp" alt="CRAN version"></a>
+![](https://cranlogs.r-pkg.org/badges/grand-total/uavRmp?color=green)
+![](https://cranlogs.r-pkg.org/badges/uavRmp?color=green)
+![](https://cranlogs.r-pkg.org/badges/last-week/uavRmp?color=green)
+[![License](https://img.shields.io/badge/license-GPL%20%28%3E=%203%29-lightgrey.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0.html)
 # uavRmp
 Unmanned Aerial Vehicle R based Mission Planning
 
