@@ -394,7 +394,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       
       # counter handling for the last file
       if (maxPoints + addmax > nrow(df@data) & fin == FALSE) {
-        oldmax    <- maxPoints
+        oldmax    <- maxPoints - 2
         maxPoints <- nrow(df@data)
         minPoints <- oldmax
         addmax    <- maxPoints - minPoints
