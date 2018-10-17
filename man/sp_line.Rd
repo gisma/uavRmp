@@ -4,8 +4,9 @@
 \alias{sp_line}
 \title{create an spatiallineobject from 2 points}
 \usage{
-sp_line(Y_coords, X_coords, ID, proj4 = "+proj=longlat +datum=WGS84 +no_defs",
-  export = FALSE, runDir)
+sp_line(Y_coords, X_coords, ID,
+  proj4 = "+proj=longlat +datum=WGS84 +no_defs", export = FALSE,
+  runDir)
 }
 \arguments{
 \item{Y_coords}{Y/lat coordinates}

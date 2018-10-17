@@ -34,7 +34,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       rundem <- demFn
       rundem <- raster::crop(rundem,extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
-      demll <- gdalwarp(srcfile =file.path(runDir, "tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
+      demll <- gdalUtils::gdalwarp(srcfile =file.path(runDir, "tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
                         overwrite = TRUE,  
                         t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                         output_Raster = TRUE )  
@@ -44,7 +44,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     } else{
       # get information of the raw file
       # project the  extent to the current input ref system 
-      tmpproj <- grep(gdalinfo(path.expand(demFn),proj4 = TRUE),pattern = "+proj=",value = TRUE)
+      tmpproj <- grep(gdalUtils::gdalinfo(path.expand(demFn),proj4 = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
       xmn  <- min(p$lon1,p$lon3) - 0.007
       xmx  <- max(p$lon1,p$lon3) + 0.007
@@ -57,7 +57,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       rundem <- raster::raster(demFn,band = 1)
       rundem <- raster::crop(rundem,extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
-      demll <- gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
+      demll <- gdalUtils::gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
                         overwrite = TRUE,  
                         t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                         output_Raster = TRUE )  
@@ -73,7 +73,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   if (!crsString) {
     # stop("the DEM/DSM is not georeferencend - please provide a correct georeferenced raster object or GeoTiff file\n")
     # if so deproject DEM/DSM because all of the vector data is latlong WGS84
-    demll <- gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
+    demll <- gdalUtils::gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
                       overwrite = TRUE,  
                       t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                       output_Raster = TRUE )  
@@ -182,7 +182,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   
   # dump flightDEM as it was used for agl prediction
   writeRaster(demll,file.path(runDir,"tmpFlightDEM.tif"),overwrite = TRUE)
-  gdalwarp(srcfile = file.path(runDir,"tmpFlightDEM.tif"), dstfile = file.path(runDir,"tmpdem.tif"),  
+  gdalUtils::gdalwarp(srcfile = file.path(runDir,"tmpFlightDEM.tif"), dstfile = file.path(runDir,"tmpdem.tif"),  
            overwrite = TRUE,  
            t_srs = paste0("+proj=utm +zone=",long2UTMzone(p$lon1)," +datum=WGS84"),
            tr = c(as.numeric(p$followSurfaceRes),as.numeric(p$followSurfaceRes))
@@ -190,7 +190,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   if (dA) outputras <- TRUE
   else outputras <- FALSE
   # deproject it again to latlon
-  tmpdemll <- gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"flightDEM.tif"), 
+  tmpdemll <- gdalUtils::gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"flightDEM.tif"), 
                        t_srs = "+proj=longlat +datum=WGS84 +no_defs",
                        overwrite = TRUE,  
                        output_Raster = outputras 
@@ -1162,7 +1162,7 @@ makeFlightPathT3 <- function(treeList,
   if (class(rst)[1] %in% c("RasterLayer", "RasterStack", "RasterBrick")) {
     rundem<-rst
     proj <- projection(rundem)
-    demll <- gdalwarp(srcfile = demFn, dstfile = file.path(runDir,"demll.tif"), overwrite=TRUE,  t_srs = "+proj=longlat +datum=WGS84 +no_defs",output_Raster = TRUE ) 
+    demll <- gdalUtils::gdalwarp(srcfile = demFn, dstfile = file.path(runDir,"demll.tif"), overwrite=TRUE,  t_srs = "+proj=longlat +datum=WGS84 +no_defs",output_Raster = TRUE ) 
     
     rundem <- raster::crop(demll,
                            extent(flightArea@bbox[1] - 0.00421,

@@ -4,9 +4,9 @@
 \alias{soloLog}
 \title{Download, reorganize and export the binary log files from 3DR Solo Pixhawk controller or the telemetry log files from the Solo radio control unit}
 \usage{
-soloLog(logFileSample = "recent", logSource = "rc", logDest = tempdir(),
-  downloadOnly = FALSE, netWarn = FALSE, renameFiles = TRUE,
-  makeSP = FALSE)
+soloLog(logFileSample = "recent", logSource = "rc",
+  logDest = tempdir(), downloadOnly = FALSE, netWarn = FALSE,
+  renameFiles = TRUE, makeSP = FALSE)
 }
 \arguments{
 \item{logFileSample}{\code{character} , options are:  \code{recent} download the most recent logfile,  \code{all} downloads all logfiles, or a plain number e.g. \code{2} for a specific logfile. Note the telemetry logfiles are numbering from 1 to 9 only, the most recent one is not numbered. The binary logfiles from the pixhawk are numbering continously but only the last 50 files or so will exist.}

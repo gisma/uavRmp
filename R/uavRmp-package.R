@@ -21,7 +21,6 @@
 #' @import htmltools
 #' @import rgeos
 #' @import rgdal
-#' @import gdalUtils
 #' @import tools
 #' @import maptools
 #' @import log4r
@@ -31,6 +30,8 @@
 #' @import methods
 #' @import devtools
 #' @import brew
+#' @importFrom gdalUtils gdalinfo
+#' @importFrom gdalUtils gdalwarp
 #' @importFrom geosphere bearing
 #' @importFrom geosphere distGeo
 #' @importFrom geosphere destPoint
