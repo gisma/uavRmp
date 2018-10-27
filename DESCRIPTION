@@ -1,8 +1,8 @@
 Package: uavRmp
 Type: Package
 Title: UAV Mission Planner
-Version: 0.5.3
-Date: 2017-11-20
+Version: 0.5.4
+Date: 2018-10-20
 Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Sebastian", "Richter", role = c("ctb")),
              person("Lars", "Opgenoorth",  role = c("ctb")),
