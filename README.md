@@ -28,12 +28,11 @@ The core planning tool ```makeFP``` (make flight plan) creates either intermedia
 
 ## The family
 
-The package family will consist of 4 parts:
+The package family will consist of 2 parts:
 
   * flight planning ```uavRmp```
-  * forest analysis ```uavRfa```
-  * remote sensing ```uavRrs```
-  * archaeology ```uavRao```
+  * remote sensing tools ```uavRst```
+
   
 
 
