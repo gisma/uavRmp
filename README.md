@@ -14,7 +14,7 @@ The `uavR` tools consist of two packages:
   * mission planning ```uavRmp``` ([CRAN](https://CRAN.R-project.org/package=uavRmp))
   * remote sensing toolbox ```uavRst```   ([CRAN](https://CRAN.R-project.org/package=uavRst))
 
-## uavRmp Unmanned Aerial Vehicle R based Mission Planning
+## Unmanned Aerial Vehicle R based Mission Planning - uavRmp 
 The [uavRmp](https://github.com/gisma/uavRmp) package is designed 
 for uav autonomous mission planning. In the first place it is a simple and open source planning tool for monitoring flights of low budget drones based on ```R```. It provide an easy workflow for planning autonomous 
 surveys including battery-dependent task splitting, save departures, and approaches of each monitoring chunks. It belongs to the ```uavR``` package family that provides more functionality for the pre- and post-processing as well as the analysis of the derived data.
