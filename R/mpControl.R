@@ -747,20 +747,20 @@ taskarea <- function(p, csvFn) {
 } 
 
 # calculates the camera footprint 
-calcCamFoot <- function(lon, lat, heading, distance, flightaltitude, i, j) {
+calcCamFoot <- function(lon, lat, heading, distance, flightaltitude, i, j,factor) {
   
-  t1 <- calcNextPos(lon,lat,abs(heading),1.71*flightaltitude/2)
-  t2 <- calcNextPos(lon,lat,abs(heading),-1*(1.71*flightaltitude/2))
+  t1 <- calcNextPos(lon,lat,abs(heading),factor*flightaltitude/2)
+  t2 <- calcNextPos(lon,lat,abs(heading),-1*(factor*flightaltitude/2))
   
-  yllc <- calcNextPos(t1[1],t1[2],-90 + abs(heading),1.71*flightaltitude*0.75/2)[2]
-  xllc <- calcNextPos(t1[1],t1[2],-90 + abs(heading),1.71*flightaltitude*0.75/2)[1]
-  ylrc <- calcNextPos(t1[1],t1[2],90  + abs(heading),1.71*flightaltitude*0.75/2)[2]
-  xlrc <- calcNextPos(t1[1],t1[2],90  + abs(heading),1.71*flightaltitude*0.75/2)[1]
+  yllc <- calcNextPos(t1[1],t1[2],-90 + abs(heading),factor*flightaltitude*0.75/2)[2]
+  xllc <- calcNextPos(t1[1],t1[2],-90 + abs(heading),factor*flightaltitude*0.75/2)[1]
+  ylrc <- calcNextPos(t1[1],t1[2],90  + abs(heading),factor*flightaltitude*0.75/2)[2]
+  xlrc <- calcNextPos(t1[1],t1[2],90  + abs(heading),factor*flightaltitude*0.75/2)[1]
   
-  yulc <- calcNextPos(t2[1],t2[2],-90 + abs(heading),1.71*flightaltitude*0.75/2)[2]
-  xulc <- calcNextPos(t2[1],t2[2],-90 + abs(heading),1.71*flightaltitude*0.75/2)[1]
-  yurc <- calcNextPos(t2[1],t2[2],90  + abs(heading),1.71*flightaltitude*0.75/2)[2]
-  xurc <- calcNextPos(t2[1],t2[2],90  + abs(heading),1.71*flightaltitude*0.75/2)[1]
+  yulc <- calcNextPos(t2[1],t2[2],-90 + abs(heading),factor*flightaltitude*0.75/2)[2]
+  xulc <- calcNextPos(t2[1],t2[2],-90 + abs(heading),factor*flightaltitude*0.75/2)[1]
+  yurc <- calcNextPos(t2[1],t2[2],90  + abs(heading),factor*flightaltitude*0.75/2)[2]
+  xurc <- calcNextPos(t2[1],t2[2],90  + abs(heading),factor*flightaltitude*0.75/2)[1]
   
   ID = paste0("CameraExtend_",flightaltitude,"_",lon,lat)
   rawPolygon <- sp::Polygon(cbind(c(xulc,xurc,xlrc,xllc,xulc),c(yulc,yurc,ylrc,yllc,yulc)))
