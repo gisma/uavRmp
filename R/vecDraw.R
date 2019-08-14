@@ -79,16 +79,21 @@ vecDraw <- function(mapCenter=NULL,
   tmpPath<- createTempDataTransfer()
   
   if (!is.null(overlay)){
+    if  (class(overlay == "character")){stop("overlay has to be a sp* object") }
     
     if (class(overlay)  %in% c("SpatialPointsDataFrame","SpatialLinesDataFrame","SpatialLines","SpatialPoints")) {
       #e <- as(raster::extent(overlay), "SpatialPolygons")
       #e <- sp::SpatialPolygonsDataFrame(e, data.frame(ID="overlay"))
       proj4string(overlay) <- sp::proj4string(overlay)
       overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+init=epsg:4326"))
-    } else if  (class(overlay)=="SpatialPolygonsDataFrame") {
+    } 
+    if  (class(overlay)=="SpatialPolygonsDataFrame") {
       overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+proj=longlat +datum=WGS84 +no_defs"))
       #overlay <- sp::SpatialPolygonsDataFrame(overlay, data.frame(ID="overlay"))
-    } else if  (class(overlay == "character")){stop("overlay has to be a sp* object") }
+    } 
+    
+    if  (class(overlay)!="sf") {
+
     
     rgdal::writeOGR(overlay, paste(tmpPath, "jsondata", sep=.Platform$file.sep), "OGRGeoJSON", driver="GeoJSON")
     
@@ -118,7 +123,23 @@ vecDraw <- function(mapCenter=NULL,
     mapCenter<-c(raster::extent(overlay)[3]+raster::extent(overlay)[4]-raster::extent(overlay)[3],raster::extent(overlay)[1]+raster::extent(overlay)[2]-raster::extent(overlay)[1])
     #features<-overlay
     
-  }  else {jsondata<-0}
+    }  else if (class(overlay)=="sf") {
+      lns[1,] <-paste0('var jsondata = {')
+      l1<-paste0('var jsondata = {')
+      lns[3,]<-paste0('"crs": { "type": "name", "properties": { "name": "EPSG:4326" } },')
+      l2<-paste0(l1,' "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },')
+      l3<- paste0(l2," [",overlay$geometry[[1]][5],",",overlay$geometry[[1]][1],"]",
+                  "[",overlay$geometry[[1]][6],",",overlay$geometry[[1]][2],"]",
+                  "[",overlay$geometry[[1]][7],",",overlay$geometry[[1]][3],"]",
+                  "[",overlay$geometry[[1]][8],",",overlay$geometry[[1]][4],"]}")
+      #lns[length(nrow(lns)+1),]<- '};'
+      # utils::write.csv2(l3, paste(tmpPath, "jsondata", sep=.Platform$file.sep), sep="\n", row.names=FALSE, col.names=FALSE, quote = FALSE)
+      fileConn<-file(paste(tmpPath, "jsondata", sep=.Platform$file.sep))
+      write(l3, fileConn)
+      close(fileConn)
+      
+      jsondata<-0
+      }
   
   if ( preset == "uav") {
     if (is.null(mapCenter)){
