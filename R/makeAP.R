@@ -287,7 +287,7 @@ makeAP <- function(projectDir = tempdir(),
   # uav depending parameter setting
   if (uavType == "djip3") {
     cameraType<-"dji4k"
-    factor <- 1.71
+    factor <- 1.71 #FOV ratio
     flightParams = c(flightPlanMode = flightPlanMode,
                      launchAltitude = launchAltitude,
                      flightAltitude = flightAltitude,
@@ -311,9 +311,9 @@ makeAP <- function(projectDir = tempdir(),
     if (cameraType == "MAPIR2") {
       factor <- 1.55
     } else if (cameraType == "GP3_7MP") {
-      factor <- 2.3
+      factor <- 1.31
     } else if (cameraType == "GP3_11MP") {
-      factor <- 2.3
+      factor <-1.71
     }
     
     
@@ -418,8 +418,16 @@ makeAP <- function(projectDir = tempdir(),
   
   lns <- launch2flightalt(p, lns, uavViewDir, launch2startHeading, uavType)
   
+  
   # assign starting point
   pos <- c(p$lon1, p$lat1)
+  
+  footprint <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0,factor)
+  footprint<-  spTransform(footprint,crs("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
+  landscape<-abs(abs(footprint@bbox[1]-footprint@bbox[3])*overlap-abs(footprint@bbox[1]-footprint@bbox[3]))
+  portrait<- abs(abs(footprint@bbox[2]-footprint@bbox[4])*overlap-abs(footprint@bbox[2]-footprint@bbox[4]))
+  
+  
   # calculates the footprint of the first position and returns a SpatialPolygonsDataFrame
   if (picFootprint)  camera <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0)
   else  camera = "NULL"
@@ -689,6 +697,8 @@ makeAP <- function(projectDir = tempdir(),
   log4r::levellog(logger,'INFO',paste("RTH flight altitude: ", round(result[[6]], digits = 0), " (m)"))
   log4r::levellog(logger,'INFO',paste("max flight speed   : ",round(maxSpeed, digits = 1),"  (km/h)      "))
   log4r::levellog(logger,'INFO',paste("picture lapse rate : ", picIntervall, "  (sec/pic) "))
+  log4r::levellog(logger, 'INFO', paste("trigger distance portrait     : ", portrait))
+  log4r::levellog(logger, 'INFO', paste("trigger distance landscape     : ", landscape))
   log4r::levellog(logger,'INFO',"--------------------- END RUN -----------------------------")
   
   # return params for visualisation and main results for overview
