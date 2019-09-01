@@ -288,11 +288,12 @@ vecDrawOutput <- function(outputId, width = '100%', height = '800px') {
 }
 
 ### Widget render function for use in Shiny =================================================
-#
+#   
 rendervecDraw<- function(expr, env = parent.frame(), quoted = FALSE) {
   projViewOutput<-NULL
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
   htmlwidgets::shinyRenderWidget(expr, projViewOutput, env, quoted = TRUE)
+}
 }
