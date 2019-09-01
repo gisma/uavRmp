@@ -37,3 +37,61 @@ ret<-system2("C:\\Strawberry\\perl\\bin\\perl","C:\\Users\\solo\\Documents\\R\\w
 
 return(flist)
 }
+
+#' extract exif information
+#' @description  extract exif
+#'
+#' @param position default is TRUE the files are selected by their relative position
+#' @param distance default is 30 m distance of the image centres 
+#' @param path path to the images files
+#'
+#' @examples
+#' wp <- system.file("extdata", "MAVLINK_waypoints.txt", package = "uavRmp")
+#' \dontrun{
+#' solo_upload( missionFile = wp)
+#' }
+#' @export drop_images
+#'               
+
+drop_images <- function(path = NULL ,
+                        position = TRUE, 
+                        distance = 30,
+                        image_format = "jpg",
+                        perlcmd= "C:\\Strawberry\\perl\\bin\\perl"){
+  
+  if (image_format != "jpg" & image_format !="raw") return()
+  
+  if (Sys.info()["sysname"] == "Linux") {
+    perlPath  <- try(system2("find", paste("/usr/bin"," ! -readable -prune -o -type f -executable -iname 'perl' -print"), stdout = TRUE))
+    perlPath<- file.path(R.utils::getAbsolutePath(perlPath),"perl")
+    rappdir_location <- try(system2("find", paste("/usr/bin"," ! -readable -prune -o -type f  -iname 'exiftool.pl' -print"), stdout = TRUE))
+    
+  }
+  if (Sys.info()["sysname"] == "Windows") {
+    perlPath <- try(system(paste0("cmd.exe /c dir /B /S ",DL,"\\","perl.exe"),intern = TRUE))
+    perlPath<- file.path(R.utils::getAbsolutePath(perlPath),"perl.exe")
+    
+  }
+  v
+  
+  rappdir_location <- file.path(
+    rappdirs::user_data_dir(appname = "r-exifr", appauthor = "paleolimbot"),
+    "exiftool"
+  )
+  
+  flist<-list()
+  flist<-append(flist, Sys.glob(file.path(R.utils::getAbsolutePath(path),"*.JPG")))
+  # dat <- exifr::read_exif(path,recursive = TRUE,args = "-n")
+  # ret2 <- dplyr::select(dat,
+  #                SourceFile, DateTimeOriginal,
+  #                GPSLongitude, GPSLatitude,
+  #                GPSTimeStamp)
+  ret<-system2(perlPath, paste("-filename -gpslatitude -gpslongitude -T -n ", path," > ", path,"out.txt"),stdout = TRUE)
+  library(geosphere)
+  distm(c(lon1, lat1), c(lon2, lat2), fun = distHaversine)
+  write.csv(dat2, 'Exifdata.csv',
+            row.names = F)
+  
+  
+  return(flist)
+}
