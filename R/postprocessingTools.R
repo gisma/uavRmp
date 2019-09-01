@@ -1,6 +1,6 @@
 
-#' extract exif information
-#' @description  extract exif
+#' extract all and returns specific exif information from a list of images
+#' @description  extract all and returns specific exif information from a list of images
 #'
 #' @param position default is TRUE the files are selected by their relative position
 #' @param distance default is 30 m distance of the image centres 
@@ -47,6 +47,8 @@ selectImages <- function(path = NULL ,
   exifInfos<-list()
   imageLat<-list()
   imageLon<-list()
+  imageTime<-list()
+  imageDate<-list()
   flist<-append(flist, Sys.glob(file.path(R.utils::getAbsolutePath(path),"*.JPG")))
   print(paste(":: retrieving exif information from ",length(flist), "files - this may take a while..."))
   fn<-file.path(R.utils::getAbsolutePath(path),paste0(strsplit(path,.Platform$file.sep)[[1]][length(strsplit(path,.Platform$file.sep)[[1]])-1],".csv"))
@@ -55,6 +57,9 @@ selectImages <- function(path = NULL ,
     #svMisc::progress(j,progress.bar = TRUE)
     exifInfos[[j]]<-system(paste(exiftool,flist[j]),intern = TRUE)  
     gpsposRow<-grep("GPS Position",exifInfos[[j]],useBytes = TRUE)
+    timeRow<-grep("Modify Date",exifInfos[[j]],useBytes = TRUE)
+    imageDate[j] <- strsplit(strsplit(exifInfos[[j]][timeRow]," :")[[1]][2]," ")[[1]][2]
+    imageTime[j] <- strsplit(strsplit(exifInfos[[j]][timeRow]," :")[[1]][2]," ")[[1]][3]
     imageLat[j] <- strsplit(strsplit(exifInfos[[j]][gpsposRow],":")[[1]][2]," ")[[1]][2]
     imageLon[j] <- strsplit(strsplit(exifInfos[[j]][gpsposRow],":")[[1]][2]," ")[[1]][3]
    # write.csv2(x = exifInfos[[j]],file=fn,append = TRUE)
@@ -69,5 +74,5 @@ selectImages <- function(path = NULL ,
   #           row.names = F)
   # 
   
-  return(exifInfos)
+  return(list(imageDate,imageTime,imageLat,imageLon))
 }
