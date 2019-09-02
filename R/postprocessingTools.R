@@ -67,7 +67,7 @@ selectImages <- function(path = NULL ,
     timeRow<-grep("Modify Date",exifInfos,useBytes = TRUE)
     warningRow<- grep("Warning",exifInfos,useBytes = TRUE)
     if (length(warningRow)==0){
-      imageDate <- strsplit(strsplit(exifInfos[timeRow]," :")[[1]][2]," ")[[1]][2]
+      imageDate <- paste0(strsplit(strsplit(exifInfos[timeRow]," :")[[1]][2]," ")[[1]][2])
       imageTime <- strsplit(strsplit(exifInfos[timeRow]," :")[[1]][2]," ")[[1]][3]
       imageLat <- strsplit(strsplit(exifInfos[gpsposRow],":")[[1]][2]," ")[[1]][2]
       imageLon <- strsplit(strsplit(exifInfos[gpsposRow],":")[[1]][2]," ")[[1]][3]
@@ -79,16 +79,17 @@ selectImages <- function(path = NULL ,
     }
   })
   exifInfo <- as.data.frame(do.call("rbind", exifInfo))
-  exifInfo$da<- paste0(exifInfo$date," ",exifInfo$time)
-  exifInfo$time <- strptime(exifInfo$da,format = "%Y:%m:%d %H:%M:%S")
+  exifInfo$DateTime <- strptime( paste0(exifInfo$date," ",exifInfo$time),format = "%Y:%m:%d %H:%M:%S")
   exifInfo$lat<- as.numeric(exifInfo$lat)
   exifInfo$lon<- as.numeric(exifInfo$lon)
+  exifInfo$date<-NULL
+  exifInfo$time<-NULL
   
-  exifInfo$dist[1]<-0
+  exifInfo$distdiff[1]<-0
   exifInfo$timediff[1]<-0
   for (i in seq(1:(nrow(exifInfo)-1)))   {
-    exifInfo$dist[i+1]<-geosphere::distm(c(exifInfo$lon[i],exifInfo$lat[i]), c(exifInfo$lon[i+1],exifInfo$lat[i+1]), fun = distGeo)
-    exifInfo$timediff[i+1]<-exifInfo$time[i+1]-exifInfo$time[i]
+    exifInfo$distdiff[i+1]<-geosphere::distm(c(exifInfo$lon[i],exifInfo$lat[i]), c(exifInfo$lon[i+1],exifInfo$lat[i+1]), fun = distGeo)
+    exifInfo$timediff[i+1]<-exifInfo$DateTime[i+1]-exifInfo$DateTime[i]
   }
   return(exifInfo)
 }
