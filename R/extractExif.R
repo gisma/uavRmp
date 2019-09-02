@@ -6,13 +6,13 @@
 #' @return data.frame of image positions and travel distance
 #' 
 #' @import exifr
-#' @import geosphere
+#' @importFrom  geosphere distm
 #' 
 #'
 #' @export
 
 
-selectImages <- function(path){
+extractExifr <- function(path){
   
   
   exifInfo <- exifr::read_exif(path, recursive = TRUE, tags = c("SourceFile", "Directory", "FileName", "DateTimeOriginal",
@@ -30,7 +30,6 @@ selectImages <- function(path){
     exifInfo$distdiff[i+1]<-geosphere::distm(c(exifInfo$GPSLongitude[i],exifInfo$GPSLatitude[i]),
                                              c(exifInfo$GPSLongitude[i+1],exifInfo$GPSLatitude[i+1]),
                                              fun = distGeo)
-    
     exifInfo$timediff[i+1]<-exifInfo$DateTime[i+1]-exifInfo$DateTime[i]
   }
   
