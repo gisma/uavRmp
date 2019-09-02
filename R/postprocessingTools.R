@@ -86,7 +86,7 @@ selectImages <- function(path = NULL ,
   
   exifInfo$dist[1]<-0
   exifInfo$timediff[1]<-0
-  for (i in seq(1:nrow(exifInfo))-1)   {
+  for (i in seq(1:(nrow(exifInfo)-1)))   {
     exifInfo$dist[i+1]<-geosphere::distm(c(exifInfo$lon[i],exifInfo$lat[i]), c(exifInfo$lon[i+1],exifInfo$lat[i+1]), fun = distGeo)
     exifInfo$timediff[i+1]<-exifInfo$time[i+1]-exifInfo$time[i]
   }
