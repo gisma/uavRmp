@@ -20,8 +20,7 @@ selectImages(path = NULL, position = TRUE, distance = 30,
 extract all and returns specific exif information from a list of images
 }
 \examples{
-wp <- system.file("extdata", "MAVLINK_waypoints.txt", package = "uavRmp")
 \dontrun{
-solo_upload( missionFile = wp)
+df <- selectImages(path = path)
 }
 }

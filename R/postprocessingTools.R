@@ -8,9 +8,9 @@
 #' @param image_format jpg or raw
 #'
 #' @examples
-#' wp <- system.file("extdata", "MAVLINK_waypoints.txt", package = "uavRmp")
+
 #' \dontrun{
-#' solo_upload( missionFile = wp)
+#' df <- selectImages(path = path)
 #' }
 #' @export 
 #'               
