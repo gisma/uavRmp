@@ -2,7 +2,7 @@
 % Please edit documentation in R/postprocessingTools.R
 \name{selectImages}
 \alias{selectImages}
-\title{extract exif information}
+\title{extract all and returns specific exif information from a list of images}
 \usage{
 selectImages(path = NULL, position = TRUE, distance = 30,
   image_format = "jpg")
@@ -17,7 +17,7 @@ selectImages(path = NULL, position = TRUE, distance = 30,
 \item{image_format}{jpg or raw}
 }
 \description{
-extract exif
+extract all and returns specific exif information from a list of images
 }
 \examples{
 wp <- system.file("extdata", "MAVLINK_waypoints.txt", package = "uavRmp")
