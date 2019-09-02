@@ -39,7 +39,7 @@ Imports:
     roxygen2,
     methods,
     brew
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,
