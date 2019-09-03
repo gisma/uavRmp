@@ -112,16 +112,19 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   launchAlt <- p$launchAltitude
   flightAltitude <- as.numeric(p$flightAltitude)
   
-  # calculate the agl flight altitude shift due to launching and max altitude
+  ### calculate the agl flight altitude shift due to launching and max altitude
+  ###
   p$flightAltitude <- as.numeric(p$flightAltitude) + (maxAlt - as.numeric(launchAlt))
   
   # make a rough estimation of the overall rth altitude
+  ## TO BE REVISED
   rthFlightAlt  <- p$flightAltitude
   p$rthAltitude <- rthFlightAlt
   
   log4r::levellog(logger, 'INFO', paste("rthFlightAlt : ", rthFlightAlt," m"))
   
-  # if terrain following filter the waypoints by using the altFilter Value
+  ### if terrain following filter the waypoints by using the altFilter Value
+  ###
   if (followSurface) {
     cat("apply follow terrain filter...\n")
     
@@ -181,8 +184,8 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   }
   
   # dump flightDEM as it was used for agl prediction
-  writeRaster(demll,file.path(runDir,"tmpFlightDEM.tif"),overwrite = TRUE)
-  gdalUtils::gdalwarp(srcfile = file.path(runDir,"tmpFlightDEM.tif"), dstfile = file.path(runDir,"tmpdem.tif"),  
+  writeRaster(demll,file.path(runDir,"AGLFlightDEM.tif"),overwrite = TRUE)
+  gdalUtils::gdalwarp(srcfile = file.path(runDir,"AGLFlightDEM.tif"), dstfile = file.path(runDir,"tmpdem.tif"),  
            overwrite = TRUE,  
            t_srs = paste0("+proj=utm +zone=",long2UTMzone(p$lon1)," +datum=WGS84"),
            tr = c(as.numeric(p$followSurfaceRes),as.numeric(p$followSurfaceRes))

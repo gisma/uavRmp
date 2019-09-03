@@ -206,14 +206,13 @@ makeAP <- function(projectDir = tempdir(),
   if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "/")  projectDir <- substr(projectDir,1,nchar(projectDir)-1)
   else if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "\\") projectDir <- substr(projectDir,1,nchar(projectDir)-1)
   projstru <- setProjStructure (projectDir,
-                    locationName, 
-                    flightAltitude,
-                    
-                    uavType,
-                    cameraType,
-                    surveyArea,
-                    demFn,
-                    copy)
+                                locationName, 
+                                flightAltitude,
+                                uavType,
+                                cameraType,
+                                surveyArea,
+                                demFn,
+                                copy)
   
   dateString <- projstru[3]
   taskName <- projstru[2]
@@ -266,28 +265,30 @@ makeAP <- function(projectDir = tempdir(),
   # 
   # # set common read write permissions
   # #Sys.chmod(list.dirs("../.."), "777")
-  # 
-  # create log file
-   logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName[[1]]), "\\.")[[1]][1],'.log'))
-   log4r::level(logger) <- "INFO"
-   log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
-   log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, dateString)))
-  # 
+  #
+  
+  ## create log file
+  logger <- log4r::create.logger(logfile = paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName[[1]]), "\\.")[[1]][1],'.log'))
+  log4r::level(logger) <- "INFO"
+  log4r::levellog(logger,'INFO',"--------------------- START RUN ---------------------------")
+  log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, dateString)))
+  
   # # generate misson control filename
   # csvFn <-paste(file.path(projectDir, locationName, dateString, "control"),paste0(taskName, ".csv"),sep = .Platform$file.sep)
-  # 
-  # get survey area
+  #
+  
+  ## get survey area
   surveyArea <- calcSurveyArea(surveyArea, projectDir, logger)
   
-  # need picfootprint for calculating the heatmap
+  ## need picfootprint for calculating the heatmap
   if (heatMap) {
     picFootprint = TRUE
   }
   
-  # uav depending parameter setting
+  ## uav platform depending parameter setting
   if (uavType == "djip3") {
     cameraType<-"dji4k"
-    factor <- 1.71 #FOV ratio
+    factor <- 1.71 # FOV ratio
     flightParams = c(flightPlanMode = flightPlanMode,
                      launchAltitude = launchAltitude,
                      flightAltitude = flightAltitude,
@@ -306,7 +307,7 @@ makeAP <- function(projectDir = tempdir(),
     # FOV*agl*(1-overlap)
     uavOptimumSpeed <- ceiling(factor * flightAltitude * fliAltRatio)
     
-  }
+  } 
   else if (uavType == "solo") {
     if (cameraType == "MAPIR2") {
       factor <- 1.55
@@ -343,13 +344,15 @@ makeAP <- function(projectDir = tempdir(),
   
   
   
-  # calc distance beteen two pictures using a camera dependent multiplicator
+  # calc distance between two pictures using a camera dependent multiplicator
   trackDistance <- calcTrackDistance(fliAltRatio, flightAltitude, factor)
   totalTrackdistance <- trackDistance
-  # to keep it simple we tacke picture as squares
+  
+  # pictures are assumed as squares
+  ## TO BE REVISED
   crossDistance <- trackDistance
   
-  # calculate survey area
+  ## calculate survey area
   # create an sp polygon object of the mission area
   taskArea <- taskarea(p, csvFn)
   # reproject it to UTM
@@ -409,7 +412,7 @@ makeAP <- function(projectDir = tempdir(),
   # set cumulative flightlength to zero
   flightLength <- 0
   
-  # initialize djiDF and
+  # initialize djiDF and mav
   djiDF <- data.frame()
   mavDF <- data.frame()
   
@@ -432,7 +435,8 @@ makeAP <- function(projectDir = tempdir(),
   if (picFootprint)  camera <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0)
   else  camera = "NULL"
   
-  # creates the export control parameter set of the first position
+  ## creates the export control parameter set of the first position
+  ##
   if (uavType == "djip3") {
     lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
   }
@@ -442,7 +446,7 @@ makeAP <- function(projectDir = tempdir(),
   # push pos to old pos
   pOld <- pos
   
-  # set counter and params for mode = "track" mode
+  ## set counter and params for mode = "track" mode
   if (mode == "track") {
     if (uavType == "djip3") {
       lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
@@ -453,7 +457,8 @@ makeAP <- function(projectDir = tempdir(),
     trackDistance <- len
     multiply <- 1
   }
-  # set counter and params for mode = "waypoints"
+  
+  ## set counter and params for mode = "waypoints"
   else if (mode == "waypoints") {
     if (uavType == "djip3") {
       lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
@@ -462,9 +467,11 @@ makeAP <- function(projectDir = tempdir(),
       lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2],lon = pos[1],head = uavViewDir,group = 99)
     }
   }
-  # set counter and params for mode = "terrainTrack"
+  
+  ## set counter and params for mode = "terrainTrack"
   else if (mode == "terrainTrack") group = 99
-  #
+  
+  ## now start calculating the waypoints according to the resolution
   cat("calculating waypoints...\n")
   pb <- pb <- utils::txtProgressBar(max = tracks, style = 3)
   # then do for the rest  forward and backward
@@ -548,7 +555,7 @@ makeAP <- function(projectDir = tempdir(),
                              totalTrackdistance,
                              picRate,
                              logger)
-
+  
   rawTime <- ft[1]
   maxFlightTime <- ft[2]
   maxSpeed <- ft[3]
@@ -593,9 +600,9 @@ makeAP <- function(projectDir = tempdir(),
   else if (uavType == "solo") {
     writeLines(unlist(lns), fileConn)
     mavDF <- utils::read.csv(file.path(runDir,"tmp.csv"), colClasses=c("V4"="character",
-                                                     "V5"="character",
-                                                     "V6"="character",
-                                                     "V7"="character"),sep = "\t", header = FALSE)
+                                                                       "V5"="character",
+                                                                       "V6"="character",
+                                                                       "V7"="character"),sep = "\t", header = FALSE)
     names(mavDF) <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","j","lat","lon")
     sp::coordinates(mavDF) <- ~ lon + lat
     sp::proj4string(mavDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
