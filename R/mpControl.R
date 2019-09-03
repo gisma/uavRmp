@@ -899,11 +899,11 @@ calculateFlightTime <- function(maxFlightTime, windCondition, maxSpeed, uavOptim
   } else if (windCondition == 1) {
     windConditionFactor <- 0.9
   } else if (windCondition == 2) {
-    windConditionFactor <- 0.7
+    windConditionFactor <- 0.8
   } else if (windCondition == 3) {
-    windConditionFactor <- 0.4
+    windConditionFactor <- 0.7
   } else if (windCondition == 4) {
-    windConditionFactor <- 0.1
+    windConditionFactor <- 0.6
   } else if (windCondition > 5) {
     windConditionFactor <- 0.0
     log4r::levellog(logger, 'INFO', "come on, it is a uav not the falcon...")  
