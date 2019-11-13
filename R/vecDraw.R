@@ -79,20 +79,20 @@ vecDraw <- function(mapCenter=NULL,
   tmpPath<- createTempDataTransfer()
   
   if (!is.null(overlay)){
-    if  (class(overlay == "character")){stop("overlay has to be a sp* object") }
+    if  (class(overlay[1]) == "character"){stop("overlay has to be a sp* object") }
     
-    if (class(overlay)  %in% c("SpatialPointsDataFrame","SpatialLinesDataFrame","SpatialLines","SpatialPoints")) {
+    if (class(overlay[1])  %in% c("SpatialPointsDataFrame","SpatialLinesDataFrame","SpatialLines","SpatialPoints")) {
       #e <- as(raster::extent(overlay), "SpatialPolygons")
       #e <- sp::SpatialPolygonsDataFrame(e, data.frame(ID="overlay"))
       proj4string(overlay) <- sp::proj4string(overlay)
       overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+init=epsg:4326"))
     } 
-    if  (class(overlay)=="SpatialPolygonsDataFrame") {
+    if  (class(overlay[1])=="SpatialPolygonsDataFrame") {
       overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+proj=longlat +datum=WGS84 +no_defs"))
       #overlay <- sp::SpatialPolygonsDataFrame(overlay, data.frame(ID="overlay"))
     } 
     
-    if  (class(overlay)!="sf") {
+    if  (class(overlay[1])!="sf") {
 
     
     rgdal::writeOGR(overlay, paste(tmpPath, "jsondata", sep=.Platform$file.sep), "OGRGeoJSON", driver="GeoJSON")
@@ -123,21 +123,22 @@ vecDraw <- function(mapCenter=NULL,
     mapCenter<-c(raster::extent(overlay)[3]+raster::extent(overlay)[4]-raster::extent(overlay)[3],raster::extent(overlay)[1]+raster::extent(overlay)[2]-raster::extent(overlay)[1])
     #features<-overlay
     
-    }  else if (class(overlay)=="sf") {
-      lns[1,] <-paste0('var jsondata = {')
-      l1<-paste0('var jsondata = {')
-      lns[3,]<-paste0('"crs": { "type": "name", "properties": { "name": "EPSG:4326" } },')
-      l2<-paste0(l1,' "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },')
-      l3<- paste0(l2," [",overlay$geometry[[1]][5],",",overlay$geometry[[1]][1],"]",
-                  "[",overlay$geometry[[1]][6],",",overlay$geometry[[1]][2],"]",
-                  "[",overlay$geometry[[1]][7],",",overlay$geometry[[1]][3],"]",
-                  "[",overlay$geometry[[1]][8],",",overlay$geometry[[1]][4],"]}")
-      #lns[length(nrow(lns)+1),]<- '};'
-      # utils::write.csv2(l3, paste(tmpPath, "jsondata", sep=.Platform$file.sep), sep="\n", row.names=FALSE, col.names=FALSE, quote = FALSE)
-      fileConn<-file(paste(tmpPath, "jsondata", sep=.Platform$file.sep))
-      write(l3, fileConn)
-      close(fileConn)
+    }  else if (class(overlay[1])=="sf") {
+    #  sf::st_write(overlay, dsn = paste(tmpPath, "jsondata", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata", sep=.Platform$file.sep), driver = "Esri", update = TRUE)
+      sf::st_write(overlay, dsn = paste(tmpPath, "jsondata.shp", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata.shp", sep=.Platform$file.sep), update = TRUE)
       
+      conn<-file(paste(tmpPath, "jsondata", sep=.Platform$file.sep))
+      lns <- readLines(paste(tmpPath, "jsondata", sep=.Platform$file.sep))
+      
+      text1 <-paste0('var jsondata = ')
+      text2 <- ';'
+      # open the file and read in all the lines 
+ 
+    # concatenate the old file with the new text
+    newjson <- c(text1,lns[1:length(lns)],text2) 
+    writeLines(newjson, conn, sep="\n")
+    close(conn)
+ 
       jsondata<-0
       }
   
@@ -205,7 +206,7 @@ vecDraw <- function(mapCenter=NULL,
             features=features,
             layer=maplayer,
             zoom = zoom,
-            html = getPopupStyle(),
+          #  html = getPopupStyle(),
             #refpoint=refpoint,
             line=line,
             rectangle=rectangle,
@@ -229,71 +230,9 @@ vecDraw <- function(mapCenter=NULL,
 }
 
 
-# create dependencies
-digiDependencies <- function(tmpPath) {
-  
-  data_dir <- paste0(tmpPath,sep=.Platform$file.sep)
-  
-  
-  list(
-    htmltools::htmlDependency(name = "crs",
-                              version = "1",
-                              src = c(file = tmpPath),
-                              script = list("crs.js")),
-    
-    htmltools::htmlDependency(name = "jsondata",
-                              version = "1",
-                              src = c(file = tmpPath),
-                              script = list("jsondata")),
-    
-    htmltools::htmlDependency(
-      name = "leaflet-draw",
-      version= "0.7.3",
-      src = c(file = tmpPath),
-      script = list("leaflet.draw.js"),
-      stylesheet=list("leaflet.draw.css")
-    )
-    
-  )
-}
 
 ###  creates temporary file structure for data transfer =================================================
-createTempDataTransfer <- function (){
-  tmpPath <- tempfile(pattern="007")
-  dir.create(tmpPath)
-  return(tmpPath)
-}
 
-vecDrawInternal <- function(tmpPath, x = NULL) {
-  deps<-digiDependencies(tmpPath) 
-  sizing = htmlwidgets::sizingPolicy(
-    browser.fill = TRUE,
-    viewer.fill = TRUE,
-    viewer.padding = 5
-  )
-  # create widget
-  htmlwidgets::createWidget(
-    name = 'vecDraw',
-    x,
-    dependencies = deps,
-    sizingPolicy = sizing,
-    package = 'uavRmp'
-  )
-}
 
-### Widget output function for use in Shiny =================================================
-#
-vecDrawOutput <- function(outputId, width = '100%', height = '800px') {
-  htmlwidgets::shinyWidgetOutput(outputId, 'vecDraw', width, height, package = 'uavRmp')
-}
 
-### Widget render function for use in Shiny =================================================
-#   
-rendervecDraw<- function(expr, env = parent.frame(), quoted = FALSE) {
-  projViewOutput<-NULL
-  if (!quoted) {
-    expr <- substitute(expr)
-  } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, projViewOutput, env, quoted = TRUE)
-}
 }
