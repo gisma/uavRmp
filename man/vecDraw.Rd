@@ -51,6 +51,7 @@ vecDraw is designed for straightforward digitizing of simple geometries without 
 Yu can either save the digitized object to a json (JS) or kml (KML) file.
 }
 \examples{
+\dontrun{
 # fully featured without overlay
 require(mapview)
 
@@ -64,4 +65,5 @@ vecDraw(overlay = m, preset = "uav")
   
 # preset for digitizing simple rectangles extents
 vecDraw(preset="ext",overlay = m)
+}
 }

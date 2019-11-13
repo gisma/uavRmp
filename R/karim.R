@@ -22,7 +22,7 @@ if (!isGeneric('read_gpx ')) {
 #' gpx <- read_gpx(gpxFN, layers=c("tracks"))
 #' 
 #' ## plot it
-#' mapview::mapview(gpx)
+#' raster::plot(gpx)
 #' 
 #' 
 #' @export read_gpx

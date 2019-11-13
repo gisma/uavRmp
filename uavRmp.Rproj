@@ -15,6 +15,6 @@ LaTeX: XeLaTeX
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
-PackageBuildArgs: --resave-data --compact-vignettes="gs+qpdf"
-PackageCheckArgs: --compact-vignettes="gs+qpdf" --as-cran
+PackageBuildArgs: --resave-data --compact-vignettes=both
+PackageCheckArgs: --compact-vignettes=both --as-cran
 PackageRoxygenize: rd,collate,namespace,vignette

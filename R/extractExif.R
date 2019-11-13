@@ -5,8 +5,7 @@
 #'
 #' @return data.frame of image positions and travel distance
 #' 
-#' @import exifr
-#' @importFrom  geosphere distm
+
 #' 
 #'
 #' @export

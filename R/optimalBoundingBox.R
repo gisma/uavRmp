@@ -50,7 +50,7 @@ optimalBB <- function(xy){
   stopifnot(is.matrix(xy), is.numeric(xy), nrow(xy) >= 2, ncol(xy) == 2)
 
   ## rotating calipers algorithm using the convex hull
-  H    <- chull(xy)      ## hull indices, vertices ordered clockwise
+  H    <- grDevices::chull(xy)      ## hull indices, vertices ordered clockwise
   n    <- length(H)      ## number of hull vertices
   hull <- xy[H, ]        ## hull vertices
 
