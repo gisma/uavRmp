@@ -4,12 +4,25 @@
 \alias{vecDraw}
 \title{digitizing vector features using a simple leaflet base map}
 \usage{
-vecDraw(mapCenter = NULL, zoom = 15, line = TRUE, rectangle = TRUE,
-  poly = TRUE, circle = TRUE, point = TRUE, remove = TRUE,
-  position = "topright", maplayer = c("CartoDB.Positron",
-  "OpenStreetMap", "Esri.WorldImagery", "Thunderforest.Landscape",
-  "OpenTopoMap"), overlay = NULL, preset = "all", locPreset = "muf",
-  cex = 10, lwd = 2, opacity = 0.7)
+vecDraw(
+  mapCenter = NULL,
+  zoom = 15,
+  line = TRUE,
+  rectangle = TRUE,
+  poly = TRUE,
+  circle = TRUE,
+  point = TRUE,
+  remove = TRUE,
+  position = "topright",
+  maplayer = c("CartoDB.Positron", "OpenStreetMap", "Esri.WorldImagery",
+    "Thunderforest.Landscape", "OpenTopoMap"),
+  overlay = NULL,
+  preset = "all",
+  locPreset = "muf",
+  cex = 10,
+  lwd = 2,
+  opacity = 0.7
+)
 }
 \arguments{
 \item{mapCenter}{center of the leaflet map}

@@ -1,7 +1,7 @@
 library(sf)
 library(tidyverse)
 library(uavRmp)
-test<-"~/temp3/test2.json"
+test<-"~/temp3/test2.plan"
 test2<-"~/temp3/flight.json"
 bu<-"/Users/User/Documents/proj/mof/natur40/cst_bu.kml"
 ei<-"/Users/User/Documents/proj/mof/natur40/cst_ei.kml"

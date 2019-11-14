@@ -3,7 +3,6 @@
 \docType{package}
 \name{uavRmp}
 \alias{uavRmp}
-\alias{uavRmp-package}
 \title{UAV Mission Planner}
 \description{
 The package provides some mission planning functionality for dealing with Unmanned Aerial Vehicles. The focus is set on an easy to use workflow for planning autonomous obstacle avoiding surveys of rtf-UAVs to retrieve aerial or spot related data. It provides either intermediate flight control files for the DJI phantom x UAVs or ready to upload control files for the pixhawk based flightcontroller as used in the 3DR Solo. Additionally it contains some useful tools for digitizing and data manipulation.

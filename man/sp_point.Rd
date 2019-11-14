@@ -4,9 +4,14 @@
 \alias{sp_point}
 \title{create an spatialpointobject from 1 points}
 \usage{
-sp_point(lon, lat, ID = "point",
-  proj4 = "+proj=longlat +datum=WGS84 +no_defs", export = FALSE,
-  runDir = runDir)
+sp_point(
+  lon,
+  lat,
+  ID = "point",
+  proj4 = "+proj=longlat +datum=WGS84 +no_defs",
+  export = FALSE,
+  runDir = runDir
+)
 }
 \arguments{
 \item{lon}{lon}

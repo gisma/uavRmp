@@ -43,7 +43,7 @@ Imports:
     exifr,
     grDevices,
     link2GI
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,

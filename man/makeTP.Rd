@@ -4,14 +4,28 @@
 \alias{makeTP}
 \title{Flight Track Planning tool}
 \usage{
-makeTP(projectDir = tempdir(), locationName = "treePos",
-  missionTrackList = NULL, launchPos = c(8.772055, 50.814689),
-  demFn = NULL, flightAltitude = 100, climbDist = 7.5,
-  aboveTreeAlt = 15, circleRadius = 1, takeOffAlt = 50,
-  presetFlightTask = "remote", maxSpeed = 25, followSurfaceRes = 5,
-  altFilter = 0.5, windCondition = 1, launchAltitude = -9999,
-  uavType = "solo", cameraType = "MAPIR2", copy = FALSE,
-  runDir = "")
+makeTP(
+  projectDir = tempdir(),
+  locationName = "treePos",
+  missionTrackList = NULL,
+  launchPos = c(8.772055, 50.814689),
+  demFn = NULL,
+  flightAltitude = 100,
+  climbDist = 7.5,
+  aboveTreeAlt = 15,
+  circleRadius = 1,
+  takeOffAlt = 50,
+  presetFlightTask = "remote",
+  maxSpeed = 25,
+  followSurfaceRes = 5,
+  altFilter = 0.5,
+  windCondition = 1,
+  launchAltitude = -9999,
+  uavType = "solo",
+  cameraType = "MAPIR2",
+  copy = FALSE,
+  runDir = ""
+)
 }
 \arguments{
 \item{projectDir}{\code{character} path to the main folder where several projects can be hosted, default is \code{tempdir()}}

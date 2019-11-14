@@ -4,16 +4,36 @@
 \alias{makeAP}
 \title{UAV Mission Planning tool for autonomous monitoring flight tasks with respect to DSM/DEM, orthophoto data retrieval.}
 \usage{
-makeAP(projectDir = tempdir(), locationName = "flightArea",
-  surveyArea = NULL, flightAltitude = 100, launchAltitude = NULL,
-  followSurface = FALSE, followSurfaceRes = NULL, demFn = NULL,
-  altFilter = 1, horizonFilter = 30, flightPlanMode = "track",
-  presetFlightTask = "remote", overlap = 0.8, maxSpeed = 20,
-  maxFlightTime = 10, picRate = 2, windCondition = 0,
-  uavType = "solo", cameraType = "MAPIR2", cmd = 16,
-  uavViewDir = 0, djiBasic = c(0, 0, 0, -90, 0), dA = FALSE,
-  heatMap = FALSE, picFootprint = FALSE, rcRange = NULL,
-  copy = FALSE, runDir = tempdir())
+makeAP(
+  projectDir = tempdir(),
+  locationName = "flightArea",
+  surveyArea = NULL,
+  flightAltitude = 100,
+  launchAltitude = NULL,
+  followSurface = FALSE,
+  followSurfaceRes = NULL,
+  demFn = NULL,
+  altFilter = 1,
+  horizonFilter = 30,
+  flightPlanMode = "track",
+  presetFlightTask = "remote",
+  overlap = 0.8,
+  maxSpeed = 20,
+  maxFlightTime = 10,
+  picRate = 2,
+  windCondition = 0,
+  uavType = "solo",
+  cameraType = "MAPIR2",
+  cmd = 16,
+  uavViewDir = 0,
+  djiBasic = c(0, 0, 0, -90, 0),
+  dA = FALSE,
+  heatMap = FALSE,
+  picFootprint = FALSE,
+  rcRange = NULL,
+  copy = FALSE,
+  runDir = tempdir()
+)
 }
 \arguments{
 \item{projectDir}{\code{character} path to the main folder where several locations can be hosted, default is \code{tempdir()}}

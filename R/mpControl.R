@@ -1717,3 +1717,26 @@ setProjStructure <- function(projectDir,
   makeGlobalVar(name = "runDir",value = file.path(projRootDir,"fp-data/run/"))
   return(c(csvFn, taskName, workingDir,projRootDir))
 }
+
+convertQGCPlanning <- function(fnQGC=NULL, missionLength=0, telemDist=0,photointerval=0){
+  t<-jsonlite::fromJSON(fnQGC)
+  tmp<- t$mission$items$TransectStyleComplexItem$Items[2][[1]]
+  #length(tmp$params[[60]])
+  #tmp$params[[1]][5:6]
+  coord<-tmp[tmp["command"]==16, ]
+  #coord$params
+  df_coordinates<-t(as.data.frame(rlist::list.cbind(coord[,"params",])))[,5:6]
+  # t$mission$items$TransectStyleComplexItem$VisualTransectPoints
+  
+  tracks<- nrow(coord)/4
+  footprintFrontal<-t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintFrontal
+  footprintSide<-t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintSide
+  sideoverlap<-t$mission$items$TransectStyleComplexItem$CameraCalc$SideOverlap
+  AGL<-t$mission$items$TransectStyleComplexItem$CameraCalc$DistanceToSurface
+  speed<-t$mission$cruiseSpeed
+  launchPoint<-t$mission$plannedHomePosition
+  flightAngle<-t$mission$items$angle
+  groundResolution<-t$mission$items$TransectStyleComplexItem$CameraCalc$ImageDensity
+  return(list(df_coordinates,tracks,footprintFrontal,AGL,speed,launchPoint,flightAngle,groundResolution))
+}
+

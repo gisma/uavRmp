@@ -4,8 +4,11 @@
 \alias{solo_upload}
 \title{Upload MAV compliant mission File to a 3DR Solo}
 \usage{
-solo_upload(missionFile = NULL, connection = "udp:10.1.1.166:14550",
-  prearm = "-1")
+solo_upload(
+  missionFile = NULL,
+  connection = "udp:10.1.1.166:14550",
+  prearm = "-1"
+)
 }
 \arguments{
 \item{missionFile}{mission file to upload}
