@@ -46,15 +46,9 @@ The easiest way to obtain a fairly good runtime enviroment is to setup Linux as 
 
 A full list of necessary libraries and binaries beyond ```R``` will soon be provided.
 
-
-To install from ```github```  you need to have installed the ```devtools``` package.
+## Installation
+To install the most actual version do it from ```github```  you need to have installed the ```devtools``` package.
 
 ```S
 devtools::install_github("gisma/uavRmp", ref = "master")
-```
-
-If you want to install the develop branch use:
-
-```S
-devtools::install_github("gisma/uavRmp", ref = "develop", dependencies = TRUE)
 ```
