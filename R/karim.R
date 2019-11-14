@@ -434,3 +434,55 @@ digiDependencies <- function(tmpPath) {
   )
 }
 
+# create dependencies
+digiDependencies <- function(tmpPath) {
+  
+  data_dir <- paste0(tmpPath,sep=.Platform$file.sep)
+  
+  
+  list(
+    htmltools::htmlDependency(name = "crs",
+                              version = "1",
+                              src = c(file = tmpPath),
+                              script = list("crs.js")),
+    
+    htmltools::htmlDependency(name = "jsondata",
+                              version = "1",
+                              src = c(file = tmpPath),
+                              script = list("jsondata")),
+    
+    htmltools::htmlDependency(
+      name = "leaflet-draw",
+      version= "0.7.3",
+      src = c(file = tmpPath),
+      script = list("leaflet.draw.js"),
+      stylesheet=list("leaflet.draw.css")
+    )
+    
+  )
+}
+
+###  creates temporary file structure for data transfer =================================================
+
+createTempDataTransfer <- function (){
+  tmpPath <- tempfile(pattern="007")
+  dir.create(tmpPath)
+  return(tmpPath)
+}
+
+vecDrawInternal <- function(tmpPath, x = NULL) {
+  deps<-digiDependencies(tmpPath) 
+  sizing = htmlwidgets::sizingPolicy(
+    browser.fill = TRUE,
+    viewer.fill = TRUE,
+    viewer.padding = 5
+  )
+  # create widget
+  htmlwidgets::createWidget(
+    name = 'vecDraw',
+    x,
+    dependencies = deps,
+    sizingPolicy = sizing,
+    package = 'uavRmp'
+  )
+}

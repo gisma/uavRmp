@@ -16,7 +16,7 @@ It is important to keep in mind that all auxilliary external binaries  like GDAL
 correctly on your system.
 }
 \author{
-Chris Reudenbach Lars Opgenoorth Sebastian Richter Florian Detsch Hanna Meyer
+Chris Reudenbach Lars Opgenoorth Sebastian Richter Florian Detsch Hanna Meyer Marvin Ludwig
 \cr
 \emph{Maintainer:} Chris Reudenbach \email{reudenbach@uni-marburg.de}
 }

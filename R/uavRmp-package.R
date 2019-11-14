@@ -7,7 +7,7 @@
 #' @name uavRmp
 #' @docType package
 #' @title UAV Mission Planner
-#' @author Chris Reudenbach Lars Opgenoorth Sebastian Richter Florian Detsch Hanna Meyer
+#' @author Chris Reudenbach Lars Opgenoorth Sebastian Richter Florian Detsch Hanna Meyer Marvin Ludwig
 #' \cr
 #' \emph{Maintainer:} Chris Reudenbach \email{reudenbach@@uni-marburg.de}
 #' 
@@ -31,7 +31,7 @@
 #' @import devtools
 #' @import brew
 #' @importFrom gdalUtils gdalinfo
-#' @importFrom gdalUtils gdalwarp
+#' @importFrom link2GI linkGDAL
 #' @importFrom geosphere bearing
 #' @importFrom geosphere distGeo
 #' @importFrom geosphere destPoint

@@ -41,7 +41,8 @@ Imports:
     methods,
     brew,
     exifr,
-    grDevices
+    grDevices,
+    link2GI
 RoxygenNote: 6.1.1
 SystemRequirements: GNU make
 Suggests: knitr,
