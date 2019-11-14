@@ -12,7 +12,7 @@
 The `uavR` tools consist of two packages:
 
   * mission planning ```uavRmp``` ([CRAN](https://CRAN.R-project.org/package=uavRmp))
-  * remote sensing toolbox ```uavRst```   ([CRAN](https://CRAN.R-project.org/package=uavRst))
+  * remote sensing toolbox ```uavRst```   ~~([CRAN](https://CRAN.R-project.org/package=uavRst))~~ 
 
 ## Unmanned Aerial Vehicle R based Mission Planning - uavRmp 
 The [uavRmp](https://github.com/gisma/uavRmp) package is designed 
@@ -46,15 +46,9 @@ The easiest way to obtain a fairly good runtime enviroment is to setup Linux as 
 
 A full list of necessary libraries and binaries beyond ```R``` will soon be provided.
 
-
-To install from ```github```  you need to have installed the ```devtools``` package.
+## Installation
+To install the most actual version do it from ```github```  you need to have installed the ```devtools``` package.
 
 ```S
 devtools::install_github("gisma/uavRmp", ref = "master")
-```
-
-If you want to install the develop branch use:
-
-```S
-devtools::install_github("gisma/uavRmp", ref = "develop", dependencies = TRUE)
 ```
