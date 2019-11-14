@@ -42,7 +42,9 @@ Imports:
     brew,
     exifr,
     grDevices,
-    link2GI
+    link2GI,
+    jsonlite,
+    rlist
 RoxygenNote: 7.0.0
 SystemRequirements: GNU make
 Suggests: knitr,

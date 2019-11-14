@@ -1,3 +1,13 @@
+## uavRmp 0.5.5
+
+new features:
+  * add sf dupport for vecdraw overlay
+  * add preliminary import functionality for QGroundcontrol flight planning files
+
+bugfixes:
+  * fix some gdalUtils issues
+ 
+  
 ## uavRmp 0.5.4
 
 bugfixes:

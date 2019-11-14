@@ -30,6 +30,7 @@
 #' @import methods
 #' @import devtools
 #' @import brew
+#' @importFrom rlist list.cbind
 #' @importFrom gdalUtils gdalinfo
 #' @importFrom link2GI linkGDAL
 #' @importFrom geosphere bearing
