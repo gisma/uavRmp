@@ -9,7 +9,7 @@
 # (7)  generates a sp object of the outer boundary of reliable DEM values
 #
 
-analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName,runDir){
+analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName,runDir,taskarea){
   g<- link2GI::linkGDAL()
   cat("load DEM/DSM data...\n")
   ## load DEM data either from a local GDAL File or from a raster object or if nothing is provided tray to download SRTM data
@@ -23,78 +23,71 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       # get information of the raw file
       # project the  extent to the current input ref system 
       proj <- projection(rundem)
-      xmn  <- min(p$lon1,p$lon3) - 0.0083
-      xmx  <- max(p$lon1,p$lon3) + 0.0083
-      ymn  <- min(p$lat1,p$lat3) - 0.0083
-      ymx  <- max(p$lat1,p$lat3) + 0.0083
+      taskAreaBuffer <- gBuffer(spTransform(taskarea,CRS(proj)), width=25.0)
+      taskAreaBuffer <-spTransform(taskarea,CRS("+proj=longlat +datum=WGS84 +no_defs"))
+      xmn <-  min(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
+      xmx <-  max(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
+      ymn <-  min(taskAreaBuffer@bbox[2],taskAreaBuffer@bbox[4],p$launchLat)
+      ymx <-  max(taskAreaBuffer@bbox[2],taskarea@bbox[4],p$launchLat)
       cut  <- data.frame(y = c(ymn,ymx), x = c(xmn,xmx))
       coordinates(cut) <- ~x+y
       sp::proj4string(cut) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
       cut <- spTransform(cut,CRS(proj))
-      rundem <- demFn
-      rundem <- raster::crop(rundem,extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))
+      rundem <- raster::crop(raster::raster(demFn,band = 1),
+                             extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))     
+      
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
-      # demll <- gdalUtils::gdalwarp(srcfile =file.path(runDir, "tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
-      #                   overwrite = TRUE,  
-      #                   t_srs = "+proj=longlat +datum=WGS84 +no_defs",
-      #                   output_Raster = TRUE )  
       system(paste0(g$path,'gdalwarp -overwrite -q ',
       '-t_srs "+proj=longlat +datum=WGS84 +no_defs" ',
       file.path(runDir,"tmpdem.tif"),' ',
       file.path(runDir,"demdll.tif")
       ))
       
-      demll<-raster::raster(file.path(runDir,"tmpdem.tif"))
+      demll<-raster::raster(file.path(runDir,"demdll.tif"))
+      dem<-raster::raster(file.path(runDir,"tmpdem.tif"))
       
-      file.copy(demFn, paste0(file.path(runDir,"/"),"/tmpdem.tif")) 
-      dem  <- demll
       # if GEOTIFF or other gdal type of data
     } else{
       # get information of the raw file
       # project the  extent to the current input ref system 
-      tmpproj <- grep(gdalUtils::gdalinfo(path.expand(demFn),proj4 = TRUE),pattern = "+proj=",value = TRUE)
+      tmpproj<-grep(system(paste0(g$path,'gdalinfo -proj4 ',path.expand(demFn)),intern = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
-      xmn  <- min(p$lon1,p$lon3) - 0.007
-      xmx  <- max(p$lon1,p$lon3) + 0.007
-      ymn  <- min(p$lat1,p$lat3) - 0.007
-      ymx  <- max(p$lat1,p$lat3) + 0.007
+      taskAreaBuffer <- gBuffer(spTransform(taskarea,CRS(proj)), width=25.0)
+      taskAreaBuffer <-spTransform(taskarea,CRS("+proj=longlat +datum=WGS84 +no_defs"))
+      xmn <-  min(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
+      xmx <-  max(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
+      ymn <-  min(taskAreaBuffer@bbox[2],taskAreaBuffer@bbox[4],p$launchLat)
+      ymx <-  max(taskAreaBuffer@bbox[2],taskarea@bbox[4],p$launchLat)
       cut  <- data.frame(y = c(ymn,ymx), x = c(xmn,xmx))
       coordinates(cut) <- ~x+y
       sp::proj4string(cut) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
       cut <- spTransform(cut,CRS(proj))
-      rundem <- raster::raster(demFn,band = 1)
-      rundem <- raster::crop(rundem,extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))
+      rundem <- raster::crop(raster::raster(path.expand(demFn),band = 1),
+                             extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))     
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
-      # demll <- gdalUtils::gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
-      #                   overwrite = TRUE,  
-      #                   t_srs = "+proj=longlat +datum=WGS84 +no_defs",
-      #                   output_Raster = TRUE, of = "GTiff" )  
-      system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ', file.path(runDir,"demll.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
-      demll<-raster::raster(file.path(runDir,"tmpdem.tif"))
-      file.copy(demFn, paste0(file.path(runDir,"/"),"/tmpdem.tif")) 
+      system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ',
+                                                      file.path(runDir,"demll.tif"), ' ',
+                                                      '-t_srs "+proj=longlat +datum=WGS84 +no_defs"'))
+      dem<-raster::raster(file.path(runDir,"tmpdem.tif"))
+      demll<-raster::raster(file.path(runDir,"demll.tif"))
+      dem <- setMinMax(dem)
       demll <- setMinMax(demll)
-      dem   <- demll
+      
     }
   }  # end of loading DEM data
   
-  # check if at least a projection string exist 
-  crsString <- comp_ll_proj4((as.character(dem@crs)))
-  
-  if (!crsString) {
-    # stop("the DEM/DSM is not georeferencend - please provide a correct georeferenced raster object or GeoTiff file\n")
-    # if so deproject DEM/DSM because all of the vector data is latlong WGS84
-    # demll <- gdalUtils::gdalwarp(srcfile = file.path(runDir,"tmpdem.tif"), dstfile = file.path(runDir,"demll.tif"), 
-    #                   overwrite = TRUE,  
-    #                   t_srs = "+proj=longlat +datum=WGS84 +no_defs",
-    #                   output_Raster = TRUE )  
-    system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ', file.path(runDir,"demll.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
-    demll<-raster::raster(file.path(runDir,"tmpdem.tif"))
-    
+  # check if dem has an geographic reference system as EPSG4326 outherwise reproject
+  if (!comp_ll_proj4((as.character(demll@crs)))) {
+    system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"demll.tif"),' ', file.path(runDir,"demll.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
+    demll<-raster::raster(file.path(runDir,"demll.tif"))
     demll <- setMinMax(demll)
   } 
   
   # preprocessing
-
+  # create sp point object from launchpos 
+  pos <- as.data.frame(cbind(p$launchLat,p$launchLon))
+  sp::coordinates(pos) <- ~V2+V1
+  sp::proj4string(pos) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
   
   # extract all waypoint altitudes
   altitude <- raster::extract(demll,df,layer = 1, nl = 1)
@@ -103,11 +96,6 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   maxAlt <- max(altitude,na.rm = TRUE)
   
   log4r::levellog(logger, 'INFO', paste("maximum DEM Altitude : ", maxAlt," m"))
-  
-  # create sp point object from launchpos 
-  pos <- as.data.frame(cbind(p$launchLat,p$launchLon))
-  sp::coordinates(pos) <- ~V2+V1
-  sp::proj4string(pos) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
   
   # extract launch altitude from DEM
   if (is.na(p$launchAltitude)) {

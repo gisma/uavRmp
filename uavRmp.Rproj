@@ -16,5 +16,5 @@ BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
 PackageBuildArgs: --resave-data --compact-vignettes=both
-PackageCheckArgs: --compact-vignettes=both --as-cran
+PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace,vignette

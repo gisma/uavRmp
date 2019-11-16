@@ -575,7 +575,7 @@ makeAP <- function(projectDir = tempdir(),
     sp::coordinates(djiDF) <- ~ lon + lat
     sp::proj4string(djiDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
-    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir)
+    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea)
     # assign adapted dem to demFn
     demFn <- result[[3]]
     dfcor <- result[[2]]
@@ -609,7 +609,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if (is.null(launchAltitude)) {
       # analyze DEM related stuff
-      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir)
+      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea)
       # assign adapted dem to demFn
       lauchPos <- result[[1]]
       dfcor <- result[[2]]

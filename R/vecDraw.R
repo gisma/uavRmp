@@ -181,7 +181,7 @@ vecDraw <- function(mapCenter=NULL,
     zoom<-zoom
     line<-line
     maplayer=c("OpenStreetMap","CartoDB.Positron","Esri.WorldImagery","Thunderforest.Landscape","OpenTopoMap")
-    overlay=overlay
+    overlay=NULL
     rectangle<-rectangle
     poly<-poly
     circle<-circle

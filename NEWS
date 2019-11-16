@@ -6,6 +6,7 @@ new features:
 
 bugfixes:
   * fix some gdalUtils issues
+  * fix wrong cropping if launchposition is outside of task
  
   
 ## uavRmp 0.5.4
