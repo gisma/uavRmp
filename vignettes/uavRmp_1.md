@@ -1,7 +1,7 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '`r Sys.Date()`'
+date: '2019-12-01'
 editor_options:
   chunk_output_type: console
 output:
@@ -20,9 +20,7 @@ vignette: >
 ---
 
 
-```{r echo=FALSE}
-knitr::opts_chunk$set(collapse = TRUE)
-```
+
 # Introduction
 Unmanned Aerial Vehicle R based Mission Planning
 
@@ -228,12 +226,10 @@ Addressed issues:
 ## The short way 
 
 Digitize the 3 corner points of an area you want to map and in addition as fourth point the position of the planned UAV launch.  Save it to  //firstSurvey.kml//. 
-```{r "setup", include=FALSE}
-require("knitr")
-knitr::opts_knit$set(root.dir = tempdir())
-```
 
-```{R, eval=FALSE}
+
+
+```r
    require(uavRmp)
    # get example DEM data
    fn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
@@ -263,7 +259,8 @@ We want to plan a flight in a more or less flat terrain in the upper Lahn-valley
 
     You may take any other tool to digitize the survey area as well as you may type the coordinates on Stdin.
 
-```{r, eval=FALSE}
+
+```r
  # load uavRmp
  require(uavRmp)
 
@@ -304,7 +301,8 @@ The project structure will look like the figure.
 
 ''flightAltitude'' is set to the (legal) maximum of 100m, ''flightPlanMode'' is set to ''track'' and finally a DEM of this area with 20m resulution is used to retrieve the altitude of the launching point. If we use the example data we first have to convert them to a valid GeoTiff file.
 
-```{r, eval=FALSE}
+
+```r
 
   # get example DEM data
  fn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
@@ -325,7 +323,8 @@ All three of them are important even if a quick inspection of the generated obje
 
 Using the ```mapview``` package  you can easily visualize the results. The below example shows the footprints of the images (blue), surveyArea (red), turnpoints of track (blue circles) and the launch position (red). 
 
-```{r, eval=FALSE}
+
+```r
  require(mapview)
  mapview(fp[[5]],color="red", alpha.regions =0.1,lwd=0.5)+
  mapview(fp[[1]],lwd=1,cex=4)+
