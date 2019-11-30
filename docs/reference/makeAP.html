@@ -347,7 +347,7 @@ https://gisma.github.io/</p>
   at <a href='https://gisma.github.io/uavRmp/uavRmp_1.html'>Github uavRmp manual</a>).</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># Depending on the arguments, the following spatial data sets can returned</span>
 
 <span class='co'># lp      the planned launching position of the UAV.</span>
@@ -360,7 +360,8 @@ https://gisma.github.io/</p>
 <span class='co'># hm      a heatmap abundance of pictures/pixel (VERY SLOW, only if heatMap = TRUE)</span>
 
 <span class='co'>## for visualisation and vecDraw load mapview</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>mapview</span>)</div><div class='output co'>#&gt; <span class='message'>Lade nötiges Paket: mapview</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>mapview</span>)
+
 <span class='co'>## (1) get example DEM data</span>
 <span class='no'>demFn</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"mrbiko.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"uavRmp"</span>)
 <span class='no'>tutorial_flightArea</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"flightarea.kml"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"uavRmp"</span>)
@@ -369,67 +370,8 @@ https://gisma.github.io/</p>
 <span class='co'>##     assuming a flat topography,</span>
 
 <span class='no'>fp</span> <span class='kw'>&lt;-</span> <span class='fu'>makeAP</span>(<span class='kw'>surveyArea</span> <span class='kw'>=</span> <span class='no'>tutorial_flightArea</span>,
-              <span class='kw'>demFn</span> <span class='kw'>=</span> <span class='no'>demFn</span>)</div><div class='output co'>#&gt; setup environ and params...
-#&gt; Reading layer `Layer #0' from data source `/tmp/RtmpJlS8jY/temp_libpath67411835892d/uavRmp/extdata/flightarea.kml' using driver `KML'
-#&gt; Simple feature collection with 1 feature and 2 fields
-#&gt; geometry type:  LINESTRING
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 8.672462 ymin: 50.85445 xmax: 8.687739 ymax: 50.85892
-#&gt; epsg (SRID):    4326
-#&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
-#&gt; calculating waypoints...
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======                                                                |   9%  |                                                                              |=============                                                         |  18%  |                                                                              |===================                                                   |  27%  |                                                                              |=========================                                             |  36%  |                                                                              |================================                                      |  45%  |                                                                              |======================================                                |  55%  |                                                                              |=============================================                         |  64%  |                                                                              |===================================================                   |  73%  |                                                                              |=========================================================             |  82%  |                                                                              |================================================================      |  91%  |                                                                              |======================================================================| 100%
-#&gt; preprocessing DEM related stuff...
-#&gt; load DEM/DSM data...</div><div class='output co'>#&gt; <span class='warning'>Warning: Spatial object is not projected; GEOS expects planar coordinates</span></div><div class='output co'>#&gt; create 4 control files...
-#&gt; create 1 of 4 control files...
-#&gt; create 2 of 4 control files...
-#&gt; create 3 of 4 control files...
-#&gt; create 4 of 4 control files...
-#&gt; [1] "INFO  [2019-12-01 00:04:23] --------------------- START RUN ---------------------------"
-#&gt; [1] "INFO  [2019-12-01 00:04:23] Working folder:  /tmp/RtmpMmS3m3/flightArea/flightarea"
-#&gt; [1] "INFO  [2019-12-01 00:04:23] original picture rate:  2   (sec/pic) "
-#&gt; [1] "INFO  [2019-12-01 00:04:23] initial speed estimation  :  20   (km/h)      "
-#&gt; [1] "INFO  [2019-12-01 00:04:29] maximum DEM Altitude :  261.405059814453  m"
-#&gt; [1] "INFO  [2019-12-01 00:04:29] launching Altitude :  261.405059814453  m"
-#&gt; [1] "INFO  [2019-12-01 00:04:29] rthFlightAlt :  100  m"
-#&gt; [1] "INFO  [2019-12-01 00:04:36] created :  20191201_0004__MAPIR2__flightarea__AREA__100m-1.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:37] created :  20191201_0004__MAPIR2__flightarea__AREA__100m-2.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:38] created :  20191201_0004__MAPIR2__flightarea__AREA__100m-3.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] created :  20191201_0004__MAPIR2__flightarea__AREA__100m-4.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] taskName     :  20191201_0004__MAPIR2__flightarea__AREA__100m"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] DEM filename    :  mrbiko"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] surveyArea      :  374608.425431548"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] launchAltitude  :  "
-#&gt; [1] "INFO  [2019-12-01 00:04:39] followSurface   :  FALSE"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] altfilter       :  1"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] horizonFilter   :  30"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] flightPlanMode  :  track"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] flightAltitude  :  100"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] presetFlightTask:  remote"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] curvesize       :  NA"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] overlap         :  0.8"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] uavViewDir      :  61.4887541417461"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] picFootprint    :  FALSE"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] followSurfaceRes:  31"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] surveyAreaCoords:  c(50.8544548635748, 8.67246150970459, 50.8589248515953, 8.68546485900879, 50.8560261809243, 8.68773937225342, 50.8562835468237, 8.67971420288086)"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] windCondition   :  0"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] calculated mission time    :  35.4   (min)      "
-#&gt; [1] "INFO  [2019-12-01 00:04:39] estimated battery lifetime  :  10   (min)      "
-#&gt; [1] "INFO  [2019-12-01 00:04:39] Area covered               :  37.4608425431548   (ha)"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] -"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] ----- use the following task params! --------------"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] RTH flight altitude:  100  (m)"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] max flight speed   :  20   (km/h)      "
-#&gt; [1] "INFO  [2019-12-01 00:04:39] picture lapse rate :  5.6   (sec/pic) "
-#&gt; [1] "INFO  [2019-12-01 00:04:39] trigger distance portrait     :  35.1418417543173"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] trigger distance landscape     :  38.2979519547778"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] --------------------- END RUN -----------------------------"
-#&gt; 
-#&gt;   
-#&gt;  NOTE 1: flighttime &gt; battery lifetime! control files have been splitted. 
-#&gt;  Fly save and have Fun...  
-#&gt;  NOTE 2: You will find all parameters in the logfile: /tmp/RtmpMmS3m3/flightArea/flightarea/fp-data/log/20191201_0004__MAPIR2__flightarea__AREA__100m.log  
-#&gt;  </div><div class='input'>
+              <span class='kw'>demFn</span> <span class='kw'>=</span> <span class='no'>demFn</span>)
+
 <span class='co'>## (3) typical real case scenario</span>
 <span class='co'>##     Flight altitudes BELOW 50 m is ambitious and risky</span>
 <span class='co'>##     You have to use a high quality high resulution DSM</span>
@@ -442,98 +384,21 @@ https://gisma.github.io/</p>
            <span class='kw'>windCondition</span> <span class='kw'>=</span> <span class='fl'>1</span>,
            <span class='kw'>uavType</span> <span class='kw'>=</span> <span class='st'>"solo"</span>,
            <span class='kw'>followSurfaceRes</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-           <span class='kw'>altFilter</span> <span class='kw'>=</span> <span class='fl'>.75</span>)</div><div class='output co'>#&gt; setup environ and params...
-#&gt; Reading layer `Layer #0' from data source `/tmp/RtmpJlS8jY/temp_libpath67411835892d/uavRmp/extdata/flightarea.kml' using driver `KML'
-#&gt; Simple feature collection with 1 feature and 2 fields
-#&gt; geometry type:  LINESTRING
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 8.672462 ymin: 50.85445 xmax: 8.687739 ymax: 50.85892
-#&gt; epsg (SRID):    4326
-#&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
-#&gt; calculating waypoints...
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   4%  |                                                                              |======                                                                |   8%  |                                                                              |========                                                              |  12%  |                                                                              |===========                                                           |  16%  |                                                                              |==============                                                        |  20%  |                                                                              |=================                                                     |  24%  |                                                                              |====================                                                  |  28%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |============================                                          |  40%  |                                                                              |===============================                                       |  44%  |                                                                              |==================================                                    |  48%  |                                                                              |====================================                                  |  52%  |                                                                              |=======================================                               |  56%  |                                                                              |==========================================                            |  60%  |                                                                              |=============================================                         |  64%  |                                                                              |================================================                      |  68%  |                                                                              |==================================================                    |  72%  |                                                                              |=====================================================                 |  76%  |                                                                              |========================================================              |  80%  |                                                                              |===========================================================           |  84%  |                                                                              |==============================================================        |  88%  |                                                                              |================================================================      |  92%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%
-#&gt; 
-#&gt;  optimum speed forced to  14  km/h 
-#&gt; preprocessing DEM related stuff...
-#&gt; load DEM/DSM data...</div><div class='output co'>#&gt; <span class='warning'>Warning: Spatial object is not projected; GEOS expects planar coordinates</span></div><div class='output co'>#&gt; apply follow terrain filter...
-#&gt; create 13 control files...
-#&gt; create 1 of 13 control files...
-#&gt; create 2 of 13 control files...
-#&gt; create 3 of 13 control files...
-#&gt; create 4 of 13 control files...
-#&gt; create 5 of 13 control files...
-#&gt; create 6 of 13 control files...
-#&gt; create 7 of 13 control files...
-#&gt; create 8 of 13 control files...
-#&gt; create 9 of 13 control files...
-#&gt; create 10 of 13 control files...
-#&gt; create 11 of 13 control files...
-#&gt; create 12 of 13 control files...
-#&gt; create 13 of 13 control files...
-#&gt; [1] "INFO  [2019-12-01 00:04:39] --------------------- START RUN ---------------------------"
-#&gt; [1] "INFO  [2019-12-01 00:04:39] Working folder:  /tmp/RtmpMmS3m3/flightArea/flightarea"
-#&gt; [1] "INFO  [2019-12-01 00:04:40] original picture rate:  2   (sec/pic) "
-#&gt; [1] "INFO  [2019-12-01 00:04:40] optimum speed forced to  14  km/h "
-#&gt; [1] ""
-#&gt; [1] "INFO  [2019-12-01 00:04:40] initial speed estimation  :  14   (km/h)      "
-#&gt; [1] "INFO  [2019-12-01 00:04:43] maximum DEM Altitude :  264.414306640625  m"
-#&gt; [1] "INFO  [2019-12-01 00:04:43] launching Altitude :  261.405059814453  m"
-#&gt; [1] "INFO  [2019-12-01 00:04:43] rthFlightAlt :  48.0092468261719  m"
-#&gt; [1] "INFO  [2019-12-01 00:04:49] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-1.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:50] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-2.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:51] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-3.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:52] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-4.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:53] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-5.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:54] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-6.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:54] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-7.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:55] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-8.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:56] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-9.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:57] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-10.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:58] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-11.csv"
-#&gt; [1] "INFO  [2019-12-01 00:04:59] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-12.csv"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] created :  20191201_0004__MAPIR2__flightarea__AREA__45m-13.csv"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] taskName     :  20191201_0004__MAPIR2__flightarea__AREA__45m"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] DEM filename    :  mrbiko"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] surveyArea      :  374608.425431548"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] launchAltitude  :  "
-#&gt; [1] "INFO  [2019-12-01 00:05:00] followSurface   :  TRUE"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] altfilter       :  0.75"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] horizonFilter   :  30"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] flightPlanMode  :  track"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] flightAltitude  :  45"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] presetFlightTask:  remote"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] curvesize       :  NA"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] overlap         :  0.8"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] uavViewDir      :  61.4887541417461"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] picFootprint    :  FALSE"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] followSurfaceRes:  5"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] surveyAreaCoords:  c(50.8544548635748, 8.67246150970459, 50.8589248515953, 8.68546485900879, 50.8560261809243, 8.68773937225342, 50.8562835468237, 8.67971420288086)"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] windCondition   :  1"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] calculated mission time    :  112.9   (min)      "
-#&gt; [1] "INFO  [2019-12-01 00:05:00] estimated battery lifetime  :  9   (min)      "
-#&gt; [1] "INFO  [2019-12-01 00:05:00] Area covered               :  37.4608425431548   (ha)"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] -"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] ----- use the following task params! --------------"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] RTH flight altitude:  48  (m)"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] max flight speed   :  14   (km/h)      "
-#&gt; [1] "INFO  [2019-12-01 00:05:00] picture lapse rate :  3.6   (sec/pic) "
-#&gt; [1] "INFO  [2019-12-01 00:05:00] trigger distance portrait     :  15.8138287903741"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] trigger distance landscape     :  17.2340783787775"
-#&gt; [1] "INFO  [2019-12-01 00:05:00] --------------------- END RUN -----------------------------"
-#&gt; 
-#&gt;   
-#&gt;  NOTE 1: flighttime &gt; battery lifetime! control files have been splitted. 
-#&gt;  Fly save and have Fun...  
-#&gt;  NOTE 2: You will find all parameters in the logfile: /tmp/RtmpMmS3m3/flightArea/flightarea/fp-data/log/20191201_0004__MAPIR2__flightarea__AREA__45m.log  
-#&gt;  </div><div class='input'>
+           <span class='kw'>altFilter</span> <span class='kw'>=</span> <span class='fl'>.75</span>)
+
 <span class='co'>## (4) view results</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fp</span>$<span class='no'>oDEM</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors</a></span>(<span class='fl'>256</span>))</div><div class='output co'>#&gt; <span class='error'>Error in as.double(y): cannot coerce type 'S4' to vector of type 'double'</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fp</span>$<span class='no'>fA</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/grDevices/rgb.html'>rgb</a></span>(<span class='fl'>255</span>, <span class='fl'>0</span>, <span class='fl'>255</span>, <span class='fl'>36</span>, <span class='kw'>maxColorValue</span><span class='kw'>=</span><span class='fl'>255</span>),<span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>0.5</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in as.double(y): cannot coerce type 'S4' to vector of type 'double'</span></div><div class='input'><span class='kw pkg'>sp</span><span class='kw ns'>::</span><span class='fu'>plot</span>(<span class='no'>fp</span>$<span class='no'>wp</span>,<span class='kw'>cex</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>0.5</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot.xy(xy.coords(x, y), type = type, ...): plot.new has not been called yet</span></div><div class='input'>
+<span class='kw pkg'>mapview</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/mapview/man/mapView.html'>mapview</a></span>(<span class='no'>fp</span>$<span class='no'>wp</span>,<span class='kw'>cex</span><span class='kw'>=</span><span class='fl'>4</span>, <span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>0.5</span>)+
+<span class='kw pkg'>mapview</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/mapview/man/mapView.html'>mapview</a></span>(<span class='no'>fp</span>$<span class='no'>lp</span>,<span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>1</span>,<span class='kw'>cex</span><span class='kw'>=</span><span class='fl'>4</span>)+
+<span class='kw pkg'>mapview</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/mapview/man/mapView.html'>mapview</a></span>(<span class='no'>fp</span>$<span class='no'>fA</span>,<span class='kw'>color</span><span class='kw'>=</span><span class='st'>"blue"</span>, <span class='kw'>alpha.regions</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,<span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>0.5</span>)+
+<span class='kw pkg'>mapview</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/mapview/man/mapView.html'>mapview</a></span>(<span class='no'>fp</span>$<span class='no'>oDEM</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors</a></span>(<span class='fl'>256</span>))
+
 <span class='co'>## (5) digitize flight area using the small "onboard" tool vecDraw()</span>
 <span class='co'>##     save vectors as "kml" or "json" files</span>
 <span class='co'>##     provide full filename  +  extension!</span>
 
 
-<span class='fu'><a href='vecDraw.html'>vecDraw</a></span>(<span class='kw'>preset</span><span class='kw'>=</span><span class='st'>"uav"</span>)</div></pre>
+<span class='fu'><a href='vecDraw.html'>vecDraw</a></span>(<span class='kw'>preset</span><span class='kw'>=</span><span class='st'>"uav"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -105,8 +105,7 @@ if (!isGeneric('makeAP')) {
 #'
 #'
 #' @examples
-#'
-
+#'\dontrun{
 #' # Depending on the arguments, the following spatial data sets can returned
 #'
 #' # lp      the planned launching position of the UAV.
@@ -148,12 +147,10 @@ if (!isGeneric('makeAP')) {
 
 #' ## (4) view results
 
-#' raster::plot(fp$oDEM,col=terrain.colors(256))
-#' plot(fp$fA, col=rgb(255, 0, 255, 36, maxColorValue=255),lwd=0.5,add=TRUE)
-#' plot(fp$wp,cex=2, lwd=0.5,add=TRUE)
-
-
-
+#'mapview::mapview(fp$wp,cex=4, lwd=0.5)+
+#'mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
+#'mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
+#'mapview::mapview(fp$oDEM,col=terrain.colors(256))
 #'
 #' ## (5) digitize flight area using the small "onboard" tool vecDraw()
 #' ##     save vectors as "kml" or "json" files
@@ -161,7 +158,7 @@ if (!isGeneric('makeAP')) {
 #' 
 #' 
 #' vecDraw(preset="uav")
-#'
+#'}
 
 
 
