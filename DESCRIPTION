@@ -45,7 +45,7 @@ Imports:
     link2GI,
     jsonlite,
     rlist
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.1
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,
