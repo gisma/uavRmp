@@ -106,7 +106,7 @@ if (!isGeneric('makeAP')) {
 #'
 #' @examples
 #'
-#'\dontrun{
+
 #' # Depending on the arguments, the following spatial data sets can returned
 #'
 #' # lp      the planned launching position of the UAV.
@@ -159,7 +159,7 @@ if (!isGeneric('makeAP')) {
 #' 
 #' 
 #' vecDraw(preset="uav")
-#'}
+#'
 
 
 

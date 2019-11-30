@@ -161,7 +161,6 @@ https://gisma.github.io/
 
 \examples{
 
-\dontrun{
 # Depending on the arguments, the following spatial data sets can returned
 
 # lp      the planned launching position of the UAV.
@@ -212,7 +211,7 @@ mapview::mapview(fp$oDEM,col=terrain.colors(256))
 
 
 vecDraw(preset="uav")
-}
+
 }
 \seealso{
 The underlying concept, a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
