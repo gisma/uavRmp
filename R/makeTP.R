@@ -20,7 +20,7 @@ if (!isGeneric('makeTP')) {
 #' For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.
 #' @param maxSpeed \code{numeric}  cruising speed, default is \code{25.0}
 #' @param windCondition \code{numeric}options are 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h, default is \code{1}
-#' @param uavType \code{character}  type of UAV. Currently "djip3" and "solo" are supported, default is \code{"solo"}
+#' @param uavType \code{character}  type of UAV. Currently "djip3" and "pixhawk" are supported, default is \code{"pixhawk"}
 #' @param missionTrackList \code{character} filename of the mission tracklist (target positions), default is \code{NULL}
 #' @param launchPos \code{list} launch position c(longitude,latitude), default is \code{c(8.772055,50.814689)}
 #' @param climbDist \code{numeric} distance within the uav will climb on the caluclated save flight altitude in meter, default is \code{7.5}
@@ -41,7 +41,7 @@ if (!isGeneric('makeTP')) {
 #' ## (2) make position flight plan
 #' makeTP  <-  makeTP(missionTrackList= tutorial_flightArea,
 #'                   demFn = dsmFn,
-#'                   uavType = "solo",
+#'                   uavType = "pixhawk",
 #'                   launchPos = c(8.679,50.856))
 #' }
 #' @export makeTP 
@@ -63,7 +63,7 @@ makeTP <-  function(projectDir=tempdir(),
                     altFilter=0.5,
                     windCondition=1,
                     launchAltitude=-9999,
-                    uavType="solo",
+                    uavType="pixhawk",
                     cameraType = "MAPIR2",
                     copy = FALSE,
                     runDir="") {

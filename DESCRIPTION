@@ -44,8 +44,9 @@ Imports:
     grDevices,
     link2GI,
     jsonlite,
-    rlist
-RoxygenNote: 7.0.1
+    rlist,
+    data.table
+RoxygenNote: 7.0.2
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,

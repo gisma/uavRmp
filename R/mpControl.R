@@ -23,8 +23,10 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       # get information of the raw file
       # project the  extent to the current input ref system 
       proj <- projection(rundem)
-      taskAreaBuffer <- gBuffer(spTransform(taskarea,CRS(proj)), width=25.0)
-      taskAreaBuffer <-spTransform(taskarea,CRS("+proj=longlat +datum=WGS84 +no_defs"))
+      
+      ta<- sp::spTransform(taskarea,CRS(proj))
+      taskAreaBuffer<- rgeos::gBuffer(ta,width = 25)
+      taskAreaBuffer <- sp::spTransform(taskarea,CRS("+proj=longlat +datum=WGS84 +no_defs"))
       xmn <-  min(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
       xmx <-  max(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
       ymn <-  min(taskAreaBuffer@bbox[2],taskAreaBuffer@bbox[4],p$launchLat)
@@ -52,18 +54,26 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       # project the  extent to the current input ref system 
       tmpproj<-grep(system(paste0(g$path,'gdalinfo -proj4 ',path.expand(demFn)),intern = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
-      taskAreaBuffer <- gBuffer(spTransform(taskarea,CRS(proj)), width=25.0)
-      taskAreaBuffer <-spTransform(taskarea,CRS("+proj=longlat +datum=WGS84 +no_defs"))
-      xmn <-  min(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
-      xmx <-  max(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
-      ymn <-  min(taskAreaBuffer@bbox[2],taskAreaBuffer@bbox[4],p$launchLat)
-      ymx <-  max(taskAreaBuffer@bbox[2],taskarea@bbox[4],p$launchLat)
-      cut  <- data.frame(y = c(ymn,ymx), x = c(xmn,xmx))
-      coordinates(cut) <- ~x+y
-      sp::proj4string(cut) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-      cut <- spTransform(cut,CRS(proj))
-      rundem <- raster::crop(raster::raster(path.expand(demFn),band = 1),
-                             extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))     
+      ta <- sf::st_transform(taskarea, CRS(proj))
+      #ta<- sp::spTransform(taskarea,CRS(proj))
+      taskAreaBuffer <- st_buffer(ta,50) 
+      #taskAreaBuffer<- rgeos::gBuffer(ta,width = 50)
+      #taskAreabuffer <- sf::st_transform(taskAreaBuffer, 4326)
+      # taskAreaBuffer <- sp::spTransform(taskarea,CRS("+proj=longlat +datum=WGS84 +no_defs"))
+      # xmn <-  min(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
+      # xmx <-  max(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
+      # ymn <-  min(taskAreaBuffer@bbox[2],taskAreaBuffer@bbox[4],p$launchLat)
+      # ymx <-  max(taskAreaBuffer@bbox[2],taskarea@bbox[4],p$launchLat)
+      # cut  <- data.frame(y = c(ymn,ymx), x = c(xmn,xmx))
+      # coordinates(cut) <- ~x+y
+      # sp::proj4string(cut) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
+      # cut <- spTransform(cut,CRS(proj))
+      cut<- sf::st_bbox(taskAreaBuffer)
+      cut<-st_as_sfc(st_bbox(cut))
+      
+      rundem<- raster::crop(raster::raster(path.expand(demFn),band = 1), as(cut,"Spatial"))
+      #rundem <- raster::crop(raster::raster(path.expand(demFn),band = 1),
+      #                       extent(cut bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))     
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
       system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ',
                                                       file.path(runDir,"demll.tif"), ' ',
@@ -75,7 +85,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       
     }
   }  # end of loading DEM data
-  
+  demll<-raster::raster(demFn) 
   # check if dem has an geographic reference system as EPSG4326 outherwise reproject
   if (!comp_ll_proj4((as.character(demll@crs)))) {
     system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"demll.tif"),' ', file.path(runDir,"demll.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
@@ -139,7 +149,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     # calculate the agl flight altitude
     #altitude<-altitude+as.numeric(p$flightAltitude)-maxAlt    
     altitude2 <- altitude2 - launchAlt[1] + flightAltitude
-    
+
     
     #write it to the sp object dataframe
     df$altitude <- round(altitude2,1)
@@ -404,7 +414,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
                                                  cmd = 20)
       
       # write the control file
-      utils::write.table(lnsnew, paste0(projectDir, "/",locationName , "/", workingDir,"/fp-data/control/",i,"__",mission,"_solo.txt"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, na = "")
+      utils::write.table(lnsnew, paste0(projectDir, "/",locationName , "/", workingDir,"/fp-data/control/",i,"__",mission,"_MAVlink.txt"), sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, na = "")
       
       # log event 
       log4r::levellog(logger, 'INFO', paste("created : ", paste0(mission,"-",i,".csv")))
@@ -593,9 +603,10 @@ makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = ",") {
 
 
 
-calcSurveyArea <- function(surveyArea,projectDir,logger) {
+calcSurveyArea <- function(surveyArea,projectDir,logger,useMP) {
   
   # check and read mission area coordinates
+  if (!useMP){
   if (is.null(surveyArea)) {
     log4r::levellog(logger, 'FATAL', '### external flight area file or coordinates missing - dont know what to to')
     stop("### external flight area file or coordinates missing - don't know what to to")
@@ -621,6 +632,7 @@ calcSurveyArea <- function(surveyArea,projectDir,logger) {
     }
   }
   return(surveyArea)
+    }
 }
 
 # imports the survey area from a json or kml file
@@ -960,11 +972,11 @@ calculateFlightTime <- function(maxFlightTime, windCondition, maxSpeed, uavOptim
 launch2flightalt <- function(p, lns, uavViewDir, launch2startHeading, uavType) {
   launchPos <- c(p$launchLon,p$launchLat)
   if (uavType == "djip3") {lns[length(lns) + 1] <- makeUavPoint(launchPos, uavViewDir, group = 99, p)}
-  if (uavType == "solo")  {lns[length(lns) + 1] <- makeUavPointMAV(lat = launchPos[2], lon = launchPos[1], head = uavViewDir, group = 99)}
+  if (uavType == "pixhawk")  {lns[length(lns) + 1] <- makeUavPointMAV(lat = launchPos[2], lon = launchPos[1], head = uavViewDir, group = 99)}
   pOld <- launchPos
   pos <- calcNextPos(pOld[1],pOld[2],launch2startHeading,10)
   if (uavType == "djip3") {lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)}
-  if (uavType == "solo")  {lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2], lon = pos[1], head = uavViewDir, group = 99)}
+  if (uavType == "pixhawk")  {lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2], lon = pos[1], head = uavViewDir, group = 99)}
   return(lns)
 }
 
@@ -1125,7 +1137,7 @@ MAVTreeCSV <- function(flightPlanMode,
     
     # write the control file
     utils::write.table(lnsnew, 
-                       paste0(strsplit(projectDir,"/fp-data/run")[[1]][1],"/fp-data/control/",i,"__",mission,"_solo.txt"), 
+                       paste0(strsplit(projectDir,"/fp-data/run")[[1]][1],"/fp-data/control/",i,"__",mission,"_pixhawk.txt"), 
                        sep="\t", 
                        row.names=FALSE, 
                        col.names=FALSE, 
@@ -1219,7 +1231,7 @@ makeFlightPathT3 <- function(treeList,
       lns[length(lns) + 1] <- makeUavPoint(posDown, forward, p, group = 1)
       writeLines(unlist(lns), fileConn)
     }
-    else if (uavType == "solo") {
+    else if (uavType == "pixhawk") {
       cat("calculating flight corridors according to position ",i," of ",nrow(treeList),"\r")
       lp <- sp_point(p$launchLon,p$launchLat,"LaunchPos")
       
@@ -1329,7 +1341,7 @@ makeFlightPathT3 <- function(treeList,
     writeDjiTreeCSV(result[[2]],p$locationName,1,94,p,logger,round(result[[4]],digits = 0),trackSwitch,result[[3]],result[[6]],projectDir)
     return(result)
     
-  } else if (uavType == "solo") {
+  } else if (uavType == "pixhawk") {
     cat("getting altitudes...\n")
     df <- utils::read.csv(file.path(runDir,"treepoints.csv"),sep = "\t",header = FALSE)
     names(df) <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","autocont","lat","lon")
@@ -1717,14 +1729,14 @@ convertQGCPlanning <- function(fnQGC=NULL, missionLength=0, telemDist=0,photoint
   # t$mission$items$TransectStyleComplexItem$VisualTransectPoints
   
   tracks<- nrow(coord)/4
-  footprintFrontal<-t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintFrontal
-  footprintSide<-t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintSide
-  sideoverlap<-t$mission$items$TransectStyleComplexItem$CameraCalc$SideOverlap
-  AGL<-t$mission$items$TransectStyleComplexItem$CameraCalc$DistanceToSurface
+  footprintFrontal<-t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintFrontal[2]
+  footprintSide<-t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintSide[2]
+  sideoverlap<-t$mission$items$TransectStyleComplexItem$CameraCalc$SideOverlap[2]
+  AGL<-t$mission$items$TransectStyleComplexItem$CameraCalc$DistanceToSurface[2]
   speed<-t$mission$cruiseSpeed
   launchPoint<-t$mission$plannedHomePosition
-  flightAngle<-t$mission$items$angle
-  groundResolution<-t$mission$items$TransectStyleComplexItem$CameraCalc$ImageDensity
+  flightAngle<-t$mission$items$angle[2]
+  groundResolution<-t$mission$items$TransectStyleComplexItem$CameraCalc$ImageDensity[2]
   return(list(df_coordinates,tracks,footprintFrontal,AGL,speed,launchPoint,flightAngle,groundResolution))
 }
 

@@ -21,7 +21,7 @@ makeTP(
   altFilter = 0.5,
   windCondition = 1,
   launchAltitude = -9999,
-  uavType = "solo",
+  uavType = "pixhawk",
   cameraType = "MAPIR2",
   copy = FALSE,
   runDir = ""
@@ -69,7 +69,7 @@ For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) ar
 
 \item{launchAltitude}{\code{numeric} altitude of launch position. If set to \code{-9999} a DEM is required for extracting the MSL, default is \code{-9999}}
 
-\item{uavType}{\code{character}  type of UAV. Currently "djip3" and "solo" are supported, default is \code{"solo"}}
+\item{uavType}{\code{character}  type of UAV. Currently "djip3" and "pixhawk" are supported, default is \code{"pixhawk"}}
 
 \item{cameraType}{\code{character}, default is \code{"MAPIR2"}.}
 
@@ -87,7 +87,7 @@ dsmFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 ## (2) make position flight plan
 makeTP  <-  makeTP(missionTrackList= tutorial_flightArea,
                   demFn = dsmFn,
-                  uavType = "solo",
+                  uavType = "pixhawk",
                   launchPos = c(8.679,50.856))
 }
 }
