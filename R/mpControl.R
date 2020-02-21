@@ -54,6 +54,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       # project the  extent to the current input ref system 
       tmpproj<-grep(system(paste0(g$path,'gdalinfo -proj4 ',path.expand(demFn)),intern = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
+      if (class(taskarea)[1] == 'SpatialPolygonsDataFrame' | class(overlay)[1] == 'SpatialPolygons') taskarea <- sf::st_as_sf(taskarea)
       ta <- sf::st_transform(taskarea, CRS(proj))
       #ta<- sp::spTransform(taskarea,CRS(proj))
       taskAreaBuffer <- st_buffer(ta,50) 
