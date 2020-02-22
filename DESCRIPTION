@@ -45,6 +45,7 @@ Imports:
     link2GI,
     jsonlite,
     rlist,
+    rlang,
     data.table
 RoxygenNote: 7.0.2
 SystemRequirements: GNU make
