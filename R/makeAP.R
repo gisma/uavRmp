@@ -100,6 +100,7 @@ if (!isGeneric('makeAP')) {
 #' @param dA if TRUE the real extent of the used DEM is returned helpful for low altitudes flight planning
 #' @param cameraType depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2
 #' @param runDir \code{character} runtime folder 
+#' @param gdalLink link to GDAL binaries
 #' @note
 #' To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: \href{http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro}{uav based Remote Sensing at giswerk.org}).
 #'https://gisma.github.io/
@@ -220,7 +221,8 @@ makeAP <- function(projectDir = tempdir(),
                    picFootprint = FALSE,
                    rcRange = NULL,
                    copy = FALSE,
-                   runDir=tempdir())
+                   runDir=tempdir(),
+                   gdalLink=NULL)
 {
   ###  setup environ and params
   cat("setup environ and params...\n")
@@ -761,7 +763,7 @@ makeAP <- function(projectDir = tempdir(),
     sp::coordinates(djiDF) <- ~ lon + lat
     sp::proj4string(djiDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
-    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea)
+    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea,gdalLink)
     # assign adapted dem to demFn
     demFn <- result[[3]]
     dfcor <- result[[2]]
@@ -796,7 +798,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if (is.null(launchAltitude)) {
       # analyze DEM related stuff
-      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea)
+      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea,gdalLink)
       # assign adapted dem to demFn
       lauchPos <- result[[1]]
       dfcor <- result[[2]]
