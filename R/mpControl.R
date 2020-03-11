@@ -50,10 +50,11 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       tmpproj<-grep(system(paste0(g$path,'gdalinfo -proj4 ',path.expand(demFn)),intern = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
       if (class(taskarea)[1] == 'SpatialPolygonsDataFrame' | class(overlay)[1] == 'SpatialPolygons') taskarea <- sf::st_as_sf(taskarea)
-      ta <- sf::st_transform(taskarea, CRS(proj))
+      ta <- sf::st_transform(taskarea, CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
       taskAreaBuffer <- st_buffer(ta,50) 
       cut<- sf::st_bbox(taskAreaBuffer)
       cut<-st_as_sfc(st_bbox(cut))
+      cut <- sf::st_transform(cut, CRS(proj))
       rundem<- raster::crop(raster::raster(path.expand(demFn),band = 1), as(cut,"Spatial"))
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
       system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ',

@@ -188,7 +188,7 @@ tutorial_flightArea <- system.file("extdata", "flightarea.kml", package = "uavRm
 fp <- makeAP(surveyArea = tutorial_flightArea,
               demFn = demFn)
               
-## (3) typical real case scenario
+## (3) typical real case scenario (1)
 ##     Flight altitudes BELOW 50 m is ambitious and risky
 ##     You have to use a high quality high resulution DSM
 ##     (here simulated with a standard DEM)
@@ -202,13 +202,36 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
            followSurfaceRes = 5,
            altFilter = .75)
 
-## (4) view results
+
+## (4) typical real case scenario (2)
+##     Flight altitudes BELOW 50 m is ambitious and risky
+##     You have to use a high quality high resulution DSM
+##     (here simulated with a standard DEM)
+##     This examples used a filight panning from the QGroundcotrol Survey planning tool
+##     It also used the calculations for camera footprints and so on
+##     NOTE EXPERIMENTAL 
+
+demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+fp <- makeAP(surveyArea=tutorial_flightArea,
+            useMP = TRUE,
+            followSurface = TRUE,
+            demFn = demFn,
+            windCondition = 1,
+            uavType = "pixhawk",
+            followSurfaceRes = 5,
+
+
+## (5) view results
+
 mapview::mapview(fp$wp,cex=4, lwd=0.5)+
 mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
 mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
 mapview::mapview(fp$oDEM,col=terrain.colors(256))
 
-## (5) digitize flight area using the small "onboard" tool vecDraw()
+
+
+## (6) digitize flight area using the small "onboard" tool vecDraw()
 ##     save vectors as "kml" or "json" files
 ##     provide full filename  +  extension!
 
