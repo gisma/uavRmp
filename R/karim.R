@@ -22,7 +22,7 @@ if (!isGeneric('read_gpx ')) {
 #' gpx <- read_gpx(gpxFN, layers=c("tracks"))
 #' 
 #' ## plot it
-#' raster::plot(gpx)
+#' plot(gpx$geometry)
 #' 
 #' 
 #' @export read_gpx
@@ -38,7 +38,7 @@ read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_poin
   if (!any(hasF)) stop("None of the layer(s) has any features.", call. = FALSE)
   
   res <- lapply(layers[hasF], function(l) {
-    readOGR(dsn = file, layer=l, verbose=FALSE)
+    sf::st_read( file,layer=l,quiet =TRUE)
   })
   names(res) <- layers[hasF]
   
@@ -97,22 +97,25 @@ comp_ll_proj4 <- function(x) {
 #' ## creating sp spatial point object
 #' line <- sp_line(c(8.770367,8.771161,8.771536),
 #'                 c(50.815172,50.814743,50.814875),
-#'                 ID="go for it",
-#'                 runDir=runDir)
+#'                 runDir=tempdir())
 #' 
 #' ## plot it
 #' raster::plot(line)
 #' 
 sp_line <- function(Y_coords,
                     X_coords,
-                    ID,
+                    ID = "ID",
                     proj4="+proj=longlat +datum=WGS84 +no_defs",
                     export=FALSE,
                     runDir) {   
+ ## x = st_linestring(matrix(cbind(Y_coords,X_coords),ncol=2,byrow=TRUE))
+##  line<-st_as_sfc(line)
+##  line <- sf::st_set_crs(line, CRS(proj4))
   line <- SpatialLines(list(Lines(Line(cbind(Y_coords,X_coords)), ID = ID)))
   sp::proj4string(line) <- CRS(proj4)
   if (export) {
-    writeLinesShape(line,file.path(runDir,paste0(ID,"home.shp")))
+  ##  sf::st_write(line,file.path(runDir,paste0(ID,"home.gpkg")))
+   writeLinesShape(line,file.path(runDir,paste0(ID,"home.shp")))
   }
   return(line)
 }

@@ -33,7 +33,7 @@ gpxFN <- system.file("extdata", "flighttrack.gpx", package = "uavRmp")
 gpx <- read_gpx(gpxFN, layers=c("tracks"))
 
 ## plot it
-raster::plot(gpx)
+plot(gpx$geometry)
 
 
 }
