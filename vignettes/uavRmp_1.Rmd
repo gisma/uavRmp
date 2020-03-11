@@ -255,6 +255,8 @@ Even more simple is the option to connect with the litchi cloud. While you are l
 
 ### Digitizing the survey area
 
+#### Build in `vecDraw` function
+
 We want to plan a flight in a more or less flat terrain in the upper Lahn-valley. First load the libraries and next start the small digitizing tool that is provided in ''uavRmp''. 
 
     You may take any other tool to digitize the survey area as well as you may type the coordinates on Stdin.
@@ -283,6 +285,18 @@ For an optimal deliniation of the flight area, please keep in mind some hints:
   - Try to identify your launching point ** very carefully** and ** most reliable**. The UAV is taking this position as a home (reference) point for both position and altitude.
 
 Finish digitizing and save it as a KML file. Take care to add the correct extensions  ''.kml'' (the ''makeAP()'' function is requiring the correct extension). In the current example save it as a kml file named ''firstSurvey.kml''.
+
+#### Missionplanner or Qgroundcontrol survey feature
+We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
+![The first autonomous complexmission planned with QGroundcontrol](../inst/images/qcmission.png)
+
+Save this at an appropriate folder. To use this planning file you have to set in `makeAP` the switch:
+
+```{r, eval=FALSE}
+ useMP = TRUE
+```
+
+
 
 ### Calling makeAP 
 

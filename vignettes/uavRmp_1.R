@@ -28,6 +28,9 @@ knitr::opts_knit$set(root.dir = tempdir())
 #   vecDraw(mapCenter = c(50.855,8.691),preset="uav")
 
 ## ---- eval=FALSE--------------------------------------------------------------
+#   useMP = TRUE
+
+## ---- eval=FALSE--------------------------------------------------------------
 #  
 #    # get example DEM data
 #   fn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
