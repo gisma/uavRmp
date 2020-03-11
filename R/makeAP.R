@@ -13,7 +13,7 @@ if (!isGeneric('makeAP')) {
 #'   common message set, that is used by the PixHawk flight controller family.
 #'   Both are implemented very rudimentarily.\cr\cr DJI:\cr The reason using DJI
 #'   is their absolute straightforward usage. Everybody can fly with a DJI but
-#'   the price is a hermetically closed system. Only the  litchi app provides
+#'   the price is a more or less closed system at least in the low budget segement. There are workarounds like the litchi app that provides
 #'   additionally to a cloud based mission planner an offline/standalone
 #'   interface to upload a CSV formated way point file for autonomous flights to
 #'   the Phantom.\cr\cr PixHawk flightcontroller/3DR Solo:\cr The open uav community is focused
@@ -24,9 +24,9 @@ if (!isGeneric('makeAP')) {
 #'   rules that are ready to be uploaded directly on the Pixhawk controller using the \code{solo_upload} function.\cr\cr
 #'   
 #' @seealso
-#'   The underlying concept, a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
+#'   The underlying concept, a tutorial and a field guide can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
 #'   "uavRmp")} or 
-#'   at \href{https://gisma.github.io/uavRmp/uavRmp_1.html}{Github uavRmp manual}).
+#'   at \href{https://gisma.github.io/uavRmp/articles/uavRmp_1.html}{Github uavRmp manual}).
 #'
 
 #' @section Warning: Take care! There are still a lot of construction zones
@@ -107,7 +107,7 @@ if (!isGeneric('makeAP')) {
 #'
 #' @examples
 #'\dontrun{
-#' # Depending on the arguments, the following spatial data sets can returned
+#' # Depending on the arguments, the following spatial data sets can be returned:
 #'
 #' # lp      the planned launching position of the UAV.
 #' # wp      waypoints inclusive all information
@@ -131,8 +131,8 @@ if (!isGeneric('makeAP')) {
 #' fp <- makeAP(surveyArea = tutorial_flightArea,
 #'               demFn = demFn)
 #'               
-#' ## (3) typical real case scenario
-#' ##     Flight altitudes BELOW 50 m is ambitious and risky
+#' ## (3) typical real case scenario (1)
+#' ##     A flight altitudes BELOW 50 m is ambitious and risky
 #' ##     You have to use a high quality high resulution DSM
 #' ##     (here simulated with a standard DEM)
 #'
@@ -145,15 +145,37 @@ if (!isGeneric('makeAP')) {
 #'            followSurfaceRes = 5,
 #'            altFilter = .75)
 #'
-
-#' ## (4) view results
-
+#'
+#' ## (4) typical real case scenario (2)
+#' ##     A flight altitudes BELOW 50 m is ambitious and risky
+#' ##     You have to use a high quality high resulution DSM
+#' ##     (here simulated with a standard DEM)
+#' ##     This examples used a filight panning from the QGroundcotrol Survey planning tool
+#' ##     It also used the calculations for camera footprints and so on
+#' ##     NOTE EXPERIMENTAL 
+#' 
+#'demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+#'tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+#'fp <- makeAP(surveyArea=tutorial_flightArea,
+#'             useMP = TRUE,
+#'             followSurface = TRUE,
+#'             demFn = demFn,
+#'             windCondition = 1,
+#'             uavType = "pixhawk",
+#'             followSurfaceRes = 5,
+#'              altFilter = .75)
+#'
+#'
+#' ## (5) view results
+#' 
 #'mapview::mapview(fp$wp,cex=4, lwd=0.5)+
 #'mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
 #'mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
 #'mapview::mapview(fp$oDEM,col=terrain.colors(256))
 #'
-#' ## (5) digitize flight area using the small "onboard" tool vecDraw()
+#'
+#'
+#' ## (6) digitize flight area using the small "onboard" tool vecDraw()
 #' ##     save vectors as "kml" or "json" files
 #' ##     provide full filename  +  extension!
 #' 
@@ -340,7 +362,7 @@ makeAP <- function(projectDir = tempdir(),
     ## calculate survey area
     # create an sp polygon object of the mission area
     # your data (removed crs column)
-    tarea <- data.table(
+    tarea <- data.table::data.table(
       longitude= as.data.frame(t$mission$items$polygon[listPos][1])[,2],
       latitude=as.data.frame(t$mission$items$polygon[listPos][1])[,1])
     tarea = st_as_sf(tarea, coords = c("longitude", "latitude"), 

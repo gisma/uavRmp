@@ -1,11 +1,11 @@
-## ----echo=FALSE----------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(collapse = TRUE)
 
-## ----"setup", include=FALSE----------------------------------------------
+## ----"setup", include=FALSE---------------------------------------------------
 require("knitr")
 knitr::opts_knit$set(root.dir = tempdir())
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #     require(uavRmp)
 #     # get example DEM data
 #     fn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
@@ -19,7 +19,7 @@ knitr::opts_knit$set(root.dir = tempdir())
 #                  demFn = fn)
 #  
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #   # load uavRmp
 #   require(uavRmp)
 #  
@@ -27,7 +27,10 @@ knitr::opts_knit$set(root.dir = tempdir())
 #   # see ?leafDraw for more information
 #   vecDraw(mapCenter = c(50.855,8.691),preset="uav")
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
+#   useMP = TRUE
+
+## ---- eval=FALSE--------------------------------------------------------------
 #  
 #    # get example DEM data
 #   fn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
@@ -37,7 +40,7 @@ knitr::opts_knit$set(root.dir = tempdir())
 #              maxSpeed =35,
 #              demFn = fn)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #   require(mapview)
 #   mapview(fp[[5]],color="red", alpha.regions =0.1,lwd=0.5)+
 #   mapview(fp[[1]],lwd=1,cex=4)+

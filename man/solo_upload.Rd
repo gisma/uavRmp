@@ -16,7 +16,7 @@ solo_upload(
 \item{connection}{a valid connection string to the Solo default is "udp:10.1.1.166:14550"}
 
 \item{prearm}{\code{character} controls the prearm status of the Solo prearm check\cr 0=Disabled\cr 1=Enabled\cr -3=Skip Baro\cr -5=Skip Compass\cr -9=Skip GPS\cr -17=Skip INS\cr -33=Skip Params/Rangefinder\cr -65=Skip RC\cr 127=Skip Voltage\cr
-default is \code{-1}\cr\cr Find more information at \href{http://ardupilot.org/copter/docs/prearm_safety_check.html}{prearm safety},\cr \href{http://python.dronekit.io/examples/mission_import_export.html}{Mission import export script}.}
+default is \code{-1}\cr\cr Find more information at \href{https://ardupilot.org/copter/docs/prearm_safety_check.html}{prearm safety},\cr \href{https://github.com/dronekit/dronekit-python}{Mission import export script}.}
 }
 \description{
 solo_upload provides a crude interface to upload the Solo mission file to the 3dr SOLO

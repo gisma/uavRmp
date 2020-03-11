@@ -24,20 +24,15 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       # project the  extent to the current input ref system 
       proj <- projection(rundem)
       
-      ta<- sp::spTransform(taskarea,CRS(proj))
-      taskAreaBuffer<- rgeos::gBuffer(ta,width = 25)
-      taskAreaBuffer <- sp::spTransform(taskarea,CRS("+proj=longlat +datum=WGS84 +no_defs"))
-      xmn <-  min(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
-      xmx <-  max(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
-      ymn <-  min(taskAreaBuffer@bbox[2],taskAreaBuffer@bbox[4],p$launchLat)
-      ymx <-  max(taskAreaBuffer@bbox[2],taskarea@bbox[4],p$launchLat)
-      cut  <- data.frame(y = c(ymn,ymx), x = c(xmn,xmx))
-      coordinates(cut) <- ~x+y
-      sp::proj4string(cut) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-      cut <- spTransform(cut,CRS(proj))
-      rundem <- raster::crop(raster::raster(demFn,band = 1),
-                             extent(cut@bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))     
-      
+      tmpproj<-grep(system(paste0(g$path,'gdalinfo -proj4 ',path.expand(demFn)),intern = TRUE),pattern = "+proj=",value = TRUE)
+      proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
+      if (class(taskarea)[1] == 'SpatialPolygonsDataFrame' | class(overlay)[1] == 'SpatialPolygons') taskarea <- sf::st_as_sf(taskarea)
+      ta <- sf::st_transform(taskarea, CRS(proj))
+      #ta<- sp::spTransform(taskarea,CRS(proj))
+      taskAreaBuffer <- st_buffer(ta,50) 
+      cut<- sf::st_bbox(taskAreaBuffer)
+      cut<-st_as_sfc(st_bbox(cut))
+      rundem <- raster::crop(demFn, as(cut,"Spatial"))   
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
       system(paste0(g$path,'gdalwarp -overwrite -q ',
       '-t_srs "+proj=longlat +datum=WGS84 +no_defs" ',
@@ -55,26 +50,12 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       tmpproj<-grep(system(paste0(g$path,'gdalinfo -proj4 ',path.expand(demFn)),intern = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
       if (class(taskarea)[1] == 'SpatialPolygonsDataFrame' | class(overlay)[1] == 'SpatialPolygons') taskarea <- sf::st_as_sf(taskarea)
-      ta <- sf::st_transform(taskarea, CRS(proj))
-      #ta<- sp::spTransform(taskarea,CRS(proj))
+      ta <- sf::st_transform(taskarea, CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
       taskAreaBuffer <- st_buffer(ta,50) 
-      #taskAreaBuffer<- rgeos::gBuffer(ta,width = 50)
-      #taskAreabuffer <- sf::st_transform(taskAreaBuffer, 4326)
-      # taskAreaBuffer <- sp::spTransform(taskarea,CRS("+proj=longlat +datum=WGS84 +no_defs"))
-      # xmn <-  min(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
-      # xmx <-  max(taskAreaBuffer@bbox[1],taskAreaBuffer@bbox[3],p$launchLon)
-      # ymn <-  min(taskAreaBuffer@bbox[2],taskAreaBuffer@bbox[4],p$launchLat)
-      # ymx <-  max(taskAreaBuffer@bbox[2],taskarea@bbox[4],p$launchLat)
-      # cut  <- data.frame(y = c(ymn,ymx), x = c(xmn,xmx))
-      # coordinates(cut) <- ~x+y
-      # sp::proj4string(cut) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-      # cut <- spTransform(cut,CRS(proj))
       cut<- sf::st_bbox(taskAreaBuffer)
       cut<-st_as_sfc(st_bbox(cut))
-      
+      cut <- sf::st_transform(cut, CRS(proj))
       rundem<- raster::crop(raster::raster(path.expand(demFn),band = 1), as(cut,"Spatial"))
-      #rundem <- raster::crop(raster::raster(path.expand(demFn),band = 1),
-      #                       extent(cut bbox[1],cut@bbox[3],cut@bbox[2],cut@bbox[4]))     
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
       system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ',
                                                       file.path(runDir,"demll.tif"), ' ',
@@ -1196,13 +1177,17 @@ makeFlightPathT3 <- function(treeList,
     #demll <- gdalUtils::gdalwarp(srcfile = demFn, dstfile = file.path(runDir,"demll.tif"), overwrite=TRUE,  t_srs = "+proj=longlat +datum=WGS84 +no_defs",output_Raster = TRUE ) 
     system(paste0(g$path,'gdalwarp -overwrite -q ', demFn,' ', file.path(runDir,"demll.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
     demll<-raster::raster(file.path(runDir,"tmpdem.tif"))
+
+    flightAreaBuffer <- st_buffer(flightArea,0.00421) 
+    cut<- sf::st_bbox(flightAreaBuffer)
+    cut<-st_as_sfc(st_bbox(cut))
+    rundem<- raster::crop(demll, as(cut,"Spatial"))
     
-    
-    rundem <- raster::crop(demll,
-                           extent(flightArea@bbox[1] - 0.00421,
-                                  flightArea@bbox[3] + 0.00421,
-                                  flightArea@bbox[2] - 0.00421,
-                                  flightArea@bbox[4] + 0.00421))
+    # rundem <- raster::crop(demll,
+    #                        extent(flightArea@bbox[1] - 0.00421,
+    #                               flightArea@bbox[3] + 0.00421,
+    #                               flightArea@bbox[2] - 0.00421,
+    #                               flightArea@bbox[4] + 0.00421))
     raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
     demll <- rundem
     dem  <- demll
@@ -1717,27 +1702,5 @@ setProjStructure <- function(projectDir,
   
   makeGlobalVar(name = "runDir",value = file.path(projRootDir,"fp-data/run/"))
   return(c(csvFn, taskName, workingDir,projRootDir))
-}
-
-convertQGCPlanning <- function(fnQGC=NULL, missionLength=0, telemDist=0,photointerval=0){
-  t<-jsonlite::fromJSON(fnQGC)
-  tmp<- t$mission$items$TransectStyleComplexItem$Items[2][[1]]
-  #length(tmp$params[[60]])
-  #tmp$params[[1]][5:6]
-  coord<-tmp[tmp["command"]==16, ]
-  #coord$params
-  df_coordinates<-t(as.data.frame(rlist::list.cbind(coord[,"params",])))[,5:6]
-  # t$mission$items$TransectStyleComplexItem$VisualTransectPoints
-  
-  tracks<- nrow(coord)/4
-  footprintFrontal<-t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintFrontal[2]
-  footprintSide<-t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintSide[2]
-  sideoverlap<-t$mission$items$TransectStyleComplexItem$CameraCalc$SideOverlap[2]
-  AGL<-t$mission$items$TransectStyleComplexItem$CameraCalc$DistanceToSurface[2]
-  speed<-t$mission$cruiseSpeed
-  launchPoint<-t$mission$plannedHomePosition
-  flightAngle<-t$mission$items$angle[2]
-  groundResolution<-t$mission$items$TransectStyleComplexItem$CameraCalc$ImageDensity[2]
-  return(list(df_coordinates,tracks,footprintFrontal,AGL,speed,launchPoint,flightAngle,groundResolution))
 }
 

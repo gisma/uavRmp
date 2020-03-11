@@ -1,7 +1,7 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '2019-12-01'
+date: '2020-03-11'
 editor_options:
   chunk_output_type: console
 output:
@@ -26,23 +26,23 @@ Unmanned Aerial Vehicle R based Mission Planning
 
 
 The [uavRmp](https://github.com/gisma/uavRmp) package is designed 
-for UAV autonomous mission planning. In the first place it is a simple and open source planning tool for operating flights of low budget drones based on ```R```. It provide an easy workflow for planning autonomous 
+for UAV autonomous mission planning. In the first place it is a simple and open source planning tool for planning survey flights of low budget drones based on ```R```. It provide an easy workflow for planning autonomous 
 surveys including battery-dependent task splitting and save departures and approaches of each monitoring chunks.
 
-The range is widespread from Digital Surface Models (DSM), Digital Elevation Models (DEM), orthophotos, altitude point clouds to landuse/landscape classification, NDVI forest structure classifications and so on… 
+The range of usage of these kinds aof aerial photography is widespread from Digital Surface Models (DSM), Digital Elevation Models (DEM), orthophotos, altitude point clouds to landuse/landscape classification, NDVI forest structure classifications and so on… 
 
 It belongs to the ```uavR``` package family that provides more functionality for the pre- and post-processing as well as the analysis of the derived data.
 
 ## Note
 WARNING: Take care! There are still a lot of construction zones around. This package is far beyond to be in a mature state. Please implement a double check systems while planning and performing autonomous flight missions. You will have a lot of chances to make a small mistake what may yield in a damage of your UAV or even worse in involving people, animals or non-cash assets. 
 
-Check your risk - use parachute systems and, even if it is running like a charm, keep alert!
+Check your risk - use parachute systems and, even if everything is running like a charm, keep alert!
 
 ## Supported UAV platforms
 
-Up to now it has been dedicated to low budget rtf-UAVs as the DJI Phantom series and the 3DR Solo. However the current and future support will focus on all Green Cube and Pixhawk based UAVs.
+Up to now it has been dedicated to low budget rtf-UAVs as the DJI Phantom (up to P4) series and the Pixhawk flightcontroller family. However the current and future support will focus on Pixhawk based UAVs only.
 
-The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://ardupilot.org/planner/) or [APM Planner 2](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmercial competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.
+The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://qgroundcontrol.com/downloads/) or [QGroundcontrol](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmercial competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.
 
 The ```uavRmd``` bridges this gap and generates ```MAVLINK``` format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.
 
@@ -57,15 +57,11 @@ PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot uni
 The package family consists of 4 parts:
 
   * flight planning ```uavRmp```
-  * forest analysis ```uavRfa```*
-  * remote sensing ```uavRrs```*
-  * archaeology ```uavRao```*
-
-* not yet released
+  * remote sensing ```uavRrst```
   
 ## Installation
 
-The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux and then use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the [dronekit](http://python.dronekit.io/develop/installation.html) python libs in addition.
+The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux and then use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the [dronekit](https://github.com/dronekit/dronekit-python) python libs in addition.
 
 A full list of necessary libaries and binaries beyond ```R``` will soon be provided.
 
@@ -199,7 +195,7 @@ Even if you can assume the use of uavs for autonomous flights as somehow “oper
   - Digital Surface Model  (DSM) data 
   - DJI Phantom/Pixhawk UAV
   - For DJI only [Litchi](https://flylitchi.com/) flight App    
-  - For Pixhawk [droidPlanner 2](https://play.google.com/store/apps/details?id=org.droidplanner&hl=de)
+  - For Pixhawk [QGroundcontrol](http://qgroundcontrol.com/downloads/)
   - Time to work it out
 
 ## General Workflow 
@@ -255,6 +251,8 @@ Even more simple is the option to connect with the litchi cloud. While you are l
 
 ### Digitizing the survey area
 
+#### Build in `vecDraw` function
+
 We want to plan a flight in a more or less flat terrain in the upper Lahn-valley. First load the libraries and next start the small digitizing tool that is provided in ''uavRmp''. 
 
     You may take any other tool to digitize the survey area as well as you may type the coordinates on Stdin.
@@ -284,6 +282,19 @@ For an optimal deliniation of the flight area, please keep in mind some hints:
   - Try to identify your launching point ** very carefully** and ** most reliable**. The UAV is taking this position as a home (reference) point for both position and altitude.
 
 Finish digitizing and save it as a KML file. Take care to add the correct extensions  ''.kml'' (the ''makeAP()'' function is requiring the correct extension). In the current example save it as a kml file named ''firstSurvey.kml''.
+
+#### Missionplanner or Qgroundcontrol survey feature
+We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
+![The first autonomous complexmission planned with QGroundcontrol](../inst/images/qcmission.png)
+
+Save this at an appropriate folder. To use this planning file you have to set in `makeAP` the switch:
+
+
+```r
+ useMP = TRUE
+```
+
+
 
 ### Calling makeAP 
 
