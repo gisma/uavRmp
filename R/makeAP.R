@@ -362,7 +362,7 @@ makeAP <- function(projectDir = tempdir(),
     ## calculate survey area
     # create an sp polygon object of the mission area
     # your data (removed crs column)
-    tarea <- data.table(
+    tarea <- data.table::data.table(
       longitude= as.data.frame(t$mission$items$polygon[listPos][1])[,2],
       latitude=as.data.frame(t$mission$items$polygon[listPos][1])[,1])
     tarea = st_as_sf(tarea, coords = c("longitude", "latitude"), 

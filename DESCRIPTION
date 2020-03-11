@@ -2,11 +2,10 @@ Package: uavRmp
 Type: Package
 Title: UAV Mission Planner
 Version: 0.5.5
-Date: 2019-09-04
+Date: 2020-03-11
 Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Marvin", "Ludwig", role = c("ctb")),
              person("Sebastian", "Richter", role = c("ctb")),
-             person("Lars", "Opgenoorth",  role = c("ctb")),
              person("Florian", "Detsch", role = c("ctb")),
              person("Hanna", "Meyer", role = c("ctb"))
              )
@@ -45,8 +44,7 @@ Imports:
     link2GI,
     jsonlite,
     rlist,
-    rlang,
-    data.table
+    rlang
 RoxygenNote: 7.0.2
 SystemRequirements: GNU make
 Suggests: knitr,
