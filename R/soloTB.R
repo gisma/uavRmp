@@ -8,7 +8,7 @@ if (!isGeneric('solo_upload')) {
 #'
 #' @param connection a valid connection string to the Solo default is "udp:10.1.1.166:14550"
 #' @param prearm \code{character} controls the prearm status of the Solo prearm check\cr 0=Disabled\cr 1=Enabled\cr -3=Skip Baro\cr -5=Skip Compass\cr -9=Skip GPS\cr -17=Skip INS\cr -33=Skip Params/Rangefinder\cr -65=Skip RC\cr 127=Skip Voltage\cr
-#' default is \code{-1}\cr\cr Find more information at \href{http://ardupilot.org/copter/docs/prearm_safety_check.html}{prearm safety},\cr \href{http://python.dronekit.io/examples/mission_import_export.html}{Mission import export script}.
+#' default is \code{-1}\cr\cr Find more information at \href{https://ardupilot.org/copter/docs/prearm_safety_check.html}{prearm safety},\cr \href{https://github.com/dronekit/dronekit-python}{Mission import export script}.
 #' 
 #'  
 #' @param missionFile mission file to upload
@@ -58,7 +58,7 @@ if (!isGeneric('soloLog')) {
 }
 #' Download, reorganize and export the binary log files from 3DR Solo Pixhawk controller or the telemetry log files from the Solo radio control unit
 #'
-#' @description  Wraps the mavtogpx.py converter as provided by the \href{http://python.dronekit.io/}{dronkit library}). It downloads and optionally converts the most important 3DR Solo logfiles. Optionally you may import the geometries and data as \code{sp} object.
+#' @description  Wraps the mavtogpx.py converter as provided by the \href{https://github.com/dronekit/dronekit-python}{dronkit library}). It downloads and optionally converts the most important 3DR Solo logfiles. Optionally you may import the geometries and data as \code{sp} object.
 #'
 #' @param logSource \code{character}, options are: \code{rc} = logfiles from the radio control, \code{pixhawk} = logfiles from the flightcontroller, default is set to  \code{rc}. The radio control is providing the last ten telemetry data files, while the flight controller provides the latest 50 binary logfiles.
 

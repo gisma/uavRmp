@@ -26,7 +26,7 @@ if (!isGeneric('makeAP')) {
 #' @seealso
 #'   The underlying concept, a tutorial and a field guide can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
 #'   "uavRmp")} or 
-#'   at \href{https://gisma.github.io/uavRmp/uavRmp_1.html}{Github uavRmp manual}).
+#'   at \href{https://gisma.github.io/uavRmp/articles/uavRmp_1.html}{Github uavRmp manual}).
 #'
 
 #' @section Warning: Take care! There are still a lot of construction zones
@@ -132,7 +132,7 @@ if (!isGeneric('makeAP')) {
 #'               demFn = demFn)
 #'               
 #' ## (3) typical real case scenario (1)
-#' ##     Flight altitudes BELOW 50 m is ambitious and risky
+#' ##     A flight altitudes BELOW 50 m is ambitious and risky
 #' ##     You have to use a high quality high resulution DSM
 #' ##     (here simulated with a standard DEM)
 #'
@@ -147,7 +147,7 @@ if (!isGeneric('makeAP')) {
 #'
 #'
 #' ## (4) typical real case scenario (2)
-#' ##     Flight altitudes BELOW 50 m is ambitious and risky
+#' ##     A flight altitudes BELOW 50 m is ambitious and risky
 #' ##     You have to use a high quality high resulution DSM
 #' ##     (here simulated with a standard DEM)
 #' ##     This examples used a filight panning from the QGroundcotrol Survey planning tool
