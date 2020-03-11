@@ -13,7 +13,7 @@ if (!isGeneric('makeAP')) {
 #'   common message set, that is used by the PixHawk flight controller family.
 #'   Both are implemented very rudimentarily.\cr\cr DJI:\cr The reason using DJI
 #'   is their absolute straightforward usage. Everybody can fly with a DJI but
-#'   the price is a hermetically closed system. Only the  litchi app provides
+#'   the price is a more or less closed system at least in the low budget segement. There are workarounds like the litchi app that provides
 #'   additionally to a cloud based mission planner an offline/standalone
 #'   interface to upload a CSV formated way point file for autonomous flights to
 #'   the Phantom.\cr\cr PixHawk flightcontroller/3DR Solo:\cr The open uav community is focused
@@ -24,7 +24,7 @@ if (!isGeneric('makeAP')) {
 #'   rules that are ready to be uploaded directly on the Pixhawk controller using the \code{solo_upload} function.\cr\cr
 #'   
 #' @seealso
-#'   The underlying concept, a tutorial and a field guid can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
+#'   The underlying concept, a tutorial and a field guide can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
 #'   "uavRmp")} or 
 #'   at \href{https://gisma.github.io/uavRmp/uavRmp_1.html}{Github uavRmp manual}).
 #'
@@ -107,7 +107,7 @@ if (!isGeneric('makeAP')) {
 #'
 #' @examples
 #'\dontrun{
-#' # Depending on the arguments, the following spatial data sets can returned
+#' # Depending on the arguments, the following spatial data sets can be returned:
 #'
 #' # lp      the planned launching position of the UAV.
 #' # wp      waypoints inclusive all information
@@ -163,7 +163,7 @@ if (!isGeneric('makeAP')) {
 #'             windCondition = 1,
 #'             uavType = "pixhawk",
 #'             followSurfaceRes = 5,
-#              altFilter = .75)
+#'              altFilter = .75)
 #'
 #'
 #' ## (5) view results
