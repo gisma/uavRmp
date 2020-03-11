@@ -10,8 +10,12 @@
 #
 
 analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName,runDir,taskarea,gdalLink=NULL){
-  if (!is.null(gdalLink)) g<- link2GI::linkGDAL()
-  else g<-gdalLink
+  
+  if (is.null(gdalLink))
+    g<- link2GI::linkGDAL()
+  else
+  g<-gdalLink
+  
   cat("load DEM/DSM data...\n")
   ## load DEM data either from a local GDAL File or from a raster object or if nothing is provided tray to download SRTM data
   #if no DEM is provided try to get SRTM data
@@ -1162,8 +1166,12 @@ makeFlightPathT3 <- function(treeList,
                              circleRadius,
                              flightArea,
                              takeOffAlt,
-                             runDir){
-  g<- link2GI::linkGDAL()
+                             runDir, gdalLink =NULL){
+  if (is.null(gdalLink)) 
+    g<- link2GI::linkGDAL()
+  else 
+    g<-gdalLink
+  
   # due to RMD Check Note
   uavViewDir<-pos<-workingDir<-trackSwitch<-NULL
   if (is.null(demFn)) {
