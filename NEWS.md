@@ -1,3 +1,16 @@
+## uavRmp 0.5.7
+
+bugfixes:
+  * fix cran issue maptools
+  * fix several R 4.x problems
+
+## uavRmp 0.5.6
+
+bugfixes:
+  * fix import functionality for QGroundcontrol flight planning files
+  * fix wrong calculation of buffers
+  * add documentation for qgroundcontrol survey files
+  
 ## uavRmp 0.5.5
 
 new features:

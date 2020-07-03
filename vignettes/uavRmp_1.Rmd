@@ -197,7 +197,7 @@ Even if you can assume the use of uavs for autonomous flights as somehow “oper
   - Digital Surface Model  (DSM) data 
   - DJI Phantom/Pixhawk UAV
   - For DJI only [Litchi](https://flylitchi.com/) flight App    
-  - For Pixhawk [QGroundcontrol](http://qgroundcontrol.com/downloads/)
+  - For Pixhawk [QGroundcontrol](http://qgroundcontrol.com/)
   - Time to work it out
 
 ## General Workflow 
@@ -246,7 +246,7 @@ knitr::opts_knit$set(root.dir = tempdir())
 
 NOTE: The first two points determine the flight angle and direction the second and third coordinate determine the width of the area. 
 
-If you want so save it on your SD card, open the [Litchi Mission](https://flylitchi.com/hub|Litchi Mission) website and click on the button ```Missions->Import```. Next navigate to the control file ```firstsurvey_1001.csv``` (you’ll find it in the folder ```projectDir/mission/date/control```). For exporting it choose ```Missions->Save``` and navigate/upload it to your missions subfolder of the Litchi app. That’s it.
+If you want so save it on your SD card, open the [Litchi Mission](https://flylitchi.com/|Litchi Mission) website and click on the button ```Missions->Import```. Next navigate to the control file ```firstsurvey_1001.csv``` (you’ll find it in the folder ```projectDir/mission/date/control```). For exporting it choose ```Missions->Save``` and navigate/upload it to your missions subfolder of the Litchi app. That’s it.
 
 Even more simple is the option to connect with the litchi cloud. While you are logged in with the same account it is synchronizing the data as soon as you start the litchi app.
 
@@ -350,7 +350,7 @@ Using the ```mapview``` package  you can easily visualize the results. The below
 
 DJI:
 
-Open [Litchi Mission](https://flylitchi.com/hub) and click on the button ''Missions->Import'' and navigate to the control file firstSurvey_1001.csv. To export it click ''Missions->Save''. 
+Open [Litchi Mission](https://flylitchi.com/) and click on the button ''Missions->Import'' and navigate to the control file firstSurvey_1001.csv. To export it click ''Missions->Save''. 
 
 Solo 
 ```solo_upload("export_1001_solo.waypoints")```

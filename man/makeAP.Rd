@@ -33,7 +33,8 @@ makeAP(
   picFootprint = FALSE,
   rcRange = NULL,
   copy = FALSE,
-  runDir = tempdir()
+  runDir = tempdir(),
+  gdalLink = NULL
 )
 }
 \arguments{
@@ -126,6 +127,8 @@ By default it is set to (\code{= 0.0}).
 \item{copy}{copy switch}
 
 \item{runDir}{\code{character} runtime folder}
+
+\item{gdalLink}{link to GDAL binaries}
 }
 \description{
 The basic idea is to provide an easy to use workflow for controlling rtf-UAVs for planning autonomous surveys to retrieve aerial data sets.

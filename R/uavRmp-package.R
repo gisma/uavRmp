@@ -13,31 +13,13 @@
 #' 
 #' 
 #'
-#' @import stringr 
-#' @import zoo
-#' @import sp
-#' @import raster
-#' @import htmlwidgets
-#' @import htmltools
-#' @import rgeos
-#' @import rgdal
-#' @import tools
-#' @import maptools
-#' @import log4r
-#' @import devtools
-#' @import roxygen2
-#' @import sf 
-#' @import methods
-#' @import devtools
-#' @import brew
+
 #' @importFrom rlist list.cbind
-#' @importFrom gdalUtils gdalinfo
 #' @importFrom link2GI linkGDAL
 #' @importFrom geosphere bearing
 #' @importFrom geosphere distGeo
 #' @importFrom geosphere destPoint
 #' @importFrom data.table fread
-#' @importFrom spatial.tools create_blank_raster 
 #' @import log4r
 #' @keywords package
 #' 

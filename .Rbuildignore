@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\inst\examples$
 ^data-raw$
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -10,4 +9,4 @@
 ^\.travis\.yml$
 _config.yml
 tic.R
-docs
+docs/

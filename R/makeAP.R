@@ -367,13 +367,13 @@ makeAP <- function(projectDir = tempdir(),
     tarea <- data.table::data.table(
       longitude= as.data.frame(t$mission$items$polygon[listPos][1])[,2],
       latitude=as.data.frame(t$mission$items$polygon[listPos][1])[,1])
-    tarea = st_as_sf(tarea, coords = c("longitude", "latitude"), 
+    tarea = sf::st_as_sf(tarea, coords = c("longitude", "latitude"), 
                      crs = 4326)
     tarea<- sf::st_bbox(tarea)
-    taskArea<-st_as_sfc(st_bbox(tarea))
+    taskArea<-sf::st_as_sfc(sf::st_bbox(tarea))
     taskAreaUTM <- sf::st_transform(taskArea, 4326)
     # reproject it to UTM
-    #taskAreaUTM <- spTransform(taskArea, CRS(paste("+proj=utm +zone=",long2UTMzone(p$lon1)," ellps=WGS84",sep = '')))
+    #taskAreaUTM <- sp::spTransform(taskArea, sp::CRS(paste("+proj=utm +zone=",long2UTMzone(p$lon1)," ellps=WGS84",sep = '')))
     # calculate area
     surveyAreaUTM <- sf::st_area(taskAreaUTM)
     #########################################
@@ -389,7 +389,7 @@ makeAP <- function(projectDir = tempdir(),
     pos <- c(df_coordinates[1,][2],df_coordinates[1,][1])
     
     footprint <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0,factor)
-    footprint<-  spTransform(footprint,crs("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
+    footprint<-  sp::spTransform(footprint,sp::CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
     landscape<-abs(abs(footprint@bbox[1]-footprint@bbox[3])*overlap-abs(footprint@bbox[1]-footprint@bbox[3]))
     portrait<- abs(abs(footprint@bbox[2]-footprint@bbox[4])*overlap-abs(footprint@bbox[2]-footprint@bbox[4]))
     
@@ -531,7 +531,7 @@ makeAP <- function(projectDir = tempdir(),
   # create an sp polygon object of the mission area
   taskArea <- taskarea(p, csvFn)
   # reproject it to UTM
-  taskAreaUTM <- spTransform(taskArea, CRS(paste("+proj=utm +zone=",long2UTMzone(p$lon1)," ellps=WGS84",sep = '')))
+  taskAreaUTM <- sp::spTransform(taskArea, sp::CRS(paste("+proj=utm +zone=",long2UTMzone(p$lon1)," ellps=WGS84",sep = '')))
   # calculate area
   surveyAreaUTM <- rgeos::gArea(taskAreaUTM)
   
@@ -604,7 +604,7 @@ makeAP <- function(projectDir = tempdir(),
   pos <- c(p$lon1, p$lat1)
   
   footprint <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0,factor)
-  footprint<-  spTransform(footprint,crs("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
+  footprint<-  sp::spTransform(footprint,sp::CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
   landscape<-abs(abs(footprint@bbox[1]-footprint@bbox[3])*overlap-abs(footprint@bbox[1]-footprint@bbox[3]))
   portrait<- abs(abs(footprint@bbox[2]-footprint@bbox[4])*overlap-abs(footprint@bbox[2]-footprint@bbox[4]))
   
@@ -673,7 +673,7 @@ makeAP <- function(projectDir = tempdir(),
       
       # calc next coordinate
       pos <- calcNextPos(pOld[1], pOld[2], heading, trackDistance)
-      if (picFootprint) camera <- spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j))
+      if (picFootprint) camera <- maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j))
       pOld <- pos
       flightLength <- flightLength + trackDistance
       if (mode == "track") {
@@ -689,7 +689,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if ((j %% 2 != 0)) {
       pos <- calcNextPos(pOld[1], pOld[2], crossdir, crossDistance)
-      if (picFootprint) camera <-  spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j))
+      if (picFootprint) camera <-  maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j))
       pOld <- pos
       flightLength <- flightLength + crossDistance
       if (uavType == "djip3") {
@@ -709,7 +709,7 @@ makeAP <- function(projectDir = tempdir(),
     
     else if ((j %% 2 == 0)) {
       pos <- calcNextPos(pOld[1], pOld[2], crossdir, crossDistance)
-      if (picFootprint) camera <- spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir,trackDistance,flightAltitude,i,j))
+      if (picFootprint) camera <- maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir,trackDistance,flightAltitude,i,j))
       pOld <- pos
       flightLength <- flightLength + crossDistance
       
@@ -761,7 +761,7 @@ makeAP <- function(projectDir = tempdir(),
     names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group = 99,p,header = TRUE,sep = ' '),split = " "))
     # make it spatial
     sp::coordinates(djiDF) <- ~ lon + lat
-    sp::proj4string(djiDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
+    sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
     result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea,gdalLink)
     # assign adapted dem to demFn
@@ -793,7 +793,7 @@ makeAP <- function(projectDir = tempdir(),
                                                                        "V7"="character"),sep = "\t", header = FALSE)
     names(mavDF) <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","j","lat","lon")
     sp::coordinates(mavDF) <- ~ lon + lat
-    sp::proj4string(mavDF) <- CRS("+proj=longlat +datum=WGS84 +no_defs")
+    sp::proj4string(mavDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     
     
     if (is.null(launchAltitude)) {

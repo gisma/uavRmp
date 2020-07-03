@@ -86,7 +86,7 @@ vecDraw <- function(mapCenter=NULL,
     if (class(overlay[1])  %in% c("SpatialPointsDataFrame","SpatialLinesDataFrame","SpatialLines","SpatialPoints")) {
       #e <- as(raster::extent(overlay), "SpatialPolygons")
       #e <- sp::SpatialPolygonsDataFrame(e, data.frame(ID="overlay"))
-      proj4string(overlay) <- sp::proj4string(overlay)
+      sp::proj4string(overlay) <- sp::proj4string(overlay)
       overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+init=epsg:4326"))
     } 
     if  (class(overlay[1])=="SpatialPolygonsDataFrame") {
@@ -126,7 +126,7 @@ vecDraw <- function(mapCenter=NULL,
     #features<-overlay
     
     }  else if (class(overlay[1])=="sf") {
-    #  sf::st_write(overlay, dsn = paste(tmpPath, "jsondata", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata", sep=.Platform$file.sep), driver = "Esri", update = TRUE)
+    #  sf::sf::st_write(overlay, dsn = paste(tmpPath, "jsondata", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata", sep=.Platform$file.sep), driver = "Esri", update = TRUE)
       sf::st_write(overlay, dsn = paste(tmpPath, "jsondata.shp", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata.shp", sep=.Platform$file.sep), update = TRUE)
       
       conn<-file(paste(tmpPath, "jsondata", sep=.Platform$file.sep))

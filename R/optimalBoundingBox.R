@@ -20,20 +20,20 @@ minBB <- function(points, buffer = 0, epsg = 25832){
 
   # input and conversion
   #--------------------------
-  xy <- do.call(rbind, st_geometry(points))
+  xy <- do.call(rbind, sf::st_geometry(points))
 
 
   # call the Rotating Caliper Algorithm
   pts <- optimalBB(xy)
 
   # convert to polygon
-  sf_pts <- st_sfc(st_polygon(list(pts)), crs = epsg)
+  sf_pts <- sf::st_sfc(sf::st_polygon(list(pts)), crs = epsg)
 
   # square buffer
-  pts_buffer <- st_buffer(sf_pts, dist = buffer, nQuadSegs = 40, endCapStyle = "FLAT",
+  pts_buffer <- sf::st_buffer(sf_pts, dist = buffer, nQuadSegs = 40, endCapStyle = "FLAT",
             joinStyle = "MITRE", mitreLimit = Inf)
 
-  pts_buffer <- st_sfc(pts_buffer, crs = epsg)
+  pts_buffer <- sf::st_sfc(pts_buffer, crs = epsg)
 
   # return spatial object
   return(pts_buffer)

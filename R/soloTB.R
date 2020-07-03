@@ -8,7 +8,7 @@ if (!isGeneric('solo_upload')) {
 #'
 #' @param connection a valid connection string to the Solo default is "udp:10.1.1.166:14550"
 #' @param prearm \code{character} controls the prearm status of the Solo prearm check\cr 0=Disabled\cr 1=Enabled\cr -3=Skip Baro\cr -5=Skip Compass\cr -9=Skip GPS\cr -17=Skip INS\cr -33=Skip Params/Rangefinder\cr -65=Skip RC\cr 127=Skip Voltage\cr
-#' default is \code{-1}\cr\cr Find more information at \href{https://ardupilot.org/copter/docs/prearm_safety_check.html}{prearm safety},\cr \href{https://github.com/dronekit/dronekit-python}{Mission import export script}.
+#' default is \code{-1}\cr\cr Find more information at \href{https://ardupilot.org}{prearm safety},\cr \href{https://github.com/dronekit/dronekit-python}{Mission import export script}.
 #' 
 #'  
 #' @param missionFile mission file to upload
@@ -154,7 +154,7 @@ soloLog <- function(logFileSample = "recent",
   }
   
   if (log == 0) {
-    f <- list.files(logFolder, pattern=extension(logFiles))
+    f <- list.files(logFolder, pattern=raster::extension(logFiles))
     cat(f," downloaded...\n")
     cat("Download from Solo controllor seems to be ok\n")
   } else {

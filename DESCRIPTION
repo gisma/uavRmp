@@ -1,8 +1,8 @@
 Package: uavRmp
 Type: Package
 Title: UAV Mission Planner
-Version: 0.5.5
-Date: 2020-03-11
+Version: 0.5.7
+Date: 2020-07-03
 Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Marvin", "Ludwig", role = c("ctb")),
              person("Sebastian", "Richter", role = c("ctb")),
@@ -19,35 +19,32 @@ License: GPL (>= 3) | file LICENSE
 Depends:
     R (>= 3.1.0)
 Imports:
-    stringr,
-        sp,
+    sp,
+    sf,    
     raster,
-    htmlwidgets,
-    htmltools,
     rgdal,
     rgeos,
-    gdalUtils,
     geosphere,
     tools,
-    maptools,
     log4r,
     zoo,
     data.table,
-    spatial.tools,
-    devtools,
-    sf,
-    roxygen2,
     methods,
     brew,
     exifr,
-    grDevices,
     link2GI,
     jsonlite,
     rlist,
     rlang
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,
-    mapview
+    mapview,
+    grDevices,
+    stringr,
+    htmltools,
+    htmlwidgets,
+    maptools
 VignetteBuilder: knitr
+

@@ -4,7 +4,9 @@
 \name{tutdata_dem}
 \alias{tutdata_dem}
 \title{DEM data set of Marburg-Biedenkopf}
-\format{\code{"raster::raster"}}
+\format{
+\code{"raster::raster"}
+}
 \source{
 \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
 }

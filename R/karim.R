@@ -13,6 +13,7 @@ if (!isGeneric('read_gpx ')) {
 #' @return  if the layer has any features a sp object is returned.
 #' @note cloned from tmap
 #' @examples 
+#' \dontrun{
 #' ## for visualisation we are using mapview
 #' require(mapview)
 #' ## assign  GPX file
@@ -24,29 +25,29 @@ if (!isGeneric('read_gpx ')) {
 #' ## plot it
 #' plot(gpx$geometry)
 #' 
-#' 
+#' }
 #' @export read_gpx
 
 read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_points", "route_points")) {
   if (!all(layers %in% c("waypoints", "tracks", "routes", "track_points", "route_points"))) stop("Incorrect layer(s)", call. = FALSE)
   
-  # check if features exist per layer
-  suppressWarnings(hasF <- sapply(layers, function(l) {
-    ogrInfo(dsn = file, layer=l)$have_features
-  }))
+  # # check if features exist per layer
+  # suppressWarnings(hasF <- sapply(layers, function(l) {
+  #   ogrInfo(dsn = file, layer=l)$have_features
+  # }))
   
-  if (!any(hasF)) stop("None of the layer(s) has any features.", call. = FALSE)
-  
-  res <- lapply(layers[hasF], function(l) {
-    sf::st_read( file,layer=l,quiet =TRUE)
-  })
-  names(res) <- layers[hasF]
-  
-  if (sum(hasF)==1) {
-    res[[1]]
-  } else {
-    res
-  }
+  # if (!any(hasF)) stop("None of the layer(s) has any features.", call. = FALSE)
+  # 
+  # res <- lapply(layers[hasF], function(l) {
+  #   sf::st_read( file,layer=l,quiet =TRUE)
+  # })
+  # names(res) <- layers[hasF]
+  # 
+  # if (sum(hasF)==1) {
+  #   res[[1]]
+  # } else {
+  #   res
+  # }
 }
 
 
@@ -111,11 +112,11 @@ sp_line <- function(Y_coords,
  ## x = st_linestring(matrix(cbind(Y_coords,X_coords),ncol=2,byrow=TRUE))
 ##  line<-st_as_sfc(line)
 ##  line <- sf::st_set_crs(line, CRS(proj4))
-  line <- SpatialLines(list(Lines(Line(cbind(Y_coords,X_coords)), ID = ID)))
-  sp::proj4string(line) <- CRS(proj4)
+  line <- sp::SpatialLines(list(sp::Lines(sp::Line(cbind(Y_coords,X_coords)), ID = ID)))
+  sp::proj4string(line) <- sp::CRS(proj4)
   if (export) {
   ##  sf::st_write(line,file.path(runDir,paste0(ID,"home.gpkg")))
-   writeLinesShape(line,file.path(runDir,paste0(ID,"home.shp")))
+   maptools::writeLinesShape(line,file.path(runDir,paste0(ID,"home.shp")))
   }
   return(line)
 }
@@ -144,10 +145,10 @@ sp_point <- function(lon,
                      runDir=runDir) {
   point = cbind(lon,lat)
   point = sp::SpatialPoints(point)
-  point = SpatialPointsDataFrame(point, as.data.frame(ID))
-  sp::proj4string(point) <- CRS(proj4)
+  point = sp::SpatialPointsDataFrame(point, as.data.frame(ID))
+  sp::proj4string(point) <- sp::CRS(proj4)
   if (export) {
-    writeLinesShape(ID,file.path(runDir,paste0(ID,".shp")))
+    maptools::writeLinesShape(ID,file.path(runDir,paste0(ID,".shp")))
   }
   return(point)
 }

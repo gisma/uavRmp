@@ -13,7 +13,7 @@ df<- t$mission$items$TransectStyleComplexItem$Items[2][[1]]
 df$params[[1]][5:6]
 sf::st_read(test,drivers="GeoJSON")
 
-rts <- st_as_sf(
+rts <- sf::st_as_sf(
   rts_csv, 
   coords = c('Longitude', 'Latitude'),
   crs = "+init=epsg:4326"
