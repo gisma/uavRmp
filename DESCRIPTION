@@ -40,11 +40,13 @@ RoxygenNote: 7.1.0
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,
+    markdown,
     mapview,
     grDevices,
     stringr,
     htmltools,
     htmlwidgets,
-    maptools
+    maptools,
+    data.table
 VignetteBuilder: knitr
 
