@@ -1,6 +1,6 @@
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) 
 [![Travis-CI Build Status](https://travis-ci.org/gisma/uavRmp.svg?branch=master)](https://travis-ci.org/gisma/uavRmp)
-<a href="https://cran.r-project.org/web/checks/check_results_uavRmp.html"><img border="0" src="http://www.r-pkg.org/badges/version/uavRmp" alt="CRAN version"></a>
+
 ![](https://cranlogs.r-pkg.org/badges/grand-total/uavRmp?color=green)
 ![](https://cranlogs.r-pkg.org/badges/uavRmp?color=green)
 ![](https://cranlogs.r-pkg.org/badges/last-week/uavRmp?color=green)
@@ -29,7 +29,7 @@ The core planning tool ```makeFP``` (make flight plan) creates either intermedia
 ## Installation
 
 
-The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux you can use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the [dronekit](http://python.dronekit.io/develop/installation.html) python libs in addition.
+The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux you can use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the python libs in addition.
 
 A full list of necessary libraries and binaries beyond ```R``` will soon be provided.
 

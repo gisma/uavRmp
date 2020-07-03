@@ -246,7 +246,7 @@ knitr::opts_knit$set(root.dir = tempdir())
 
 NOTE: The first two points determine the flight angle and direction the second and third coordinate determine the width of the area. 
 
-If you want so save it on your SD card, open the [Litchi Mission](https://flylitchi.com/|Litchi Mission) website and click on the button ```Missions->Import```. Next navigate to the control file ```firstsurvey_1001.csv``` (you’ll find it in the folder ```projectDir/mission/date/control```). For exporting it choose ```Missions->Save``` and navigate/upload it to your missions subfolder of the Litchi app. That’s it.
+If you want so save it on your SD card, open the [Litchi Mission](https://flylitchi.com/) website and click on the button ```Missions->Import```. Next navigate to the control file ```firstsurvey_1001.csv``` (you’ll find it in the folder ```projectDir/mission/date/control```). For exporting it choose ```Missions->Save``` and navigate/upload it to your missions subfolder of the Litchi app. That’s it.
 
 Even more simple is the option to connect with the litchi cloud. While you are logged in with the same account it is synchronizing the data as soon as you start the litchi app.
 
