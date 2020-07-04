@@ -1,0 +1,7 @@
+url: https://r-spatial.github.io/uavRmp
+
+development:
+  mode: auto
+  version_label: default
+  version_tooltip: "Version"
+
