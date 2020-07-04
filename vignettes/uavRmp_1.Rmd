@@ -33,7 +33,6 @@ surveys including battery-dependent task splitting and save departures and appro
 
 The range of usage of these kinds aof aerial photography is widespread from Digital Surface Models (DSM), Digital Elevation Models (DEM), orthophotos, altitude point clouds to landuse/landscape classification, NDVI forest structure classifications and so on… 
 
-It belongs to the ```uavR``` package family that provides more functionality for the pre- and post-processing as well as the analysis of the derived data.
 
 ## Note
 WARNING: Take care! There are still a lot of construction zones around. This package is far beyond to be in a mature state. Please implement a double check systems while planning and performing autonomous flight missions. You will have a lot of chances to make a small mistake what may yield in a damage of your UAV or even worse in involving people, animals or non-cash assets. 
@@ -58,8 +57,8 @@ PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot uni
 
 The package family consists of 4 parts:
 
-  * flight planning ```uavRmp```
-  * remote sensing ```uavRrst```
+  * flight planning `uavRmp`
+  * remote sensing `uavRrst`
   
 ## Installation
 

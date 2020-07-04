@@ -1,7 +1,7 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '2020-07-03'
+date: '2020-07-04'
 editor_options:
   chunk_output_type: console
 output:
@@ -31,7 +31,6 @@ surveys including battery-dependent task splitting and save departures and appro
 
 The range of usage of these kinds aof aerial photography is widespread from Digital Surface Models (DSM), Digital Elevation Models (DEM), orthophotos, altitude point clouds to landuse/landscape classification, NDVI forest structure classifications and so on… 
 
-It belongs to the ```uavR``` package family that provides more functionality for the pre- and post-processing as well as the analysis of the derived data.
 
 ## Note
 WARNING: Take care! There are still a lot of construction zones around. This package is far beyond to be in a mature state. Please implement a double check systems while planning and performing autonomous flight missions. You will have a lot of chances to make a small mistake what may yield in a damage of your UAV or even worse in involving people, animals or non-cash assets. 
@@ -56,8 +55,8 @@ PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot uni
 
 The package family consists of 4 parts:
 
-  * flight planning ```uavRmp```
-  * remote sensing ```uavRrst```
+  * flight planning `uavRmp`
+  * remote sensing `uavRrst`
   
 ## Installation
 
@@ -242,7 +241,7 @@ Digitize the 3 corner points of an area you want to map and in addition as fourt
 
 NOTE: The first two points determine the flight angle and direction the second and third coordinate determine the width of the area. 
 
-If you want so save it on your SD card, open the [Litchi Mission](https://flylitchi.com/|Litchi Mission) website and click on the button ```Missions->Import```. Next navigate to the control file ```firstsurvey_1001.csv``` (you’ll find it in the folder ```projectDir/mission/date/control```). For exporting it choose ```Missions->Save``` and navigate/upload it to your missions subfolder of the Litchi app. That’s it.
+If you want so save it on your SD card, open the [Litchi Mission](https://flylitchi.com/) website and click on the button ```Missions->Import```. Next navigate to the control file ```firstsurvey_1001.csv``` (you’ll find it in the folder ```projectDir/mission/date/control```). For exporting it choose ```Missions->Save``` and navigate/upload it to your missions subfolder of the Litchi app. That’s it.
 
 Even more simple is the option to connect with the litchi cloud. While you are logged in with the same account it is synchronizing the data as soon as you start the litchi app.
 

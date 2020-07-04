@@ -28,11 +28,11 @@ Imports:
     tools,
     log4r,
     zoo,
-    data.table,
     methods,
     brew,
     exifr,
     link2GI,
+    data.table,    
     jsonlite,
     rlist,
     rlang
@@ -46,7 +46,6 @@ Suggests: knitr,
     stringr,
     htmltools,
     htmlwidgets,
-    maptools,
-    data.table
+    maptools
 VignetteBuilder: knitr
 

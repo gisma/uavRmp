@@ -19,7 +19,6 @@
 #' @importFrom geosphere bearing
 #' @importFrom geosphere distGeo
 #' @importFrom geosphere destPoint
-#' @importFrom data.table fread
 #' @import log4r
 #' @keywords package
 #' 
