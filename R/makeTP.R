@@ -4,35 +4,35 @@ if (!isGeneric('makeTP')) {
 }
 #' Flight Track Planning tool 
 #' @description  makeTP generates a flight track chaining up point objects with respect to a heterogenous surface and known obstacles as documented by an DSM for taking top down pictures. It creates a single control file for autonomous picture retrieval flights. 
-#' @param projectDir \code{character} path to the main folder where several projects can be hosted, default is \code{tempdir()}
-#' @param demFn  \code{character} filename of the used DSM data file, default is \code{NULL}
-#' @param locationName \code{character} base name string of the mission, default is \code{"treePos"}
-#' @param presetFlightTask \code{character} (DJI only EXPERIMENTAL). NOTE: it is strongly recommended to use the default \code{"remote"} \cr
+#' @param projectDir `character` path to the main folder where several projects can be hosted, default is `tempdir()`
+#' @param demFn  `character` filename of the used DSM data file, default is `NULL`
+#' @param locationName `character` base name string of the mission, default is `"treePos"`
+#' @param presetFlightTask `character` (DJI only EXPERIMENTAL). NOTE: it is strongly recommended to use the default `"remote"` \cr
 #'  Further options are: \cr
-#' \code{"simple_ortho"} takes one picture/waypoint,
-#' \code{"multi_ortho"} takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angele of -60deg,
-#' \code{"simple_pano"} takes a 360 deg panorama picture and 
-#' \code{"remote"} which assumes that the camera is controlled by the remote control (RC)
-#' @param flightAltitude \code{numeric} set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is \code{100}
-#' default is (\code{= 0.0}). If set to \code{-99} it will be 
+#' `"simple_ortho"` takes one picture/waypoint,
+#' `"multi_ortho"` takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angele of -60deg,
+#' `"simple_pano"` takes a 360 deg panorama picture and 
+#' `"remote"` which assumes that the camera is controlled by the remote control (RC)
+#' @param flightAltitude `numeric` set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is `100`
+#' default is (`= 0.0`). If set to `-99` it will be 
 #' calculated from the swath width of the pictures. NOTE: This makes only sense for 
-#' \code{followingTerrain = TRUE} to smooth curves.
-#' For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.
-#' @param maxSpeed \code{numeric}  cruising speed, default is \code{25.0}
-#' @param windCondition \code{numeric}options are 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h, default is \code{1}
-#' @param uavType \code{character}  type of UAV. Currently "djip3" and "pixhawk" are supported, default is \code{"pixhawk"}
-#' @param missionTrackList \code{character} filename of the mission tracklist (target positions), default is \code{NULL}
-#' @param launchPos \code{list} launch position c(longitude,latitude), default is \code{c(8.772055,50.814689)}
-#' @param climbDist \code{numeric} distance within the uav will climb on the caluclated save flight altitude in meter, default is \code{7.5}
-#' @param aboveTreeAlt \code{numeric} minimum flight height above target trees in meter, default is \code{15.0}
-#' @param circleRadius \code{numeric} radius to circle around above target trees in meter, default is \code{1.0}
-#' @param takeOffAlt altitude \code{numeric} climb altitude of the uav at take off position in meter, default is \code{50.0}
-#' @param altFilter \code{numeric} allowed altitude differences bewteen two waypoints in meter, default is \code{0.5}
-#' @param launchAltitude \code{numeric} altitude of launch position. If set to \code{-9999} a DEM is required for extracting the MSL, default is \code{-9999}
-#' @param followSurfaceRes \code{numeric}, default is \code{5} meter.
-#' @param cameraType \code{character}, default is \code{"MAPIR2"}.
-#' @param copy \code{boolean} copy used file to data folder default is \code{FALSE}
-#' @param runDir \code{character} runtime folder 
+#' `followingTerrain = TRUE` to smooth curves.
+#' For `flightPlanMode = "waypoint"` camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.
+#' @param maxSpeed `numeric`  cruising speed, default is `25.0`
+#' @param windCondition `numeric`options are 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h, default is `1`
+#' @param uavType `character`  type of UAV. Currently "djip3" and "pixhawk" are supported, default is `"pixhawk"`
+#' @param missionTrackList `character` filename of the mission tracklist (target positions), default is `NULL`
+#' @param launchPos `list` launch position c(longitude,latitude), default is `c(8.772055,50.814689)`
+#' @param climbDist `numeric` distance within the uav will climb on the caluclated save flight altitude in meter, default is `7.5`
+#' @param aboveTreeAlt `numeric` minimum flight height above target trees in meter, default is `15.0`
+#' @param circleRadius `numeric` radius to circle around above target trees in meter, default is `1.0`
+#' @param takeOffAlt altitude `numeric` climb altitude of the uav at take off position in meter, default is `50.0`
+#' @param altFilter `numeric` allowed altitude differences bewteen two waypoints in meter, default is `0.5`
+#' @param launchAltitude `numeric` altitude of launch position. If set to `-9999` a DEM is required for extracting the MSL, default is `-9999`
+#' @param followSurfaceRes `numeric`, default is `5` meter.
+#' @param cameraType `character`, default is `"MAPIR2"`.
+#' @param copy `boolean` copy used file to data folder default is `FALSE`
+#' @param runDir `character` runtime folder 
 
 #' @examples
 #'\dontrun{

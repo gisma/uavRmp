@@ -39,8 +39,8 @@ makeTP(
 \item{demFn}{\code{character} filename of the used DSM data file, default is \code{NULL}}
 
 \item{flightAltitude}{\code{numeric} set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is \code{100}
-default is (\code{= 0.0}). If set to \code{-99} it will be 
-calculated from the swath width of the pictures. NOTE: This makes only sense for 
+default is (\verb{= 0.0}). If set to \code{-99} it will be
+calculated from the swath width of the pictures. NOTE: This makes only sense for
 \code{followingTerrain = TRUE} to smooth curves.
 For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.}
 
@@ -53,10 +53,10 @@ For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) ar
 \item{takeOffAlt}{altitude \code{numeric} climb altitude of the uav at take off position in meter, default is \code{50.0}}
 
 \item{presetFlightTask}{\code{character} (DJI only EXPERIMENTAL). NOTE: it is strongly recommended to use the default \code{"remote"} \cr
- Further options are: \cr
+Further options are: \cr
 \code{"simple_ortho"} takes one picture/waypoint,
 \code{"multi_ortho"} takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angele of -60deg,
-\code{"simple_pano"} takes a 360 deg panorama picture and 
+\code{"simple_pano"} takes a 360 deg panorama picture and
 \code{"remote"} which assumes that the camera is controlled by the remote control (RC)}
 
 \item{maxSpeed}{\code{numeric}  cruising speed, default is \code{25.0}}

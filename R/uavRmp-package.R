@@ -9,7 +9,7 @@
 #' @title UAV Mission Planner
 #' @author Chris Reudenbach Lars Opgenoorth Sebastian Richter Florian Detsch Hanna Meyer Marvin Ludwig
 #' \cr
-#' \emph{Maintainer:} Chris Reudenbach \email{reudenbach@@uni-marburg.de}
+#' *Maintainer:* Chris Reudenbach \email{reudenbach@@uni-marburg.de}
 #' 
 #' 
 #'
@@ -28,9 +28,9 @@ NULL
 #' @name tutdata_dem
 #' @title DEM data set of Marburg-Biedenkopf
 #' @description DEM data set resampled to 20 m resolution
-#' @format \code{"raster::raster"}
+#' @format `"raster::raster"`
 #' @keywords datasets
-#' @source \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+#' @source `Faculty of Geography UAV derived data from Marburg University Forest first campaign`
 NULL
 #'
 #' MAVLINK waypoint example data 
@@ -39,7 +39,7 @@ NULL
 #' @title MAVLINK waypoint example data
 #' @description Waypoint file
 #' @keywords datasets
-#' @source \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+#' @source `Faculty of Geography UAV derived data from Marburg University Forest first campaign`
 NULL
 #'
 #' Virtual object position  coordinates example data 
@@ -48,7 +48,7 @@ NULL
 #' @title position example data
 #' @description position data for planning a single flight task with focus on known objects
 #' @keywords datasets
-#' @source \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+#' @source `Faculty of Geography UAV derived data from Marburg University Forest first campaign`
 NULL
 #'
 #' GPX example data 
@@ -57,7 +57,7 @@ NULL
 #' @title GPX example data 
 #' @description GPX example data as derived by a 3DR Solo flight
 #' @keywords datasets
-#' @source \code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+#' @source `Faculty of Geography UAV derived data from Marburg University Forest first campaign`
 NULL
 
 #' Flight area planning example data 
@@ -66,7 +66,7 @@ NULL
 #' @title Flight area planning example data 
 #' @description Flight area planning example data as typically needed for planning an autonomous survey flight task
 #' @keywords datasets
-#' @source \code{Faculty of Geography Marburg}
+#' @source `Faculty of Geography Marburg`
 NULL
 
 #' Flight area planning Qgroundcontrol survey data 
@@ -75,5 +75,5 @@ NULL
 #' @title Flight area planning Qgroundcontrol survey data 
 #' @description Flight area planning example data as typically needed for planning an autonomous survey flight task. The task is planned with the QGroundcontrol survey tool.
 #' @keywords datasets
-#' @source \code{Faculty of Geography Marburg}
+#' @source `Faculty of Geography Marburg`
 NULL

@@ -5,7 +5,7 @@
 \alias{tutdata_flightarea}
 \title{Flight area planning example data}
 \source{
-\code{Faculty of Geography Marburg}
+\verb{Faculty of Geography Marburg}
 }
 \description{
 Flight area planning example data as typically needed for planning an autonomous survey flight task

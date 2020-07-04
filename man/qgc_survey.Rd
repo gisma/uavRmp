@@ -5,7 +5,7 @@
 \alias{qgc_survey}
 \title{Flight area planning Qgroundcontrol survey data}
 \source{
-\code{Faculty of Geography Marburg}
+\verb{Faculty of Geography Marburg}
 }
 \description{
 Flight area planning example data as typically needed for planning an autonomous survey flight task. The task is planned with the QGroundcontrol survey tool.

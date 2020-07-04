@@ -5,7 +5,7 @@
 \alias{tutdata_position}
 \title{position example data}
 \source{
-\code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+\verb{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
 }
 \description{
 position data for planning a single flight task with focus on known objects

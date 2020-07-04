@@ -17,7 +17,7 @@ Generates a variable with a certain value in the R environment
 \examples{
 \dontrun{
 
-# creates the global var \code{pathToData} with the value \code{~/home/data}
+# creates the global var `pathToData` with the value `~/home/data`
 makeGlobalVar("pathToData","~/home/data") 
 
 }

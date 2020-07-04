@@ -47,7 +47,7 @@ c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or
 an OGR compatible file (prefunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’erably geoJSON or KML) with
 at least 4 coordinates that describe the flight area.
 The fourth coordinate is the launch position.
- You will find further explanation under seealso.}
+You will find further explanation under seealso.}
 
 \item{flightAltitude}{set the default flight altitude of the mission. It is
 assumed that the UAV is started at the highest point of the surveyArea
@@ -68,7 +68,7 @@ Further explanation at seealso}
 
 \item{altFilter}{if \code{followingTerrain} is equal \code{TRUE} then
 \code{altFilter} is the threshold value of accepted altitude difference (m) between two way points.
- If this value is not exceeded, the way point is omitted due to the fact that only 99 way points per mission are allowed.}
+If this value is not exceeded, the way point is omitted due to the fact that only 99 way points per mission are allowed.}
 
 \item{horizonFilter}{integer filter size of the rolling filter kernel for the flight track. Must be multiplied by the \code{followSurfaceRes} to get the spatial extent}
 
@@ -78,8 +78,8 @@ Further explanation at seealso}
 \item{useMP}{default is FALSE switches to use a missionplanner/Qgroundcontrolplanner survey as planning base}
 
 \item{presetFlightTask}{(DJI only) strongly recommended to use "remote"
-       \cr
- Options are:
+\cr
+Options are:
 \code{"simple_ortho"} takes one picture/way point,
 \code{"multi_ortho"} takes 4 picture at a waunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’unable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’ypoint, two vertically down and two in forward and backward viewing direction and an Angele of -60deg,
 \code{"simple_pano"} takes a 360 deg panorama picture and
@@ -105,13 +105,13 @@ Further explanation at seealso}
 
 \item{djiBasic}{c(0,0,0,-90)
 \cr curvesize (DJI only) controls the curve angle of the uav passing way points.
-By default it is set to (\code{= 0.0}).
+By default it is set to (\verb{= 0.0}).
 \cr rotationdir (DJI only) camera control parameter set the UAV basic turn direction to right (0) or left (1)
 \cr gimbalmode (DJI only) camera control parameter
 \code{0} deactivates the gimbal control
 \code{1} activates the gimbal for focusing POIs
 \code{2} activates the gimbal for focus and interpolate a field of view in an angel of \code{gimbalpitchangle}
-\cr gimbalpitchangle (DJI only) vertical angle of camera  \code{+30 deg..-90 deg}
+\cr gimbalpitchangle (DJI only) vertical angle of camera  \verb{+30 deg..-90 deg}
 \cr actiontype (DJI only) individual actionype settings of the camera c(1,1,...)
 \cr actionparam (DJI only) corresponding parameter for the above individual actiontype c(0,0,...)
 \code{uavViewDir} viewing direction of camera default is \code{0}}
@@ -135,21 +135,21 @@ The basic idea is to provide an easy to use workflow for controlling rtf-UAVs fo
 }
 \details{
 makeAP (make aerial plan) creates either intermediate flight control files for the
-  DJI phantom x UAVs or ready to upload control files for the 3DR Solo/PixHawk flightcontroller. The
-  DJI control files are designed for using with the proprietary litchi flight
-  control app exchange format, while the 3DR Solo/PixHawk flightcontroller files are using the MAVLINK
-  common message set, that is used by the PixHawk flight controller family.
-  Both are implemented very rudimentarily.\cr\cr DJI:\cr The reason using DJI
-  is their absolute straightforward usage. Everybody can fly with a DJI but
-  the price is a more or less closed system at least in the low budget segement. There are workarounds like the litchi app that provides
-  additionally to a cloud based mission planner an offline/standalone
-  interface to upload a CSV formated way point file for autonomous flights to
-  the Phantom.\cr\cr PixHawk flightcontroller/3DR Solo:\cr The open uav community is focused
-  on the PixHawk autopilot unit and the Mission Planner software. It is well
-  documented and several APIs are provided. Nevertheless a high resolution 
-  terrain following flight planning tool for  autonomous obstacle avoiding flight missions
-  is not available. \code{makeAP} creates a straightforward version of MAV format flight control
-  rules that are ready to be uploaded directly on the Pixhawk controller using the \code{solo_upload} function.\cr\cr
+DJI phantom x UAVs or ready to upload control files for the 3DR Solo/PixHawk flightcontroller. The
+DJI control files are designed for using with the proprietary litchi flight
+control app exchange format, while the 3DR Solo/PixHawk flightcontroller files are using the MAVLINK
+common message set, that is used by the PixHawk flight controller family.
+Both are implemented very rudimentarily.\cr\cr DJI:\cr The reason using DJI
+is their absolute straightforward usage. Everybody can fly with a DJI but
+the price is a more or less closed system at least in the low budget segement. There are workarounds like the litchi app that provides
+additionally to a cloud based mission planner an offline/standalone
+interface to upload a CSV formated way point file for autonomous flights to
+the Phantom.\cr\cr PixHawk flightcontroller/3DR Solo:\cr The open uav community is focused
+on the PixHawk autopilot unit and the Mission Planner software. It is well
+documented and several APIs are provided. Nevertheless a high resolution
+terrain following flight planning tool for  autonomous obstacle avoiding flight missions
+is not available. \code{makeAP} creates a straightforward version of MAV format flight control
+rules that are ready to be uploaded directly on the Pixhawk controller using the \code{solo_upload} function.\cr\cr
 }
 \note{
 To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: \href{http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro}{uav based Remote Sensing at giswerk.org}).
@@ -157,12 +157,12 @@ https://gisma.github.io/
 }
 \section{Warning}{
  Take care! There are still a lot of construction zones
-  around. This script is far beyond to be in a mature state. Please control
-  and backup all controls again while planning and performing autonomous
-  flight plans and missions. You will have a lot of chances to make a small
-  mistake what may yield in a damage of your UAV or even worse in involving
-  people, animals or non-cash assets. Check your risk, use parachute systems
-  and even if it is running like a charm, keep alert!
+around. This script is far beyond to be in a mature state. Please control
+and backup all controls again while planning and performing autonomous
+flight plans and missions. You will have a lot of chances to make a small
+mistake what may yield in a damage of your UAV or even worse in involving
+people, animals or non-cash assets. Check your risk, use parachute systems
+and even if it is running like a charm, keep alert!
 }
 
 \examples{
@@ -244,7 +244,6 @@ vecDraw(preset="uav")
 }
 }
 \seealso{
-The underlying concept, a tutorial and a field guide can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
-  "uavRmp")} or 
-  at \href{https://gisma.github.io/uavRmp/articles/uavRmp_1.html}{Github uavRmp manual}).
+The underlying concept, a tutorial and a field guide can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package = "uavRmp")} or
+at \href{https://gisma.github.io/uavRmp/articles/uavRmp_1.html}{Github uavRmp manual}).
 }

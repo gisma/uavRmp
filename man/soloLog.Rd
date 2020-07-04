@@ -33,12 +33,12 @@ soloLog(
 Wraps the mavtogpx.py converter as provided by the \href{https://github.com/dronekit/dronekit-python}{dronkit library}). It downloads and optionally converts the most important 3DR Solo logfiles. Optionally you may import the geometries and data as \code{sp} object.
 }
 \note{
-for using the Solo stuff is tested only for Linux and the bash shell under Windows 10. You need to install the following python libs: \cr 
-\code{sudo pip install pymavlink}  \cr 
-\code{sudo pip install dronekit-sitl} \cr 
-\code{sudo pip install dronekit} \cr \cr
+for using the Solo stuff is tested only for Linux and the bash shell under Windows 10. You need to install the following python libs: \cr
+\verb{sudo pip install pymavlink}  \cr
+\verb{sudo pip install dronekit-sitl} \cr
+\verb{sudo pip install dronekit} \cr \cr
 Additionally you need \code{sshpass}:\cr
-\code{sudo apt-get install sshpass} \cr 
+\verb{sudo apt-get install sshpass} \cr
 \cr And please rememeber - you need to be connected at least to a running 3DR Solo radio control and if you want to donload data from the Pixhawk to a Solo UAV
 }
 \examples{

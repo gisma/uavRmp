@@ -7,8 +7,8 @@ if (!isGeneric('solo_upload')) {
 #' @description  solo_upload provides a crude interface to upload the Solo mission file to the 3dr SOLO
 #'
 #' @param connection a valid connection string to the Solo default is "udp:10.1.1.166:14550"
-#' @param prearm \code{character} controls the prearm status of the Solo prearm check\cr 0=Disabled\cr 1=Enabled\cr -3=Skip Baro\cr -5=Skip Compass\cr -9=Skip GPS\cr -17=Skip INS\cr -33=Skip Params/Rangefinder\cr -65=Skip RC\cr 127=Skip Voltage\cr
-#' default is \code{-1}\cr\cr Find more information at \href{https://ardupilot.org}{prearm safety},\cr \href{https://github.com/dronekit/dronekit-python}{Mission import export script}.
+#' @param prearm `character` controls the prearm status of the Solo prearm check\cr 0=Disabled\cr 1=Enabled\cr -3=Skip Baro\cr -5=Skip Compass\cr -9=Skip GPS\cr -17=Skip INS\cr -33=Skip Params/Rangefinder\cr -65=Skip RC\cr 127=Skip Voltage\cr
+#' default is `-1`\cr\cr Find more information at [prearm safety](https://ardupilot.org),\cr [Mission import export script](https://github.com/dronekit/dronekit-python).
 #' 
 #'  
 #' @param missionFile mission file to upload
@@ -58,25 +58,25 @@ if (!isGeneric('soloLog')) {
 }
 #' Download, reorganize and export the binary log files from 3DR Solo Pixhawk controller or the telemetry log files from the Solo radio control unit
 #'
-#' @description  Wraps the mavtogpx.py converter as provided by the \href{https://github.com/dronekit/dronekit-python}{dronkit library}). It downloads and optionally converts the most important 3DR Solo logfiles. Optionally you may import the geometries and data as \code{sp} object.
+#' @description  Wraps the mavtogpx.py converter as provided by the [dronkit library](https://github.com/dronekit/dronekit-python)). It downloads and optionally converts the most important 3DR Solo logfiles. Optionally you may import the geometries and data as `sp` object.
 #'
-#' @param logSource \code{character}, options are: \code{rc} = logfiles from the radio control, \code{pixhawk} = logfiles from the flightcontroller, default is set to  \code{rc}. The radio control is providing the last ten telemetry data files, while the flight controller provides the latest 50 binary logfiles.
+#' @param logSource `character`, options are: `rc` = logfiles from the radio control, `pixhawk` = logfiles from the flightcontroller, default is set to  `rc`. The radio control is providing the last ten telemetry data files, while the flight controller provides the latest 50 binary logfiles.
 
-#' @param logFileSample \code{character} , options are:  \code{recent} download the most recent logfile,  \code{all} downloads all logfiles, or a plain number e.g. \code{2} for a specific logfile. Note the telemetry logfiles are numbering from 1 to 9 only, the most recent one is not numbered. The binary logfiles from the pixhawk are numbering continously but only the last 50 files or so will exist. 
+#' @param logFileSample `character` , options are:  `recent` download the most recent logfile,  `all` downloads all logfiles, or a plain number e.g. `2` for a specific logfile. Note the telemetry logfiles are numbering from 1 to 9 only, the most recent one is not numbered. The binary logfiles from the pixhawk are numbering continously but only the last 50 files or so will exist. 
 #' 
-#' @param logDest \code{character} (existing) destination path to which the logs should be downloaded to 
-#' @param downloadOnly \code{logical} wether to only download the files or also convert and rename them, default is set FALSE
-#' @param netWarn \code{logical} wether to warn and waits before starting a connection to the controller. helps while testing due to occassional wifi shutdowns of the Solo, default is set to FALSE
-#' @param renameFiles  \code{logical} renames the log and gpx files according to the time period, default is set TRUE
+#' @param logDest `character` (existing) destination path to which the logs should be downloaded to 
+#' @param downloadOnly `logical` wether to only download the files or also convert and rename them, default is set FALSE
+#' @param netWarn `logical` wether to warn and waits before starting a connection to the controller. helps while testing due to occassional wifi shutdowns of the Solo, default is set to FALSE
+#' @param renameFiles  `logical` renames the log and gpx files according to the time period, default is set TRUE
 #' 
-#' @param makeSP \code{logical} wether returning an \code{sp} object from the gpx files or not, default is FALSE
+#' @param makeSP `logical` wether returning an `sp` object from the gpx files or not, default is FALSE
 #' 
 #' @note for using the Solo stuff is tested only for Linux and the bash shell under Windows 10. You need to install the following python libs: \cr 
-#' \code{sudo pip install pymavlink}  \cr 
-#' \code{sudo pip install dronekit-sitl} \cr 
-#' \code{sudo pip install dronekit} \cr \cr
-#' Additionally you need \code{sshpass}:\cr
-#' \code{sudo apt-get install sshpass} \cr 
+#' `sudo pip install pymavlink`  \cr 
+#' `sudo pip install dronekit-sitl` \cr 
+#' `sudo pip install dronekit` \cr \cr
+#' Additionally you need `sshpass`:\cr
+#' `sudo apt-get install sshpass` \cr 
 #' \cr And please rememeber - you need to be connected at least to a running 3DR Solo radio control and if you want to donload data from the Pixhawk to a Solo UAV
 #' 
 #' @examples

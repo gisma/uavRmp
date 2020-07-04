@@ -5,7 +5,7 @@
 \alias{tutdata_flighttrack}
 \title{GPX example data}
 \source{
-\code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+\verb{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
 }
 \description{
 GPX example data as derived by a 3DR Solo flight

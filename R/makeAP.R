@@ -20,13 +20,13 @@ if (!isGeneric('makeAP')) {
 #'   on the PixHawk autopilot unit and the Mission Planner software. It is well
 #'   documented and several APIs are provided. Nevertheless a high resolution 
 #'   terrain following flight planning tool for  autonomous obstacle avoiding flight missions
-#'   is not available. \code{makeAP} creates a straightforward version of MAV format flight control
-#'   rules that are ready to be uploaded directly on the Pixhawk controller using the \code{solo_upload} function.\cr\cr
+#'   is not available. `makeAP` creates a straightforward version of MAV format flight control
+#'   rules that are ready to be uploaded directly on the Pixhawk controller using the `solo_upload` function.\cr\cr
 #'   
 #' @seealso
-#'   The underlying concept, a tutorial and a field guide can be found in the package vignettes. See \code{browseVignettes("uavRmp")} or \code{vignette(package =
-#'   "uavRmp")} or 
-#'   at \href{https://gisma.github.io/uavRmp/articles/uavRmp_1.html}{Github uavRmp manual}).
+#'   The underlying concept, a tutorial and a field guide can be found in the package vignettes. See `browseVignettes("uavRmp")` or `vignette(package =
+#'   "uavRmp")` or 
+#'   at [Github uavRmp manual](https://gisma.github.io/uavRmp/articles/uavRmp_1.html)).
 #'
 
 #' @section Warning: Take care! There are still a lot of construction zones
@@ -38,8 +38,8 @@ if (!isGeneric('makeAP')) {
 #'   and even if it is running like a charm, keep alert!
 
 
-#' @param projectDir \code{character} path to the main folder where several locations can be hosted, default is \code{tempdir()}
-#' @param locationName \code{character} path to the location folder where all tasks of this plot are hosted, default is \code{"flightArea"} 
+#' @param projectDir `character` path to the main folder where several locations can be hosted, default is `tempdir()`
+#' @param locationName `character` path to the location folder where all tasks of this plot are hosted, default is `"flightArea"` 
 #' @param surveyArea  you may provide either the coordinates by
 #' c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or
 #' an OGR compatible file (prefunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’erably geoJSON or KML) with
@@ -50,41 +50,41 @@ if (!isGeneric('makeAP')) {
 #' It will overwrite the DEM based estimation if any other value than -9999
 #' @param demFn  filename of the corresponding DEM data file.
 
-#' @param followSurface  \code{boolean}  TRUE performs an altitude correction
+#' @param followSurface  `boolean`  TRUE performs an altitude correction
 #' of the mission's flight altitude using additional DEM data.
-#' If no DEM data is provided and \code{followSurface} is TRUE,
+#' If no DEM data is provided and `followSurface` is TRUE,
 #' SRTM data will be downloaded and used.
 #' Further explanation at seealso
-#' @param altFilter if \code{followingTerrain} is equal \code{TRUE} then
-#' \code{altFilter} is the threshold value of accepted altitude difference (m) between two way points.
+#' @param altFilter if `followingTerrain` is equal `TRUE` then
+#' `altFilter` is the threshold value of accepted altitude difference (m) between two way points.
 #'  If this value is not exceeded, the way point is omitted due to the fact that only 99 way points per mission are allowed.
-#' @param horizonFilter integer filter size of the rolling filter kernel for the flight track. Must be multiplied by the \code{followSurfaceRes} to get the spatial extent
-#' @param flightPlanMode type of flight plan. Available are: \code{"waypoints"},
-#'   \code{"track"}, \code{"manual"}.
+#' @param horizonFilter integer filter size of the rolling filter kernel for the flight track. Must be multiplied by the `followSurfaceRes` to get the spatial extent
+#' @param flightPlanMode type of flight plan. Available are: `"waypoints"`,
+#'   `"track"`, `"manual"`.
 #' @param useMP default is FALSE switches to use a missionplanner/Qgroundcontrolplanner survey as planning base
 #' @param presetFlightTask (DJI only) strongly recommended to use "remote"
 #'        \cr
 #'  Options are:
-#' \code{"simple_ortho"} takes one picture/way point,
-#' \code{"multi_ortho"} takes 4 picture at a waunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’unable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’ypoint, two vertically down and two in forward and backward viewing direction and an Angele of -60deg,
-#' \code{"simple_pano"} takes a 360 deg panorama picture and
-#' \code{"remote"} which assumes that the camera is controlled by the remote control (RC)
+#' `"simple_ortho"` takes one picture/way point,
+#' `"multi_ortho"` takes 4 picture at a waunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’unable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’ypoint, two vertically down and two in forward and backward viewing direction and an Angele of -60deg,
+#' `"simple_pano"` takes a 360 deg panorama picture and
+#' `"remote"` which assumes that the camera is controlled by the remote control (RC)
 #' @param flightAltitude set the default flight altitude of the mission. It is
 #'   assumed that the UAV is started at the highest point of the surveyArea
 #'   otherwise you have to defined the position of launching.
 #' @param overlap overlapping of the pictures in percent (1.0 = 100)
 #' @param djiBasic c(0,0,0,-90)
 #' \cr curvesize (DJI only) controls the curve angle of the uav passing way points.
-#' By default it is set to (\code{= 0.0}).
+#' By default it is set to (`= 0.0`).
 #' \cr rotationdir (DJI only) camera control parameter set the UAV basic turn direction to right (0) or left (1)
 #' \cr gimbalmode (DJI only) camera control parameter
-#' \code{0} deactivates the gimbal control
-#' \code{1} activates the gimbal for focusing POIs
-#' \code{2} activates the gimbal for focus and interpolate a field of view in an angel of \code{gimbalpitchangle}
-#' \cr gimbalpitchangle (DJI only) vertical angle of camera  \code{+30 deg..-90 deg}
+#' `0` deactivates the gimbal control
+#' `1` activates the gimbal for focusing POIs
+#' `2` activates the gimbal for focus and interpolate a field of view in an angel of `gimbalpitchangle`
+#' \cr gimbalpitchangle (DJI only) vertical angle of camera  `+30 deg..-90 deg`
 #' \cr actiontype (DJI only) individual actionype settings of the camera c(1,1,...)
 #' \cr actionparam (DJI only) corresponding parameter for the above individual actiontype c(0,0,...)
-#' \code{uavViewDir} viewing direction of camera default is \code{0}
+#' `uavViewDir` viewing direction of camera default is `0`
 #' @param maxSpeed  cruising speed
 #' @param heatMap switch for calculating the overlapping factor on a raster map
 #' @param picFootprint switch for calculating the footprint at all way points
@@ -99,10 +99,10 @@ if (!isGeneric('makeAP')) {
 #' @param uavType type of uav. currently "djip3" and "solo" are supported
 #' @param dA if TRUE the real extent of the used DEM is returned helpful for low altitudes flight planning
 #' @param cameraType depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2
-#' @param runDir \code{character} runtime folder 
+#' @param runDir `character` runtime folder 
 #' @param gdalLink link to GDAL binaries
 #' @note
-#' To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: \href{http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro}{uav based Remote Sensing at giswerk.org}).
+#' To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: [uav based Remote Sensing at giswerk.org](http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro)).
 #'https://gisma.github.io/
 #'
 #'

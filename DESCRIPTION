@@ -48,4 +48,4 @@ Suggests: knitr,
     htmlwidgets,
     maptools
 VignetteBuilder: knitr
-
+Roxygen: list(markdown = TRUE)

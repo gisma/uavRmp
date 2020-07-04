@@ -9,7 +9,7 @@ if (!isGeneric('read_gpx ')) {
 #' Read a GPX file. By default, it reads all possible GPX layers, and only returns shapes for layers that have any features.
 #' 
 #' @param file a GPX filename (including directory)
-#' @param layers vector of GPX layers. Possible options are \code{"waypoints"}, \code{"tracks"}, \code{"routes"}, \code{"track_points"}, \code{"route_points"}. By dedault, all those layers are read.
+#' @param layers vector of GPX layers. Possible options are `"waypoints"`, `"tracks"`, `"routes"`, `"track_points"`, `"route_points"`. By dedault, all those layers are read.
 #' @return  if the layer has any features a sp object is returned.
 #' @note cloned from tmap
 #' @examples 
@@ -91,7 +91,7 @@ comp_ll_proj4 <- function(x) {
 #' @param ID id of line
 #' @param proj4 projection
 #' @param export write shafefile default = F 
-#' @param runDir \code{character} runtime folder 
+#' @param runDir `character` runtime folder 
 #' @export
 #' 
 #' @examples 
@@ -128,7 +128,7 @@ sp_line <- function(Y_coords,
 #' @param proj4 projection
 #' @param ID name of point
 #' @param export write shafefile default = F 
-#' @param runDir \code{character} runtime folder 
+#' @param runDir `character` runtime folder 
 #' @export
 #' @examples 
 #' ## creating sp spatial point object
@@ -279,7 +279,7 @@ initProj <- function(projRootDir=getwd(), projFolders=c("log/","control/","run/"
 #'@examples
 #' \dontrun{
 #'
-#' # creates the global var \code{pathToData} with the value \code{~/home/data}
+#' # creates the global var `pathToData` with the value `~/home/data`
 #' makeGlobalVar("pathToData","~/home/data") 
 #' 
 #' }
@@ -357,9 +357,9 @@ file_move <- function(from, to,pattern="*") {
 #' copyDir
 #' @description  copyDir copy all image data to the corresponding folder
 #'
-#' @param fromDir \code{character} a path to the image data
-#' @param toProjDir \code{character} a path to the projRootDir
-#' @param pattern  \code{character} a string pattern for filtering  file list 
+#' @param fromDir `character` a path to the image data
+#' @param toProjDir `character` a path to the projRootDir
+#' @param pattern  `character` a string pattern for filtering  file list 
 #' @export copyDir
 #' 
 copyDir <- function(fromDir, toProjDir, pattern="*") {

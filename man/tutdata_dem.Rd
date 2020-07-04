@@ -8,7 +8,7 @@
 \code{"raster::raster"}
 }
 \source{
-\code{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
+\verb{Faculty of Geography UAV derived data from Marburg University Forest first campaign}
 }
 \description{
 DEM data set resampled to 20 m resolution
