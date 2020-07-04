@@ -1,3 +1,7 @@
+# mpControl contains all kind of of unctionality which is directly realted to the task planning
+# none of them is exported and only rudimentary documented
+
+
 #DEM related preprocessing and basic analysis stuff
 # 
 # (1)  it imports and deproject different kind of input DEM/DSM data
