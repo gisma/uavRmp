@@ -395,7 +395,7 @@ makeAP <- function(projectDir = tempdir(),
     
     
     # calculates the footprint of the first position and returns a SpatialPolygonsDataFrame
-    if (picFootprint)  camera <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0)
+    if (picFootprint)  camera <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0,factor)
     else  camera = "NULL"
     
     ## creates the export control parameter set of the first position
@@ -610,7 +610,7 @@ makeAP <- function(projectDir = tempdir(),
   
   
   # calculates the footprint of the first position and returns a SpatialPolygonsDataFrame
-  if (picFootprint)  camera <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0)
+  if (picFootprint)  camera <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0,factor)
   else  camera = "NULL"
   
   ## creates the export control parameter set of the first position
@@ -673,7 +673,7 @@ makeAP <- function(projectDir = tempdir(),
       
       # calc next coordinate
       pos <- calcNextPos(pOld[1], pOld[2], heading, trackDistance)
-      if (picFootprint) camera <- maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j))
+      if (picFootprint) camera <- maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + trackDistance
       if (mode == "track") {
@@ -689,7 +689,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if ((j %% 2 != 0)) {
       pos <- calcNextPos(pOld[1], pOld[2], crossdir, crossDistance)
-      if (picFootprint) camera <-  maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j))
+      if (picFootprint) camera <-  maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + crossDistance
       if (uavType == "djip3") {
@@ -709,7 +709,7 @@ makeAP <- function(projectDir = tempdir(),
     
     else if ((j %% 2 == 0)) {
       pos <- calcNextPos(pOld[1], pOld[2], crossdir, crossDistance)
-      if (picFootprint) camera <- maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir,trackDistance,flightAltitude,i,j))
+      if (picFootprint) camera <- maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir,trackDistance,flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + crossDistance
       
@@ -763,6 +763,7 @@ makeAP <- function(projectDir = tempdir(),
     sp::coordinates(djiDF) <- ~ lon + lat
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
+
     result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea,gdalLink)
     # assign adapted dem to demFn
     demFn <- result[[3]]
@@ -798,6 +799,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if (is.null(launchAltitude)) {
       # analyze DEM related stuff
+
       result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea,gdalLink)
       # assign adapted dem to demFn
       lauchPos <- result[[1]]

@@ -331,15 +331,17 @@ The script generates:
 
 All three of them are important even if a quick inspection of the generated objects is most of the time sufficient. The log file dumps the all important parameters of the calculated mission. Most important the calculated mission speed and picture rate based on an estimation of the mission time. 
 
-Using the ```mapview``` package  you can easily visualize the results. The below example shows the footprints of the images (blue), surveyArea (red), turnpoints of track (blue circles) and the launch position (red). 
+Using the ```mapview``` package  you can easily visualize the results. The below example shows the footprints of the images (green), surveyArea (blue), turnpoints of track (blue circles), the launch position (red circle) and the used original DEM (oDEM). 
 
 
 ```r
  require(mapview)
- mapview(fp[[5]],color="red", alpha.regions =0.1,lwd=0.5)+
- mapview(fp[[1]],lwd=1,cex=4)+
- mapview(fp[[3]],color="red",cex=5)+
- mapview(fp[[4]],color="darkblue", alpha.regions =0.1,lwd=0.5)
+mapview::mapview(fp$wp,cex=4, lwd=0.5)+
+  mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
+  mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
+  mapview::mapview(fp$oDEM)+
+  mapview::mapview(fp)+
+ mapview::mapview(fp$fp,color="green")
 ```
 
 ![The first autonomous mission](../inst/images/simplemission.png)  
