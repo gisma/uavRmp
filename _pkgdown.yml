@@ -21,8 +21,5 @@ footer:
 home:
   sidebar:
     structure: [links, license, community, citation, authors, dev]
-development:
-  mode: auto
-  version_label: default
-  version_tooltip: "Version"
+
 
