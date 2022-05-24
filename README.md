@@ -1,3 +1,5 @@
+## Unmanned Aerial Vehicle R based Mission Planning - uavRmp 
+
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) 
 [![Travis-CI Build Status](https://travis-ci.org/gisma/uavRmp.svg?branch=master)](https://travis-ci.org/gisma/uavRmp)
 
@@ -8,7 +10,7 @@
 
 
 
-## Unmanned Aerial Vehicle R based Mission Planning - uavRmp 
+
 The [uavRmp](https://github.com/gisma/uavRmp) package is designed 
 
 for uav autonomous mission planning. In the first place it is a simple and open source planning tool for monitoring flights of low budget drones based on ```R```. It provide an easy workflow for planning autonomous 
