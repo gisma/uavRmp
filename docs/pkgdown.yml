@@ -1,6 +1,10 @@
-pandoc: 2.7.3
-pkgdown: 1.4.1
+pandoc: 2.14.0.3
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   uavRmp_1: uavRmp_1.html
+last_built: 2022-05-24T18:01Z
+urls:
+  reference: https://r-spatial.github.io/uavRmp/reference
+  article: https://r-spatial.github.io/uavRmp/articles
 
