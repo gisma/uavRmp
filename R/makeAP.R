@@ -326,9 +326,6 @@ makeAP <- function(projectDir = tempdir(),
     updir           <- t$mission$items$angle[listPos]
     if (updir <= 180) downdir <- updir + 180
     else if (updir>180) downdir<- updir -180
-    
-
-    
     crossdir        <- geosphere::bearing(c(df_coordinates[2,][2],df_coordinates[2,][1] ),c(df_coordinates[3,][2],df_coordinates[3,][1] ),a = 6378137,f = 1 / 298.257223563)
     missionArea     <- t$mission$items$polygon[listPos]
     # calculate heading from launch position to mission start position
@@ -349,8 +346,8 @@ makeAP <- function(projectDir = tempdir(),
     p <- makeFlightParam( c(missionArea[[1]][1],missionArea[[1]][5],
                             missionArea[[1]][2],missionArea[[1]][6] ,
                             missionArea[[1]][3],missionArea[[1]][7] ,
-                           launchLat, launchLon),
-      flightParams, followSurface)
+                            launchLat, launchLon),
+                          flightParams, followSurface)
     mode<-p$flightPlanMode
     
     
@@ -368,7 +365,7 @@ makeAP <- function(projectDir = tempdir(),
       longitude= as.data.frame(t$mission$items$polygon[listPos][1])[,2],
       latitude=as.data.frame(t$mission$items$polygon[listPos][1])[,1])
     tarea = sf::st_as_sf(tarea, coords = c("longitude", "latitude"), 
-                     crs = 4326)
+                         crs = 4326)
     tarea<- sf::st_bbox(tarea)
     taskArea<-sf::st_as_sfc(sf::st_bbox(tarea))
     taskAreaUTM <- sf::st_transform(taskArea, 4326)
@@ -399,6 +396,8 @@ makeAP <- function(projectDir = tempdir(),
     else  camera = "NULL"
     
     ## creates the export control parameter set of the first position
+    
+    
     if (uavType == "pixhawk") {
       lns[length(lns) + 1] <-  makeUavPointMAV(lat = pos[2],lon = pos[1], head = uavViewDir, group = 99 )
     }
@@ -410,7 +409,7 @@ makeAP <- function(projectDir = tempdir(),
       if (uavType == "pixhawk") {
         lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2],lon = pos[1],head = uavViewDir,group = 99)
       }
-      trackDistance <- len
+#      trackDistance <- len
       multiply <- 1
     }
     
@@ -428,7 +427,7 @@ makeAP <- function(projectDir = tempdir(),
     for (j in seq(1:(nrow(df_coord)-1))) {
       df_coord$heading[j] <- geosphere::bearing(c(df_coord$lon[j],df_coord$lat[j] ), c(df_coord$lon[j + 1],df_coord$lat[j + 1]),a = 6378137,f = 1 / 298.257223563)
       df_coord$len[j] <- geosphere::distGeo(c(df_coord$lon[j],df_coord$lat[j] ), c(df_coord$lon[j + 1],df_coord$lat[j + 1]),a = 6378137,f = 1 / 298.257223563)
-      df_coord$multiply <- floor(df_coord$len / followSurfaceRes)
+      df_coord$multiply[j] <- floor(df_coord$len[j] / followSurfaceRes)
      }
     ## now start calculating the waypoints according to the resolution
     cat("calculating waypoints...\n")
@@ -632,7 +631,7 @@ makeAP <- function(projectDir = tempdir(),
     if (uavType == "pixhawk") {
       lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2],lon = pos[1],head = uavViewDir,group = 99)
     }
-    trackDistance <- len
+    #trackDistance <- len
     multiply <- 1
   }
   
