@@ -69,7 +69,7 @@ Further options are: \cr
 
 \item{launchAltitude}{\code{numeric} altitude of launch position. If set to \code{-9999} a DEM is required for extracting the MSL, default is \code{-9999}}
 
-\item{uavType}{\code{character}  type of UAV. Currently "djip3" and "pixhawk" are supported, default is \code{"pixhawk"}}
+\item{uavType}{\code{character}  type of UAV. Currently "dji_csv" and "pixhawk" are supported, default is \code{"pixhawk"}}
 
 \item{cameraType}{\code{character}, default is \code{"MAPIR2"}.}
 

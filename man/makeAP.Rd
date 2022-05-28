@@ -11,7 +11,7 @@ makeAP(
   flightAltitude = 100,
   launchAltitude = NULL,
   followSurface = FALSE,
-  followSurfaceRes = NULL,
+  followSurfaceRes = 25,
   demFn = NULL,
   altFilter = 1,
   horizonFilter = 30,
@@ -95,7 +95,7 @@ Options are:
 
 \item{windCondition}{1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h}
 
-\item{uavType}{type of uav. currently "djip3" and "solo" are supported}
+\item{uavType}{type of uav. currently "dji_csv" and "solo" are supported}
 
 \item{cameraType}{depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2}
 
@@ -196,22 +196,14 @@ fp <- makeAP(surveyArea = tutorial_flightArea,
 ##     You have to use a high quality high resulution DSM
 ##     (here simulated with a standard DEM)
 
-fp <- makeAP(surveyArea=tutorial_flightArea,
-           followSurface = TRUE,
-           flightAltitude = 45,
-           demFn = demFn,
-           windCondition = 1,
-           uavType = "pixhawk",
-           followSurfaceRes = 5,
-           altFilter = .75)
 
 
 ## (4) typical real case scenario (2)
 ##     A flight altitudes BELOW 50 m is ambitious and risky
 ##     You have to use a high quality high resulution DSM
 ##     (here simulated with a standard DEM)
-##     This examples used a filight panning from the QGroundcotrol Survey planning tool
-##     It also used the calculations for camera footprints and so on
+##     This examples uses a flight planning from the QGroundcotrol Survey planning tool
+##     It also used the all calculations for camera flight speed etc.
 ##     NOTE EXPERIMENTAL 
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
@@ -225,8 +217,23 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
             followSurfaceRes = 5,
              altFilter = .75)
 
+## (5) typical real case scenario (3)
+##     This examples uses a flight planning from the QGroundcotrol Survey planning tool
+##     It also used the all calculations for camera flight speed etc.
+##     The flight plan is modyfied by splitting up the task according to 99 Waypoints
+##     and flight time and saved as litchi csv format 
+##     NOTE EXPERIMENTAL tested with DJI mavic mini 2
 
-## (5) view results
+demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+fp <- makeAP(surveyArea=tutorial_flightArea,
+            useMP = TRUE,
+            demFn = demFn,
+            maxFlightTime = 25,
+            uavType = "dji_csv")
+        
+        
+## (6) view results
 
 mapview::mapview(fp$wp,cex=4, lwd=0.5)+
 mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+

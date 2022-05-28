@@ -15,14 +15,14 @@
 
 
 analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName,runDir,taskarea,gdalLink=NULL){
-  
+  #browser()
   if (is.null(gdalLink))
     g<- link2GI::linkGDAL()
   else
     g<-gdalLink
   
   cat("load DEM/DSM data...\n")
-  ## load DEM data either from a local GDAL File or from a raster object or if nothing is provided tray to download SRTM data
+  ## load DEM data either from a local GDAL File or from a raster object or if nothing is provided tray to download SRTM dataa
   #if no DEM is provided try to get SRTM data
   if (is.null(demFn)) {
     log4r::levellog(logger, 'WARN', "CAUTION!!! no DEM file provided I try to download SRTM data... SRTM DATA has a poor resolution for UAVs!!! ")
@@ -152,6 +152,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     #     to the raw waypoints altitudes the missing (moving window) values (in the end) are duplicated
     # (2) the resulting values are sampled by the same horizonFilter size distance
     # (3) finally the altFilter is applied
+   # browser()
     if ( as.character(p$flightPlanMode) == "terrainTrack") {
       sDF <- as.data.frame(df@data)
       sDF$sortID <- seq(1,nrow(sDF))
@@ -585,33 +586,40 @@ calcFovHeatmap <- function(footprint,dem) {
   fovhm[fovhm < 1] = NaN
   return(fovhm)
 }
+#browser()
 # export data to DJI exchange format 
 # (1) controls with respect to waypoint number and/or battery lifetime the splitting of the mission files to seperate task files
-# (2) checking the return to home and fly to start of the misson tracks with respect to the obstacles to generate a save start and end of a task
+# (2) checking the return to home and fly to start of the missIon tracks with respect to the obstacles to generate a save start and end of a task
 calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSwitch=FALSE, dem, maxAlt, projectDir, workingDir,locationName,runDir) {
   minPoints <- 1
   addmax    <- maxPoints
   if (maxPoints > nrow(df@data)) {maxPoints <- nrow(df@data)}
   # store launch position and coordinates we need them for the rth calculations
   row1      <- df@data[1,1:(ncol(df@data))]
-  launchLat <- df@data[1,1]
-  launchLon <- df@data[1,2]
-  dem       <- raster::raster(dem)
-  
+  launchLat <- p$launchLat # df@data[1,1]
+  launchLon <- p$launchLon #df@data[1,2]
+
+  g<- link2GI::linkGDAL()
+  system(paste0(g$path,'gdalwarp -overwrite -q ',
+                '-t_srs "+proj=longlat +datum=WGS84 +no_defs" ',
+                file.path(runDir,"tmpdem.tif"),' ',
+                file.path(runDir,"demdll.tif")
+  ))
+  dem<-raster::raster(file.path(runDir,"demdll.tif"))
   # due to reprojection recalculate teh launch position and altitude
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
   sp::proj4string(launch_pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   launchAlt <- raster::extract(dem,launch_pos,layer = 1, nl = 1)  
-  
+ # browser()
   # for each of the splitted task files
   for (i in 1:nofiles) {
     cat(paste0("create ",i, " of ",nofiles, " control files...\n"))  
     
     # for safety issues we need to generate synthetic climb and sink waypoints 
     # take current start position of the partial task
-    startLat <- df@data[minPoints + 1,1] # minPoints+1 because of adding the endpoint of the task
-    startLon <- df@data[minPoints + 1,2]
+    startLat <-  launchLat # df@data[minPoints + 1,1] # minPoints+1 because of adding the endpoint of the task
+    startLon <-  launchLon #df@data[minPoints + 1,2]
     
     # take current end position of split task
     endLat <- df@data[maxPoints,1]
@@ -638,7 +646,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     # calculate rth and 2start headings
     homeheading  <- geosphere::bearing(c(endLon,endLat),c(launchLon,launchLat), a = 6378137, f = 1/298.257223563)
     startheading <- geosphere::bearing(c(launchLon,launchLat),c(startLon,startLat), a = 6378137, f = 1/298.257223563)
-    
+    #browser()
     # generate home max alt waypoint
     heading   <- homeheading
     altitude  <- maxAltHomeFlight + 0.1*maxAltHomeFlight
@@ -647,13 +655,18 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     
     # generate ascent waypoint to realize save fly home altitude
     homemaxrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
+    names(homemaxrow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
+    
+ 
     
     # generate maximum altitude wp on the way to the mission start
     heading     <- startheading
     altitude    <- maxAltStartFlight + 0.1*maxAltStartFlight
-    latitude    <- startmaxpos[1,2]
-    longitude   <- startmaxpos[1,1]
+    latitude    <- startLat #startmaxpos[1,2]
+    longitude   <- startLon #startmaxpos[1,1]
     startmaxrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
+    names(startmaxrow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
+
     
     # calculate rth ascent from last task position
     pos <- calcNextPos(endLon,endLat,homeheading,10)
@@ -666,26 +679,31 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     
     # generate ascent waypoint to realize save fly home altitude
     ascentrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
-    
+    names(ascentrow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
+                         
     # generate home position with heading and altitude
+    #homerow <- cbind(row1[1:2],altitude,heading,row1[5:length(row1)])
     homerow <- cbind(row1[1:2],altitude,heading,row1[5:length(row1)])
-    
+    names( homerow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
     # generate launch to start waypoint to realize save fly home altitude
     pos       <- calcNextPos(launchLon,launchLat,startheading,10)
     heading   <- startheading
     altitude  <- as.numeric(p$flightAltitude)
-    latitude  <- pos[2]
-    longitude <- pos[1]
-    startrow  <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
+    latitude  <- startLat #pos[2]
+    longitude <- startLon #pos[1]
+    #startrow  <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
+    startrow  <- cbind(latitude,longitude,2,heading,row1[5:length(row1)])
+    names(startrow ) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
     
     # calculate rth ascent from last task position
-    pos            <- calcNextPos(longitude,latitude,startheading,10)
+    pos            <- calcNextPos(longitude,latitude,startheading,1)
     heading        <- startheading
     altitude       <- maxAltStartFlight
     latitude       <- pos[2]
     longitude      <- pos[1]
-    startascentrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
-    
+    #startascentrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
+    startascentrow  <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
+    names(startascentrow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
     # extract the dataframe from the sp point object
     DF <- df@data[(as.numeric(minPoints) + 1):maxPoints,]
     
@@ -717,6 +735,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
 # (DJI only) create the full argument list for one waypoint
 makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = ",") {
   # create the value lines
+  #browser()
   if (!header) {
     # create camera action arguments
     action <- ""
@@ -731,24 +750,27 @@ makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = ",") {
                      sep,as.character(p$rotationdir),
                      sep,as.character(p$gimbalmode),
                      sep,as.character(p$gimbalpitchangle),
-                     sep,action,
+                     sep,"-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,1,0,0,0,0,0,0,0,",
                      group)
   }
   # create the header
   else {
-    action <- ""
-    for (i in seq(1:length(p$task[,1]))) { 
-      action <- paste0(action,p$task[i,]$actionNames[1],sep)
-    }
+     action = "actiontype1,actionparam1,actiontype2,actionparam2,actiontype3,actionparam3,actiontype4,actionparam4,actiontype5,actionparam5,actiontype6,actionparam6,actiontype7,actionparam7,actiontype8,actionparam8,actiontype9,actionparam9,actiontype10,actionparam10,actiontype11,actionparam11,actiontype12,actionparam12,actiontype13,actionparam13,actiontype14,actionparam14,actiontype15,actionparam15,"
     tmp <-    paste0("lon",sep,"lat",sep,"latitude",sep,"longitude",sep,
-                     "altitude",sep,
-                     "heading",sep,
-                     "curvesize",sep,
+                     "altitude(m)",sep,
+                     "heading(deg)",sep,
+                     "curvesize(m)",sep,
                      "rotationdir",sep,
                      "gimbalmode",sep,
                      "gimbalpitchangle",sep,
-                     action,"id")    
+                     action,
+                     "altitudemode,speed(m/s),poi_latitude,poi_longitude,poi_altitude(m),poi_altitudemode,photo_timeinterval,photo_distinterval,id")    
   }
+  
+
+  
+  
+  
 }
 
 
@@ -966,9 +988,11 @@ calculateFlightTime <- function(maxFlightTime, windCondition, maxSpeed, uavOptim
 # assign launching point 
 launch2flightalt <- function(p, lns, uavViewDir, launch2startHeading, uavType) {
   launchPos <- c(p$launchLon,p$launchLat)
+  if (uavType == "dji_csv") {lns[length(lns) + 1] <- makeUavPoint(launchPos, uavViewDir, group = 99, p)}
   if (uavType == "pixhawk")  {lns[length(lns) + 1] <- makeUavPointMAV(lat = launchPos[2], lon = launchPos[1], head = uavViewDir, group = 99)}
   pOld <- launchPos
   pos <- calcNextPos(pOld[1],pOld[2],launch2startHeading,10)
+  if (uavType == "dji_csv") {lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)}
   if (uavType == "pixhawk")  {lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2], lon = pos[1], head = uavViewDir, group = 99)}
   return(lns)
 }
@@ -1220,7 +1244,19 @@ makeFlightPathT3 <- function(treeList,
   lns <- list()
   fileConn <- file(file.path(runDir,"treepoints.csv"))
   for (i in 1:nrow(treeList) ) {
-if (uavType == "pixhawk") {
+    if (uavType == "dji_csv") {
+      forward <- geosphere::bearing(treeList@coords[i,], treeList@coords[i + 1,], a = 6378137, f = 1/298.257223563)
+      backward <- geosphere::bearing(treeList@coords[i + 1,], treeList@coords[i,], a = 6378137, f = 1/298.257223563)
+      p$task <- fp_getPresetTask("treetop")
+      lns[length(lns) + 1] <- makeUavPoint(treeList@coords[i,], forward, p, group = 99)
+      p$task <- fp_getPresetTask("nothing")
+      posUp  <- calcNextPos(treeList@coords[i,][1], treeList@coords[i,][2], heading = forward, distance = p$climbDist)
+      lns[length(lns) + 1] <- makeUavPoint(posUp, forward, p, group = 1)
+      posDown <- calcNextPos(treeList@coords[i + 1,][1], treeList@coords[i + 1,][2], backward, distance = p$climbDist)
+      lns[length(lns) + 1] <- makeUavPoint(posDown, forward, p, group = 1)
+      writeLines(unlist(lns), fileConn)
+    }
+    else if (uavType == "pixhawk") {
       cat("calculating flight corridors according to position ",i," of ",nrow(treeList),"\r")
       lp <- sp_point(p$launchLon,p$launchLat,"LaunchPos")
       
@@ -1320,7 +1356,18 @@ if (uavType == "pixhawk") {
     }
   }
   close(fileConn)
- if (uavType == "pixhawk") {
+  if (uavType == "dji_csv") {
+    cat("calculating DEM related stuff\n")
+    djiDF <- utils::read.csv(file.path(runDir,"treepoints.csv"),sep = ",",header = FALSE)
+    names(djiDF) <- unlist(strsplit( makeUavPoint(pos,uavViewDir,group = 99,p,header = TRUE,sep = ' '),split = " "))
+    sp::coordinates(djiDF) <- ~lon+lat
+    sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
+    result <- getAltitudes(demll ,djiDF,p,followSurfaceRes = 5,logger,projectDir,locationName,flightArea)
+    writeDjiTreeCSV(result[[2]],p$locationName,1,94,p,logger,round(result[[4]],digits = 0),trackSwitch,result[[3]],result[[6]],projectDir)
+    return(result)
+    
+  } 
+ else if (uavType == "pixhawk") {
     cat("getting altitudes...\n")
     df <- utils::read.csv(file.path(runDir,"treepoints.csv"),sep = "\t",header = FALSE)
     names(df) <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","autocont","lat","lon")

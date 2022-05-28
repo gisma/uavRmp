@@ -20,7 +20,7 @@ if (!isGeneric('makeTP')) {
 #' For `flightPlanMode = "waypoint"` camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.
 #' @param maxSpeed `numeric`  cruising speed, default is `25.0`
 #' @param windCondition `numeric`options are 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h, default is `1`
-#' @param uavType `character`  type of UAV. Currently "djip3" and "pixhawk" are supported, default is `"pixhawk"`
+#' @param uavType `character`  type of UAV. Currently "dji_csv" and "pixhawk" are supported, default is `"pixhawk"`
 #' @param missionTrackList `character` filename of the mission tracklist (target positions), default is `NULL`
 #' @param launchPos `list` launch position c(longitude,latitude), default is `c(8.772055,50.814689)`
 #' @param climbDist `numeric` distance within the uav will climb on the caluclated save flight altitude in meter, default is `7.5`
@@ -155,7 +155,7 @@ makeTP <-  function(projectDir=tempdir(),
   log4r::levellog(logger, 'INFO', paste("flightAltitude  : ", takeOffAlt))    
   log4r::levellog(logger, 'INFO', paste("presetFlightTask: ", presetFlightTask))
   
-  if (uavType == "djiP3"){
+  if (uavType == "dji_csv"){
     log4r::levellog(logger, 'INFO', paste("curvesize       : ", p$curvesize))
     log4r::levellog(logger, 'INFO', paste("rotationdir     : ", p$rotationdir))
     log4r::levellog(logger, 'INFO', paste("gimbalmode      : ", p$gimbalmode))

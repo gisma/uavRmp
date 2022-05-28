@@ -1,3 +1,11 @@
+## uavRmp 0.6.0
+new features:
+  * change DJI flag from `djip3` to `dji_csv`
+  * re-add DJI support
+  * add converter for Missionplaner/Qgroundcontrol survey flightplans to lichi csv
+bugfixes:
+  * fix several waypoint issues especially the zig zag behaviour starting and landing
+  
 ## uavRmp 0.5.7
 
 bugfixes:
