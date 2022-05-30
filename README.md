@@ -1,7 +1,7 @@
 ## Unmanned Aerial Vehicle R based Mission Planning - uavRmp 
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) 
-[![Travis-CI Build Status](https://travis-ci.org/gisma/uavRmp.svg?branch=master)](https://travis-ci.org/gisma/uavRmp)
+
 
 ![](https://cranlogs.r-pkg.org/badges/grand-total/uavRmp?color=green)
 ![](https://cranlogs.r-pkg.org/badges/uavRmp?color=green)
