@@ -180,6 +180,9 @@ if (!isGeneric('makeAP')) {
 #'             demFn = demFn,
 #'             maxFlightTime = 25,
 #'             uavType = "dji_csv")
+#'             
+#' ## call a simple shiny interface
+#' runApp(system.file("shiny/plan2litchi/", "app.R", package = "uavRmp"))
 #'         
 #'         
 #' ## (6) view results
@@ -269,6 +272,7 @@ makeAP <- function(projectDir = tempdir(),
   
   ## uav platform depending parameter setting
   if (uavType == "dji_csv") {
+    #browser()
     cameraType<-"dji4k"
     factor <- 1.71 # FOV ratio
     flightParams = c(flightPlanMode = flightPlanMode,
