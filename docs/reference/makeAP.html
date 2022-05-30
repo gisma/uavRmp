@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
       </span>
     </div>
 
@@ -70,7 +70,7 @@
   flightAltitude <span class="op">=</span> <span class="fl">100</span>,
   launchAltitude <span class="op">=</span> <span class="cn">NULL</span>,
   followSurface <span class="op">=</span> <span class="cn">FALSE</span>,
-  followSurfaceRes <span class="op">=</span> <span class="cn">NULL</span>,
+  followSurfaceRes <span class="op">=</span> <span class="fl">25</span>,
   demFn <span class="op">=</span> <span class="cn">NULL</span>,
   altFilter <span class="op">=</span> <span class="fl">1</span>,
   horizonFilter <span class="op">=</span> <span class="fl">30</span>,
@@ -157,7 +157,7 @@ Options are:
 <dt>windCondition</dt>
 <dd><p>1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h</p></dd>
 <dt>uavType</dt>
-<dd><p>type of uav. currently "djip_csv" and "solo" are supported</p></dd>
+<dd><p>type of uav. currently "dji_csv" and "solo" are supported</p></dd>
 <dt>cameraType</dt>
 <dd><p>depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2</p></dd>
 <dt>cmd</dt>
@@ -264,22 +264,14 @@ at <a href="https://gisma.github.io/uavRmp/articles/uavRmp_1.html" class="extern
 <span class="r-in"><span class="co">##     You have to use a high quality high resulution DSM</span></span>
 <span class="r-in"><span class="co">##     (here simulated with a standard DEM)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu">makeAP</span><span class="op">(</span>surveyArea<span class="op">=</span><span class="va">tutorial_flightArea</span>,</span>
-<span class="r-in">           followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">           flightAltitude <span class="op">=</span> <span class="fl">45</span>,</span>
-<span class="r-in">           demFn <span class="op">=</span> <span class="va">demFn</span>,</span>
-<span class="r-in">           windCondition <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">           uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,</span>
-<span class="r-in">           followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span>
-<span class="r-in">           altFilter <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## (4) typical real case scenario (2)</span></span>
 <span class="r-in"><span class="co">##     A flight altitudes BELOW 50 m is ambitious and risky</span></span>
 <span class="r-in"><span class="co">##     You have to use a high quality high resulution DSM</span></span>
 <span class="r-in"><span class="co">##     (here simulated with a standard DEM)</span></span>
-<span class="r-in"><span class="co">##     This examples used a filight panning from the QGroundcotrol Survey planning tool</span></span>
-<span class="r-in"><span class="co">##     It also used the calculations for camera footprints and so on</span></span>
+<span class="r-in"><span class="co">##     This examples uses a flight planning from the QGroundcotrol Survey planning tool</span></span>
+<span class="r-in"><span class="co">##     It also used the all calculations for camera flight speed etc.</span></span>
 <span class="r-in"><span class="co">##     NOTE EXPERIMENTAL </span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">demFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
@@ -293,8 +285,23 @@ at <a href="https://gisma.github.io/uavRmp/articles/uavRmp_1.html" class="extern
 <span class="r-in">            followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span>
 <span class="r-in">             altFilter <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span></span>
 <span class="r-in"></span>
+<span class="r-in"><span class="co">## (5) typical real case scenario (3)</span></span>
+<span class="r-in"><span class="co">##     This examples uses a flight planning from the QGroundcotrol Survey planning tool</span></span>
+<span class="r-in"><span class="co">##     It also used the all calculations for camera flight speed etc.</span></span>
+<span class="r-in"><span class="co">##     The flight plan is modyfied by splitting up the task according to 99 Waypoints</span></span>
+<span class="r-in"><span class="co">##     and flight time and saved as litchi csv format </span></span>
+<span class="r-in"><span class="co">##     NOTE EXPERIMENTAL tested with DJI mavic mini 2</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co">## (5) view results</span></span>
+<span class="r-in"><span class="va">demFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">tutorial_flightArea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"qgc_survey.plan"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu">makeAP</span><span class="op">(</span>surveyArea<span class="op">=</span><span class="va">tutorial_flightArea</span>,</span>
+<span class="r-in">            useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span class="r-in">            demFn <span class="op">=</span> <span class="va">demFn</span>,</span>
+<span class="r-in">            maxFlightTime <span class="op">=</span> <span class="fl">25</span>,</span>
+<span class="r-in">            uavType <span class="op">=</span> <span class="st">"dji_csv"</span><span class="op">)</span></span>
+<span class="r-in">        </span>
+<span class="r-in">        </span>
+<span class="r-in"><span class="co">## (6) view results</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">wp</span>,cex<span class="op">=</span><span class="fl">4</span>, lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span>
 <span class="r-in"><span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">lp</span>,color <span class="op">=</span> <span class="st">"red"</span>, lwd<span class="op">=</span><span class="fl">1</span>,cex<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">+</span></span>

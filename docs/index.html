@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
       </span>
     </div>
 
@@ -89,9 +89,11 @@
 <div class="section level2">
 <h2 id="supported-uav-platforms">Supported UAV platforms<a class="anchor" aria-label="anchor" href="#supported-uav-platforms"></a>
 </h2>
-<p>Up to now the <code>uavRmp</code> package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI 3 Phantom series and Pixhawk based platforms as the 3DR Solo. However the future support will focus the Pixhawk based UAVs.</p>
-<p>The core planning tool <code>makeFP</code> (make flight plan) creates either intermediate flight control files for the DJI Phantom x UAVs or ready to upload control files for the 3DR Solo. The dji control files are designed for using with the proprietary <a href="https://flylitchi.com/" class="external-link">Litchi</a> flight control app exchange format, while the 3DR Solo files are using the <code>MAVLINK</code> common message format, that is used by the PixHawk flight controller family.</p>
-<p>The majority of the open UAV community is using the PixHawk autopilot unit and for planning probably the <a href="http://ardupilot.org/planner/" class="external-link">MissionPlanner</a> or a bit more basic <a href="http://qgroundcontrol.com/" class="external-link">QGroundControl</a> ground station software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless both have only a poor planning support for terrain following autonomous flights (basically SRTM data) and no straightforward support for battery-dependent task splitting and save departures and approaches (MissionPlanner). Up to now the most affordable powerful <a href="https://www.ugcs.com/" class="external-link">UgCS</a> software provides all auf the above mentioned capabilities. However it is challenging to use especially for a fast deployment of a small local flight task as typically requested in fieldwork.</p>
+<p>Up to now the <code>uavRmp</code> package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI series that are supported ba (Litchi)[<a href="https://flylitchi.com/" class="external-link uri">https://flylitchi.com/</a>] and Pixhawk based platforms as the 3DR Solo.</p>
+<p>The core planning tool <code>makeFP</code> (make flight plan) creates either intermediate flight control files for the DJI UAVs or ready to upload control files for the 3DR Solo.</p>
+<p><strong>NOTE:</strong> The DJI control files are designed for using with the proprietary <a href="https://flylitchi.com/" class="external-link">Litchi</a> flight control app exchange format, while the 3DR Solo files are using the <code>MAVLINK</code> common message format, that is used by the PixHawk flight controller family.</p>
+<p><strong>NEW:</strong> You may use now the survey planning tool of <code>QGroundControl</code> or <code>Missionplanner</code> and convert it either to DJI compatible Litchi format or MavLink files. Both with safe flights to the mission start and RTH as well as task splitting. You will find an simple GUI interface calling <code>runApp(system.file("shiny/plan2litchi/", "/app.R", package = "uavRmp"))</code>.</p>
+<p>The majority of the open UAV community is using the PixHawk autopilot unit and for planning probably the <a href="http://ardupilot.org/planner/" class="external-link">MissionPlanner</a> or a bit more basic <a href="http://qgroundcontrol.com/" class="external-link">QGroundControl</a> ground station software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless both have only a poor planning support for terrain following autonomous flights (basically SRTM data) and no straightforward support for battery-dependent task splitting and save departures and approaches (MissionPlanner). Up to now the most affordable powerful <a href="https://www.ugcs.com/" class="external-link">UgCS</a> software provides all of the above mentioned capabilities. However it is challenging to use especially for a fast deployment of a small local flight task as typically requested in fieldwork.</p>
 <p>The <code>uavRmp</code> bridges this gap and generates <code>MAVLINK</code> format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.</p>
 </div>
 <div class="section level2">
