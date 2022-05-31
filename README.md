@@ -1,7 +1,5 @@
 ## Unmanned Aerial Vehicle R based Mission Planning - uavRmp 
 
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) 
-
 
 ![](https://cranlogs.r-pkg.org/badges/grand-total/uavRmp?color=green)
 ![](https://cranlogs.r-pkg.org/badges/uavRmp?color=green)
@@ -23,14 +21,14 @@ The core planning tool ```makeFP``` (make flight plan) creates either intermedia
 
 **NEW:** You may use now the survey planning tool of `QGroundControl` or `Missionplanner` and convert it either to DJI compatible Litchi format or MavLink files. Both with safe flights to the mission start and RTH as well as task splitting. You will find an simple GUI interface calling `runApp(system.file("shiny/plan2litchi/", "/app.R", package = "uavRmp"))`.
 
-The majority of the open UAV community is using the PixHawk autopilot unit and for planning probably the [MissionPlanner](http://ardupilot.org/planner/) or a bit more basic [QGroundControl](http://qgroundcontrol.com/) ground station software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless both have only a poor planning support for terrain following autonomous flights (basically SRTM data) and no straightforward support for battery-dependent task splitting and save departures and approaches (MissionPlanner). Up to now the most affordable powerful [UgCS](https://www.ugcs.com/) software provides all of the above mentioned capabilities. However it is challenging to use especially for a fast deployment of a small local flight task as typically requested in fieldwork.
+The majority of the open UAV community is using the PixHawk autopilot unit and for planning probably the [MissionPlanner](https://ardupilot.org/planner/) or a bit more basic [QGroundControl](https://qgroundcontrol.com/) ground station software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless both have only a poor planning support for terrain following autonomous flights (basically SRTM data) and no straightforward support for battery-dependent task splitting and save departures and approaches (MissionPlanner). Up to now the most affordable powerful [UgCS](https://www.ugcs.com/) software provides all of the above mentioned capabilities. However it is challenging to use especially for a fast deployment of a small local flight task as typically requested in fieldwork.
 
 The ```uavRmp``` bridges this gap  and  generates  ```MAVLINK``` format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.
 
 
 ## Installation
 
-The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux you can use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the python libs in addition.
+The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. For using some of the the Solo related functions you need to install the python libs in addition.
 
 A full list of necessary libraries and binaries beyond ```R``` will soon be provided.
 
