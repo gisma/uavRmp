@@ -82,7 +82,6 @@
 <h2 id="unmanned-aerial-vehicle-r-based-mission-planning---uavrmp">Unmanned Aerial Vehicle R based Mission Planning - uavRmp<a class="anchor" aria-label="anchor" href="#unmanned-aerial-vehicle-r-based-mission-planning---uavrmp"></a>
 </h2>
 
-<p><img src="https://cranlogs.r-pkg.org/badges/grand-total/uavRmp?color=green"><img src="https://cranlogs.r-pkg.org/badges/uavRmp?color=green"><img src="https://cranlogs.r-pkg.org/badges/last-week/uavRmp?color=green"><a href="http://www.gnu.org/licenses/gpl-3.0.html" class="external-link"><img src="https://img.shields.io/badge/license-GPL%20%28%3E=%203%29-lightgrey.svg?style=flat" alt="License"></a></p>
 <p>The <a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a> package is designed for a lightweighted uav autonomous mission planning including full documentation capabilities. In the first place it is a simple and open source planning tool for monitoring flights of low budget drones based on <code>R</code>. It provide an easy workflow for planning autonomous surveys including battery-dependent task splitting, save departures, and approaches of each monitoring chunks.</p>
 </div>
 <div class="section level2">
@@ -92,16 +91,18 @@
 <p>The core planning tool <code>makeFP</code> (make flight plan) creates either intermediate flight control files for the DJI UAVs or ready to upload control files for the 3DR Solo.</p>
 <p><strong>NOTE:</strong> The DJI control files are designed for using with the proprietary <code>Litchi</code> flight control app exchange format, while the 3DR Solo files are using the <code>MAVLINK</code> common message format, that is used by the PixHawk flight controller family.</p>
 <p><strong>NEW:</strong> You may use now the survey planning tool of <code>QGroundControl</code> or <code>Missionplanner</code> and convert it either to DJI compatible Litchi format or MavLink files. Both with safe flights to the mission start and RTH as well as task splitting. You will find an simple GUI interface calling <code>runApp(system.file("shiny/plan2litchi/", "/app.R", package = "uavRmp"))</code>.</p>
-<p>The majority of the open UAV community is using the PixHawk autopilot unit and for planning probably the <a href="http://ardupilot.org/planner/" class="external-link">MissionPlanner</a> or a bit more basic <a href="http://qgroundcontrol.com/" class="external-link">QGroundControl</a> ground station software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless both have only a poor planning support for terrain following autonomous flights (basically SRTM data) and no straightforward support for battery-dependent task splitting and save departures and approaches (MissionPlanner). Up to now the most affordable powerful <a href="https://www.ugcs.com/" class="external-link">UgCS</a> software provides all of the above mentioned capabilities. However it is challenging to use especially for a fast deployment of a small local flight task as typically requested in fieldwork.</p>
+<p>The majority of the open UAV community is using the PixHawk autopilot unit and for planning probably the <a href="https://ardupilot.org/planner/" class="external-link">MissionPlanner</a> or a bit more basic <a href="https://qgroundcontrol.com/" class="external-link">QGroundControl</a> ground station software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless both have only a poor planning support for terrain following autonomous flights (basically SRTM data) and no straightforward support for battery-dependent task splitting and save departures and approaches (MissionPlanner). Up to now the most affordable powerful <a href="https://www.ugcs.com/" class="external-link">UgCS</a> software provides all of the above mentioned capabilities. However it is challenging to use especially for a fast deployment of a small local flight task as typically requested in fieldwork.</p>
 <p>The <code>uavRmp</code> bridges this gap and generates <code>MAVLINK</code> format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux you can use the <a href="http://giswerk.org/doku.php?do=export_code&amp;id=tutorials:softgis:xubuntu:xubuntugis&amp;codeblock=0setup" class="external-link">postinstall script</a> for installing most of the stuff. For using some of the the Solo related functions you need to install the python libs in addition.</p>
+<p>The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. For using some of the the Solo related functions you need to install the python libs in addition.</p>
 <p>A full list of necessary libraries and binaries beyond <code>R</code> will soon be provided.</p>
 <p>To install the most actual version do it from <code>github</code> you need to have installed the <code>devtools</code> package.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>install.packages<span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span></span></code></pre></div>
 </div>
 
   </div>
@@ -143,7 +144,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="http://www.repostatus.org/#active" class="external-link"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a></li>
+<li><a href="http://www.gnu.org/licenses/gpl-3.0.html" class="external-link"><img src="https://img.shields.io/badge/license-GPL%20%28%3E=%203%29-lightgrey.svg?style=flat" alt="License"></a></li>
 </ul>
 </div>
 
