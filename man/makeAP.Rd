@@ -28,6 +28,7 @@ makeAP(
   cmd = 16,
   uavViewDir = 0,
   maxwaypoints = 90,
+  above_ground = TRUE,
   djiBasic = c(0, 0, 0, -90, 0),
   dA = FALSE,
   heatMap = FALSE,
@@ -105,6 +106,8 @@ Options are:
 \item{uavViewDir}{dview direction of uav}
 
 \item{maxwaypoints}{maximal number of waypoints for Litchi default is 90}
+
+\item{above_ground}{Litchi setting if the waypoint altitudes are interpreted as AGL default = TRUE}
 
 \item{djiBasic}{c(0,0,0,-90)
 \cr curvesize (DJI only) controls the curve angle of the uav passing way points.

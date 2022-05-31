@@ -74,6 +74,7 @@ if (!isGeneric('makeAP')) {
 #'   otherwise you have to defined the position of launching.
 #' @param overlap overlapping of the pictures in percent (1.0 = 100)
 #' @param maxwaypoints maximal number of waypoints for Litchi default is 90
+#' @param above_ground Litchi setting if the waypoint altitudes are interpreted as AGL default = TRUE 
 #' @param djiBasic c(0,0,0,-90)
 #' \cr curvesize (DJI only) controls the curve angle of the uav passing way points.
 #' By default it is set to (`= 0.0`).
@@ -231,6 +232,7 @@ makeAP <- function(projectDir = tempdir(),
                    cmd=16,
                    uavViewDir = 0,
                    maxwaypoints = 90,
+                   above_ground = TRUE,
                    djiBasic = c(0, 0, 0,-90, 0),
                    dA = FALSE,
                    heatMap = FALSE,
@@ -413,7 +415,7 @@ makeAP <- function(projectDir = tempdir(),
     heading <- updir
     # define output line var
     lns <- list()
-    lns <- launch2flightalt(p, lns, uavViewDir, launch2startHeading, uavType)
+    lns <- launch2flightalt(p, lns, uavViewDir, launch2startHeading, uavType,above_ground=above_ground)
     # assign starting point
     pos <- c(df_coordinates[1,][2],df_coordinates[1,][1])
     
@@ -429,7 +431,7 @@ makeAP <- function(projectDir = tempdir(),
     
     # ## creates the export control parameter set of the first position
     # if (uavType == "dji_csv") {
-    #  lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+    #  lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
     # }
     #
     if (uavType == "pixhawk") {
@@ -441,7 +443,7 @@ makeAP <- function(projectDir = tempdir(),
 # set counter and params for mode = "track" mode
     if (mode == "track") {
       if (uavType == "dji_csv") {
-        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
       }
       if (uavType == "pixhawk") {
         lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2],lon = pos[1],head = uavViewDir,group = 99)
@@ -453,7 +455,7 @@ makeAP <- function(projectDir = tempdir(),
     ## set counter and params for mode = "waypoints"
     else if (mode == "waypoints") {
       if (uavType == "dji_csv") {
-        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
       }
       if (uavType == "pixhawk") {
         lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2],lon = pos[1],head = uavViewDir,group = 99)
@@ -495,7 +497,7 @@ makeAP <- function(projectDir = tempdir(),
           group <- 99
         }
         if (uavType == "dji_csv") {
-          lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+          lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
         }
         if (uavType == "pixhawk") {
         lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2], lon = pos[1], head = uavViewDir, group = group)
@@ -509,7 +511,7 @@ makeAP <- function(projectDir = tempdir(),
       #   pOld <- pos
       #   flightLength <- flightLength + crossDistance
       #   if (uavType == "dji_csv") {
-      #     lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+      #     lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
       #   }
       #   if (uavType == "pixhawk") {
       #     lns[length(lns) + 1] <-
@@ -531,7 +533,7 @@ makeAP <- function(projectDir = tempdir(),
       #   flightLength <- flightLength + crossDistance
       #   
       #   if (uavType == "dji_csv") {
-      #     lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+      #     lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
       #     heading <- updir
       #   }
       #   if (uavType == "pixhawk") {
@@ -643,7 +645,7 @@ makeAP <- function(projectDir = tempdir(),
   # define output line var
   lns <- list()
   
-  lns <- launch2flightalt(p, lns, uavViewDir, launch2startHeading, uavType)
+  lns <- launch2flightalt(p, lns, uavViewDir, launch2startHeading, uavType,above_ground=above_ground)
   
   
   # assign starting point
@@ -662,7 +664,7 @@ makeAP <- function(projectDir = tempdir(),
   ## creates the export control parameter set of the first position
   ##
   if (uavType == "dji_csv") {
-    lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+    lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
   }
   if (uavType == "pixhawk") {
     lns[length(lns) + 1] <-  makeUavPointMAV(lat = pos[2],lon = pos[1], head = uavViewDir, group = 99 )
@@ -673,7 +675,7 @@ makeAP <- function(projectDir = tempdir(),
   ## set counter and params for mode = "track" mode
   if (mode == "track") {
     if (uavType == "dji_csv") {
-      lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+      lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
     }
     if (uavType == "pixhawk") {
       lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2],lon = pos[1],head = uavViewDir,group = 99)
@@ -685,7 +687,7 @@ makeAP <- function(projectDir = tempdir(),
   ## set counter and params for mode = "waypoints"
   else if (mode == "waypoints") {
     if (uavType == "dji_csv") {
-      lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+      lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
     }
     if (uavType == "pixhawk") {
       lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2],lon = pos[1],head = uavViewDir,group = 99)
@@ -726,7 +728,7 @@ makeAP <- function(projectDir = tempdir(),
         group <- 99
       }
       if (uavType == "dji_csv") {
-        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = group, p)
+        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = group, p,ag=above_ground)
       }
       if (uavType == "pixhawk") {
         lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2], lon = pos[1], head = uavViewDir, group = group)
@@ -739,7 +741,7 @@ makeAP <- function(projectDir = tempdir(),
       pOld <- pos
       flightLength <- flightLength + crossDistance
       if (uavType == "dji_csv") {
-        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
       }
       if (uavType == "pixhawk") {
         lns[length(lns) + 1] <-
@@ -760,7 +762,7 @@ makeAP <- function(projectDir = tempdir(),
       flightLength <- flightLength + crossDistance
       
       if (uavType == "dji_csv") {
-        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)
+        lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
         heading <- updir
       }
       if (uavType == "pixhawk") {

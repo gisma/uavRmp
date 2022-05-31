@@ -734,7 +734,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
 
 
 # (DJI only) create the full argument list for one waypoint
-makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = ",") {
+makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = "," , ag = TRUE) {
   # create the value lines
   #browser()
   if (!header) {
@@ -743,6 +743,8 @@ makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = ",") {
     for (i in seq(1:length(p$task[,1]))) { 
       action <- paste0(action,p$task[i,]$x[1],sep)
     }
+    if (ag) dji_actions = "-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,1,0,0,0,0,0,0,0,"
+    else dji_actions = "-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,0,0,0,0,0,0,0,0,"
     # create waypoint plus camera options
     tmp <-    paste0(pos[1],sep,pos[2],sep,pos[2],sep,pos[1],
                      sep,as.character(p$flightAltitude),
@@ -751,7 +753,7 @@ makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = ",") {
                      sep,as.character(p$rotationdir),
                      sep,as.character(p$gimbalmode),
                      sep,as.character(p$gimbalpitchangle),
-                     sep,"-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,-1,0,1,0,0,0,0,0,0,0,",
+                     sep,dji_actions,
                      group)
   }
   # create the header
@@ -987,13 +989,13 @@ calculateFlightTime <- function(maxFlightTime, windCondition, maxSpeed, uavOptim
 
 
 # assign launching point 
-launch2flightalt <- function(p, lns, uavViewDir, launch2startHeading, uavType) {
+launch2flightalt <- function(p, lns, uavViewDir, launch2startHeading, uavType, above_ground = TRUE) {
   launchPos <- c(p$launchLon,p$launchLat)
-  if (uavType == "dji_csv") {lns[length(lns) + 1] <- makeUavPoint(launchPos, uavViewDir, group = 99, p)}
+  if (uavType == "dji_csv") {lns[length(lns) + 1] <- makeUavPoint(launchPos, uavViewDir, group = 99, p,ag = above_ground)}
   if (uavType == "pixhawk")  {lns[length(lns) + 1] <- makeUavPointMAV(lat = launchPos[2], lon = launchPos[1], head = uavViewDir, group = 99)}
   pOld <- launchPos
   pos <- calcNextPos(pOld[1],pOld[2],launch2startHeading,10)
-  if (uavType == "dji_csv") {lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p)}
+  if (uavType == "dji_csv") {lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)}
   if (uavType == "pixhawk")  {lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2], lon = pos[1], head = uavViewDir, group = 99)}
   return(lns)
 }
@@ -1249,12 +1251,12 @@ makeFlightPathT3 <- function(treeList,
       forward <- geosphere::bearing(treeList@coords[i,], treeList@coords[i + 1,], a = 6378137, f = 1/298.257223563)
       backward <- geosphere::bearing(treeList@coords[i + 1,], treeList@coords[i,], a = 6378137, f = 1/298.257223563)
       p$task <- fp_getPresetTask("treetop")
-      lns[length(lns) + 1] <- makeUavPoint(treeList@coords[i,], forward, p, group = 99)
+      lns[length(lns) + 1] <- makeUavPoint(treeList@coords[i,], forward, p, group = 99,ag=above_ground)
       p$task <- fp_getPresetTask("nothing")
       posUp  <- calcNextPos(treeList@coords[i,][1], treeList@coords[i,][2], heading = forward, distance = p$climbDist)
-      lns[length(lns) + 1] <- makeUavPoint(posUp, forward, p, group = 1)
+      lns[length(lns) + 1] <- makeUavPoint(posUp, forward, p, group = 1,ag=above_ground)
       posDown <- calcNextPos(treeList@coords[i + 1,][1], treeList@coords[i + 1,][2], backward, distance = p$climbDist)
-      lns[length(lns) + 1] <- makeUavPoint(posDown, forward, p, group = 1)
+      lns[length(lns) + 1] <- makeUavPoint(posDown, forward, p, group = 1,ag=above_ground)
       writeLines(unlist(lns), fileConn)
     }
     else if (uavType == "pixhawk") {
@@ -1360,7 +1362,7 @@ makeFlightPathT3 <- function(treeList,
   if (uavType == "dji_csv") {
     cat("calculating DEM related stuff\n")
     djiDF <- utils::read.csv(file.path(runDir,"treepoints.csv"),sep = ",",header = FALSE)
-    names(djiDF) <- unlist(strsplit( makeUavPoint(pos,uavViewDir,group = 99,p,header = TRUE,sep = ' '),split = " "))
+    names(djiDF) <- unlist(strsplit( makeUavPoint(pos,uavViewDir,group = 99,p,,ag=above_ground,header = TRUE,sep = ' '),split = " "))
     sp::coordinates(djiDF) <- ~lon+lat
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     result <- getAltitudes(demll ,djiDF,p,followSurfaceRes = 5,logger,projectDir,locationName,flightArea)
