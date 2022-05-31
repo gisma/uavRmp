@@ -37,5 +37,7 @@ A full list of necessary libraries and binaries beyond ```R``` will soon be prov
 To install the most actual version do it from ```github```  you need to have installed the ```devtools``` package.
 
 ```S
+install.packages("devtools")
+
 devtools::install_github("gisma/uavRmp", ref = "master")
 ```
