@@ -27,6 +27,7 @@ makeAP(
   cameraType = "MAPIR2",
   cmd = 16,
   uavViewDir = 0,
+  maxwaypoints = 90,
   djiBasic = c(0, 0, 0, -90, 0),
   dA = FALSE,
   heatMap = FALSE,
@@ -102,6 +103,8 @@ Options are:
 \item{cmd}{mavlink command}
 
 \item{uavViewDir}{dview direction of uav}
+
+\item{maxwaypoints}{maximal number of waypoints for Litchi default is 90}
 
 \item{djiBasic}{c(0,0,0,-90)
 \cr curvesize (DJI only) controls the curve angle of the uav passing way points.

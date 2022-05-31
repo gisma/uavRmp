@@ -73,6 +73,7 @@ if (!isGeneric('makeAP')) {
 #'   assumed that the UAV is started at the highest point of the surveyArea
 #'   otherwise you have to defined the position of launching.
 #' @param overlap overlapping of the pictures in percent (1.0 = 100)
+#' @param maxwaypoints maximal number of waypoints for Litchi default is 90
 #' @param djiBasic c(0,0,0,-90)
 #' \cr curvesize (DJI only) controls the curve angle of the uav passing way points.
 #' By default it is set to (`= 0.0`).
@@ -229,6 +230,7 @@ makeAP <- function(projectDir = tempdir(),
                    cameraType = "MAPIR2",
                    cmd=16,
                    uavViewDir = 0,
+                   maxwaypoints = 90,
                    djiBasic = c(0, 0, 0,-90, 0),
                    dA = FALSE,
                    heatMap = FALSE,
@@ -816,8 +818,8 @@ makeAP <- function(projectDir = tempdir(),
     
     # max numbers of dji waypoints is due to factory limits 98
     # according to start and rth safety we need 6 points for organizig the splitted task
-    nofiles <- ceiling(nrow(dfcor@data) / 90)
-    maxPoints <- 90
+    nofiles <- ceiling(nrow(dfcor@data) / maxwaypoints)
+    maxPoints <- maxwaypoints
     minPoints <- 1
     # check if the flighttime is forcing more files
     if (nofiles < ceiling(rawTime / maxFlightTime)) {
