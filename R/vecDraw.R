@@ -94,7 +94,7 @@ vecDraw <- function(mapCenter=NULL,
       #overlay <- sp::SpatialPolygonsDataFrame(overlay, data.frame(ID="overlay"))
     } 
     
-    if  (class(overlay[1])!="sf") {
+    if  (methods::is(overlay[1],"sf")) {
 
     
     rgdal::writeOGR(overlay, paste(tmpPath, "jsondata", sep=.Platform$file.sep), "OGRGeoJSON", driver="GeoJSON")

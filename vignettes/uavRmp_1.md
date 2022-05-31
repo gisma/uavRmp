@@ -1,7 +1,7 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '2020-07-04'
+date: '2022-05-31'
 editor_options:
   chunk_output_type: console
 output:
@@ -41,7 +41,7 @@ Check your risk - use parachute systems and, even if everything is running like 
 
 Up to now it has been dedicated to low budget rtf-UAVs as the DJI Phantom (up to P4) series and the Pixhawk flightcontroller family. However the current and future support will focus on Pixhawk based UAVs only.
 
-The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://qgroundcontrol.com/downloads/) or [QGroundcontrol](http://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmercial competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.
+The open UAV community is focused on the PixHawk autopilot unit and the [MissionPlanner](http://qgroundcontrol.com/downloads/) or [QGroundcontrol](https://ardupilot.org/planner2/) software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmercial competitors like the powerful [ugcs](https://www.ugcs.com/) software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.
 
 The ```uavRmd``` bridges this gap and generates ```MAVLINK``` format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.
 
@@ -60,7 +60,7 @@ The package family consists of 4 parts:
   
 ## Installation
 
-The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. If interested in setting up a clean Xubuntu or Mint Linux and then use the  [postinstall script](http://giswerk.org/doku.php?do=export_code&id=tutorials:softgis:xubuntu:xubuntugis&codeblock=0setup) for installing most of the stuff. For using some of the the Solo related functions you need to install the [dronekit](https://github.com/dronekit/dronekit-python) python libs in addition.
+The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB.  For using some of the the Solo related functions you need to install the [dronekit](https://github.com/dronekit/dronekit-python) python libs in addition.
 
 A full list of necessary libaries and binaries beyond ```R``` will soon be provided.
 
@@ -331,17 +331,15 @@ The script generates:
 
 All three of them are important even if a quick inspection of the generated objects is most of the time sufficient. The log file dumps the all important parameters of the calculated mission. Most important the calculated mission speed and picture rate based on an estimation of the mission time. 
 
-Using the ```mapview``` package  you can easily visualize the results. The below example shows the footprints of the images (green), surveyArea (blue), turnpoints of track (blue circles), the launch position (red circle) and the used original DEM (oDEM). 
+Using the ```mapview``` package  you can easily visualize the results. The below example shows the footprints of the images (blue), surveyArea (red), turnpoints of track (blue circles) and the launch position (red). 
 
 
 ```r
  require(mapview)
-mapview::mapview(fp$wp,cex=4, lwd=0.5)+
-  mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
-  mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
-  mapview::mapview(fp$oDEM)+
-  mapview::mapview(fp)+
- mapview::mapview(fp$fp,color="green")
+ mapview(fp[[5]],color="red", alpha.regions =0.1,lwd=0.5)+
+ mapview(fp[[1]],lwd=1,cex=4)+
+ mapview(fp[[3]],color="red",cex=5)+
+ mapview(fp[[4]],color="darkblue", alpha.regions =0.1,lwd=0.5)
 ```
 
 ![The first autonomous mission](../inst/images/simplemission.png)  

@@ -101,10 +101,6 @@ if (!isGeneric('makeAP')) {
 #' @param cameraType depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2
 #' @param runDir `character` runtime folder 
 #' @param gdalLink link to GDAL binaries
-#' @note
-#' To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: [uav based Remote Sensing at giswerk.org](http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro)).
-#'https://gisma.github.io/
-#'
 #'
 #' @examples
 #'\dontrun{

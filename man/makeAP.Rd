@@ -151,10 +151,6 @@ terrain following flight planning tool for  autonomous obstacle avoiding flight 
 is not available. \code{makeAP} creates a straightforward version of MAV format flight control
 rules that are ready to be uploaded directly on the Pixhawk controller using the \code{solo_upload} function.\cr\cr
 }
-\note{
-To use the script you need to install quite a lot of R-packages and at least the binary GDAL tools as well as SAGA GIS and GRASS GIS according to your system needs. Please find more information at the giswerk.org: \href{http://giswerk.org/doku.php?id=rs:micrors:uavrs:intro}{uav based Remote Sensing at giswerk.org}).
-https://gisma.github.io/
-}
 \section{Warning}{
  Take care! There are still a lot of construction zones
 around. This script is far beyond to be in a mature state. Please control

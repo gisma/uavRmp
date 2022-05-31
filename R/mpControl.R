@@ -442,17 +442,18 @@ calcSurveyArea <- function(surveyArea,projectDir,logger,useMP) {
   }
   else {
     # import flight area if provided by an external vector file
-    if (class(surveyArea) == "numeric" & length(surveyArea) >= 8) {
+    
+    if (methods::is(surveyArea, "numeric") & length(surveyArea) >= 8) {
       surveyArea <- surveyArea
     }
-    else if (class(surveyArea) == "numeric" & length(surveyArea) < 8) {
+    else if (methods::is(surveyArea, "numeric") & length(surveyArea) < 8) {
       log4r::levellog(logger, 'FATAL', "### you did not provide a launching coordinate")
       stop("### you did not provide a launching coordinate")
     }
     else {
       #file.copy( from = surveyArea, to = file.path(projectDir,"data"))
       test <- try(flightBound <- readExternalFlightBoundary(surveyArea))
-      if (class(test) != "try-error") {
+      if (methods::is(test, "try-error")) {
         surveyArea <- flightBound 
       } else {
         log4r::levellog(logger, 'FATAL', "### can not find/read input file")        
@@ -1398,7 +1399,7 @@ makeFlightPathT3 <- function(treeList,
 
 # get launch position coordinates
 readLaunchPos <- function(fN,extend=FALSE){
-  if (class(fN) != "numeric") {
+  if (methods::is(fN, "numeric")) {
     flightBound <- importSurveyArea(fN)
     launchLon <- flightBound@polygons[[1]]@Polygons[[1]]@coords[1,1] 
     launchLat <- flightBound@polygons[[1]]@Polygons[[1]]@coords[1,2] 
