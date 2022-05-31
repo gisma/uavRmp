@@ -20,8 +20,8 @@ dem <- raster::raster(system.file("extdata", "mrbiko.tif", package = "uavRmp"))
 
 ## generate extraction line object
 line <- sp_line(c(8.66821,8.68212),c(50.83939,50.83267),ID="Highest Position",runDir=runDir)
-
+\dontrun{
 ## extract highest position
 maxpos_on_line(dem,line)  
-
+}
 }

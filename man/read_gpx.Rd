@@ -26,7 +26,6 @@ cloned from tmap
 \examples{
 \dontrun{
 ## for visualisation we are using mapview
-require(mapview)
 ## assign  GPX file
 gpxFN <- system.file("extdata", "flighttrack.gpx", package = "uavRmp")
 
