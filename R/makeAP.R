@@ -323,7 +323,7 @@ makeAP <- function(projectDir = tempdir(),
   #-----------------------------------------------------------------------------------------------
   # if a missionplanner surveypalanning is used 
   if (useMP) {
-    
+    #browser()
     t<-jsonlite::fromJSON(surveyArea)
     listPos<-grep("command", t$mission$items$TransectStyleComplexItem$Items)
     tmp<- t$mission$items$TransectStyleComplexItem$Items[listPos][[1]]
@@ -420,9 +420,10 @@ makeAP <- function(projectDir = tempdir(),
     pos <- c(df_coordinates[1,][2],df_coordinates[1,][1])
     
     footprint <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0,factor)
-    footprint<-  sp::spTransform(footprint,sp::CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
-    landscape<-abs(abs(footprint@bbox[1]-footprint@bbox[3])*overlap-abs(footprint@bbox[1]-footprint@bbox[3]))
-    portrait<- abs(abs(footprint@bbox[2]-footprint@bbox[4])*overlap-abs(footprint@bbox[2]-footprint@bbox[4]))
+   footprint =            sf::st_transform(sf::st_as_sf(footprint),crs = 25832)  
+    #footprint<-  sp::spTransform(footprint,sp::CRS("+init=epsg:25832"))
+    landscape<-abs(abs(sf::st_bbox(footprint)[1]-sf::st_bbox(footprint)[3])*overlap-abs(sf::st_bbox(footprint)[1]-sf::st_bbox(footprint)[3]))
+    portrait<- abs(abs(sf::st_bbox(footprint)[2]-sf::st_bbox(footprint)[4])*overlap-abs(sf::st_bbox(footprint)[2]-sf::st_bbox(footprint)[4]))
     
     
     # calculates the footprint of the first position and returns a SpatialPolygonsDataFrame
@@ -779,7 +780,7 @@ makeAP <- function(projectDir = tempdir(),
   
   ##########################
   ##########################################
-  
+  #browser()
   #estimate time regarding parameter
   ft <- calculateFlightTime( maxFlightTime,
                              windCondition,

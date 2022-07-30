@@ -67,9 +67,11 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       cut <- sf::st_transform(cut, sp::CRS(proj))
       rundem<- raster::crop(raster::raster(path.expand(demFn),band = 1), methods::as(cut,"Spatial"))
       raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
-      system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ',
-                    file.path(runDir,"demll.tif"), ' ',
-                    '-t_srs "+proj=longlat +datum=WGS84 +no_defs"'))
+      demll=raster::projectRaster(from = rundem,crs ="+proj=longlat +datum=WGS84 +no_defs" )
+      raster::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
+      # system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ',
+      #               file.path(runDir,"demll.tif"), ' ',
+      #               '-t_srs "+proj=longlat +datum=WGS84 +no_defs"'))
       dem<-raster::raster(file.path(runDir,"tmpdem.tif"))
       demll<-raster::raster(file.path(runDir,"demll.tif"))
       dem <- raster::setMinMax(dem)
@@ -600,13 +602,16 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
   launchLat <- p$launchLat # df@data[1,1]
   launchLon <- p$launchLon #df@data[1,2]
 
-  g<- link2GI::linkGDAL()
-  system(paste0(g$path,'gdalwarp -overwrite -q ',
-                '-t_srs "+proj=longlat +datum=WGS84 +no_defs" ',
-                file.path(runDir,"tmpdem.tif"),' ',
-                file.path(runDir,"demdll.tif")
-  ))
-  dem<-raster::raster(file.path(runDir,"demdll.tif"))
+  # g<- link2GI::linkGDAL()
+  # system(paste0(g$path,'gdalwarp -overwrite -q ',
+  #               '-t_srs "+proj=longlat +datum=WGS84 +no_defs" ',
+  #               file.path(runDir,"tmpdem.tif"),' ',
+  #               file.path(runDir,"demdll.tif")
+  # ))
+
+  #demll=raster::projectRaster(from = dem,crs ="+proj=longlat +datum=WGS84 +no_defs" )
+  #raster::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
+  dem<-raster::raster(file.path(runDir,"demll.tif"))
   # due to reprojection recalculate teh launch position and altitude
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
