@@ -218,7 +218,7 @@ makeAP <- function(projectDir = tempdir(),
                    followSurface = FALSE,
                    followSurfaceRes = 25,
                    demFn = NULL,
-                   noFiles = NULL,
+                   noFiles = 1,
                    altFilter = 1.0,
                    horizonFilter = 30,
                    flightPlanMode = "track",
@@ -828,7 +828,7 @@ makeAP <- function(projectDir = tempdir(),
     maxPoints <- maxwaypoints
     minPoints <- 1
     # check if the flighttime is forcing more files
-    if (nofiles < noFiles) {
+    if (noFiles < nofiles) {
       nofiles <- noFiles
       maxPoints <- ceiling(nrow(dfcor@data) / nofiles) + 1
       mp <- maxPoints
@@ -860,7 +860,7 @@ makeAP <- function(projectDir = tempdir(),
       lauchPos <- result[[1]]
       dfcor <- result[[2]]
       demFn <- result[[3]]
-      if (is.null(noFiles))
+      if (noFiles > nofiles)
       {nofiles <- ceiling(rawTime / maxFlightTime)} else {nofiles = noFiles}
       maxPoints <- ceiling(nrow(dfcor@data) / nofiles) + 1
       
