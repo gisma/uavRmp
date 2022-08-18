@@ -20,7 +20,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     g<- link2GI::linkGDAL()
   else
     g<-gdalLink
-  
+  #browser() 
   cat("load DEM/DSM data...\n")
   ## load DEM data either from a local GDAL File or from a raster object or if nothing is provided tray to download SRTM dataa
   #if no DEM is provided try to get SRTM data
@@ -61,7 +61,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
       if (class(taskarea)[1] == 'SpatialPolygonsDataFrame' | class(taskarea)[1] == 'SpatialPolygons') taskarea <- sf::st_as_sf(taskarea)
       ta <- sf::st_transform(taskarea, sp::CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
-      taskAreaBuffer <- sf::st_buffer(ta,50) 
+      taskAreaBuffer <- sf::st_buffer(ta,150) 
       cut<- sf::st_bbox(taskAreaBuffer)
       cut<-sf::st_as_sfc(sf::st_bbox(cut))
       cut <- sf::st_transform(cut, sp::CRS(proj))
@@ -238,6 +238,11 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
 
 
 calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,batteryTime,logger,p,len,multiply,tracks,param,speed,uavType,dem,maxAlt,projectDir, workingDir,locationName,uavViewDir,cmd,runDir){
+  # read dem
+  #dem <- raster::raster(dem)
+  #raster::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
+  dem<-raster::raster(file.path(runDir,"demll.tif"))
+  
   fin <- FALSE
   minPoints <- 1
   # set number of waypoints per file
@@ -254,8 +259,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
   launchLat <- df@data[1,8]
   launchLon <- df@data[1,9]
   
-  # read dem
-  dem <- raster::raster(dem)
+  
   # re-read launch altitude
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
@@ -616,7 +620,8 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
   sp::proj4string(launch_pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-  launchAlt <- raster::extract(dem,launch_pos,layer = 1, nl = 1)  
+  launchAlt <- terra::extract(dem,launch_pos) #exactextractr::exact_extract(terra::rast(dem),sf::st_as_sf(launch_pos)  )
+  
  # browser()
   # for each of the splitted task files
   for (i in 1:nofiles) {

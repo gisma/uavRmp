@@ -95,6 +95,7 @@ if (!isGeneric('makeAP')) {
 #' @param windCondition 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h
 #' @param copy copy switch
 #' @param cmd mavlink command
+#' @param noFiles manual split number of files
 #' @param uavViewDir dview direction of uav
 #' @param maxFlightTime user defined estimation of the lipo lifetime (20 min default)
 #' @param rcRange range of estimated range of remote control
@@ -217,6 +218,7 @@ makeAP <- function(projectDir = tempdir(),
                    followSurface = FALSE,
                    followSurfaceRes = 25,
                    demFn = NULL,
+                   noFiles = NULL,
                    altFilter = 1.0,
                    horizonFilter = 30,
                    flightPlanMode = "track",
@@ -231,7 +233,7 @@ makeAP <- function(projectDir = tempdir(),
                    cameraType = "MAPIR2",
                    cmd=16,
                    uavViewDir = 0,
-                   maxwaypoints = 90,
+                   maxwaypoints = 9999,
                    above_ground = TRUE,
                    djiBasic = c(0, 0, 0,-90, 0),
                    dA = FALSE,
@@ -269,6 +271,7 @@ makeAP <- function(projectDir = tempdir(),
   
   ## need picfootprint for calculating the heatmap
   if (heatMap) { picFootprint = TRUE }
+  
   
   ## uav platform depending parameter setting
   if (uavType == "dji_csv") {
@@ -467,7 +470,7 @@ makeAP <- function(projectDir = tempdir(),
     else if (mode == "terrainTrack")
       group = 99 }
     group = 99
-    df_coord<-as.data.frame(df_coordinates)
+    df_coord<-data.frame(df_coordinates)
     names(df_coord)<-c("lat","lon")
     for (j in 2:(nrow(df_coord)-1)) {
       df_coord$heading[j] <- geosphere::bearing(c(df_coord$lon[j],df_coord$lat[j] ), c(df_coord$lon[j + 1],df_coord$lat[j + 1]),a = 6378137,f = 1 / 298.257223563)
@@ -480,8 +483,8 @@ makeAP <- function(projectDir = tempdir(),
     # then do for the rest  forward and backward
     for (j in 2:(nrow(df_coord)-1)) {
       pOld<- c(df_coord$lon[j],df_coord$lat[j])
-     # for (i in seq(1:df_coord$multiply[j])) {
-        if (mode == "waypoints" || mode == "terrainTrack" || mode == "track") {
+     # for (i in seq(1:df_coord$multiply[j])) {  mode == "terrainTrack"
+        if (mode == "waypoints"  || mode == "track") {
           group <- 1
           if (df_coord$multiply[j] < 1 || is.na(df_coord$multiply[j])) {group <- 99}}
         #  else      {group <- 1}}
@@ -790,7 +793,7 @@ makeAP <- function(projectDir = tempdir(),
                              totalTrackdistance,
                              picRate,
                              logger)
-  
+  #browser()
   rawTime <- ft[1]
   maxFlightTime <- ft[2]
   maxSpeed <- ft[3]
@@ -814,10 +817,10 @@ makeAP <- function(projectDir = tempdir(),
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
 
-    result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea=taskArea,gdalLink)
+   result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea=taskArea,gdalLink)
     # assign adapted dem to demFn
-    demFn <- result[[3]]
-    dfcor <- result[[2]]
+   demFn <- result[[3]]
+   dfcor <- result[[2]]
     
     # max numbers of dji waypoints is due to factory limits 98
     # according to start and rth safety we need 6 points for organizig the splitted task
@@ -825,8 +828,8 @@ makeAP <- function(projectDir = tempdir(),
     maxPoints <- maxwaypoints
     minPoints <- 1
     # check if the flighttime is forcing more files
-    if (nofiles < ceiling(rawTime / maxFlightTime)) {
-      nofiles <- ceiling(rawTime / maxFlightTime)
+    if (nofiles < noFiles) {
+      nofiles <- noFiles
       maxPoints <- ceiling(nrow(dfcor@data) / nofiles) + 1
       mp <- maxPoints
       minPoints <- 1
@@ -834,9 +837,11 @@ makeAP <- function(projectDir = tempdir(),
     # start the creation of the control file(s)
     cat('generate control files...\n')
 
+    
     # generate single tasks waypoint file for DJI Litchi import format
-    calcDjiTask( result[[2]],taskName,nofiles,maxPoints,p,logger, round(result[[6]], digits = 0), trackSwitch=FALSE,file.path(runDir,"tmpdem.tif"),result[[8]], projectDir,dateString,locationName,runDir)
+    calcDjiTask( result[[2]],taskName,nofiles,maxPoints,p,logger, round(result[[6]], digits = 0), trackSwitch=FALSE,file.path(runDir,"demll.tif"),result[[8]], projectDir,dateString,locationName,runDir)
   }
+  
   else if (uavType == "pixhawk") {
     writeLines(unlist(lns), fileConn)
     mavDF <- utils::read.csv(file.path(runDir,"tmp.csv"), colClasses=c("V4"="character",
@@ -850,14 +855,13 @@ makeAP <- function(projectDir = tempdir(),
     
     if (is.null(launchAltitude)) {
       # analyze DEM related stuff
-
       result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea,gdalLink)
       # assign adapted dem to demFn
       lauchPos <- result[[1]]
       dfcor <- result[[2]]
       demFn <- result[[3]]
-      
-      nofiles <- ceiling(rawTime / maxFlightTime)
+      if (is.null(noFiles))
+      {nofiles <- ceiling(rawTime / maxFlightTime)} else {nofiles = noFiles}
       maxPoints <- ceiling(nrow(dfcor@data) / nofiles) + 1
       
     }
