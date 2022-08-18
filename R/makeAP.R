@@ -828,7 +828,7 @@ makeAP <- function(projectDir = tempdir(),
     maxPoints <- maxwaypoints
     minPoints <- 1
     # check if the flighttime is forcing more files
-    if (noFiles < nofiles) {
+    if (nofiles < noFiles) {
       nofiles <- noFiles
       maxPoints <- ceiling(nrow(dfcor@data) / nofiles) + 1
       mp <- maxPoints
