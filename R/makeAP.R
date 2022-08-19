@@ -246,6 +246,7 @@ makeAP <- function(projectDir = tempdir(),
 {
   ###  setup environ and params
   cat("setup environ and params...\n")
+  nofiles=1
   # assign flight mission name
   #locationName <- file.path(locationName,"missions")
   if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "/")  projectDir <- substr(projectDir,1,nchar(projectDir)-1)
@@ -577,13 +578,15 @@ makeAP <- function(projectDir = tempdir(),
   # pictures are assumed as squares
   crossDistance <- trackDistance
   
-
+  #browser()
   ## calculate survey area
   # create an sp polygon object of the mission area
   taskArea <- taskarea(p, csvFn)
   mapview::mapview( taskArea)
   # reproject it to UTM
-  taskAreaUTM <- sp::spTransform(taskArea, sp::CRS(paste("+proj=utm +zone=",long2UTMzone(p$lon1)," ellps=WGS84",sep = '')))
+  ta=sf::st_as_sf(taskArea)
+  ta=sf::st_transform(ta,crs = paste("+proj=utm +zone=",long2UTMzone(p$lon1)," ellps=WGS84",sep = ''))
+  taskAreaUTM <- as(ta, "Spatial")
   # calculate area
   surveyAreaUTM <- rgeos::gArea(taskAreaUTM)
   
@@ -656,9 +659,11 @@ makeAP <- function(projectDir = tempdir(),
   pos <- c(p$lon1, p$lat1)
   
   footprint <- calcCamFoot(pos[1], pos[2], uavViewDir, trackDistance, flightAltitude, 0, 0,factor)
-  footprint<-  sp::spTransform(footprint,sp::CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
-  landscape<-abs(abs(footprint@bbox[1]-footprint@bbox[3])*overlap-abs(footprint@bbox[1]-footprint@bbox[3]))
-  portrait<- abs(abs(footprint@bbox[2]-footprint@bbox[4])*overlap-abs(footprint@bbox[2]-footprint@bbox[4]))
+  footprint =            sf::st_transform(sf::st_as_sf(footprint),crs = 25832)  
+  #footprint<-  sp::spTransform(footprint,sp::CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
+  landscape<-abs(abs(sf::st_bbox(footprint)[1]-sf::st_bbox(footprint)[3])*overlap-abs(sf::st_bbox(footprint)[1]-sf::st_bbox(footprint)[3]))
+  portrait<- abs(abs(sf::st_bbox(footprint)[2]-sf::st_bbox(footprint)[4])*overlap-abs(sf::st_bbox(footprint)[2]-sf::st_bbox(footprint)[4]))
+  
   
   
   # calculates the footprint of the first position and returns a SpatialPolygonsDataFrame

@@ -98,7 +98,7 @@ makeTP <-  function(projectDir=tempdir(),
   # # create misson filename
   flightList <- readTreeTrack(missionTrackList)
   test <- try(readLaunchPos(launchPos))
-  if (methods::is(test, "try-error")){
+  if (!methods::is(test, "try-error")){
     launchPos <- test
     flightArea <-  flightList+launchPos
   }

@@ -449,17 +449,17 @@ calcSurveyArea <- function(surveyArea,projectDir,logger,useMP) {
   else {
     # import flight area if provided by an external vector file
     
-    if (methods::is(surveyArea, "numeric") & length(surveyArea) >= 8) {
+    if (!methods::is(surveyArea, "numeric") & length(surveyArea) >= 8) {
       surveyArea <- surveyArea
     }
-    else if (methods::is(surveyArea, "numeric") & length(surveyArea) < 8) {
-      log4r::levellog(logger, 'FATAL', "### you did not provide a launching coordinate")
-      stop("### you did not provide a launching coordinate")
-    }
+    # else if (!methods::is(surveyArea, "numeric") & length(surveyArea) < 8) {
+    #   log4r::levellog(logger, 'FATAL', "### you did not provide a launching coordinate")
+    #   stop("### you did not provide a launching coordinate")
+    # }
     else {
       #file.copy( from = surveyArea, to = file.path(projectDir,"data"))
       test <- try(flightBound <- readExternalFlightBoundary(surveyArea))
-      if (methods::is(test, "try-error")) {
+      if (!methods::is(test, "try-error")) {
         surveyArea <- flightBound 
       } else {
         log4r::levellog(logger, 'FATAL', "### can not find/read input file")        
@@ -493,7 +493,7 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
   flightBound <- importSurveyArea(fN)
   sp::spTransform(flightBound, sp::CRS("+proj=longlat +datum=WGS84 +no_defs"))
   if (extend) {
-    x <- raster::extent(flightBound)
+    x <- sf::st_bbox(flightBound)
     
     # first flightline used for length and angle of the parallels
     lon1 <- x@xmin # startpoint
@@ -502,10 +502,10 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
     lat2 <- x@ymax # endpoint
     lon3 <- x@xmax # crosswaypoint
     lat3 <- x@ymax # crosswaypoint
-    if (methods::is(flightBound, "SpatialPolygonesDataFrame")) {
+    if (!methods::is(flightBound, "SpatialPolygonesDataFrame")) {
       launchLon  <- flightBound@polygons[[1]]@Polygons[[1]]@coords[4,1] 
       launchLat <- flightBound@polygons[[1]]@Polygons[[1]]@coords[4,2]  
-    } else if (methods::is(flightBound, "SpatialLinesDataFrame")) {
+    } else if (!methods::is(flightBound, "SpatialLinesDataFrame")) {
       launchLon <- flightBound@lines[[1]]@Lines[[1]]@coords[7,1] 
       launchLat <- flightBound@lines[[1]]@Lines[[1]]@coords[7,2]
     }
@@ -524,20 +524,21 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
       launchLat <- flightBound@polygons[[1]]@Polygons[[1]]@coords[4,2]       
     }
     if (methods::is(flightBound, "SpatialLinesDataFrame")) {
-      
-      tr<-try(lon3 <- flightBound@lines[[1]]@Lines[[1]]@coords[5,1],silent = TRUE)
-      if (methods::is(tr, "try-error")) {
-        lon1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,1] 
-        lat1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,2] 
+      fb = as(flightBound, "SpatialPointsDataFrame")
+      fb = sp::remove.duplicates(fb)
+      tr<-try(lon3 <- fb@coords[4,1],silent = TRUE)
+      if (!methods::is(tr, "try-error")) {
+        lon1 <- fb@coords[1,1] 
+        lat1 <- fb@coords[1,2] 
         
-        lon2 <- flightBound@lines[[1]]@Lines[[1]]@coords[2,1] 
-        lat2 <- flightBound@lines[[1]]@Lines[[1]]@coords[2,2] 
+        lon2 <- fb@coords[2,1] 
+        lat2 <- fb@coords[2,2] 
         
-        lon3 <- flightBound@lines[[1]]@Lines[[1]]@coords[3,1] 
-        lat3 <- flightBound@lines[[1]]@Lines[[1]]@coords[3,2]
+        lon3 <- fb@coords[3,1] 
+        lat3 <- fb@coords[3,2]
         
-        launchLon <- flightBound@lines[[1]]@Lines[[1]]@coords[4,1] 
-        launchLat <- flightBound@lines[[1]]@Lines[[1]]@coords[4,2]  
+        launchLon <- fb@coords[4,1] 
+        launchLat <- fb@coords[4,2]  
       } else {
       lon1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,1] 
       lat1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,2] 
@@ -1411,7 +1412,7 @@ makeFlightPathT3 <- function(treeList,
 
 # get launch position coordinates
 readLaunchPos <- function(fN,extend=FALSE){
-  if (methods::is(fN, "numeric")) {
+  if (!methods::is(fN, "numeric")) {
     flightBound <- importSurveyArea(fN)
     launchLon <- flightBound@polygons[[1]]@Polygons[[1]]@coords[1,1] 
     launchLat <- flightBound@polygons[[1]]@Polygons[[1]]@coords[1,2] 
