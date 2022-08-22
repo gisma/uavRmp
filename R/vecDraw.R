@@ -81,23 +81,25 @@ vecDraw <- function(mapCenter=NULL,
   
   if (!is.null(overlay)){
 
-    if  (!methods::is(overlay[1], "character")) {stop("overlay has to be a sp* object") }
+    if  (methods::is(overlay[1], "character")) {stop("overlay has to be a sp* object") }
     
-    if (class(overlay[1])  %in% c("SpatialPointsDataFrame","SpatialLinesDataFrame","SpatialLines","SpatialPoints")) {
+    if (methods::is(overlay[1],"SpatialPointsDataFrame") | 
+        methods::is(overlay[1],"SpatialLinesDataFrame") |
+        methods::is(overlay[1],"SpatialPoints")) {
       #e <- as(raster::extent(overlay), "SpatialPolygons")
       #e <- sp::SpatialPolygonsDataFrame(e, data.frame(ID="overlay"))
       sp::proj4string(overlay) <- sp::proj4string(overlay)
-      overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+init=epsg:4326"))
+      #overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+init=epsg:4326"))
     } 
-    if  (!methods::is(overlay[1],"SpatialPolygonsDataFrame")) {
+    if  (methods::is(overlay[1],"SpatialPolygonsDataFrame")) {
       overlay<-sp::spTransform(overlay,CRSobj = sp::CRS("+proj=longlat +datum=WGS84 +no_defs"))
       #overlay <- sp::SpatialPolygonsDataFrame(overlay, data.frame(ID="overlay"))
     } 
-    
-    if  (!methods::is(overlay[1],"sf")) {
+    if (methods::is(overlay[1],"sf") | 
+        methods::is(overlay[1],"sfc")) {
 
     
-    rgdal::writeOGR(overlay, paste(tmpPath, "jsondata", sep=.Platform$file.sep), "OGRGeoJSON", driver="GeoJSON")
+    sf::st_write(overlay, paste(tmpPath, "jsondata", sep=.Platform$file.sep), "OGRGeoJSON", driver="GeoJSON")
     
     # for fastet json read in a html document we wrap it with var data = {};
     # and we fix the crs item of ogr2json
@@ -113,36 +115,38 @@ vecDraw <- function(mapCenter=NULL,
     utils::write.table(lns, paste(tmpPath, "jsondata", sep=.Platform$file.sep), sep="\n", row.names=FALSE, col.names=FALSE, quote = FALSE)
     features<-names(overlay)
     # correct if only Lines or Polygons (obsolete here?)
-    if (class(overlay)[1] == 'SpatialPolygonsDataFrame' | class(overlay)[1] == 'SpatialPolygons'){
-      noFeature <- length(overlay@polygons)
-    } else if (class(overlay)[1] == 'SpatialLinesDataFrame' | class(overlay)[1] == 'SpatialLines'){
-      noFeature <- length(overlay@lines)
-    } 
+    # if (methods::is(overlay)[1] == 'SpatialPolygonsDataFrame' | methods::is(overlay)[1] == 'SpatialPolygons'){
+    #   noFeature <- length(overlay@polygons)
+    # } else if (methods::is(overlay)[1] == 'SpatialLinesDataFrame' | methods::is(overlay)[1] == 'SpatialLines'){
+    #   noFeature <- length(overlay@lines)
+    # } 
     jsondata<-1
     
     
     
-    mapCenter<-c(raster::extent(overlay)[3]+raster::extent(overlay)[4]-raster::extent(overlay)[3],raster::extent(overlay)[1]+raster::extent(overlay)[2]-raster::extent(overlay)[1])
-    #features<-overlay
+    mapCenter<-c(sf::st_bbox(overlay)[2] +(sf::st_bbox(overlay)[4]-sf::st_bbox(overlay)[2]),sf::st_bbox(overlay)[1]+(sf::st_bbox(overlay)[3]-sf::st_bbox(overlay)[1]))
+    features<-overlay
     
-    }  else if (!methods::is(overlay[1],"sf")) {
-    #  sf::sf::st_write(overlay, dsn = paste(tmpPath, "jsondata", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata", sep=.Platform$file.sep), driver = "Esri", update = TRUE)
-      sf::st_write(overlay, dsn = paste(tmpPath, "jsondata.shp", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata.shp", sep=.Platform$file.sep), update = TRUE)
-      
-      conn<-file(paste(tmpPath, "jsondata", sep=.Platform$file.sep))
-      lns <- readLines(paste(tmpPath, "jsondata", sep=.Platform$file.sep))
-      
-      text1 <-paste0('var jsondata = ')
-      text2 <- ';'
-      # open the file and read in all the lines 
- 
-    # concatenate the old file with the new text
-    newjson <- c(text1,lns[1:length(lns)],text2) 
-    writeLines(newjson, conn, sep="\n")
-    close(conn)
- 
-      jsondata<-0
-      }
+    }  else if (!methods::is(overlay[1],"sf") | 
+    
+        !methods::is(overlay[1],"sfc")) {
+    # #  sf::sf::st_write(overlay, dsn = paste(tmpPath, "jsondata", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata", sep=.Platform$file.sep), driver = "Esri", update = TRUE)
+       sf::st_write(sf::st_as_sf(overlay), dsn = paste(tmpPath, "jsondata", sep=.Platform$file.sep), layer = paste(tmpPath, "jsondata.shp", sep=.Platform$file.sep),driver="GeoJSON", append = FALSE)
+       
+       conn<-file(paste(tmpPath, "jsondata", sep=.Platform$file.sep))
+       lns <- readLines(paste(tmpPath, "jsondata", sep=.Platform$file.sep))
+       
+       text1 <-paste0('var jsondata = ')
+       text2 <- ';'
+    #   # open the file and read in all the lines 
+    # 
+    # # concatenate the old file with the new text
+     newjson <- c(text1,lns[1:length(lns)],text2) 
+     writeLines(newjson, conn, sep="\n")
+     close(conn)
+    # 
+       jsondata<-0
+   }
   } else {jsondata<-0}
   if ( preset == "uav") {
     if (is.null(mapCenter)){
@@ -181,7 +185,7 @@ vecDraw <- function(mapCenter=NULL,
     zoom<-zoom
     line<-line
     maplayer=c("OpenStreetMap","CartoDB.Positron","Esri.WorldImagery","Thunderforest.Landscape","OpenTopoMap")
-    overlay=NULL
+    overlay=overlay
     rectangle<-rectangle
     poly<-poly
     circle<-circle
