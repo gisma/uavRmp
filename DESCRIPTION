@@ -1,7 +1,7 @@
 Package: uavRmp
 Type: Package
 Title: UAV Mission Planner
-Version: 0.6.0
+Version: 0.6.1
 Date: 2022-05-30
 Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Marvin", "Ludwig", role = c("ctb")),
@@ -35,7 +35,7 @@ Imports:
     data.table,    
     jsonlite,
     rlist
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,

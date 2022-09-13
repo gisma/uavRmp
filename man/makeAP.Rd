@@ -13,6 +13,7 @@ makeAP(
   followSurface = FALSE,
   followSurfaceRes = 25,
   demFn = NULL,
+  noFiles = 1,
   altFilter = 1,
   horizonFilter = 30,
   flightPlanMode = "track",
@@ -27,7 +28,7 @@ makeAP(
   cameraType = "MAPIR2",
   cmd = 16,
   uavViewDir = 0,
-  maxwaypoints = 90,
+  maxwaypoints = 9999,
   above_ground = TRUE,
   djiBasic = c(0, 0, 0, -90, 0),
   dA = FALSE,
@@ -67,6 +68,8 @@ Further explanation at seealso}
 \item{followSurfaceRes}{horizontal step distance for analyzing the DEM altitudes}
 
 \item{demFn}{filename of the corresponding DEM data file.}
+
+\item{noFiles}{manual split number of files}
 
 \item{altFilter}{if \code{followingTerrain} is equal \code{TRUE} then
 \code{altFilter} is the threshold value of accepted altitude difference (m) between two way points.
