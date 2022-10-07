@@ -1373,7 +1373,7 @@ makeFlightPathT3 <- function(treeList,
   if (uavType == "dji_csv") {
     cat("calculating DEM related stuff\n")
     djiDF <- utils::read.csv(file.path(runDir,"treepoints.csv"),sep = ",",header = FALSE)
-    names(djiDF) <- unlist(strsplit( makeUavPoint(pos,uavViewDir,group = 99,p,,ag=above_ground,header = TRUE,sep = ' '),split = " "))
+    names(djiDF) <- unlist(strsplit( makeUavPoint(pos,uavViewDir,group = 99,p,ag=above_ground,header = TRUE,sep = ' '),split = " "))
     sp::coordinates(djiDF) <- ~lon+lat
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     result <- getAltitudes(demll ,djiDF,p,followSurfaceRes = 5,logger,projectDir,locationName,flightArea)
