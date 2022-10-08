@@ -19,6 +19,7 @@
 #' @importFrom geosphere bearing
 #' @importFrom geosphere distGeo
 #' @importFrom geosphere destPoint
+#' @importFrom methods as
 #' @import log4r
 #' @keywords package
 #' 

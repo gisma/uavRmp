@@ -621,7 +621,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
   sp::proj4string(launch_pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-  launchAlt <- terra::extract(dem,launch_pos) #exactextractr::exact_extract(terra::rast(dem),sf::st_as_sf(launch_pos)  )
+  launchAlt <- raster::extract(dem,launch_pos) #exactextractr::exact_extract(terra::rast(dem),sf::st_as_sf(launch_pos)  )
   
  # browser()
   # for each of the splitted task files
@@ -1210,7 +1210,9 @@ makeFlightPathT3 <- function(treeList,
                              circleRadius,
                              flightArea,
                              takeOffAlt,
-                             runDir, gdalLink =NULL){
+                             runDir, 
+                             gdalLink = NULL,
+                             above_ground){
   if (is.null(gdalLink)) 
     g<- link2GI::linkGDAL()
   else 

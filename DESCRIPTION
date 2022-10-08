@@ -22,7 +22,6 @@ Imports:
     sp,
     sf,    
     raster,
-    rgdal,
     rgeos,
     geosphere,
     tools,
