@@ -13,3 +13,4 @@ _config.yml
 _pkgdown.yml
 tic.R
 ^docs$
+^doc$

@@ -1,3 +1,7 @@
+## uavRmp 0.6.1
+new features:
+  * add functions to correct wrong DJI GPS altitude
+
 ## uavRmp 0.6.0
 new features:
   * change DJI flag from `djip3` to `dji_csv`

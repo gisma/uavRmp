@@ -2,6 +2,8 @@
 
 export(copyDir)
 export(extractExifr)
+export(fixGPSAlt)
+export(getGPSAltDiff)
 export(initProj)
 export(makeAP)
 export(makeGlobalVar)

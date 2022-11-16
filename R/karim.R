@@ -489,3 +489,67 @@ vecDrawInternal <- function(tmpPath, x = NULL) {
     package = 'uavRmp'
   )
 }
+
+
+
+# workflow
+# gpic="/media/creu/mob/franzosenwiese/images/DJI_101_0177.JPG"
+# dem="~/Desktop/uav/jk/burgwald_DEM.tif"
+# path = "/media/creu/mob/franzosenwiese/images/"
+# getGPSAltDiff(gpic,dem)
+# fixGPSAlt(path,diff)
+
+#' getGPSAltDiff
+#' @description  extract the difference of the exif GPS aLtitude tag and a given DEM altitude at this point 
+#'
+#' @param picPath `character` a path to the image 
+#' @param demPath `character` a path to the DEM
+
+
+#' @examples 
+#' \dontrun{
+#' demFN <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+#' picFN <- system.file("extdata", "dji.jpg", package = "uavRmp")
+#  getGPSAltDiff(picFN,demFN)
+#' 
+#' }
+#' @export getGPSAltDiff
+getGPSAltDiff <- function(picPath,demPath){
+  
+  #system2("exiftool", paste0("-n   -tagsFromFile @ -AbsoluteAltitude+=", diff, " ",image))
+  exifInfo <- exifr::read_exif(picPath, recursive = FALSE, tags = c("SourceFile", "GPSLatitude", "GPSLongitude","GPSAltitude"))
+  pos <- as.data.frame(cbind(exifInfo$GPSLatitude,exifInfo$GPSLongitude))
+  sp::coordinates(pos) <- ~V2+V1
+  sp::proj4string(pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
+  demAlt = raster::extract(raster::raster(demPath),pos)
+  diff= demAlt- exifInfo$GPSAltitude
+  return(diff)
+}
+
+
+#' fixGPSAlt
+#' @description  fixes broken GPS altitudes in the exif data of DJI images  with the given differen value
+#'
+#' @param path `character`  path to the images 
+#' @param diff `number` fixing value in meter
+#' @examples 
+#' @ dontrun{
+#' 
+#' picFN <- system.file("extdata", "dji.jpg", package = "uavRmp")
+#  fixGPSAlt(picFN,100.0)
+#' 
+#' }
+#' @export fixGPSAlt
+#' 
+#' 
+fixGPSAlt <- function(path,diff){
+  
+  
+  system2("exiftool", paste0("-n   -tagsFromFile @ -AbsoluteAltitude+=", diff, " ",path, "*.JPG"))
+  exifInfo <- exifr::read_exif(path, recursive = TRUE, tags = c("SourceFile", "GPSAltitude", "AbsoluteAltitude"))
+  
+  return(exifInfo)
+}
+
+
+ 

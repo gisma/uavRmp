@@ -7,16 +7,16 @@ if (!isGeneric('makeAP')) {
 #' @description The basic idea is to provide an easy to use workflow for controlling rtf-UAVs for planning autonomous surveys to retrieve aerial data sets. 
 #'   
 #' @details makeAP (make aerial plan) creates either intermediate flight control files for the
-#'   DJI phantom x UAVs or ready to upload control files for the 3DR Solo/PixHawk flightcontroller. The
+#'   DJI phantom x UAVs or ready to upload control files for the 3DR Solo/PixHawk flight controller. The
 #'   DJI control files are designed for using with the proprietary litchi flight
-#'   control app exchange format, while the 3DR Solo/PixHawk flightcontroller files are using the MAVLINK
+#'   control app exchange format, while the 3DR Solo/PixHawk flight controller files are using the MAVLINK
 #'   common message set, that is used by the PixHawk flight controller family.
-#'   Both are implemented very rudimentarily.\cr\cr DJI:\cr The reason using DJI
+#'   Both are implemented very rudimentary.\cr\cr DJI:\cr The reason using DJI
 #'   is their absolute straightforward usage. Everybody can fly with a DJI but
-#'   the price is a more or less closed system at least in the low budget segement. There are workarounds like the litchi app that provides
+#'   the price is a more or less closed system at least in the low budget segment. There are workarounds like the litchi app that provides
 #'   additionally to a cloud based mission planner an offline/standalone
-#'   interface to upload a CSV formated way point file for autonomous flights to
-#'   the Phantom.\cr\cr PixHawk flightcontroller/3DR Solo:\cr The open uav community is focused
+#'   interface to upload a CSV formatted way point file for autonomous flights to
+#'   the Phantom.\cr\cr PixHawk flight controller/3DR Solo:\cr The open UAV community is focused
 #'   on the PixHawk autopilot unit and the Mission Planner software. It is well
 #'   documented and several APIs are provided. Nevertheless a high resolution 
 #'   terrain following flight planning tool for  autonomous obstacle avoiding flight missions
