@@ -51,15 +51,6 @@ DJI: The reason using DJI UAVs is because of their absolute straightforward usag
 
 PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. '''uavRst''' supports the ```MAVLINK``` common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the ```upload2Solo``` function.
 
-
-
-## The family
-
-The package family consists of 4 parts:
-
-  * flight planning `uavRmp`
-  * remote sensing `uavRrst`
-  
 ## Installation
 
 The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB.  For using some of the the Solo related functions you need to install the [dronekit](https://github.com/dronekit/dronekit-python) python libs in addition.
