@@ -157,7 +157,7 @@ if ( !isGeneric("initProj") ) {
 #'@param projRootDir  project github root directory (your github name)
 #'@param projFolders list of subfolders in project
 #'
-#'@export initProj
+#' @keywords internal
 #'   
 
 

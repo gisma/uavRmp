@@ -1,7 +1,7 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '2022-05-31'
+date: '2023-01-29'
 editor_options:
   chunk_output_type: console
 output:
@@ -49,15 +49,6 @@ DJI: The reason using DJI UAVs is because of their absolute straightforward usag
 
 PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. '''uavRst''' supports the ```MAVLINK``` common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the ```upload2Solo``` function.
 
-
-
-## The family
-
-The package family consists of 4 parts:
-
-  * flight planning `uavRmp`
-  * remote sensing `uavRrst`
-  
 ## Installation
 
 The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB.  For using some of the the Solo related functions you need to install the [dronekit](https://github.com/dronekit/dronekit-python) python libs in addition.
@@ -265,7 +256,7 @@ We want to plan a flight in a more or less flat terrain in the upper Lahn-valley
  # see ?leafDraw for more information
  vecDraw(mapCenter = c(50.855,8.691),preset="uav")
 ```
-![Digitized Flight Area](../inst/images/missionarea.png)  
+![Digitized Flight Area](missionarea.png)  
 
 Feel free to digitize - similar to the above figure - the four points needed:
 
@@ -284,7 +275,7 @@ Finish digitizing and save it as a KML file. Take care to add the correct extens
 
 #### Missionplanner or Qgroundcontrol survey feature
 We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
-![The first autonomous complexmission planned with QGroundcontrol](../inst/images/qcmission.png)
+![The first autonomous complex mission planned with QGroundcontrol](qcmission.png)
 
 Save this at an appropriate folder. To use this planning file you have to set in `makeAP` the switch:
 
@@ -305,7 +296,7 @@ PLEASE NOTE: Optionally all used data files are copied to a folder called ''data
 
 The project structure will look like the figure.
 
-![Example of uavRmp folder structure](../inst/images/folderstructure.png)  
+![Example of uavRmp folder structure](folderstructure.png)  
 
 #### The used arguments
 
@@ -342,7 +333,7 @@ Using the ```mapview``` package  you can easily visualize the results. The below
  mapview(fp[[4]],color="darkblue", alpha.regions =0.1,lwd=0.5)
 ```
 
-![The first autonomous mission](../inst/images/simplemission.png)  
+![The first autonomous mission](simplemission.png)  
 
 ### Export to the flight app 
 

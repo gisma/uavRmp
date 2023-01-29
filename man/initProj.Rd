@@ -19,3 +19,4 @@ Defines and creates (if necessary) all folders variables
 set the SAGA path variables and other system variables
 exports all variables to the global environment
 }
+\keyword{internal}
