@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.2</span>
       </span>
     </div>
 
@@ -63,43 +63,54 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">sp_line</span><span class="op">(</span>
-  <span class="va">Y_coords</span>,
-  <span class="va">X_coords</span>,
-  ID <span class="op">=</span> <span class="st">"ID"</span>,
-  proj4 <span class="op">=</span> <span class="st">"+proj=longlat +datum=WGS84 +no_defs"</span>,
-  export <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">runDir</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sp_line</span><span class="op">(</span></span>
+<span>  <span class="va">Y_coords</span>,</span>
+<span>  <span class="va">X_coords</span>,</span>
+<span>  ID <span class="op">=</span> <span class="st">"ID"</span>,</span>
+<span>  proj4 <span class="op">=</span> <span class="st">"+proj=longlat +datum=WGS84 +no_defs"</span>,</span>
+<span>  export <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">runDir</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>Y_coords</dt>
 <dd><p>Y/lat coordinates</p></dd>
+
+
 <dt>X_coords</dt>
 <dd><p>X/lon coordinates</p></dd>
+
+
 <dt>ID</dt>
 <dd><p>id of line</p></dd>
+
+
 <dt>proj4</dt>
 <dd><p>projection</p></dd>
+
+
 <dt>export</dt>
 <dd><p>write shafefile default = F</p></dd>
+
+
 <dt>runDir</dt>
 <dd><p><code>character</code> runtime folder</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## creating sp spatial point object</span></span>
-<span class="r-in"><span class="va">line</span> <span class="op">&lt;-</span> <span class="fu">sp_line</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.770367</span>,<span class="fl">8.771161</span>,<span class="fl">8.771536</span><span class="op">)</span>,</span>
-<span class="r-in">                <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50.815172</span>,<span class="fl">50.814743</span>,<span class="fl">50.814875</span><span class="op">)</span>,</span>
-<span class="r-in">                runDir<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## plot it</span></span>
-<span class="r-in"><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">line</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## creating sp spatial point object</span></span></span>
+<span class="r-in"><span><span class="va">line</span> <span class="op">&lt;-</span> <span class="fu">sp_line</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.770367</span>,<span class="fl">8.771161</span>,<span class="fl">8.771536</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50.815172</span>,<span class="fl">50.814743</span>,<span class="fl">50.814875</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                runDir<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## plot it</span></span></span>
+<span class="r-in"><span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">line</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sp_line-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -114,7 +125,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

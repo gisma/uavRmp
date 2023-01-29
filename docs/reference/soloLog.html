@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.2</span>
       </span>
     </div>
 
@@ -63,33 +63,46 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">soloLog</span><span class="op">(</span>
-  logFileSample <span class="op">=</span> <span class="st">"recent"</span>,
-  logSource <span class="op">=</span> <span class="st">"rc"</span>,
-  logDest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,
-  downloadOnly <span class="op">=</span> <span class="cn">FALSE</span>,
-  netWarn <span class="op">=</span> <span class="cn">FALSE</span>,
-  renameFiles <span class="op">=</span> <span class="cn">TRUE</span>,
-  makeSP <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">soloLog</span><span class="op">(</span></span>
+<span>  logFileSample <span class="op">=</span> <span class="st">"recent"</span>,</span>
+<span>  logSource <span class="op">=</span> <span class="st">"rc"</span>,</span>
+<span>  logDest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  downloadOnly <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  netWarn <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  renameFiles <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  makeSP <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>logFileSample</dt>
 <dd><p><code>character</code> , options are:  <code>recent</code> download the most recent logfile,  <code>all</code> downloads all logfiles, or a plain number e.g. <code>2</code> for a specific logfile. Note the telemetry logfiles are numbering from 1 to 9 only, the most recent one is not numbered. The binary logfiles from the pixhawk are numbering continously but only the last 50 files or so will exist.</p></dd>
+
+
 <dt>logSource</dt>
 <dd><p><code>character</code>, options are: <code>rc</code> = logfiles from the radio control, <code>pixhawk</code> = logfiles from the flightcontroller, default is set to  <code>rc</code>. The radio control is providing the last ten telemetry data files, while the flight controller provides the latest 50 binary logfiles.</p></dd>
+
+
 <dt>logDest</dt>
 <dd><p><code>character</code> (existing) destination path to which the logs should be downloaded to</p></dd>
+
+
 <dt>downloadOnly</dt>
 <dd><p><code>logical</code> wether to only download the files or also convert and rename them, default is set FALSE</p></dd>
+
+
 <dt>netWarn</dt>
 <dd><p><code>logical</code> wether to warn and waits before starting a connection to the controller. helps while testing due to occassional wifi shutdowns of the Solo, default is set to FALSE</p></dd>
+
+
 <dt>renameFiles</dt>
 <dd><p><code>logical</code> renames the log and gpx files according to the time period, default is set TRUE</p></dd>
+
+
 <dt>makeSP</dt>
 <dd><p><code>logical</code> wether returning an <code>sp</code> object from the gpx files or not, default is FALSE</p></dd>
+
 </dl></div>
     <div id="note">
     <h2>Note</h2>
@@ -99,22 +112,22 @@ Additionally you need <code>sshpass</code>:<br><code>sudo apt-get install sshpas
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co">## download recent telemetry log file from controller and convert it to gpx</span></span>
-<span class="r-in"><span class="fu">soloLog</span><span class="op">(</span>logFiles <span class="op">=</span> <span class="st">"solo.tlog"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## download the last available logfile from the radio control</span></span>
-<span class="r-in"><span class="fu">soloLog</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## download ALL logfiles from the radio control</span></span>
-<span class="r-in"><span class="fu">soloLog</span><span class="op">(</span>logFiles <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## download ALL telemetry logfiles from the flight controller</span></span>
-<span class="r-in"><span class="fu">soloLog</span><span class="op">(</span>logSource <span class="op">=</span> <span class="st">"pixhawk"</span>,logFiles <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## download telementry logfile number 5  from the remote control</span></span>
-<span class="r-in"><span class="fu">soloLog</span><span class="op">(</span>logSource <span class="op">=</span> <span class="st">"rc"</span>,logFiles <span class="op">=</span> <span class="st">"5"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co">## download recent telemetry log file from controller and convert it to gpx</span></span></span>
+<span class="r-in"><span><span class="fu">soloLog</span><span class="op">(</span>logFiles <span class="op">=</span> <span class="st">"solo.tlog"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## download the last available logfile from the radio control</span></span></span>
+<span class="r-in"><span><span class="fu">soloLog</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## download ALL logfiles from the radio control</span></span></span>
+<span class="r-in"><span><span class="fu">soloLog</span><span class="op">(</span>logFiles <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## download ALL telemetry logfiles from the flight controller</span></span></span>
+<span class="r-in"><span><span class="fu">soloLog</span><span class="op">(</span>logSource <span class="op">=</span> <span class="st">"pixhawk"</span>,logFiles <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## download telementry logfile number 5  from the remote control</span></span></span>
+<span class="r-in"><span><span class="fu">soloLog</span><span class="op">(</span>logSource <span class="op">=</span> <span class="st">"rc"</span>,logFiles <span class="op">=</span> <span class="st">"5"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -129,7 +142,7 @@ Additionally you need <code>sshpass</code>:<br><code>sudo apt-get install sshpas
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -28,6 +28,12 @@
     <loc>https://r-spatial.github.io/uavRmp/reference/extractExifr.html</loc>
   </url>
   <url>
+    <loc>https://r-spatial.github.io/uavRmp/reference/fixGPSAlt.html</loc>
+  </url>
+  <url>
+    <loc>https://r-spatial.github.io/uavRmp/reference/getGPSAltDiff.html</loc>
+  </url>
+  <url>
     <loc>https://r-spatial.github.io/uavRmp/reference/index.html</loc>
   </url>
   <url>
@@ -70,6 +76,9 @@
     <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_dem.html</loc>
   </url>
   <url>
+    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_dji.html</loc>
+  </url>
+  <url>
     <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_flightarea.html</loc>
   </url>
   <url>
@@ -77,6 +86,9 @@
   </url>
   <url>
     <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_position.html</loc>
+  </url>
+  <url>
+    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_qgc_survey.html</loc>
   </url>
   <url>
     <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_waypoints.html</loc>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.2</span>
       </span>
     </div>
 
@@ -78,10 +78,12 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Unmanned Aerial Vehicle R based Mission Planning</h1>
-                        <h4 data-toc-skip class="author">Chris Reudenbach</h4>
+      <h1 data-toc-skip>Unmanned Aerial Vehicle R based Mission
+Planning</h1>
+                        <h4 data-toc-skip class="author">Chris
+Reudenbach</h4>
             
-            <h4 data-toc-skip class="date">2022-05-31</h4>
+            <h4 data-toc-skip class="date">2023-01-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/gisma/uavRmp/blob/HEAD/vignettes/uavRmp_1.Rmd" class="external-link"><code>vignettes/uavRmp_1.Rmd</code></a></small>
       <div class="hidden name"><code>uavRmp_1.Rmd</code></div>
@@ -94,22 +96,62 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>Unmanned Aerial Vehicle R based Mission Planning</p>
-<p>The <a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a> package is designed for UAV autonomous mission planning. In the first place it is a simple and open source planning tool for planning survey flights of low budget drones based on <code>R</code>. It provide an easy workflow for planning autonomous surveys including battery-dependent task splitting and save departures and approaches of each monitoring chunks.</p>
-<p>The range of usage of these kinds aof aerial photography is widespread from Digital Surface Models (DSM), Digital Elevation Models (DEM), orthophotos, altitude point clouds to landuse/landscape classification, NDVI forest structure classifications and so on…</p>
+<p>The <a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a> package is
+designed for UAV autonomous mission planning. In the first place it is a
+simple and open source planning tool for planning survey flights of low
+budget drones based on <code>R</code>. It provide an easy workflow for
+planning autonomous surveys including battery-dependent task splitting
+and save departures and approaches of each monitoring chunks.</p>
+<p>The range of usage of these kinds aof aerial photography is
+widespread from Digital Surface Models (DSM), Digital Elevation Models
+(DEM), orthophotos, altitude point clouds to landuse/landscape
+classification, NDVI forest structure classifications and so on…</p>
 <div class="section level3">
 <h3 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a>
 </h3>
-<p>WARNING: Take care! There are still a lot of construction zones around. This package is far beyond to be in a mature state. Please implement a double check systems while planning and performing autonomous flight missions. You will have a lot of chances to make a small mistake what may yield in a damage of your UAV or even worse in involving people, animals or non-cash assets.</p>
-<p>Check your risk - use parachute systems and, even if everything is running like a charm, keep alert!</p>
+<p>WARNING: Take care! There are still a lot of construction zones
+around. This package is far beyond to be in a mature state. Please
+implement a double check systems while planning and performing
+autonomous flight missions. You will have a lot of chances to make a
+small mistake what may yield in a damage of your UAV or even worse in
+involving people, animals or non-cash assets.</p>
+<p>Check your risk - use parachute systems and, even if everything is
+running like a charm, keep alert!</p>
 </div>
 <div class="section level3">
 <h3 id="supported-uav-platforms">Supported UAV platforms<a class="anchor" aria-label="anchor" href="#supported-uav-platforms"></a>
 </h3>
-<p>Up to now it has been dedicated to low budget rtf-UAVs as the DJI Phantom (up to P4) series and the Pixhawk flightcontroller family. However the current and future support will focus on Pixhawk based UAVs only.</p>
-<p>The open UAV community is focused on the PixHawk autopilot unit and the <a href="http://qgroundcontrol.com/downloads/" class="external-link">MissionPlanner</a> or <a href="https://ardupilot.org/planner2/" class="external-link">QGroundcontrol</a> software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmercial competitors like the powerful <a href="https://www.ugcs.com/" class="external-link">ugcs</a> software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.</p>
-<p>The <code>uavRmd</code> bridges this gap and generates <code>MAVLINK</code> format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.</p>
-<p>DJI: The reason using DJI UAVs is because of their absolute straightforward usage. Everybody can fly with a DJI but the price for this simplicity is a hermetically closed system. Only the Litchi app provides in addition to a cloud based mission planer an offline/standalone interface to upload a CSV formated way point file for autonomous flights to the Phantom.</p>
-<p>PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. ’‘’uavRst’’’ supports the <code>MAVLINK</code> common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the <code>upload2Solo</code> function.</p>
+<p>Up to now it has been dedicated to low budget rtf-UAVs as the DJI
+Phantom (up to P4) series and the Pixhawk flightcontroller family.
+However the current and future support will focus on Pixhawk based UAVs
+only.</p>
+<p>The open UAV community is focused on the PixHawk autopilot unit and
+the <a href="http://qgroundcontrol.com/downloads/" class="external-link">MissionPlanner</a> or
+<a href="https://ardupilot.org/planner2/" class="external-link">QGroundcontrol</a> software.
+Both are well documented and provide APIs and easy to use GUIs.
+Nevertheless they are missing planning capability (APM Planner) or a
+terrain following autonomous flight planning tool, that is also dealing
+with battery-dependent task splitting and save departures and approaches
+(MissionPlanner) yet. Other commmercial competitors like the powerful <a href="https://www.ugcs.com/" class="external-link">ugcs</a> software package are still lacking
+an advanced capability for generating smooth and save surface following
+flight tasks for low AGL altitudes.</p>
+<p>The <code>uavRmd</code> bridges this gap and generates
+<code>MAVLINK</code> format compliant mission files that can be uploaded
+to the Pixhawk controller using an integrated function or externally by
+any Ground Control Station software.</p>
+<p>DJI: The reason using DJI UAVs is because of their absolute
+straightforward usage. Everybody can fly with a DJI but the price for
+this simplicity is a hermetically closed system. Only the Litchi app
+provides in addition to a cloud based mission planer an
+offline/standalone interface to upload a CSV formated way point file for
+autonomous flights to the Phantom.</p>
+<p>PixHawk/3DR Solo: The open UAV community is focused on the PixHawk
+autopilot unit and the Mission Planner software. It is well documented
+and several APIs are provided. Nevertheless a terrain following
+autonomous flight planning tool is not available. ’‘’uavRst’’’ supports
+the <code>MAVLINK</code> common message format that can be uploaded
+directly on the Pixhawk controller using Ground Control Station software
+or the <code>upload2Solo</code> function.</p>
 </div>
 <div class="section level3">
 <h3 id="the-family">The family<a class="anchor" aria-label="anchor" href="#the-family"></a>
@@ -125,52 +167,89 @@
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<p>The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. For using some of the the Solo related functions you need to install the <a href="https://github.com/dronekit/dronekit-python" class="external-link">dronekit</a> python libs in addition.</p>
-<p>A full list of necessary libaries and binaries beyond <code>R</code> will soon be provided.</p>
-<p>To install from <code>github</code> you need to have installed the <code>devtools</code> package.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span></span></code></pre></div>
+<p>The most easiest way to obtain a fairly good runtime enviroment is to
+setup Linux as a dual boot system or in a VB. For using some of the the
+Solo related functions you need to install the <a href="https://github.com/dronekit/dronekit-python" class="external-link">dronekit</a> python
+libs in addition.</p>
+<p>A full list of necessary libaries and binaries beyond <code>R</code>
+will soon be provided.</p>
+<p>To install from <code>github</code> you need to have installed the
+<code>devtools</code> package.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span></span></code></pre></div>
 <p>If you want to install all dependencies use:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">,</span> dependencies <span class="op">=</span> TRUE<span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">,</span> dependencies <span class="op">=</span> TRUE<span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="the-core-planning-tools">The core planning tools<a class="anchor" aria-label="anchor" href="#the-core-planning-tools"></a>
 </h2>
-<p>The core planning tools <code>makeAP</code> (make area plan) and <code>makeTP</code> (make target plan) are creating either intermediate flight control files for the DJI Phantom 3x UAVs or ready to upload control files for the Pixhawk based UAVs like the 3DR Solo. The intermediate DJI control files are expected to be used with the proprietary <a href="https://flylitchi.com/" class="external-link">Litchi</a> flight control app, while the Pixhawk/3DR Solo files are using the <code>MAVLINK</code> common message format.</p>
-<p>The basic idea is to provide an easy to use workflow for controlling rtf UAVs on autonomous survey missions.</p>
+<p>The core planning tools <code>makeAP</code> (make area plan) and
+<code>makeTP</code> (make target plan) are creating either intermediate
+flight control files for the DJI Phantom 3x UAVs or ready to upload
+control files for the Pixhawk based UAVs like the 3DR Solo. The
+intermediate DJI control files are expected to be used with the
+proprietary <a href="https://flylitchi.com/" class="external-link">Litchi</a> flight control
+app, while the Pixhawk/3DR Solo files are using the <code>MAVLINK</code>
+common message format.</p>
+<p>The basic idea is to provide an easy to use workflow for controlling
+rtf UAVs on autonomous survey missions.</p>
 <div class="section level3">
 <h3 id="the-types-of-mission-tasks">The types of mission tasks<a class="anchor" aria-label="anchor" href="#the-types-of-mission-tasks"></a>
 </h3>
-<p>To define a flight area you have to provide either 4 Points (or 3 lines). You may take more complex vectors like a multi point polygon, but only the first 4 coordinates x1, x2, x3 and x4 (the latter for the launching position) are used in exactly this order. If you take a rectangle the 4th corner coordinate will be the launching point. The concept is looking like the following sketch:</p>
+<p>To define a flight area you have to provide either 4 Points (or 3
+lines). You may take more complex vectors like a multi point polygon,
+but only the first 4 coordinates x1, x2, x3 and x4 (the latter for the
+launching position) are used in exactly this order. If you take a
+rectangle the 4th corner coordinate will be the launching point. The
+concept is looking like the following sketch:</p>
 <pre><code>x2------x3           x2-------x1
 | a                 /
 |                  /
 |   x4            / x4
 |  /             / /
 x1/             x3/</code></pre>
-<p>This coordinates the length of the line and the angle are used to calculate extend and parallels of the flight plan according to the flight altitude, overlap etc. NOTE: The flight direction depends on the order of the points.</p>
-<p>If <code>flightPlanMode = "tracks"</code>. The result look like below.</p>
+<p>This coordinates the length of the line and the angle are used to
+calculate extend and parallels of the flight plan according to the
+flight altitude, overlap etc. NOTE: The flight direction depends on the
+order of the points.</p>
+<p>If <code>flightPlanMode = "tracks"</code>. The result look like
+below.</p>
 <pre><code>#--#  #--&gt;             #-----#
 |  |  |               /    
 |  |  |              #-----#
 |  |  |                   /
 #  #--#         &lt;--#-----#</code></pre>
-<p>If <code>flightPlanMode = "waypoints"</code> The result is an equal spatial distribution of way points:</p>
+<p>If <code>flightPlanMode = "waypoints"</code> The result is an equal
+spatial distribution of way points:</p>
 <pre><code>#--#  #--&gt;             #--#--#
 |  |  |               /    
 #  #  #              #--#--#
 |  |  |                   /
 #  #--#         &lt;--#--#--#</code></pre>
-<p><code>waypoints</code> is optimal for autonomous flights under calm conditions in complex terrain because the camera takes a picture at every way point.</p>
-<p><code>track</code> is optimal for relatively plain areas and automatically triggered picture capturing DJI only: Automatically picture capturing in a time interval works only within the range of the remote control because the UAV needs a trigger signal for taking pictures.</p>
+<p><code>waypoints</code> is optimal for autonomous flights under calm
+conditions in complex terrain because the camera takes a picture at
+every way point.</p>
+<p><code>track</code> is optimal for relatively plain areas and
+automatically triggered picture capturing DJI only: Automatically
+picture capturing in a time interval works only within the range of the
+remote control because the UAV needs a trigger signal for taking
+pictures.</p>
 </div>
 <div class="section level3">
 <h3 id="terrain-following-task">Terrain following task<a class="anchor" aria-label="anchor" href="#terrain-following-task"></a>
 </h3>
-<p>The argument <code>followSurface = TRUE</code> will switch from fixed AGL flight altitude into a terrain following flight altitude.</p>
-<p>NOTE: You have to be aware that the DJI UAV is calibrating the altitude at the launch position in the field! So you need either a correct coordinate altitude or a high resolution DEM to get a good(!) estimation of the launch position and altitude.</p>
-<p>You must choose a clearly defined and reliable launching position both in the map and the field. If one fails, we made the experience that the aircraft probably will hit the terrain…</p>
-<p>Let us assume a defined flight altitude of 50m. According to the launching point altitude the UAV will act like the following sketch shows:</p>
+<p>The argument <code>followSurface = TRUE</code> will switch from fixed
+AGL flight altitude into a terrain following flight altitude.</p>
+<p>NOTE: You have to be aware that the DJI UAV is calibrating the
+altitude at the launch position in the field! So you need either a
+correct coordinate altitude or a high resolution DEM to get a good(!)
+estimation of the launch position and altitude.</p>
+<p>You must choose a clearly defined and reliable launching position
+both in the map and the field. If one fails, we made the experience that
+the aircraft probably will hit the terrain…</p>
+<p>Let us assume a defined flight altitude of 50m. According to the
+launching point altitude the UAV will act like the following sketch
+shows:</p>
 <pre><code> ............... x_(uav)_x ........... UAV started at 30m altitude results in
                                          a "real" flight altitude of 30m + 50m =&gt; 80m
 
@@ -185,9 +264,11 @@ x1/             x3/</code></pre>
            ___|          |___          "real" flight altitude of 50m above 0m
       ____|                  |
   ___|                       |__x__ 0m</code></pre>
-<p>To avoid negative impacts from the Phantom 3 auto-calibration, the launch altitude is used to correct the flight altitude according to:</p>
-<pre><code><span class="va">maximumAltitude_of_surveyArea</span> <span class="op">+</span> <span class="va">altitude_of_launchposition</span></code></pre>
-<p>So the adapted flight altitude is always seen as the flight altitude above the highest terrain altitude:</p>
+<p>To avoid negative impacts from the Phantom 3 auto-calibration, the
+launch altitude is used to correct the flight altitude according to:</p>
+<pre><code><span> <span class="va">maximumAltitude_of_surveyArea</span> <span class="op">+</span> <span class="va">altitude_of_launchposition</span></span></code></pre>
+<p>So the adapted flight altitude is always seen as the flight altitude
+above the highest terrain altitude:</p>
 <pre><code> ...................................... real altitude of UAV: 110m
 
                ___60m____
@@ -195,9 +276,12 @@ x1/             x3/</code></pre>
        30m _x_|          |___
       ____|                  |
   ___|                       |______</code></pre>
-<p>To get a fixed scale flight the launch altitude is used to correct the flight altitude according to:</p>
+<p>To get a fixed scale flight the launch altitude is used to correct
+the flight altitude according to:</p>
 <pre><code> ```maximumAltitude of surveyArea + altitude of launch position```</code></pre>
-<p>With the setting of <code>terrainfollowing = true</code> this is calculated for each way point. So the adapted flight altitude looks like:</p>
+<p>With the setting of <code>terrainfollowing = true</code> this is
+calculated for each way point. So the adapted flight altitude looks
+like:</p>
 <pre><code>               ..........
               |          |
           ....|          |....
@@ -214,13 +298,20 @@ x1/             x3/</code></pre>
 <div class="section level3">
 <h3 id="overview-of-the-task">Overview of the task<a class="anchor" aria-label="anchor" href="#overview-of-the-task"></a>
 </h3>
-<p>This recipe deals with the effective and safe planning of an autonomous flight. This provides basic information about the used hardware and software as well as supplemental data and nice to haves.</p>
+<p>This recipe deals with the effective and safe planning of an
+autonomous flight. This provides basic information about the used
+hardware and software as well as supplemental data and nice to
+haves.</p>
 </div>
 <div class="section level3">
 <h3 id="skills-you-will-learn">Skills you will learn<a class="anchor" aria-label="anchor" href="#skills-you-will-learn"></a>
 </h3>
-<p>The basic workflow of planning a good aerial and target oriented flight mission. In the extended version you find some more explanations and hints for improving your planning.</p>
-<p>Even if you can assume the use of uavs for autonomous flights as somehow “operational”, you should always keep in mind that avoiding negative impacts is a result of ￼responsible and focused planning.</p>
+<p>The basic workflow of planning a good aerial and target oriented
+flight mission. In the extended version you find some more explanations
+and hints for improving your planning.</p>
+<p>Even if you can assume the use of uavs for autonomous flights as
+somehow “operational”, you should always keep in mind that avoiding
+negative impacts is a result of ￼responsible and focused planning.</p>
 <pre><code> Please keep in mind that autonomous UAVs can harm the the pilot and environment. </code></pre>
 </div>
 <div class="section level3">
@@ -232,7 +323,8 @@ x1/             x3/</code></pre>
 <a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a> package</li>
 <li>Digital Surface Model (DSM) data</li>
 <li>DJI Phantom/Pixhawk UAV</li>
-<li>For DJI only <a href="https://flylitchi.com/" class="external-link">Litchi</a> flight App<br>
+<li>For DJI only <a href="https://flylitchi.com/" class="external-link">Litchi</a> flight
+App<br>
 </li>
 <li>For Pixhawk <a href="http://qgroundcontrol.com/" class="external-link">QGroundcontrol</a>
 </li>
@@ -243,9 +335,12 @@ x1/             x3/</code></pre>
 <h3 id="general-workflow">General Workflow<a class="anchor" aria-label="anchor" href="#general-workflow"></a>
 </h3>
 <ul>
-<li>Identify the area, digitize/type the coords of 3 corners and the launching position</li>
-<li>Adjust the flight parameters to your needs and generate flight control files</li>
-<li>Convert and upload the mission control files either directly to your tablet/smartphone or alternatively via the Litchi cloud.</li>
+<li>Identify the area, digitize/type the coords of 3 corners and the
+launching position</li>
+<li>Adjust the flight parameters to your needs and generate flight
+control files</li>
+<li>Convert and upload the mission control files either directly to your
+tablet/smartphone or alternatively via the Litchi cloud.</li>
 <li>Make an extensive preflight check</li>
 <li>Fly the mission</li>
 </ul>
@@ -253,33 +348,45 @@ x1/             x3/</code></pre>
 <div class="section level3">
 <h3 id="basic-examples">Basic examples<a class="anchor" aria-label="anchor" href="#basic-examples"></a>
 </h3>
-<p>The first example will introduce you to the basic usage and folder structure.</p>
+<p>The first example will introduce you to the basic usage and folder
+structure.</p>
 <pre><code> Purpose: Survey flight over flat terrain to generate DSM and orthophoto. It is described for the Phantom 3 and Litchi only. </code></pre>
 <p>Addressed issues:</p>
 <ul>
-<li>Create a reliable DSM for near surface retrieval of high resolution pictures</li>
+<li>Create a reliable DSM for near surface retrieval of high resolution
+pictures</li>
 <li>Create an orthophoto for visual inspection of POIs</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="the-short-way">The short way<a class="anchor" aria-label="anchor" href="#the-short-way"></a>
 </h3>
-<p>Digitize the 3 corner points of an area you want to map and in addition as fourth point the position of the planned UAV launch. Save it to //firstSurvey.kml//.</p>
+<p>Digitize the 3 corner points of an area you want to map and in
+addition as fourth point the position of the planned UAV launch. Save it
+to //firstSurvey.kml//.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R">   <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a></span><span class="op">)</span>
-   <span class="co"># get example DEM data</span>
-   <span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span>
-   <span class="va">fa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"flightarea.kml"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span>
-   <span class="co"># preset = "uav" supress all not necessary tools</span>
-   <span class="fu"><a href="../reference/vecDraw.html">vecDraw</a></span><span class="op">(</span>mapCenter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50.855</span>,<span class="fl">8.691</span><span class="op">)</span>,preset<span class="op">=</span><span class="st">"uav"</span><span class="op">)</span>
-  
-   <span class="co"># Use the digitized data (assumed to be named "firstSurvey.json")</span>
-   <span class="co"># and the example DEM to calculate a flight control file</span>
-   <span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>surveyArea <span class="op">=</span> <span class="va">fa</span>,
-                demFn <span class="op">=</span> <span class="va">fn</span><span class="op">)</span></code></pre></div>
-<p>NOTE: The first two points determine the flight angle and direction the second and third coordinate determine the width of the area.</p>
-<p>If you want so save it on your SD card, open the <a href="https://flylitchi.com/" class="external-link">Litchi Mission</a> website and click on the button <code>Missions-&gt;Import</code>. Next navigate to the control file <code>firstsurvey_1001.csv</code> (you’ll find it in the folder <code>projectDir/mission/date/control</code>). For exporting it choose <code>Missions-&gt;Save</code> and navigate/upload it to your missions subfolder of the Litchi app. That’s it.</p>
-<p>Even more simple is the option to connect with the litchi cloud. While you are logged in with the same account it is synchronizing the data as soon as you start the litchi app.</p>
+<code class="sourceCode R"><span>   <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a></span><span class="op">)</span></span>
+<span>   <span class="co"># get example DEM data</span></span>
+<span>   <span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span>   <span class="va">fa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"flightarea.kml"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span>   <span class="co"># preset = "uav" supress all not necessary tools</span></span>
+<span>   <span class="fu"><a href="../reference/vecDraw.html">vecDraw</a></span><span class="op">(</span>mapCenter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50.855</span>,<span class="fl">8.691</span><span class="op">)</span>,preset<span class="op">=</span><span class="st">"uav"</span><span class="op">)</span></span>
+<span>  </span>
+<span>   <span class="co"># Use the digitized data (assumed to be named "firstSurvey.json")</span></span>
+<span>   <span class="co"># and the example DEM to calculate a flight control file</span></span>
+<span>   <span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>surveyArea <span class="op">=</span> <span class="va">fa</span>,</span>
+<span>                demFn <span class="op">=</span> <span class="va">fn</span><span class="op">)</span></span></code></pre></div>
+<p>NOTE: The first two points determine the flight angle and direction
+the second and third coordinate determine the width of the area.</p>
+<p>If you want so save it on your SD card, open the <a href="https://flylitchi.com/" class="external-link">Litchi Mission</a> website and click on
+the button <code>Missions-&gt;Import</code>. Next navigate to the
+control file <code>firstsurvey_1001.csv</code> (you’ll find it in the
+folder <code>projectDir/mission/date/control</code>). For exporting it
+choose <code>Missions-&gt;Save</code> and navigate/upload it to your
+missions subfolder of the Litchi app. That’s it.</p>
+<p>Even more simple is the option to connect with the litchi cloud.
+While you are logged in with the same account it is synchronizing the
+data as soon as you start the litchi app.</p>
 </div>
 <div class="section level3">
 <h3 id="the-long-way">The long way<a class="anchor" aria-label="anchor" href="#the-long-way"></a>
@@ -290,36 +397,58 @@ x1/             x3/</code></pre>
 <div class="section level5">
 <h5 id="build-in-vecdraw-function">Build in <code>vecDraw</code> function<a class="anchor" aria-label="anchor" href="#build-in-vecdraw-function"></a>
 </h5>
-<p>We want to plan a flight in a more or less flat terrain in the upper Lahn-valley. First load the libraries and next start the small digitizing tool that is provided in ‘’uavRmp’’.</p>
+<p>We want to plan a flight in a more or less flat terrain in the upper
+Lahn-valley. First load the libraries and next start the small
+digitizing tool that is provided in ‘’uavRmp’’.</p>
 <pre><code>You may take any other tool to digitize the survey area as well as you may type the coordinates on Stdin.</code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"> <span class="co"># load uavRmp</span>
- <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a></span><span class="op">)</span>
-
- <span class="co"># start digitizing tool with preset = "uav" for a reduced toolbar</span>
- <span class="co"># see ?leafDraw for more information</span>
- <span class="fu"><a href="../reference/vecDraw.html">vecDraw</a></span><span class="op">(</span>mapCenter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50.855</span>,<span class="fl">8.691</span><span class="op">)</span>,preset<span class="op">=</span><span class="st">"uav"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span> <span class="co"># load uavRmp</span></span>
+<span> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a></span><span class="op">)</span></span>
+<span></span>
+<span> <span class="co"># start digitizing tool with preset = "uav" for a reduced toolbar</span></span>
+<span> <span class="co"># see ?leafDraw for more information</span></span>
+<span> <span class="fu"><a href="../reference/vecDraw.html">vecDraw</a></span><span class="op">(</span>mapCenter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50.855</span>,<span class="fl">8.691</span><span class="op">)</span>,preset<span class="op">=</span><span class="st">"uav"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="../inst/images/missionarea.png" alt=""><p class="caption">Digitized Flight Area</p>
+<img src="missionarea.png" alt=""><p class="caption">Digitized Flight Area</p>
 </div>
-<p>Feel free to digitize - similar to the above figure - the four points needed:</p>
+<p>Feel free to digitize - similar to the above figure - the four points
+needed:</p>
 <ul>
 <li>P1, P2, P3 define the extend and angles of the mission area.</li>
 <li>P1 is the starting point of the survey</li>
-<li>Flight direction angle and along distance is defined by P1-&gt;P2</li>
+<li>Flight direction angle and along distance is defined by
+P1-&gt;P2</li>
 <li>P2-&gt;P3 defines the cross distance</li>
-<li>P4 is the launching point. Try to digitize it very carefully because of getting an optimal launch altitude.</li>
+<li>P4 is the launching point. Try to digitize it very carefully because
+of getting an optimal launch altitude.</li>
 </ul>
-<p>For an optimal deliniation of the flight area, please keep in mind some hints: - It makes sense to put the launching position somewhere near or within the proposed survey area with respect to an optimal visibility to the UAV and the shortest possible distance for the radio controller to keep in contact with the UAV. - It is helpful to fly <strong>along</strong> structures with necessary climbs at the end of each track. It saves energy and in most cases the climbs can be controlled easier. - Try to identify your launching point ** very carefully** and ** most reliable**. The UAV is taking this position as a home (reference) point for both position and altitude.</p>
-<p>Finish digitizing and save it as a KML file. Take care to add the correct extensions ’‘.kml’’ (the ‘’makeAP()’’ function is requiring the correct extension). In the current example save it as a kml file named ‘’firstSurvey.kml’’.</p>
+<p>For an optimal deliniation of the flight area, please keep in mind
+some hints: - It makes sense to put the launching position somewhere
+near or within the proposed survey area with respect to an optimal
+visibility to the UAV and the shortest possible distance for the radio
+controller to keep in contact with the UAV. - It is helpful to fly
+<strong>along</strong> structures with necessary climbs at the end of
+each track. It saves energy and in most cases the climbs can be
+controlled easier. - Try to identify your launching point ** very
+carefully** and ** most reliable**. The UAV is taking this position as a
+home (reference) point for both position and altitude.</p>
+<p>Finish digitizing and save it as a KML file. Take care to add the
+correct extensions ’‘.kml’’ (the ‘’makeAP()’’ function is requiring the
+correct extension). In the current example save it as a kml file named
+‘’firstSurvey.kml’’.</p>
 </div>
 <div class="section level5">
 <h5 id="missionplanner-or-qgroundcontrol-survey-feature">Missionplanner or Qgroundcontrol survey feature<a class="anchor" aria-label="anchor" href="#missionplanner-or-qgroundcontrol-survey-feature"></a>
 </h5>
-<p>We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and open Pattern-&gt;Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. <img src="../inst/images/qcmission.png" alt="The first autonomous complexmission planned with QGroundcontrol"></p>
-<p>Save this at an appropriate folder. To use this planning file you have to set in <code>makeAP</code> the switch:</p>
+<p>We want to plan a flight in a structured terrain in the upper
+Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and
+open Pattern-&gt;Survey. Start digitizing a pattern as you want and also
+fill in the values on the right sided menus for camera angel overlap and
+so on. <img src="qcmission.png" alt="The first autonomous complex mission planned with QGroundcontrol"></p>
+<p>Save this at an appropriate folder. To use this planning file you
+have to set in <code>makeAP</code> the switch:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"> <span class="va">useMP</span> <span class="op">=</span> <span class="cn">TRUE</span></code></pre></div>
+<code class="sourceCode R"><span> <span class="va">useMP</span> <span class="op">=</span> <span class="cn">TRUE</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level4">
@@ -328,42 +457,68 @@ x1/             x3/</code></pre>
 <div class="section level5">
 <h5 id="working-directories-and-other-structural-defaults">Working directories and other structural defaults<a class="anchor" aria-label="anchor" href="#working-directories-and-other-structural-defaults"></a>
 </h5>
-<p>There are a lot of optional arguments available that helps to control the generation of an autonomous flight plan. In this first use case we keep it as simple as possible. First we will focus the arguments to organize the project. All results will be stored in a fixed folder structure. The root folder is set by the argument <code>projectDir</code>. e.g. ’‘~/proj/uav’‘. The current working directory will then be generated from the <code>locationName</code> and is always a subfolder of the’‘projectDir’‘. So in this case it is set to’‘firstSurvey’‘. The resulting folder for a specified location in a speciefied project is then’‘~/proj/uav/firstsurvey’‘. According to the date of planning the following subfolder structure is set up. For the mission control files a folder named’‘control’’ is used, the log files are saved in the <code>log</code> folder the temporary data sets are stored in a folder called ‘’run’’.</p>
-<p>PLEASE NOTE: Optionally all used data files are copied to a folder called ‘’data’‘, which is located directly under the’‘projectDir’’ folder.</p>
+<p>There are a lot of optional arguments available that helps to control
+the generation of an autonomous flight plan. In this first use case we
+keep it as simple as possible. First we will focus the arguments to
+organize the project. All results will be stored in a fixed folder
+structure. The root folder is set by the argument
+<code>projectDir</code>. e.g. ’‘~/proj/uav’‘. The current working
+directory will then be generated from the <code>locationName</code> and
+is always a subfolder of the’‘projectDir’‘. So in this case it is set
+to’‘firstSurvey’‘. The resulting folder for a specified location in a
+speciefied project is then’‘~/proj/uav/firstsurvey’‘. According to the
+date of planning the following subfolder structure is set up. For the
+mission control files a folder named’‘control’’ is used, the log files
+are saved in the <code>log</code> folder the temporary data sets are
+stored in a folder called ‘’run’’.</p>
+<p>PLEASE NOTE: Optionally all used data files are copied to a folder
+called ‘’data’‘, which is located directly under the’‘projectDir’’
+folder.</p>
 <p>The project structure will look like the figure.</p>
 <div class="figure">
-<img src="../inst/images/folderstructure.png" alt=""><p class="caption">Example of uavRmp folder structure</p>
+<img src="folderstructure.png" alt=""><p class="caption">Example of uavRmp folder structure</p>
 </div>
 </div>
 <div class="section level5">
 <h5 id="the-used-arguments">The used arguments<a class="anchor" aria-label="anchor" href="#the-used-arguments"></a>
 </h5>
-<p>‘’flightAltitude’’ is set to the (legal) maximum of 100m, ‘’flightPlanMode’’ is set to ‘’track’’ and finally a DEM of this area with 20m resulution is used to retrieve the altitude of the launching point. If we use the example data we first have to convert them to a valid GeoTiff file.</p>
+<p>‘’flightAltitude’’ is set to the (legal) maximum of 100m,
+‘’flightPlanMode’’ is set to ‘’track’’ and finally a DEM of this area
+with 20m resulution is used to retrieve the altitude of the launching
+point. If we use the example data we first have to convert them to a
+valid GeoTiff file.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-  <span class="co"># get example DEM data</span>
- <span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span>
- <span class="va">fa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"flightarea.kml"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span>
-
- <span class="va">fp</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>surveyArea<span class="op">=</span><span class="va">fa</span>,
-            maxSpeed <span class="op">=</span><span class="fl">35</span>,
-            demFn <span class="op">=</span> <span class="va">fn</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span>  <span class="co"># get example DEM data</span></span>
+<span> <span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span> <span class="va">fa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"flightarea.kml"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span></span>
+<span> <span class="va">fp</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>surveyArea<span class="op">=</span><span class="va">fa</span>,</span>
+<span>            maxSpeed <span class="op">=</span><span class="fl">35</span>,</span>
+<span>            demFn <span class="op">=</span> <span class="va">fn</span><span class="op">)</span></span></code></pre></div>
 <p>The script generates:</p>
 <ul>
 <li>R objects for visualisation</li>
 <li>log file</li>
 <li>flight control file(s).</li>
 </ul>
-<p>All three of them are important even if a quick inspection of the generated objects is most of the time sufficient. The log file dumps the all important parameters of the calculated mission. Most important the calculated mission speed and picture rate based on an estimation of the mission time.</p>
-<p>Using the <code>mapview</code> package you can easily visualize the results. The below example shows the footprints of the images (blue), surveyArea (red), turnpoints of track (blue circles) and the launch position (red).</p>
+<p>All three of them are important even if a quick inspection of the
+generated objects is most of the time sufficient. The log file dumps the
+all important parameters of the calculated mission. Most important the
+calculated mission speed and picture rate based on an estimation of the
+mission time.</p>
+<p>Using the <code>mapview</code> package you can easily visualize the
+results. The below example shows the footprints of the images (blue),
+surveyArea (red), turnpoints of track (blue circles) and the launch
+position (red).</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/mapview" class="external-link">mapview</a></span><span class="op">)</span>
- <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span>
- <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,lwd<span class="op">=</span><span class="fl">1</span>,cex<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">+</span>
- <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>,cex<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">+</span>
- <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"darkblue"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/mapview" class="external-link">mapview</a></span><span class="op">)</span></span>
+<span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span>
+<span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,lwd<span class="op">=</span><span class="fl">1</span>,cex<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">+</span></span>
+<span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>,cex<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">+</span></span>
+<span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"darkblue"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="../inst/images/simplemission.png" alt=""><p class="caption">The first autonomous mission</p>
+<img src="simplemission.png" alt=""><p class="caption">The first autonomous mission</p>
 </div>
 </div>
 </div>
@@ -371,7 +526,9 @@ x1/             x3/</code></pre>
 <h4 id="export-to-the-flight-app">Export to the flight app<a class="anchor" aria-label="anchor" href="#export-to-the-flight-app"></a>
 </h4>
 <p>DJI:</p>
-<p>Open <a href="https://flylitchi.com/" class="external-link">Litchi Mission</a> and click on the button ‘’Missions-&gt;Import’’ and navigate to the control file firstSurvey_1001.csv. To export it click ‘’Missions-&gt;Save’’.</p>
+<p>Open <a href="https://flylitchi.com/" class="external-link">Litchi Mission</a> and click on
+the button ‘’Missions-&gt;Import’’ and navigate to the control file
+firstSurvey_1001.csv. To export it click ‘’Missions-&gt;Save’’.</p>
 <p>Solo <code>solo_upload("export_1001_solo.waypoints")</code></p>
 <p>Ready to take off - that’s your first flight plan!</p>
 </div>
@@ -383,7 +540,11 @@ x1/             x3/</code></pre>
 <div class="section level3">
 <h3 id="planning-your-survey">Planning your Survey<a class="anchor" aria-label="anchor" href="#planning-your-survey"></a>
 </h3>
-<p>It is most important that you setup your survey with an appropriate overlap for reliable stitching results. If the overlap is too small or vice versa you fly too fast you will get poor or no results. Same is with the flight altitude and the camera settings. Below you find suggested values.</p>
+<p>It is most important that you setup your survey with an appropriate
+overlap for reliable stitching results. If the overlap is too small or
+vice versa you fly too fast you will get poor or no results. Same is
+with the flight altitude and the camera settings. Below you find
+suggested values.</p>
 <table class="table">
 <thead><tr class="header">
 <th>ASL Alt m</th>
@@ -433,31 +594,54 @@ x1/             x3/</code></pre>
 <div class="section level3">
 <h3 id="camera-speed">Camera Speed<a class="anchor" aria-label="anchor" href="#camera-speed"></a>
 </h3>
-<p>Depending on the product and manufactor of the cameras you have to deal with different speeds. NOTE: Only the speed that can be continously achieved is taken into account. Currently a picture rate of 2 sconds is the maximum in speed.</p>
-<p><strong>It is strongly recommended that you use (if available) an autonoumous camera timer (time lapse) for controlling the pictures interval.</strong></p>
+<p>Depending on the product and manufactor of the cameras you have to
+deal with different speeds. NOTE: Only the speed that can be continously
+achieved is taken into account. Currently a picture rate of 2 sconds is
+the maximum in speed.</p>
+<p><strong>It is strongly recommended that you use (if available) an
+autonoumous camera timer (time lapse) for controlling the pictures
+interval.</strong></p>
 </div>
 <div class="section level3">
 <h3 id="flight-speed">Flight Speed<a class="anchor" aria-label="anchor" href="#flight-speed"></a>
 </h3>
-<p>On average the fasted SD Cards will be able to achieve an average speed of about 2 seconds/JPEG (Raw + JPEG 3.5 seconds) image. As a result taking pictures every 2 seconds will be a sporty attempt. The Flight speed recommodations are meeting this needs. Let us assume you fly a task with the field of view (FOV) of the DJI 4K camera at 35 meters above ground level (AGL). To derive the maximum flight distance from picture to picture in meter for the given overlap you have to calculate:</p>
-<p><span class="math inline">\(FOV*agl*(1-overlap) = 1,71*35*0,2 = 12 m\)</span></p>
+<p>On average the fasted SD Cards will be able to achieve an average
+speed of about 2 seconds/JPEG (Raw + JPEG 3.5 seconds) image. As a
+result taking pictures every 2 seconds will be a sporty attempt. The
+Flight speed recommodations are meeting this needs. Let us assume you
+fly a task with the field of view (FOV) of the DJI 4K camera at 35
+meters above ground level (AGL). To derive the maximum flight distance
+from picture to picture in meter for the given overlap you have to
+calculate:</p>
+<p><span class="math inline">\(FOV*agl*(1-overlap) = 1,71*35*0,2 = 12
+m\)</span></p>
 <p>If you can take a picture every 2 seconds your max speed is: <span class="math inline">\(12 m / 2 s = 6 m/s\)</span></p>
 </div>
 <div class="section level3">
 <h3 id="rule-of-thumb">Rule of thumb<a class="anchor" aria-label="anchor" href="#rule-of-thumb"></a>
 </h3>
-<p>For JPG pictures: <span class="math inline">\(0,15 * agl (RAW; 0,07 * agl)\)</span> For a 100 meter AGL flight you should set the speed to a maximum of: <span class="math inline">\(0,15 * 100 = 15 m/s (54 km/h)\)</span> For a flight of 35m agl this is will be roughly 5,25 m/s ## DEM/DSM Data If you fly in an wide open flat area you do not need additional data. But if you fly in middle range mountains, forests or similar complex structures you will need a digtal surface model (DSM/DEM) for retrieving an optimal and safe flight path.</p>
+<p>For JPG pictures: <span class="math inline">\(0,15 * agl (RAW; 0,07 *
+agl)\)</span> For a 100 meter AGL flight you should set the speed to a
+maximum of: <span class="math inline">\(0,15 * 100 = 15 m/s (54
+km/h)\)</span> For a flight of 35m agl this is will be roughly 5,25 m/s
+## DEM/DSM Data If you fly in an wide open flat area you do not need
+additional data. But if you fly in middle range mountains, forests or
+similar complex structures you will need a digtal surface model
+(DSM/DEM) for retrieving an optimal and safe flight path.</p>
 </div>
 <div class="section level3">
 <h3 id="weather">Weather<a class="anchor" aria-label="anchor" href="#weather"></a>
 </h3>
-<p>Actually you also should check the weather. Forget about flying with wind speed above 4 Beaufort - the UAV is <strong>not</strong> a falcon.</p>
+<p>Actually you also should check the weather. Forget about flying with
+wind speed above 4 Beaufort - the UAV is <strong>not</strong> a
+falcon.</p>
 </div>
 <div class="section level3">
 <h3 id="workflow-in-the-field">Workflow in the field<a class="anchor" aria-label="anchor" href="#workflow-in-the-field"></a>
 </h3>
 <ol style="list-style-type: decimal">
-<li>Plan you r flight with an adequate planning tool at home and control it in the field (see examples, check your flightplan)</li>
+<li>Plan you r flight with an adequate planning tool at home and control
+it in the field (see examples, check your flightplan)</li>
 <li>Setup your Remote Controller</li>
 <li>Setup your controlling device</li>
 <li>Setup your UAV</li>
@@ -467,7 +651,8 @@ x1/             x3/</code></pre>
 <li>Start UAV</li>
 <li>Start Camera</li>
 <li>Load Task</li>
-<li>Fly Task As simple this seems it is full of pitfalls. Therefore we would like to provide some checklist:</li>
+<li>Fly Task As simple this seems it is full of pitfalls. Therefore we
+would like to provide some checklist:</li>
 </ol>
 </div>
 <div class="section level3">
@@ -534,7 +719,7 @@ x1/             x3/</code></pre>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.2</span>
       </span>
     </div>
 
@@ -63,93 +63,132 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">makeTP</span><span class="op">(</span>
-  projectDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,
-  locationName <span class="op">=</span> <span class="st">"treePos"</span>,
-  missionTrackList <span class="op">=</span> <span class="cn">NULL</span>,
-  launchPos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.772055</span>, <span class="fl">50.814689</span><span class="op">)</span>,
-  demFn <span class="op">=</span> <span class="cn">NULL</span>,
-  flightAltitude <span class="op">=</span> <span class="fl">100</span>,
-  climbDist <span class="op">=</span> <span class="fl">7.5</span>,
-  aboveTreeAlt <span class="op">=</span> <span class="fl">15</span>,
-  circleRadius <span class="op">=</span> <span class="fl">1</span>,
-  takeOffAlt <span class="op">=</span> <span class="fl">50</span>,
-  presetFlightTask <span class="op">=</span> <span class="st">"remote"</span>,
-  maxSpeed <span class="op">=</span> <span class="fl">25</span>,
-  followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,
-  altFilter <span class="op">=</span> <span class="fl">0.5</span>,
-  windCondition <span class="op">=</span> <span class="fl">1</span>,
-  launchAltitude <span class="op">=</span> <span class="op">-</span><span class="fl">9999</span>,
-  uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,
-  cameraType <span class="op">=</span> <span class="st">"MAPIR2"</span>,
-  copy <span class="op">=</span> <span class="cn">FALSE</span>,
-  runDir <span class="op">=</span> <span class="st">""</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">makeTP</span><span class="op">(</span></span>
+<span>  projectDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  locationName <span class="op">=</span> <span class="st">"treePos"</span>,</span>
+<span>  missionTrackList <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  launchPos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.772055</span>, <span class="fl">50.814689</span><span class="op">)</span>,</span>
+<span>  demFn <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  flightAltitude <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  climbDist <span class="op">=</span> <span class="fl">7.5</span>,</span>
+<span>  aboveTreeAlt <span class="op">=</span> <span class="fl">15</span>,</span>
+<span>  circleRadius <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  takeOffAlt <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  presetFlightTask <span class="op">=</span> <span class="st">"remote"</span>,</span>
+<span>  maxSpeed <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>  followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  altFilter <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  windCondition <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  launchAltitude <span class="op">=</span> <span class="op">-</span><span class="fl">9999</span>,</span>
+<span>  uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,</span>
+<span>  cameraType <span class="op">=</span> <span class="st">"MAPIR2"</span>,</span>
+<span>  copy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  runDir <span class="op">=</span> <span class="st">""</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>projectDir</dt>
 <dd><p><code>character</code> path to the main folder where several projects can be hosted, default is <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code></p></dd>
+
+
 <dt>locationName</dt>
 <dd><p><code>character</code> base name string of the mission, default is <code>"treePos"</code></p></dd>
+
+
 <dt>missionTrackList</dt>
 <dd><p><code>character</code> filename of the mission tracklist (target positions), default is <code>NULL</code></p></dd>
+
+
 <dt>launchPos</dt>
 <dd><p><code>list</code> launch position c(longitude,latitude), default is <code>c(8.772055,50.814689)</code></p></dd>
+
+
 <dt>demFn</dt>
 <dd><p><code>character</code> filename of the used DSM data file, default is <code>NULL</code></p></dd>
+
+
 <dt>flightAltitude</dt>
 <dd><p><code>numeric</code> set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is <code>100</code>
 default is (<code>= 0.0</code>). If set to <code>-99</code> it will be
 calculated from the swath width of the pictures. NOTE: This makes only sense for
 <code>followingTerrain = TRUE</code> to smooth curves.
 For <code>flightPlanMode = "waypoint"</code> camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.</p></dd>
+
+
 <dt>climbDist</dt>
 <dd><p><code>numeric</code> distance within the uav will climb on the caluclated save flight altitude in meter, default is <code>7.5</code></p></dd>
+
+
 <dt>aboveTreeAlt</dt>
 <dd><p><code>numeric</code> minimum flight height above target trees in meter, default is <code>15.0</code></p></dd>
+
+
 <dt>circleRadius</dt>
 <dd><p><code>numeric</code> radius to circle around above target trees in meter, default is <code>1.0</code></p></dd>
+
+
 <dt>takeOffAlt</dt>
 <dd><p>altitude <code>numeric</code> climb altitude of the uav at take off position in meter, default is <code>50.0</code></p></dd>
+
+
 <dt>presetFlightTask</dt>
 <dd><p><code>character</code> (DJI only EXPERIMENTAL). NOTE: it is strongly recommended to use the default <code>"remote"</code> <br>
 Further options are: <br><code>"simple_ortho"</code> takes one picture/waypoint,
 <code>"multi_ortho"</code> takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angele of -60deg,
 <code>"simple_pano"</code> takes a 360 deg panorama picture and
 <code>"remote"</code> which assumes that the camera is controlled by the remote control (RC)</p></dd>
+
+
 <dt>maxSpeed</dt>
 <dd><p><code>numeric</code>  cruising speed, default is <code>25.0</code></p></dd>
+
+
 <dt>followSurfaceRes</dt>
 <dd><p><code>numeric</code>, default is <code>5</code> meter.</p></dd>
+
+
 <dt>altFilter</dt>
 <dd><p><code>numeric</code> allowed altitude differences bewteen two waypoints in meter, default is <code>0.5</code></p></dd>
+
+
 <dt>windCondition</dt>
 <dd><p><code>numeric</code>options are 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h, default is <code>1</code></p></dd>
+
+
 <dt>launchAltitude</dt>
 <dd><p><code>numeric</code> altitude of launch position. If set to <code>-9999</code> a DEM is required for extracting the MSL, default is <code>-9999</code></p></dd>
+
+
 <dt>uavType</dt>
 <dd><p><code>character</code>  type of UAV. Currently "dji_csv" and "pixhawk" are supported, default is <code>"pixhawk"</code></p></dd>
+
+
 <dt>cameraType</dt>
 <dd><p><code>character</code>, default is <code>"MAPIR2"</code>.</p></dd>
+
+
 <dt>copy</dt>
 <dd><p><code>boolean</code> copy used file to data folder default is <code>FALSE</code></p></dd>
+
+
 <dt>runDir</dt>
 <dd><p><code>character</code> runtime folder</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co">## (1) get example DEM data</span></span>
-<span class="r-in"><span class="va">dsmFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
-<span class="r-in"><span class="co">## (2) make position flight plan</span></span>
-<span class="r-in"><span class="va">makeTP</span>  <span class="op">&lt;-</span>  <span class="fu">makeTP</span><span class="op">(</span>missionTrackList<span class="op">=</span> <span class="va">tutorial_flightArea</span>,</span>
-<span class="r-in">                  demFn <span class="op">=</span> <span class="va">dsmFn</span>,</span>
-<span class="r-in">                  uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,</span>
-<span class="r-in">                  launchPos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.679</span>,<span class="fl">50.856</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co">## (1) get example DEM data</span></span></span>
+<span class="r-in"><span><span class="va">dsmFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">## (2) make position flight plan</span></span></span>
+<span class="r-in"><span><span class="va">makeTP</span>  <span class="op">&lt;-</span>  <span class="fu">makeTP</span><span class="op">(</span>missionTrackList<span class="op">=</span> <span class="va">tutorial_flightArea</span>,</span></span>
+<span class="r-in"><span>                  demFn <span class="op">=</span> <span class="va">dsmFn</span>,</span></span>
+<span class="r-in"><span>                  uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,</span></span>
+<span class="r-in"><span>                  launchPos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8.679</span>,<span class="fl">50.856</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -164,7 +203,7 @@ Further options are: <br><code>"simple_ortho"</code> takes one picture/waypoint,
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

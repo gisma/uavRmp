@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.2</span>
       </span>
     </div>
 
@@ -63,61 +63,92 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">vecDraw</span><span class="op">(</span>
-  mapCenter <span class="op">=</span> <span class="cn">NULL</span>,
-  zoom <span class="op">=</span> <span class="fl">15</span>,
-  line <span class="op">=</span> <span class="cn">TRUE</span>,
-  rectangle <span class="op">=</span> <span class="cn">TRUE</span>,
-  poly <span class="op">=</span> <span class="cn">TRUE</span>,
-  circle <span class="op">=</span> <span class="cn">TRUE</span>,
-  point <span class="op">=</span> <span class="cn">TRUE</span>,
-  remove <span class="op">=</span> <span class="cn">TRUE</span>,
-  position <span class="op">=</span> <span class="st">"topright"</span>,
-  maplayer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CartoDB.Positron"</span>, <span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldImagery"</span>,
-    <span class="st">"Thunderforest.Landscape"</span>, <span class="st">"OpenTopoMap"</span><span class="op">)</span>,
-  overlay <span class="op">=</span> <span class="cn">NULL</span>,
-  preset <span class="op">=</span> <span class="st">"all"</span>,
-  locPreset <span class="op">=</span> <span class="st">"muf"</span>,
-  cex <span class="op">=</span> <span class="fl">10</span>,
-  lwd <span class="op">=</span> <span class="fl">2</span>,
-  opacity <span class="op">=</span> <span class="fl">0.7</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">vecDraw</span><span class="op">(</span></span>
+<span>  mapCenter <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  zoom <span class="op">=</span> <span class="fl">15</span>,</span>
+<span>  line <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  rectangle <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  poly <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  circle <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  point <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  remove <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  position <span class="op">=</span> <span class="st">"topright"</span>,</span>
+<span>  maplayer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CartoDB.Positron"</span>, <span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldImagery"</span>,</span>
+<span>    <span class="st">"Thunderforest.Landscape"</span>, <span class="st">"OpenTopoMap"</span><span class="op">)</span>,</span>
+<span>  overlay <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  preset <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  locPreset <span class="op">=</span> <span class="st">"muf"</span>,</span>
+<span>  cex <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  lwd <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  opacity <span class="op">=</span> <span class="fl">0.7</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>mapCenter</dt>
 <dd><p>center of the leaflet map</p></dd>
+
+
 <dt>zoom</dt>
 <dd><p>set initial zoom level of leaflet map</p></dd>
+
+
 <dt>line</dt>
 <dd><p>enable/disable line tool</p></dd>
+
+
 <dt>rectangle</dt>
 <dd><p>enable/disable polygon tool</p></dd>
+
+
 <dt>poly</dt>
 <dd><p>enable/disable polygon tool</p></dd>
+
+
 <dt>circle</dt>
 <dd><p>enable/disable circle tool</p></dd>
+
+
 <dt>point</dt>
 <dd><p>enable/disable point tool</p></dd>
+
+
 <dt>remove</dt>
 <dd><p>enable/disable the remove feature of the draw tool</p></dd>
+
+
 <dt>position</dt>
 <dd><p>toolbar layout (topright, topleft, bottomright, bottomleft)</p></dd>
+
+
 <dt>maplayer</dt>
 <dd><p>string as provided by leaflet-provider</p></dd>
+
+
 <dt>overlay</dt>
 <dd><p>optional sp* object may used for orientation</p></dd>
+
+
 <dt>preset</dt>
 <dd><p>character default is "uav" for line based mission digitizing, "ext" for rectangles, NULL for all drawing items</p></dd>
+
+
 <dt>locPreset</dt>
 <dd><p>character location preset, default is "muf" for Marburg University Forest,  "tra" Traddelstein, "hag" Hagenstein, "baw" Bayerwald.</p></dd>
+
+
 <dt>cex</dt>
 <dd><p>size of item</p></dd>
+
+
 <dt>lwd</dt>
 <dd><p>line width of item</p></dd>
+
+
 <dt>opacity</dt>
 <dd><p>opacity of item</p></dd>
+
 </dl></div>
     <div id="note">
     <h2>Note</h2>
@@ -126,21 +157,21 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># fully featured without overlay</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/mapview" class="external-link">mapview</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># preset for digitizing uav flight areas using Meuse data set as overlay</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/" class="external-link">sp</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">meuse</span><span class="op">)</span> </span>
-<span class="r-in"><span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">meuse</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="op">~</span><span class="va">x</span><span class="op">+</span><span class="va">y</span> </span>
-<span class="r-in"><span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/is.projected.html" class="external-link">proj4string</a></span><span class="op">(</span><span class="va">meuse</span><span class="op">)</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span><span class="st">"+init=epsg:28992"</span><span class="op">)</span> </span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spTransform.html" class="external-link">spTransform</a></span><span class="op">(</span><span class="va">meuse</span>,CRSobj <span class="op">=</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span><span class="st">"+init=epsg:4326"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">vecDraw</span><span class="op">(</span>overlay <span class="op">=</span> <span class="va">m</span>, preset <span class="op">=</span> <span class="st">"uav"</span><span class="op">)</span></span>
-<span class="r-in">  </span>
-<span class="r-in"><span class="co"># preset for digitizing simple rectangles extents</span></span>
-<span class="r-in"><span class="fu">vecDraw</span><span class="op">(</span>preset<span class="op">=</span><span class="st">"ext"</span>,overlay <span class="op">=</span> <span class="va">m</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># fully featured without overlay</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/mapview" class="external-link">mapview</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># preset for digitizing uav flight areas using Meuse data set as overlay</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/" class="external-link">sp</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">meuse</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">meuse</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="op">~</span><span class="va">x</span><span class="op">+</span><span class="va">y</span> </span></span>
+<span class="r-in"><span><span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/is.projected.html" class="external-link">proj4string</a></span><span class="op">(</span><span class="va">meuse</span><span class="op">)</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span><span class="st">"+init=epsg:28992"</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/spTransform.html" class="external-link">spTransform</a></span><span class="op">(</span><span class="va">meuse</span>,CRSobj <span class="op">=</span> <span class="fu">sp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span><span class="st">"+init=epsg:4326"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">vecDraw</span><span class="op">(</span>overlay <span class="op">=</span> <span class="va">m</span>, preset <span class="op">=</span> <span class="st">"uav"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="co"># preset for digitizing simple rectangles extents</span></span></span>
+<span class="r-in"><span><span class="fu">vecDraw</span><span class="op">(</span>preset<span class="op">=</span><span class="st">"ext"</span>,overlay <span class="op">=</span> <span class="va">m</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -155,7 +186,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
