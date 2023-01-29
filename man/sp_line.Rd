@@ -30,6 +30,7 @@ sp_line(
 create an spatiallineobject from 2 points, optional export as shapefile
 }
 \examples{
+\dontrun{
 ## creating sp spatial point object
 line <- sp_line(c(8.770367,8.771161,8.771536),
                 c(50.815172,50.814743,50.814875),
@@ -37,5 +38,5 @@ line <- sp_line(c(8.770367,8.771161,8.771536),
 
 ## plot it
 raster::plot(line)
-
+}
 }

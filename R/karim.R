@@ -13,6 +13,7 @@
 #' @export
 #' 
 #' @examples 
+#' \dontrun{
 #' ## creating sp spatial point object
 #' line <- sp_line(c(8.770367,8.771161,8.771536),
 #'                 c(50.815172,50.814743,50.814875),
@@ -20,7 +21,7 @@
 #' 
 #' ## plot it
 #' raster::plot(line)
-#' 
+#' }
 sp_line <- function(Y_coords,
                     X_coords,
                     ID = "ID",
