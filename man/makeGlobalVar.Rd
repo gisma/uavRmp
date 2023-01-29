@@ -23,3 +23,4 @@ makeGlobalVar("pathToData","~/home/data")
 }
 
 }
+\keyword{internal}

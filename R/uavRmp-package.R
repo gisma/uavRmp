@@ -81,7 +81,7 @@ NULL
 
 #' Flight area planning Qgroundcontrol survey data 
 #' @docType data
-#' @name qgc_survey
+#' @name tutdata_qgc_survey
 #' @title Flight area planning Qgroundcontrol survey data 
 #' @description Flight area planning example data as typically needed for planning an autonomous survey flight task. The task is planned with the QGroundcontrol survey tool.
 #' @keywords datasets

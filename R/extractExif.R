@@ -8,7 +8,7 @@
 
 #' 
 #'
-#' @export
+#' @keywords internal
 
 
 extractExifr <- function(path){

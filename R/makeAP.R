@@ -181,7 +181,7 @@ if (!isGeneric('makeAP')) {
 #'             uavType = "dji_csv")
 #'             
 #' ## call a simple shiny interface
-#' runApp(system.file("shiny/plan2litchi/", "app.R", package = "uavRmp"))
+#' shiny::runApp(system.file("shiny/plan2litchi/", "app.R", package = "uavRmp"))
 #'         
 #'         
 #' ## (6) view results
@@ -586,9 +586,9 @@ makeAP <- function(projectDir = tempdir(),
   # reproject it to UTM
   ta=sf::st_as_sf(taskArea)
   ta=sf::st_transform(ta,crs = paste("+proj=utm +zone=",long2UTMzone(p$lon1)," ellps=WGS84",sep = ''))
-  taskAreaUTM <- as(ta, "Spatial")
+  # taskAreaUTM <- as(ta, "Spatial") # rgeos
   # calculate area
-  surveyAreaUTM <- rgeos::gArea(taskAreaUTM)
+  surveyAreaUTM <- sf::st_area(ta) # rgeos
   
   
   ## now do old planning stuff
@@ -730,7 +730,7 @@ makeAP <- function(projectDir = tempdir(),
       
       # calc next coordinate
       pos <- calcNextPos(pOld[1], pOld[2], heading, trackDistance)
-      if (picFootprint) camera <- maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j,factor))
+      if (picFootprint) camera <- sf::st_polygon(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + trackDistance
       if (mode == "track") {
@@ -746,7 +746,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if ((j %% 2 != 0)) {
       pos <- calcNextPos(pOld[1], pOld[2], crossdir, crossDistance)
-      if (picFootprint) camera <-  maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor))
+      if (picFootprint) camera <- sf::st_polygon(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + crossDistance
       if (uavType == "dji_csv") {
@@ -766,7 +766,7 @@ makeAP <- function(projectDir = tempdir(),
     
     else if ((j %% 2 == 0)) {
       pos <- calcNextPos(pOld[1], pOld[2], crossdir, crossDistance)
-      if (picFootprint) camera <- maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir,trackDistance,flightAltitude,i,j,factor))
+      if (picFootprint) camera <- sf::st_polygon(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir,trackDistance,flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + crossDistance
       

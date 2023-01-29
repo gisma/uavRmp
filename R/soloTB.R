@@ -193,7 +193,7 @@ soloLog <- function(logFileSample = "recent",
     i <- 1
     flights <- list()
     for (flight in gpxLogFiles) {
-      f <- read_gpx(flight)
+      f <- as(sf::st_read(flight,layer=c("tracks")),"Spatial")
       flights[[i]] <- f
       firstTime <- as.character(flights[[i]]$track_points@data$time)[1]
       lastTime <- as.character(flights[[i]]$track_points@data$time)[length(flights[[i]]$track_points@data$time)]

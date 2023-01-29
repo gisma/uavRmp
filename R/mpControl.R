@@ -223,7 +223,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     cat("start demArea analysis - will take a while...\n")
     c        <- raster::clump(tmpdemll > 0)
     demArea  <- raster::rasterToPolygons(c)
-    demArea  <- rgeos::gUnaryUnion(demArea)
+    demArea  <- sf::st_combine(demArea) #rgeos::gUnaryUnion(demArea)
   } else {
     demArea  <- "NULL"
   }
@@ -473,16 +473,8 @@ calcSurveyArea <- function(surveyArea,projectDir,logger,useMP) {
 
 # imports the survey area from a json or kml file
 importSurveyArea <- function(fN) {
-  # read shapefile
-  #if (path.expand(extension(fN)) == ".json") 
-  #  flightBound <- rgdal::readOGR(dsn = path.expand(fN), layer = "OGRGeoJSON",verbose = FALSE)
-  # else if (path.expand(extension(fN)) != ".kml" ) 
-  #    flightBound <- rgdal::readOGR(dsn = path.expand(dirname(fN)), layer = tools::file_path_sans_ext(basename(fN)), pointDropZ = TRUE, verbose = FALSE)
-  #else if (path.expand(extension(fN)) == ".kml" ) {
   tmp <- sf::st_read(path.expand(fN))
   flightBound = methods::as(tmp, "Spatial")
-  #flightBound <- rgdal::readOGR(dsn = path.expand(fN), layer = tools::file_path_sans_ext(basename(fN)), pointDropZ = TRUE, verbose = FALSE)    
-  #  }
   flightBound@data <- as.data.frame(cbind(1,1,1,1,1,-1,0,-1,1,1,1))
   names(flightBound@data) <- c("Name", "description", "timestamp", "begin", "end", "altitudeMode", "tessellate", "extrude", "visibility", "drawOrder", "icon")
   return(flightBound)
@@ -1513,8 +1505,8 @@ get_seg_fparams <- function(dem,
   startAlt<-p$launchAltitude
   seg  <- sp_line(c(start[1],target[1]),c(start[2],target[2]),"seg",runDir=runDir)
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))
-  seg_buf<-rgeos::gBuffer(spgeom = seg_utm,width = 5.0)
-  seg_buf <- sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
+  seg_buf<- sf::st_buffer(seg_utm,dist = 5.0) #rgeos::gBuffer(spgeom = seg_utm,width = 5.0)
+  seg_buf <- sf::st_transform(seg_buf,crs = 4326) #sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
   # calculate minimum rth altitude for each line by identifing max altitude
   seg_flight_altitude  <- raster::extract(dem,seg_buf, fun = max,na.rm = TRUE,layer = 1, nl = 1) - startAlt + as.numeric(p$flightAltitude)
   
@@ -1543,8 +1535,9 @@ get_point_fparams <- function(dem,
   startAlt<-p$launchAltitude
   seg  <- sp_point(point[1],point[2],"point")
   seg_utm <- sp::spTransform(seg,CRSobj =  paste0("+proj=utm +zone=",long2UTMzone(seg@bbox[1])," +datum=WGS84"))
-  seg_buf<-rgeos::gBuffer(spgeom = seg_utm,width = radius)
-  seg_buf <- sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
+  seg_buf<- sf::st_buffer(seg_utm,dist = radius) #seg_buf<-rgeos::gBuffer(spgeom = seg_utm,width = radius)
+  seg_buf <- sf::st_transform(seg_buf,crs = 4326) #sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
+  
   # calculate minimum rth altitude for each line by identifing max altitude
   seg_flight_altitude  <- raster::extract(dem,seg_buf, fun = max,na.rm = TRUE,layer = 1, nl = 1) - startAlt + as.numeric(p$aboveTreeAlt)
   

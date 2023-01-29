@@ -21,3 +21,4 @@ picFN <- system.file("extdata", "dji.jpg", package = "uavRmp")
 
 }
 }
+\keyword{internal}

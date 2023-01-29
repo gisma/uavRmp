@@ -1,86 +1,5 @@
 # karim is the blue djinn
-if (!isGeneric('read_gpx ')) {
-  setGeneric('read_gpx ', function(x, ...)
-    standardGeneric('read_gpx '))
-}
 
-#' Read GPX file
-#' 
-#' Read a GPX file. By default, it reads all possible GPX layers, and only returns shapes for layers that have any features.
-#' 
-#' @param file a GPX filename (including directory)
-#' @param layers vector of GPX layers. Possible options are `"waypoints"`, `"tracks"`, `"routes"`, `"track_points"`, `"route_points"`. By dedault, all those layers are read.
-#' @return  if the layer has any features a sp object is returned.
-#' @note cloned from tmap
-#' @examples 
-#' \dontrun{
-#' ## for visualisation we are using mapview
-#' ## assign  GPX file
-#' gpxFN <- system.file("extdata", "flighttrack.gpx", package = "uavRmp")
-#' 
-#' ## read it
-#' gpx <- read_gpx(gpxFN, layers=c("tracks"))
-#' 
-#' ## plot it
-#' plot(gpx$geometry)
-#' 
-#' }
-#' @export read_gpx
-
-read_gpx <- function(file, layers=c("waypoints", "tracks", "routes", "track_points", "route_points")) {
-  if (!all(layers %in% c("waypoints", "tracks", "routes", "track_points", "route_points"))) stop("Incorrect layer(s)", call. = FALSE)
-  
-  # # check if features exist per layer
-  # suppressWarnings(hasF <- sapply(layers, function(l) {
-  #   ogrInfo(dsn = file, layer=l)$have_features
-  # }))
-  
-  # if (!any(hasF)) stop("None of the layer(s) has any features.", call. = FALSE)
-  # 
-  # res <- lapply(layers[hasF], function(l) {
-  #   sf::st_read( file,layer=l,quiet =TRUE)
-  # })
-  # names(res) <- layers[hasF]
-  # 
-  # if (sum(hasF)==1) {
-  #   res[[1]]
-  # } else {
-  #   res
-  # }
-}
-
-
-# Check projection of objects according to their keywords -------
-
-comp_ll_proj4 <- function(x) {
-  proj <- datum <- nodefs <- "FALSE"
-  allWGS84 <- as.vector(c("+init=epsg:4326", "+proj=longlat", "+datum=WGS84", "+no_defs", "+ellps=WGS84", "+towgs84=0,0,0"))
-  s <- as.vector(strsplit(x," "))
-  for (i in seq(1:length(s[[1]]))) {
-    
-    if (s[[1]][i] == "+init=epsg:4326") {
-      proj <- datum <- nodefs <- "TRUE"
-    }
-    if (s[[1]][i] == "+proj=longlat") {
-      proj <- "TRUE"
-    }
-    if (s[[1]][i] == "+no_defs") {
-      nodefs <- "TRUE"
-    }
-    if (s[[1]][i] == "+datum=WGS84") {
-      datum <- "TRUE"
-    }
-  }
-  if (proj == "TRUE" & nodefs == "TRUE" &  datum == "TRUE") {
-    ret <- TRUE
-  } else {
-    ret = FALSE
-  }
-  return(ret)
-}
-
-
-# 
 # 
 #' create an spatiallineobject from 2 points
 #' @description
@@ -114,8 +33,8 @@ sp_line <- function(Y_coords,
   line <- sp::SpatialLines(list(sp::Lines(sp::Line(cbind(Y_coords,X_coords)), ID = ID)))
   sp::proj4string(line) <- sp::CRS(proj4)
   if (export) {
-  ##  sf::st_write(line,file.path(runDir,paste0(ID,"home.gpkg")))
-   maptools::writeLinesShape(line,file.path(runDir,paste0(ID,"home.shp")))
+    sf::st_write(sf::st_as_sf(line),file.path(runDir,paste0(ID,"home.shp")))
+   #maptools::writeLinesShape(line,file.path(runDir,paste0(ID,"home.shp")))
   }
   return(line)
 }
@@ -147,7 +66,8 @@ sp_point <- function(lon,
   point = sp::SpatialPointsDataFrame(point, as.data.frame(ID))
   sp::proj4string(point) <- sp::CRS(proj4)
   if (export) {
-    maptools::writeLinesShape(ID,file.path(runDir,paste0(ID,".shp")))
+    sf::st_write(sf::st_as_sf(point),file.path(runDir,paste0(ID,"home.shp")))
+    #maptools::writeLinesShape(ID,file.path(runDir,paste0(ID,".shp")))
   }
   return(point)
 }
@@ -274,7 +194,7 @@ initProj <- function(projRootDir=getwd(), projFolders=c("log/","control/","run/"
 #' @description  Generates a variable with a certain value in the R environment
 #' @param name character string name of the variable
 #' @param value character string value of the variable
-#'@export makeGlobalVar 
+#' @keywords internal
 #'@examples
 #' \dontrun{
 #'
@@ -359,7 +279,7 @@ file_move <- function(from, to,pattern="*") {
 #' @param fromDir `character` a path to the image data
 #' @param toProjDir `character` a path to the projRootDir
 #' @param pattern  `character` a string pattern for filtering  file list 
-#' @export copyDir
+#' @keywords internal
 #' 
 copyDir <- function(fromDir, toProjDir, pattern="*") {
   toDir <- gsub("\\\\", "/", path.expand(toProjDir)) 
@@ -513,7 +433,7 @@ vecDrawInternal <- function(tmpPath, x = NULL) {
 #  getGPSAltDiff(picFN,demFN)
 #' 
 #' }
-#' @export getGPSAltDiff
+#' @keywords internal
 getGPSAltDiff <- function(picPath,demPath){
   
   #system2("exiftool", paste0("-n   -tagsFromFile @ -AbsoluteAltitude+=", diff, " ",image))
@@ -532,24 +452,53 @@ getGPSAltDiff <- function(picPath,demPath){
 #'
 #' @param path `character`  path to the images 
 #' @param diff `number` fixing value in meter
+#' @param camType `character` default is "YUN" for Yuneec H520RTK alternative is "DJI"
+#' 
 #' @examples 
-#' @ dontrun{
+#' \dontrun{
 #' 
 #' picFN <- system.file("extdata", "dji.jpg", package = "uavRmp")
 #  fixGPSAlt(picFN,100.0)
 #' 
 #' }
-#' @export fixGPSAlt
+#' @keywords internal
 #' 
 #' 
-fixGPSAlt <- function(path,diff){
+fixGPSAlt <- function(path,diff,camType="YUN"){
   
-  
+  if (camType == "DJI")
   system2("exiftool", paste0("-n   -tagsFromFile @ -AbsoluteAltitude+=", diff, " ",path, "*.JPG"))
+  if (camType == "YUN")
+  system2("exiftool", paste0("-n   -tagsFromFile @ -GPSAltitude+=", diff, " ",path, "*.JPG"))
   exifInfo <- exifr::read_exif(path, recursive = TRUE, tags = c("SourceFile", "GPSAltitude", "AbsoluteAltitude"))
   
   return(exifInfo)
 }
 
 
- 
+comp_ll_proj4 <- function(x) {
+  proj <- datum <- nodefs <- "FALSE"
+  allWGS84 <- as.vector(c("+init=epsg:4326", "+proj=longlat", "+datum=WGS84", "+no_defs", "+ellps=WGS84", "+towgs84=0,0,0"))
+  s <- as.vector(strsplit(x," "))
+  for (i in seq(1:length(s[[1]]))) {
+    
+    if (s[[1]][i] == "+init=epsg:4326") {
+      proj <- datum <- nodefs <- "TRUE"
+    }
+    if (s[[1]][i] == "+proj=longlat") {
+      proj <- "TRUE"
+    }
+    if (s[[1]][i] == "+no_defs") {
+      nodefs <- "TRUE"
+    }
+    if (s[[1]][i] == "+datum=WGS84") {
+      datum <- "TRUE"
+    }
+  }
+  if (proj == "TRUE" & nodefs == "TRUE" &  datum == "TRUE") {
+    ret <- TRUE
+  } else {
+    ret = FALSE
+  }
+  return(ret)
+}

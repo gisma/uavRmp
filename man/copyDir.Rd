@@ -16,3 +16,4 @@ copyDir(fromDir, toProjDir, pattern = "*")
 \description{
 copyDir copy all image data to the corresponding folder
 }
+\keyword{internal}

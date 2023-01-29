@@ -238,7 +238,7 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
             uavType = "dji_csv")
             
 ## call a simple shiny interface
-runApp(system.file("shiny/plan2litchi/", "app.R", package = "uavRmp"))
+shiny::runApp(system.file("shiny/plan2litchi/", "app.R", package = "uavRmp"))
         
         
 ## (6) view results
