@@ -3,7 +3,7 @@ new features:
   * move functions to internal
 
 bugfixes:
-  * remove dependencies on rgeos, maptools and rgdal #5
+  * remove dependencies on rgeos, maptools and rgdal #10
   
   
 ## uavRmp 0.6.1
