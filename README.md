@@ -19,7 +19,7 @@ The ```uavRmp``` bridges this gap  and  generates  ```MAVLINK``` format complian
 
 ## Supported UAV platforms
 
-Up to now the ```uavRmp``` package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI series that are supported by [Litchi](/https://flylitchi.com/) and Pixhawk based platforms as the outdated but still running 3DR Solo. 
+Up to now the ```uavRmp``` package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI series that are supported by [Litchi](https://flylitchi.com/) and Pixhawk based platforms as the outdated but still running 3DR Solo. 
 
 The core planning tool ```makeFP``` (make flight plan) creates either intermediate flight control files for the DJI UAVs or ready to upload control files for the 3DR Solo. 
 
