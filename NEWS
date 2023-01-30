@@ -9,8 +9,6 @@ changes:
 changes:
 
 * move functions to internal
-
-bugfixes:
 * remove dependencies on rgeos, maptools and rgdal #10
   
   

@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   uavRmp_1: uavRmp_1.html
-last_built: 2023-01-30T10:08Z
+last_built: 2023-01-30T10:18Z
 urls:
   reference: https://r-spatial.github.io/uavRmp/reference
   article: https://r-spatial.github.io/uavRmp/articles
