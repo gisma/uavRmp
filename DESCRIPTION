@@ -1,8 +1,8 @@
 Package: uavRmp
 Type: Package
 Title: UAV Mission Planner
-Version: 0.6.2
-Date: 2023-01-29
+Version: 0.6.3
+Date: 2023-01-30
 Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Marvin", "Ludwig", role = c("ctb")),
              person("Sebastian", "Richter", role = c("ctb")),
@@ -11,7 +11,7 @@ Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", 
              )
 Encoding: UTF-8
 Maintainer: Chris Reudenbach <reudenbach@uni-marburg.de>
-Description: The Unmanned Aerial Vehicle Mission Planner provides an easy to use work flow for planning autonomous obstacle avoiding surveys of (almost) ready to fly unmanned aerial vehicles to retrieve aerial or spot related data. It creates either intermediate flight control files for the DJI-phantom or DJI-mavic series or ready to upload control files for the pixhawk-based flight controller as used in the 3DR-Solo. Additionally it contains some useful tools for digitizing and data manipulation.
+Description: The Unmanned Aerial Vehicle Mission Planner provides an easy to use work flow for planning autonomous obstacle avoiding surveys of (almost) ready to fly unmanned aerial vehicles to retrieve aerial or spot related data. It creates either intermediate flight control files for the DJI-Litchi supported series or ready to upload control files for the pixhawk-based flight controller as used in the 3DR-Solo. Additionally it contains some useful tools for digitizing and data manipulation.
 URL: https://github.com/gisma/uavRmp
 BugReports: https://github.com/gisma/uavRmp/issues
 LazyData: TRUE
@@ -31,7 +31,9 @@ Imports:
     link2GI,
     data.table,    
     jsonlite,
-    rlist
+    rlist,
+    xfun,
+    terra
 RoxygenNote: 7.2.3
 SystemRequirements: GNU make
 Suggests: knitr,
@@ -42,6 +44,5 @@ Suggests: knitr,
     stringr,
     htmltools,
     htmlwidgets,
-    raster
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

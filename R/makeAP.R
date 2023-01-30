@@ -88,7 +88,7 @@ if (!isGeneric('makeAP')) {
 #' \cr actionparam (DJI only) corresponding parameter for the above individual actiontype c(0,0,...)
 #' `uavViewDir` viewing direction of camera default is `0`
 #' @param maxSpeed  cruising speed
-#' @param heatMap switch for calculating the overlapping factor on a raster map
+# #' @param heatMap switch for calculating the overlapping factor on a raster map
 #' @param picFootprint switch for calculating the footprint at all way points
 #' @param followSurfaceRes horizontal step distance for analyzing the DEM altitudes
 #' @param picRate fastest stable interval (s) for shooting pictures
@@ -136,14 +136,14 @@ if (!isGeneric('makeAP')) {
 #' ##     You have to use a high quality high resulution DSM
 #' ##     (here simulated with a standard DEM)
 #'
-# fp <- makeAP(surveyArea=tutorial_flightArea,
-#            followSurface = TRUE,
-#            flightAltitude = 45,
-#            demFn = demFn,
-#            windCondition = 1,
-#            uavType = "pixhawk",
-#            followSurfaceRes = 5,
-#            altFilter = .75)
+#' fp <- makeAP(surveyArea=tutorial_flightArea,
+#'            followSurface = TRUE,
+#'            flightAltitude = 45,
+#'            demFn = demFn,
+#'            windCondition = 1,
+#'            uavType = "pixhawk",
+#'            followSurfaceRes = 5,
+#'            altFilter = .75)
 #'
 #'
 #' ## (4) typical real case scenario (2)
@@ -237,7 +237,7 @@ makeAP <- function(projectDir = tempdir(),
                    above_ground = TRUE,
                    djiBasic = c(0, 0, 0,-90, 0),
                    dA = FALSE,
-                   heatMap = FALSE,
+                   #heatMap = FALSE,
                    picFootprint = FALSE,
                    rcRange = NULL,
                    copy = FALSE,
@@ -271,7 +271,7 @@ makeAP <- function(projectDir = tempdir(),
   log4r::levellog(logger, 'INFO', paste("Working folder: ", file.path(projectDir, locationName, dateString)))
   
   ## need picfootprint for calculating the heatmap
-  if (heatMap) { picFootprint = TRUE }
+ # if (heatMap) { picFootprint = TRUE }
   
   
   ## uav platform depending parameter setting
@@ -897,14 +897,14 @@ makeAP <- function(projectDir = tempdir(),
   }
   close(fileConn)
   
-  # if heatMap is requested
-  if (heatMap) {
-    cat("calculating picture coverage heat map\n")
-    fovH <- calcFovHeatmap(camera, result[[4]])
-  } else
-  {
-    fovH <- "NULL"
-  }
+  # # if heatMap is requested
+  # if (heatMap) {
+  #   cat("calculating picture coverage heat map\n")
+  #   fovH <- calcFovHeatmap(camera, result[[4]])
+  # } else
+  # {
+  #   fovH <- "NULL"
+  # }
   
   # call rcShed
   ##if (!is.null(rcRange)) {
@@ -967,6 +967,7 @@ makeAP <- function(projectDir = tempdir(),
     note <- "control files are splitted after max 98 waypoints (litchi control file restricted number)"
   }
   else { note <- " Fly save and have Fun..." }
+
   dumpFile(paste0(file.path(projectDir, locationName, dateString, "fp-data/log/"),strsplit(basename(taskName), "\\.")[[1]][1],'.log'))
   cat("\n ",
       "\n NOTE 1:",as.character(note),"",
@@ -978,9 +979,10 @@ makeAP <- function(projectDir = tempdir(),
          result[[4]], # resampled dem
          camera,      # camera footprint (DJI only)
          taskArea,    # Area of flight task
-         rcCover,     # Estimated area that is covered by RC
-         fovH)        # Heatmap of overlapping Pictures
-  names(x) <- c("lp", "wp", "demA", "oDEM", "rDEM", "fp", "fA", "rcA", "hm")
+         rcCover) #,     # Estimated area that is covered by RC
+#         fovH)                 # Heatmap of overlapping Pictures
+         
+  names(x) <- c("lp", "wp", "demA", "oDEM", "rDEM", "fp", "fA", "rcA")
   system(paste0("rm -rf ",file.path(projectDir,locationName,dateString,"fp-data/run")))
   return(x)
 }

@@ -29,7 +29,7 @@ NULL
 #' @name tutdata_dji
 #' @title DJI image of a survey flight
 #' @description DJI image of a survey flight
-#' @format `"raster::raster"`
+#' @format `"terra::rast"`
 #' @keywords datasets
 #' @source `Faculty of Geography UAV derived data from Marburg University Forest first campaign`
 NULL
@@ -38,7 +38,7 @@ NULL
 #' @name tutdata_dem
 #' @title DEM data set of Marburg-Biedenkopf
 #' @description DEM data set resampled to 20 m resolution
-#' @format `"raster::raster"`
+#' @format `"terra::rast"`
 #' @keywords datasets
 #' @source `Faculty of Geography UAV derived data from Marburg University Forest first campaign`
 NULL

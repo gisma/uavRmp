@@ -32,7 +32,6 @@ makeAP(
   above_ground = TRUE,
   djiBasic = c(0, 0, 0, -90, 0),
   dA = FALSE,
-  heatMap = FALSE,
   picFootprint = FALSE,
   rcRange = NULL,
   copy = FALSE,
@@ -127,8 +126,6 @@ By default it is set to (\verb{= 0.0}).
 
 \item{dA}{if TRUE the real extent of the used DEM is returned helpful for low altitudes flight planning}
 
-\item{heatMap}{switch for calculating the overlapping factor on a raster map}
-
 \item{picFootprint}{switch for calculating the footprint at all way points}
 
 \item{rcRange}{range of estimated range of remote control}
@@ -201,6 +198,14 @@ fp <- makeAP(surveyArea = tutorial_flightArea,
 ##     You have to use a high quality high resulution DSM
 ##     (here simulated with a standard DEM)
 
+fp <- makeAP(surveyArea=tutorial_flightArea,
+           followSurface = TRUE,
+           flightAltitude = 45,
+           demFn = demFn,
+           windCondition = 1,
+           uavType = "pixhawk",
+           followSurfaceRes = 5,
+           altFilter = .75)
 
 
 ## (4) typical real case scenario (2)

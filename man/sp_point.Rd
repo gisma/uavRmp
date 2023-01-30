@@ -2,7 +2,7 @@
 % Please edit documentation in R/karim.R
 \name{sp_point}
 \alias{sp_point}
-\title{create an spatialpointobject from 1 points}
+\title{create an spatialpointobject from 1 point}
 \usage{
 sp_point(
   lon,
@@ -34,6 +34,6 @@ create an spatial point object from 1 point and optionally export it as a shapef
 point <- sp_point(8.770362,50.815240,ID="Faculty of Geographie Marburg")
 
 ## plot it
-raster::plot(point)
+terra::plot(terra::vect(point))
 
 }

@@ -5,7 +5,7 @@
 \alias{tutdata_dji}
 \title{DJI image of a survey flight}
 \format{
-\code{"raster::raster"}
+\code{"terra::rast"}
 }
 \source{
 \verb{Faculty of Geography UAV derived data from Marburg University Forest first campaign}

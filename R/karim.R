@@ -15,12 +15,12 @@
 #' @examples 
 #' \dontrun{
 #' ## creating sp spatial point object
-#' line <- sp_line(c(8.770367,8.771161,8.771536),
+#'line <- sp_line(c(8.770367,8.771161,8.771536),
 #'                 c(50.815172,50.814743,50.814875),
 #'                 runDir=tempdir())
 #' 
 #' ## plot it
-#' raster::plot(line)
+#' plot(line)
 #' }
 sp_line <- function(Y_coords,
                     X_coords,
@@ -39,7 +39,7 @@ sp_line <- function(Y_coords,
   }
   return(line)
 }
-#' create an spatialpointobject from 1 points
+#' create an spatialpointobject from 1 point
 #' @description
 #' create an spatial point object from 1 point and optionally export it as a shapefile
 #' @param lon lon
@@ -54,7 +54,7 @@ sp_line <- function(Y_coords,
 #' point <- sp_point(8.770362,50.815240,ID="Faculty of Geographie Marburg")
 #' 
 #' ## plot it
-#' raster::plot(point)
+#' terra::plot(terra::vect(point))
 #' 
 sp_point <- function(lon,
                      lat,
@@ -82,7 +82,7 @@ sp_point <- function(lon,
 #' @examples 
 #' \dontrun{
 #' ## load DEM/DSM 
-#' dem <- raster::raster(system.file("extdata", "mrbiko.tif", package = "uavRmp"))
+#' dem <- terra::rast(system.file("extdata", "mrbiko.tif", package = "uavRmp"))
 #' 
 #' ## generate extraction line object
 #' line <- sp_line(c(8.66821,8.68212),c(50.83939,50.83267),ID="Highest Position",runDir=runDir)
@@ -93,13 +93,13 @@ sp_point <- function(lon,
  
 maxpos_on_line <- function(dem,line){
   mask <- dem
-  raster::values(mask) <- NA
+  terra::values(mask) <- NA
   #...update it with the altitude information of the flightline
-  mask  <- raster::rasterize(line,mask)
+  mask  <- terra::rasterize(terra::vect(line),mask)
   mask2 <- mask*dem
   # and find the position of the max altitude
-  idx = raster::which.max(mask2)
-  maxPos = raster::xyFromCell(mask2,idx)
+  idx = terra::where.max(mask2)
+  maxPos = terra::xyFromCell(mask2,idx[2])
   return(maxPos)
 }
 
@@ -116,9 +116,7 @@ fun_multiply <- function(x)
   
   return(result)
 }
-fun_whichmax <- function(mask,value) { 
-  raster::xyFromCell(value,which.max(mask * value))
-}
+
 
 ### getPopupStyle creates popup style =================================================
 getPopupStyle <- function() {
@@ -443,7 +441,7 @@ getGPSAltDiff <- function(picPath,demPath){
   pos <- as.data.frame(cbind(exifInfo$GPSLatitude,exifInfo$GPSLongitude))
   sp::coordinates(pos) <- ~V2+V1
   sp::proj4string(pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-  demAlt = raster::extract(raster::raster(demPath),pos)
+  demAlt = as.numeric(terra::extract(terra::rast(demPath),terra::vect(pos),ID=FALSE))
   diff= demAlt- exifInfo$GPSAltitude
   return(diff)
 }

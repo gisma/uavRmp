@@ -32,7 +32,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     if (class(demFn)[1] %in% c("RasterLayer", "RasterStack", "RasterBrick")) {
       # get information of the raw file
       # project the  extent to the current input ref system 
-      proj <- raster::projection(rundem)
+      proj <- terra::crs(rundem)
       
       tmpproj<-grep(system(paste0(g$path,'gdalinfo -proj4 ',path.expand(demFn)),intern = TRUE),pattern = "+proj=",value = TRUE)
       proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
@@ -42,16 +42,16 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       taskAreaBuffer <- sf::st_buffer(ta,50) 
       cut<- sf::st_bbox(taskAreaBuffer)
       cut<-sf::st_as_sfc(sf::st_bbox(cut))
-      rundem <- raster::crop(demFn, methods::as(cut,"Spatial"))   
-      raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
+      rundem <- terra::crop(terra::rast(demFn), cut)   
+      terra::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
       system(paste0(g$path,'gdalwarp -overwrite -q ',
                     '-t_srs "+proj=longlat +datum=WGS84 +no_defs" ',
                     file.path(runDir,"tmpdem.tif"),' ',
                     file.path(runDir,"demdll.tif")
       ))
       
-      demll<-raster::raster(file.path(runDir,"demdll.tif"))
-      dem<-raster::raster(file.path(runDir,"tmpdem.tif"))
+      demll<-terra::rast(file.path(runDir,"demdll.tif"))
+      dem<-terra::rast(file.path(runDir,"tmpdem.tif"))
       
       # if GEOTIFF or other gdal type of data
     } else{
@@ -65,27 +65,27 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       cut<- sf::st_bbox(taskAreaBuffer)
       cut<-sf::st_as_sfc(sf::st_bbox(cut))
       cut <- sf::st_transform(cut, sp::CRS(proj))
-      rundem<- raster::crop(raster::raster(path.expand(demFn),band = 1), methods::as(cut,"Spatial"))
-      raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
-      demll=raster::projectRaster(from = rundem,crs ="+proj=longlat +datum=WGS84 +no_defs" )
-      raster::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
+      rundem<- terra::crop(terra::rast(path.expand(demFn)), cut)
+      terra::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
+      demll=terra::project(rundem,"+proj=longlat +datum=WGS84 +no_defs" )
+      terra::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
       # system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ',
       #               file.path(runDir,"demll.tif"), ' ',
       #               '-t_srs "+proj=longlat +datum=WGS84 +no_defs"'))
-      dem<-raster::raster(file.path(runDir,"tmpdem.tif"))
-      demll<-raster::raster(file.path(runDir,"demll.tif"))
-      dem <- raster::setMinMax(dem)
-      demll <- raster::setMinMax(demll)
+      dem<-terra::rast(file.path(runDir,"tmpdem.tif"))
+      demll<-terra::rast(file.path(runDir,"demll.tif"))
+      dem <- terra::setMinMax(dem)
+      demll <- terra::setMinMax(demll)
       
     }
   }  # end of loading DEM data
-  demll<-raster::raster(demFn) 
+  demll<-terra::rast(demFn) 
   # check if dem has an geographic reference system as EPSG4326 outherwise reproject
-  if (!comp_ll_proj4((as.character(demll@crs)))) {
-    system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"demll.tif"),' ', file.path(runDir,"demll.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
-    demll<-raster::raster(file.path(runDir,"demll.tif"))
-    demll <- raster::setMinMax(demll)
-  } 
+  #if (!comp_ll_proj4((as.character(demll@crs)))) {
+    system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"demll.tif"),' ', file.path(runDir,"demtmp.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
+    demll<-terra::rast(file.path(runDir,"demtmp.tif"))
+    demll <- terra::setMinMax(demll)
+  #} 
   
   # preprocessing
   # create sp point object from launchpos 
@@ -94,7 +94,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   sp::proj4string(pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   
   # extract all waypoint altitudes
-  altitude <- raster::extract(demll,df,layer = 1, nl = 1)
+  altitude <- terra::extract(demll,terra::vect(df),layer = 1, nl = 1,ID=FALSE)
   
   # get maximum altitude of the task area
   maxAlt <- max(altitude,na.rm = TRUE)
@@ -103,7 +103,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   
   # extract launch altitude from DEM
   if (is.na(p$launchAltitude)) {
-    tmpalt <- raster::extract(demll,pos,layer = 1, nl = 1)  
+    tmpalt <-as.numeric(terra::extract(demll,terra::vect(pos),layer = 1, nl = 1,ID=FALSE))
     p$launchAltitude <- as.numeric(tmpalt)
     # otherwise take it from the parameter set
   } else 
@@ -134,15 +134,15 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     cat("apply follow terrain filter...\n")
     
     # extract all waypoint altitudes
-    altitude2 <- raster::extract(demll,df,layer = 1, nl = 1)
+    altitude2 <-terra::extract(demll,terra::vect(df),layer = 1, nl = 1,ID=FALSE)
     # get maximum altitude of the task area
     
     # extract launch altitude from DEM
-    launchAlt <- raster::extract(demll,pos,layer = 1, nl = 1)  
+    launchAlt <- as.numeric(terra::extract(demll,terra::vect(pos),layer = 1, nl = 1,ID=FALSE))
     
     # calculate the agl flight altitude
     #altitude<-altitude+as.numeric(p$flightAltitude)-maxAlt    
-    altitude2 <- altitude2 - launchAlt[1] + flightAltitude
+    altitude2 <- altitude2 - launchAlt + flightAltitude
     
     
     #write it to the sp object dataframe
@@ -160,7 +160,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       sDF$sortID <- seq(1,nrow(sDF))
       # smooth to maxvalues
       filtAlt       <- data.frame(zoo::rollmax(zoo::na.fill(sDF$altitude,"extend"), horizonFilter,fill = "extend"))
-      sDF$altitude  <- filtAlt[,1]
+      sDF$altitude  <- filtAlt
       colNames      <- colnames(sDF)
       colnames(sDF) <- colNames
       turnPoints    <- sDF[sDF$id == "99",]
@@ -190,7 +190,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   }
   
   # dump flightDEM as it was used for agl prediction
-  raster::writeRaster(demll,file.path(runDir,"AGLFlightDEM.tif"),overwrite = TRUE)
+  terra::writeRaster(demll,file.path(runDir,"AGLFlightDEM.tif"),overwrite = TRUE)
   # gdalUtils::gdalwarp(srcfile = file.path(runDir,"AGLFlightDEM.tif"), dstfile = file.path(runDir,"tmpdem.tif"),  
   #          overwrite = TRUE,  
   #          t_srs = paste0("+proj=utm +zone=",long2UTMzone(p$lon1)," +datum=WGS84"),
@@ -216,14 +216,14 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
                 file.path(runDir,"tmpdem.tif"),' ',
                 file.path(runDir,"flightDEM.tif")
   ))
-  tmpdemll<-raster::raster(file.path(runDir,"tmpdem.tif"))
+  tmpdemll<-terra::rast(file.path(runDir,"tmpdem.tif"))
   
   # create a sp polygon object of the DEM area that is useable for a flight task planning
   if (dA) {
     cat("start demArea analysis - will take a while...\n")
-    c        <- raster::clump(tmpdemll > 0)
-    demArea  <- raster::rasterToPolygons(c)
-    demArea  <- sf::st_combine(demArea) #rgeos::gUnaryUnion(demArea)
+    patches        <- terra::patches(tmpdemll > 0)
+    demArea  <- terra::as.polygons(patches) #terra::rasterasterToPolygons(c)
+    demArea  <- sf::st_as_sf(demArea) #rgeos::gUnaryUnion(demArea)
   } else {
     demArea  <- "NULL"
   }
@@ -241,7 +241,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
   # read dem
   #dem <- raster::raster(dem)
   #raster::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
-  dem<-raster::raster(file.path(runDir,"demll.tif"))
+  dem<-terra::rast(file.path(runDir,"demll.tif"))
   
   fin <- FALSE
   minPoints <- 1
@@ -264,7 +264,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
   sp::proj4string(launch_pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-  launchAlt <- raster::extract(dem,launch_pos,layer = 1, nl = 1)  
+  launchAlt <- as.numeric(terra::extract(dem,terra::vect(launch_pos),layer = 1, nl = 1,ID=FALSE))
   
   # for each splitted task file
   for (i in 1:nofiles) {
@@ -286,8 +286,8 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start",runDir=runDir)
       
       # calculate minimum rth altitude for each line by identifying max altitude
-      homeRth  <- raster::extract(dem,home, fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
-      startRth <- raster::extract(dem,start,fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
+      homeRth  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+      startRth <- as.numeric(terra::extract(dem,terra::vect(start),fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
       
       # add 10% of flight altitude as safety buffer
       homeRth  <- homeRth  + 0.1 * homeRth
@@ -310,7 +310,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       # keeps <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","j")
       keeps <- c("latitude","longitude","altitude")
       DF <- DF[keeps]
-      DF[stats::complete.cases(DF),]
+      DF[stats::complete.cases(DF$altitude),]
       utils::write.table(DF[,1:(ncol(DF))],file = file.path(runDir,"tmp2.csv"),quote = FALSE,row.names = FALSE,sep = "\t")
       
       #read raw waypoint list
@@ -568,24 +568,25 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
 # }
 
 
-# calculate the overlap factor of the camera footprints returning an heatmap
-calcFovHeatmap <- function(footprint,dem) {
-  p        <- split(footprint, footprint@plotOrder)
-  t        <- raster::raster(nrow = nrow(dem)*2,ncol = ncol(dem)*2)
-  t@crs    <- dem@crs
-  t@extent <- dem@extent
-  t        <- raster::resample(dem,t)
-  t[]      <- 0
-  s        <- t
-  
-  for (i in seq(1:length(footprint))) {
-    tmp <- raster::rasterize(p[[i]],t)
-    s <- raster::stack(tmp, s)
-  }
-  fovhm <- raster::stackApply(s, indices = raster::nlayers(s), fun = sum)
-  fovhm[fovhm < 1] = NaN
-  return(fovhm)
-}
+# # calculate the overlap factor of the camera footprints returning an heatmap
+# calcFovHeatmap <- function(footprint,dem) {
+#   p        <- split(footprint, footprint@plotOrder)
+#   t        <- terra::rast(nrow = nrow(dem)*2,ncol = ncol(dem)*2)
+#   t@crs    <- terra::crs(dem)
+#   t@extent <- terra::ext(dem)
+#   t        <- terra::resample(dem,t)
+#   t[]      <- 0
+#   s        <- t
+#   
+#   for (i in seq(1:length(footprint))) {
+#     tmp <- terra::rasterize(terra::vect(p[[i]]),t)
+#     s <- c(tmp, s)
+#   }
+#   fovhm <- raster::stackApply(s, indices = raster::nlayers(s), fun = sum)
+#                        #  sapp(s, fun = function(x, ...) {indices = raster::nlayers(x), fun = "sum"})
+#   fovhm[fovhm < 1] = NaN
+#   return(fovhm)
+# }
 #browser()
 # export data to DJI exchange format 
 # (1) controls with respect to waypoint number and/or battery lifetime the splitting of the mission files to seperate task files
@@ -608,12 +609,12 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
 
   #demll=raster::projectRaster(from = dem,crs ="+proj=longlat +datum=WGS84 +no_defs" )
   #raster::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
-  dem<-raster::raster(file.path(runDir,"demll.tif"))
+  dem <-terra::rast(file.path(runDir,"demll.tif"))
   # due to reprojection recalculate teh launch position and altitude
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
   sp::proj4string(launch_pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-  launchAlt <- raster::extract(dem,launch_pos) #exactextractr::exact_extract(terra::rast(dem),sf::st_as_sf(launch_pos)  )
+  launchAlt <- as.numeric(terra::extract(dem,terra::vect(launch_pos),ID=FALSE)) #exactextractr::exact_extract(terra::rast(dem),sf::st_as_sf(launch_pos)  )
   
  # browser()
   # for each of the splitted task files
@@ -636,8 +637,8 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     # calculate minimum rth altitude for each line by identifying max altitude
     #homeRth<-max(unlist(raster::extract(dem,home)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
     #startRth<-max(unlist(raster::extract(dem,start)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
-    maxAltHomeFlight  <- raster::extract(dem,home, fun = max, na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
-    maxAltStartFlight <- raster::extract(dem,start,fun = max, na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
+    maxAltHomeFlight  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max, na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+    maxAltStartFlight <- as.numeric(terra::extract(dem,terra::vect(start),fun = max, na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
     
     # get the max position of the flightlines
     homemaxpos  <- maxpos_on_line(dem,home)
@@ -668,7 +669,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     altitude    <- maxAltStartFlight + 0.1*maxAltStartFlight
     latitude    <- startLat #startmaxpos[1,2]
     longitude   <- startLon #startmaxpos[1,1]
-    startmaxrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
+    startmaxrow <- cbind(latitude,longitude,altitude,heading,row1[5:(length(row1))])
     names(startmaxrow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
 
     
@@ -1054,8 +1055,8 @@ MAVTreeCSV <- function(flightPlanMode,
     start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start",runDir=runDir)
     
     # calculate minimum rth altitude for each line by identifing max altitude
-    homeRth  <- raster::extract(dem,home, fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
-    startRth <- raster::extract(dem,start,fun = max,na.rm = TRUE,layer = 1, nl = 1) - launchAlt + as.numeric(p$flightAltitude)
+    homeRth  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+    startRth <- as.numeric(terra::extract(dem,terra::vect(start),fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
     
     # add 10% of flight altitude as safety buffer
     homeRth  <- homeRth  + 0.1 * homeRth
@@ -1216,26 +1217,26 @@ makeFlightPathT3 <- function(treeList,
     log4r::levellog(logger, 'WARN', "CAUTION!!! no DEM file provided")
     stop("CAUTION!!! no DEM file provided")}
   cat("preprocessing DSM data...\n")
-  if (class(demFn)[1] == "character") rst <- raster::raster(demFn)
+  if (class(demFn)[1] == "character") rst <- terra::rast(demFn)
   # read local dem file
   if (class(rst)[1] %in% c("RasterLayer", "RasterStack", "RasterBrick")) {
     rundem<-rst
-    proj <- raster::projection(rundem)
+    proj <- terra::crs(rundem)
     #demll <- gdalUtils::gdalwarp(srcfile = demFn, dstfile = file.path(runDir,"demll.tif"), overwrite=TRUE,  t_srs = "+proj=longlat +datum=WGS84 +no_defs",output_Raster = TRUE ) 
     system(paste0(g$path,'gdalwarp -overwrite -q ', demFn,' ', file.path(runDir,"demll.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
-    demll<-raster::raster(file.path(runDir,"tmpdem.tif"))
+    demll<-terra::rast(file.path(runDir,"tmpdem.tif"))
 
     flightAreaBuffer <- sf::st_buffer(flightArea,0.00421) 
     cut<- sf::st_bbox(flightAreaBuffer)
     cut<-sf::st_as_sfc(sf::st_bbox(cut))
-    rundem<- raster::crop(demll, methods::as(cut,"Spatial"))
+    rundem<- terra::crop(demll,cut)
     
     # rundem <- raster::crop(demll,
     #                        extent(flightArea@bbox[1] - 0.00421,
     #                               flightArea@bbox[3] + 0.00421,
     #                               flightArea@bbox[2] - 0.00421,
     #                               flightArea@bbox[4] + 0.00421))
-    raster::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
+    terra::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
     demll <- rundem
     dem  <- demll
   }
@@ -1269,7 +1270,7 @@ makeFlightPathT3 <- function(treeList,
       lp <- sp_point(p$launchLon,p$launchLat,"LaunchPos")
       
       if (p$launchAltitude == -9999){
-        tmpalt <- raster::extract(dem,lp,layer = 1, nl = 1)  
+        tmpalt <- as.numeric(terra::extract(dem,terra::vect(lp),layer = 1, nl = 1,ID=FALSE))  
         p$launchAltitude <- as.numeric(tmpalt)
         # otherwise take it from the parameter set
       } else 
@@ -1277,7 +1278,7 @@ makeFlightPathT3 <- function(treeList,
         p$launchAltitude <- as.numeric(p$launchAltitude)
       }
       # extract all waypoint altitudes
-      altitude <- as.data.frame(raster::extract(demll,treeList,layer = 1, nl = 1))
+      altitude <- as.data.frame(as.numeric(terra::extract(demll,terra::vect(treeList),layer = 1, nl = 1),ID=FALSE))
       altitude<-as.matrix(altitude)
       # get maximum altitude of the flight corridors
       maxAlt <- max(altitude,na.rm = TRUE)
@@ -1489,7 +1490,7 @@ makeUavPointMAV<- function(lat=0.000000,lon=0.000000,alt=100.0,head=0,wp=0,cf=3,
 mavCmd <- function(id,wp=0,cf="3",cmd="82",p1="0.000000",p2="0.000000",p3="0.000000",p4="0.000000",lon="0.000000",lat="0.000000",alt="0.000000",autocont="1"){
   sep <- "\t"
   #<INDEX> <CURRENT WP> <COORD FRAME> <COMMAND> <PARAM1> <PARAM2> <PARAM3> <PARAM4> <PARAM5/X/LONGITUDE> <PARAM6/Y/LATITUDE> <PARAM7/Z/ALTITUDE> <AUTOCONTINUE>
-  return(paste0(id,sep,wp,sep,cf,sep,cmd,sep,p1,sep,p2,sep,p3,sep,p4,sep,lat,sep,lon,sep,alt,sep,autocont))
+  return(paste0(id,sep,wp,sep,cf,sep,cmd,sep,p1,sep,p2,sep,p3,sep,p4,sep,lat,sep,lon,sep,alt,sep,autocont)[1])
 }
 
 # getting true for odd numbers
@@ -1508,7 +1509,7 @@ get_seg_fparams <- function(dem,
   seg_buf<- sf::st_buffer(seg_utm,dist = 5.0) #rgeos::gBuffer(spgeom = seg_utm,width = 5.0)
   seg_buf <- sf::st_transform(seg_buf,crs = 4326) #sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
   # calculate minimum rth altitude for each line by identifing max altitude
-  seg_flight_altitude  <- raster::extract(dem,seg_buf, fun = max,na.rm = TRUE,layer = 1, nl = 1) - startAlt + as.numeric(p$flightAltitude)
+  seg_flight_altitude  <- as.numeeric(terra::extract(dem,terra::vect(seg_buf), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - startAlt + as.numeric(p$flightAltitude)
   
   # add 10% of flight altitude as safety buffer
   #seg_flight_altitude  <- seg_flight_altitude  + 0.1 * seg_flight_altitude
@@ -1539,7 +1540,7 @@ get_point_fparams <- function(dem,
   seg_buf <- sf::st_transform(seg_buf,crs = 4326) #sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
   
   # calculate minimum rth altitude for each line by identifing max altitude
-  seg_flight_altitude  <- raster::extract(dem,seg_buf, fun = max,na.rm = TRUE,layer = 1, nl = 1) - startAlt + as.numeric(p$aboveTreeAlt)
+  seg_flight_altitude  <- as.numeric(terra::extract(dem,terra::vect(seg_buf), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - startAlt + as.numeric(p$aboveTreeAlt)
   
   # calculate heading 
   return (c(seg_flight_altitude))
@@ -1658,8 +1659,8 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     sp::proj4string(start) <-sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     
     # calculate minimum rth altitude for each line by identifying max altitude
-    homeRth<-max(unlist(raster::extract(dem,home,layer = 1, nl = 1)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
-    startRth<-max(unlist(raster::extract(dem,start,layer = 1, nl = 1)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
+    homeRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(home),layer = 1, nl = 1)),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt)
+    startRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(start),layer = 1, nl = 1)),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt)
     
     # calculate rth heading 
     homeheading<-geosphere::bearing(c(endLon,endLat),c(launchLon,launchLat), a=6378137, f=1/298.257223563)
@@ -1708,7 +1709,7 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
 getAltitudes <- function(demll ,df,p,followSurfaceRes,logger,projectDir,locationName,flightArea) {
   
   # extract all waypoint altitudes
-  altitude <- as.data.frame(raster::extract(demll,df,layer = 1, nl = 1))
+  altitude <- as.data.frame(as.numeric(terra::extract(demll,terra::vect(df),layer = 1, nl = 1),ID=FALSE))
   names(altitude) <- "altitude"
   altitude<-as.matrix(altitude)
   # get maximum altitude of the task area
@@ -1720,7 +1721,7 @@ getAltitudes <- function(demll ,df,p,followSurfaceRes,logger,projectDir,location
   sp::proj4string(pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   
   if (p$launchAltitude == -9999){
-    tmpalt <- raster::extract(demll,pos,layer = 1, nl = 1)  
+    tmpalt <- as.numeric(terra::extract(demll,terra::vect(pos),layer = 1, nl = 1,ID=FALSE))
     p$launchAltitude <- as.numeric(tmpalt)
     # otherwise take it from the parameter set
   } else 

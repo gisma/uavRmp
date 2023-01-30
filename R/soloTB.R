@@ -154,7 +154,7 @@ soloLog <- function(logFileSample = "recent",
   }
   
   if (log == 0) {
-    f <- list.files(logFolder, pattern=raster::extension(logFiles))
+    f <- list.files(logFolder, pattern=paste0(".",(xfun::file_ext(logFiles))))
     cat(f," downloaded...\n")
     cat("Download from Solo controllor seems to be ok\n")
   } else {

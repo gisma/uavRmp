@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.3</span>
       </span>
     </div>
 
@@ -91,7 +91,6 @@
 <span>  above_ground <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  djiBasic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">90</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  dA <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  heatMap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  picFootprint <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  rcRange <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  copy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -242,10 +241,6 @@ By default it is set to (<code>= 0.0</code>).
 <dd><p>if TRUE the real extent of the used DEM is returned helpful for low altitudes flight planning</p></dd>
 
 
-<dt>heatMap</dt>
-<dd><p>switch for calculating the overlapping factor on a raster map</p></dd>
-
-
 <dt>picFootprint</dt>
 <dd><p>switch for calculating the footprint at all way points</p></dd>
 
@@ -333,6 +328,14 @@ at <a href="https://gisma.github.io/uavRmp/articles/uavRmp_1.html" class="extern
 <span class="r-in"><span><span class="co">##     You have to use a high quality high resulution DSM</span></span></span>
 <span class="r-in"><span><span class="co">##     (here simulated with a standard DEM)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu">makeAP</span><span class="op">(</span>surveyArea<span class="op">=</span><span class="va">tutorial_flightArea</span>,</span></span>
+<span class="r-in"><span>           followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>           flightAltitude <span class="op">=</span> <span class="fl">45</span>,</span></span>
+<span class="r-in"><span>           demFn <span class="op">=</span> <span class="va">demFn</span>,</span></span>
+<span class="r-in"><span>           windCondition <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>           uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,</span></span>
+<span class="r-in"><span>           followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>           altFilter <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## (4) typical real case scenario (2)</span></span></span>

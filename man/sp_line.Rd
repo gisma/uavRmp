@@ -37,6 +37,6 @@ line <- sp_line(c(8.770367,8.771161,8.771536),
                 runDir=tempdir())
 
 ## plot it
-raster::plot(line)
+plot(line)
 }
 }
