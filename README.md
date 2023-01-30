@@ -6,7 +6,7 @@ checks](https://badges.cranchecks.info/worst/uavRmp.svg)](https://cran.r-project
 ![monthly](https://cranlogs.r-pkg.org/badges/uavRmp)
 ![total](https://cranlogs.r-pkg.org/badges/grand-total/uavRmp)
 [![CRAN](https://www.r-pkg.org/badges/version/uavRmp?color=009999)](https://cran.r-project.org/package=uavRmp)
-[![](https://img.shields.io/github/stars/r-spatial/uavRmp?style=flat)](https://github.com/r-spatial/uavRmp)
+[![](https://img.shields.io/github/uavRmp/gisma/uavRmp?style=flat)](https://github.com/r-spatial/uavRmp)
 [![License](https://img.shields.io/badge/license-GPL%20%28%3E=%203%29-lightgrey.svg?style=flat)](https://www.gnu.org/licenses/gpl-3.0.html)
 <!-- badges: end -->
 
