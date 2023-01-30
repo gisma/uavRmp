@@ -1,14 +1,15 @@
 ## Unmanned Aerial Vehicle R based Mission Planning - uavRmp 
 
-
 <!-- badges: start -->
 [![cran
-checks](https://badges.cranchecks.info/worst/link2GI.svg)](https://cran.r-project.org/web/checks/check_results_link2GI.html)
-![monthly](https://cranlogs.r-pkg.org/badges/link2GI)
-![total](https://cranlogs.r-pkg.org/badges/grand-total/link2GI)
-[![CRAN](https://www.r-pkg.org/badges/version/link2GI?color=009999)](https://cran.r-project.org/package=link2GI)
+checks](https://badges.cranchecks.info/worst/uavRmp.svg)](https://cran.r-project.org/web/checks/check_results_uavRmp.html)
+![monthly](https://cranlogs.r-pkg.org/badges/uavRmp)
+![total](https://cranlogs.r-pkg.org/badges/grand-total/uavRmp)
+[![CRAN](https://www.r-pkg.org/badges/version/uavRmp?color=009999)](https://cran.r-project.org/package=uavRmp)
+[![](https://img.shields.io/github/stars/r-spatial/uavRmp?style=flat)](https://github.com/r-spatial/uavRmp)
 [![License](https://img.shields.io/badge/license-GPL%20%28%3E=%203%29-lightgrey.svg?style=flat)](https://www.gnu.org/licenses/gpl-3.0.html)
 <!-- badges: end -->
+
 
 The [uavRmp](https://github.com/gisma/uavRmp) package is designed for a lightweighted  uav autonomous mission planning including full documentation capabilities. In the first place it is a simple and open source planning tool for monitoring flights of low budget drones based on ```R```. It provide an easy workflow for planning autonomous 
 surveys including battery-dependent task splitting, save departures, and approaches of each monitoring chunks. 
