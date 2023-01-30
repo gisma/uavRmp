@@ -3,6 +3,7 @@
 changes:
 
 * remove dependencies on raster
+* drop heatmap of images
 
 ## uavRmp 0.6.2
 

@@ -1509,7 +1509,7 @@ get_seg_fparams <- function(dem,
   seg_buf<- sf::st_buffer(seg_utm,dist = 5.0) #rgeos::gBuffer(spgeom = seg_utm,width = 5.0)
   seg_buf <- sf::st_transform(seg_buf,crs = 4326) #sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
   # calculate minimum rth altitude for each line by identifing max altitude
-  seg_flight_altitude  <- as.numeeric(terra::extract(dem,terra::vect(seg_buf), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - startAlt + as.numeric(p$flightAltitude)
+  seg_flight_altitude  <- as.numeric(terra::extract(dem,terra::vect(seg_buf), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - startAlt + as.numeric(p$flightAltitude)
   
   # add 10% of flight altitude as safety buffer
   #seg_flight_altitude  <- seg_flight_altitude  + 0.1 * seg_flight_altitude
@@ -1659,8 +1659,8 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     sp::proj4string(start) <-sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     
     # calculate minimum rth altitude for each line by identifying max altitude
-    homeRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(home),layer = 1, nl = 1)),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt)
-    startRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(start),layer = 1, nl = 1)),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt)
+    homeRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(home),layer = 1, nl = 1),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt))
+    startRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(start),layer = 1, nl = 1),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt))
     
     # calculate rth heading 
     homeheading<-geosphere::bearing(c(endLon,endLat),c(launchLon,launchLat), a=6378137, f=1/298.257223563)

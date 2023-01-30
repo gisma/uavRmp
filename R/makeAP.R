@@ -116,7 +116,7 @@ if (!isGeneric('makeAP')) {
 #' # fp      optimized footprints of the camera
 #' # fA      flight area with at least 2 overlaps
 #' # rcA     area covered by the RC according to the range and line of sight
-#' # hm      a heatmap abundance of pictures/pixel (VERY SLOW, only if heatMap = TRUE)
+
 #'
 #' ## for visualisation and vecDraw load mapview
 #' require(mapview)
