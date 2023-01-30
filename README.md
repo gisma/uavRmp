@@ -2,7 +2,6 @@
 
 
 <!-- badges: start -->
-[![tic](https://github.com/r-spatial/link2GI/workflows/tic/badge.svg?branch=master)](https://github.com/r-spatial/link2GI/actions)
 [![cran
 checks](https://badges.cranchecks.info/worst/link2GI.svg)](https://cran.r-project.org/web/checks/check_results_link2GI.html)
 ![monthly](https://cranlogs.r-pkg.org/badges/link2GI)
