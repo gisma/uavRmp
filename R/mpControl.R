@@ -156,7 +156,9 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     bobu=sf::st_simplify(bobu,dTolerance = 3*horizonFilter)
     buf=sf::st_buffer(bobu, 1.5*horizonFilter,joinStyle="BEVEL")
     idx <- !sf::st_intersects(buf, df_sf )
+    tdx <- sf::st_intersects(buf, df_sf )
     i_points = df_sf[unlist(idx),]
+    t_points = df_sf[unlist(tdx),]
     i_points$id = 1
     t_points$id = 99
     names(t_points)= names(i_points)
