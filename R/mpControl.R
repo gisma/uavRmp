@@ -74,6 +74,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       #               '-t_srs "+proj=longlat +datum=WGS84 +no_defs"'))
       dem<-terra::rast(file.path(runDir,"tmpdem.tif"))
       demll<-terra::rast(file.path(runDir,"demll.tif"))
+      
       dem <- terra::setMinMax(dem)
       demll <- terra::setMinMax(demll)
       
@@ -82,9 +83,9 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   demll<-terra::rast(demFn) 
   # check if dem has an geographic reference system as EPSG4326 outherwise reproject
   #if (!comp_ll_proj4((as.character(demll@crs)))) {
-    system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"demll.tif"),' ', file.path(runDir,"demtmp.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
-    demll<-terra::rast(file.path(runDir,"demtmp.tif"))
-    demll <- terra::setMinMax(demll)
+  #  system(paste0(g$path,'gdalwarp.exe -overwrite -q ', file.path(runDir,"demll.tif"),' ', file.path(runDir,"demtmp.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
+  #  demll<-terra::rast(file.path(runDir,"demtmp.tif"))
+  #  demll <- terra::setMinMax(demll)
   #} 
   
   # preprocessing
@@ -713,12 +714,12 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     DF <- df@data[(as.numeric(minPoints) + 1):maxPoints,]
     
     # add the 6 safety points to each dataframe (i.e. task)
-    DF = rbind(startmaxrow,DF)
-    DF = rbind(startascentrow,DF)
-    DF = rbind(startrow,DF)
-    DF = rbind(DF,ascentrow)
-    DF = rbind(DF,homemaxrow)
-    DF = rbind(DF,homerow)
+    DF = dplyr::bind_rows(startmaxrow,DF)
+    DF = dplyr::bind_rows(startascentrow,DF)
+    DF = dplyr::bind_rows(startrow,DF)
+    DF = dplyr::bind_rows(DF,ascentrow)
+    DF = dplyr::bind_rows(DF,homemaxrow)
+    DF = dplyr::bind_rows(DF,homerow)
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
     utils::write.csv(DF[,1:(ncol(DF) - 2)],file = paste0(projectDir,"/",locationName ,"/", workingDir,"/fp-data/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
@@ -1692,9 +1693,9 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     
     # append this three points to each part of the splitted task
     DF<-df@data[minPoints:maxPoints,]
-    DF = rbind(startrow,DF)
-    DF = rbind(DF,ascentrow)
-    DF = rbind(DF,homerow)
+    DF = dplyr::bind_rows(startrow,DF)
+    DF = dplyr::bind_rows(DF,ascentrow)
+    DF = dplyr::bind_rows(DF,homerow)
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
     utils::write.csv(DF[,1:(ncol(DF)-2)],file = paste0(strsplit(projectDir,"/tmp")[[1]][1],"/fp-data/control/",i,"__",mission,"__dji.csv"),quote = FALSE,row.names = FALSE)
