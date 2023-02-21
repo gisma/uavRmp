@@ -164,11 +164,14 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       sDF$altitude  <- filtAlt
       colNames      <- colnames(sDF)
       colnames(sDF) <- colNames
+      sDF$id[seq(1, to = nrow(sDF), by = horizonFilter)] =1
       turnPoints    <- sDF[sDF$id == "99",]
-      samplePoints  <- sDF[seq(1, to = nrow(sDF), by = horizonFilter),]
+      samplePoints  <- sDF[sDF$id == "1",]
+      #samplePoints  <- sDF[seq(1, to = nrow(sDF), by = horizonFilter),] 
+      #duplicates <- which(!is.na(match(rownames(samplePoints),rownames(turnPoints))))
+      #  fDF <- rbind(turnPoints,samplePoints[-duplicates,])
       
-      duplicates <- which(!is.na(match(rownames(samplePoints),rownames(turnPoints))))
-      fDF <- rbind(turnPoints,samplePoints[-duplicates,])
+      fDF <- rbind(samplePoints,turnPoints)
       fDF <- fDF[order(fDF$sortID),]
       
       dif           <- abs(as.data.frame(diff(as.matrix(fDF$altitude))))
