@@ -133,7 +133,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   ###
   if (followSurface) {
     cat("apply follow terrain filter...\n")
-    
+
     # extract all waypoint altitudes
     altitude2 <-terra::extract(demll,terra::vect(df),layer = 1, nl = 1,ID=FALSE)
     # get maximum altitude of the task area
@@ -148,6 +148,20 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     
     #write it to the sp object dataframe
     df$altitude <- round(altitude2,1)
+    df$sortID <- seq(1,nrow(df))
+    df_sf = sf::st_as_sf(df)
+    bobuf=concaveman::concaveman(points = df_sf)
+    sf::st_crs(bobuf)=4326
+    bobu= sf::st_cast(bobuf,"LINESTRING")
+    bobu=sf::st_simplify(bobu,dTolerance = 3*horizonFilter)
+    buf=sf::st_buffer(bobu, 1.5*horizonFilter,joinStyle="BEVEL")
+    idx <- !sf::st_intersects(buf, df_sf )
+    i_points = df_sf[unlist(idx),]
+    i_points$id = 1
+    t_points$id = 99
+    names(t_points)= names(i_points)
+    sf::st_geometry(t_points) <- "geometry"
+    df <-as(rbind(i_points,t_points), "Spatial")
     
     # if terraintrack = true try to reduce the number of waypoints by filtering
     # this is done by: 
@@ -157,19 +171,20 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     # (3) finally the altFilter is applied
    # browser()
     if ( as.character(p$flightPlanMode) == "terrainTrack") {
-      sDF <- as.data.frame(df@data)
-      sDF$sortID <- seq(1,nrow(sDF))
+      sDF <-  as.data.frame(df@data)
+      #sDF$sortID <- seq(1,nrow(sDF))
       # smooth to maxvalues
       filtAlt       <- data.frame(zoo::rollmax(zoo::na.fill(sDF$altitude,"extend"), horizonFilter,fill = "extend"))
       sDF$altitude  <- filtAlt
       colNames      <- colnames(sDF)
       colnames(sDF) <- colNames
-      sDF$id[seq(1, to = nrow(sDF), by = horizonFilter)] =1
+      ipoi = sDF[sDF$id == 1,]
+      #i_poi$id[seq(1, to = nrow(i_points), by = horizonFilter)] = 1
       turnPoints    <- sDF[sDF$id == "99",]
-      samplePoints  <- sDF[sDF$id == "1",]
-      #samplePoints  <- sDF[seq(1, to = nrow(sDF), by = horizonFilter),] 
+      #samplePoints  <- sDF[sDF$id == "1",]
+      samplePoints  <- ipoi[seq(1, to = nrow(ipoi), by = horizonFilter),] 
       #duplicates <- which(!is.na(match(rownames(samplePoints),rownames(turnPoints))))
-      #  fDF <- rbind(turnPoints,samplePoints[-duplicates,])
+      #fDF <- rbind(turnPoints,samplePoints[-duplicates,])
       
       fDF <- rbind(samplePoints,turnPoints)
       fDF <- fDF[order(fDF$sortID),]
