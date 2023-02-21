@@ -344,7 +344,8 @@ makeAP <- function(projectDir = tempdir(),
     fliAltRatio     <- 1 - t$mission$items$TransectStyleComplexItem$CameraCalc$SideOverlap[listPos]/100
     flightAltitude  <- t$mission$items$TransectStyleComplexItem$CameraCalc$DistanceToSurface[listPos]
     #maxSpeed        <-  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[3]*3.6 #t$mission$cruiseSpeed
-    if (length(t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[3]*3.6)!=0) maxSpeed <-  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[3]*3.6
+    # if (length(t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[2]*3.6)!=0) maxSpeed <-  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[2]*3.6
+    maxSpeed =  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[!is.na(t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed)]*3.6
     launchLat       <- t$mission$plannedHomePosition[1]
     launchLon       <- t$mission$plannedHomePosition[2]
     updir           <- t$mission$items$angle[listPos]
@@ -473,6 +474,9 @@ makeAP <- function(projectDir = tempdir(),
     group = 99
     df_coord<-data.frame(df_coordinates)
     names(df_coord)<-c("lat","lon")
+    df_coord$heading=0
+    df_coord$len=0
+    df_coord$multiply=1
     for (j in 2:(nrow(df_coord)-1)) {
       df_coord$heading[j] <- geosphere::bearing(c(df_coord$lon[j],df_coord$lat[j] ), c(df_coord$lon[j + 1],df_coord$lat[j + 1]),a = 6378137,f = 1 / 298.257223563)
       df_coord$len[j] <- geosphere::distGeo(c(df_coord$lon[j],df_coord$lat[j] ), c(df_coord$lon[j + 1],df_coord$lat[j + 1]),a = 6378137,f = 1 / 298.257223563)
@@ -821,12 +825,15 @@ makeAP <- function(projectDir = tempdir(),
     sp::coordinates(djiDF) <- ~ lon + lat
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
-
-   result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea=taskArea,gdalLink)
+   if (followSurface)
+   {
+     result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea=taskArea,gdalLink)
     # assign adapted dem to demFn
    demFn <- result[[3]]
    dfcor <- result[[2]]
-    
+   } else{
+     dfcor = djiDF
+   }
     # max numbers of dji waypoints is due to factory limits 98
     # according to start and rth safety we need 6 points for organizig the splitted task
     nofiles <- ceiling(nrow(dfcor@data) / maxwaypoints)
