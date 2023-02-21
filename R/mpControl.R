@@ -177,7 +177,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       fDF$dif       <- dif[,1]
       
       fDF <- fDF[fDF$id == "99" | fDF$dif > altFilter , ]
-      
+
       fDF$lon <- as.numeric(fDF$longitude)
       fDF$lat <- as.numeric(fDF$latitude)
       
@@ -185,7 +185,8 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       sp::proj4string(fDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
       fDF@data$sortID      <- NULL
       fDF@data$dif         <- NULL
-      
+      fDF[["altitude(m)"]] = as.matrix(fDF$altitude)[,1]
+     
       df <- fDF
     }
   }

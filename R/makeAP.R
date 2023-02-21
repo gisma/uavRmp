@@ -827,15 +827,12 @@ makeAP <- function(projectDir = tempdir(),
     sp::coordinates(djiDF) <- ~ lon + lat
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
-   if (followSurface)
-   {
+
      result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea=taskArea,gdalLink)
     # assign adapted dem to demFn
    demFn <- result[[3]]
    dfcor <- result[[2]]
-   } else{
-     dfcor = djiDF
-   }
+
     # max numbers of dji waypoints is due to factory limits 98
     # according to start and rth safety we need 6 points for organizig the splitted task
     nofiles <- ceiling(nrow(dfcor@data) / maxwaypoints)

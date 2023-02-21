@@ -209,8 +209,10 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
 
 ## (4) typical real case scenario (2)
 ##     A flight altitudes BELOW 50 m is ambitious and risky
-##     You have to use a high quality high resulution DSM
+##     You have to use a high quality high resolution DSM
 ##     (here simulated with a standard DEM)
+##     NOTE All settings are taken from QGroundcontrol so adapt the survey settings according 
+##          to "calc above terain" and reduce the tolerance to something like 5 meters or below!
 ##     This examples uses a flight planning from the QGroundcotrol Survey planning tool
 ##     It also used the all calculations for camera flight speed etc.
 ##     NOTE EXPERIMENTAL 
