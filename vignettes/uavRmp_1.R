@@ -31,6 +31,23 @@ knitr::opts_knit$set(root.dir = tempdir())
 #   useMP = TRUE
 
 ## ---- eval=FALSE--------------------------------------------------------------
+#  demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+#  tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
+#  fp <- makeAP(projectDir = tempdir(),
+#               surveyArea = tutorial_flightArea,
+#               useMP = TRUE,
+#               noFiles = 1,
+#               followSurface = TRUE,
+#               above_ground = FALSE,
+#               demFn = demFn,
+#               horizonFilter = 5,
+#               followSurfaceRes = 5,
+#               altFilter = 5.0,
+#               cameraType ="dji32",  # Air 2S
+#               uavType = "dji_csv"
+#               )
+
+## ---- eval=FALSE--------------------------------------------------------------
 #  
 #    # get example DEM data
 #   fn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")

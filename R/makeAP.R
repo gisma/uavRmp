@@ -278,9 +278,9 @@ makeAP <- function(projectDir = tempdir(),
   ## uav platform depending parameter setting
   if (uavType == "dji_csv") {
     #browser()
-    if (cameraType<-"dji43"){
+    if (cameraType == "dji43"){
     factor <- 1.33 # FOV ratio
-    } else if (cameraType<-"dji32"){
+    } else if (cameraType == "dji32"){
       factor <- 1.5 # FOV ratio
     } 
     flightParams = c(flightPlanMode = flightPlanMode,

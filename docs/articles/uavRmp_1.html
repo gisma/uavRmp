@@ -457,21 +457,22 @@ a manual starting point for the continuation of the task after battery
 change. Crucial for a problem-free terrain contour flight is to set the
 parameter above_ground = FALSE. The example below shows this for an Air
 2S DJI and a 30m ASL flight.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>demFn <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, <span class="at">package =</span> <span class="st">"uavRmp"</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>tutorial_flightArea <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"tutdata_qgc_survey30m.plan"</span>, <span class="at">package =</span> <span class="st">"uavRmp"</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> <span class="fu">makeAP</span>(<span class="at">projectDir =</span> <span class="fu">tempdir</span>(),</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">surveyArea =</span> tutorial_flightArea,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">useMP =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">noFiles =</span> <span class="dv">1</span>,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">followSurface =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">above_ground =</span> <span class="cn">FALSE</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">demFn =</span> demFn,</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">horizonFilter =</span> <span class="dv">5</span>,</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">followSurfaceRes =</span> <span class="dv">5</span>,</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">altFilter =</span> <span class="fl">5.0</span>,</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">cameraType =</span><span class="st">"dji32"</span>,  <span class="co"># Air 2S</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">uavType =</span> <span class="st">"dji_csv"</span> </span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>             )</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">demFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span><span class="va">tutorial_flightArea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"tutdata_qgc_survey30m.plan"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>projectDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>             surveyArea <span class="op">=</span> <span class="va">tutorial_flightArea</span>,</span>
+<span>             useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>             noFiles <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>             followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>             above_ground <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>             demFn <span class="op">=</span> <span class="va">demFn</span>,</span>
+<span>             horizonFilter <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>             followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>             altFilter <span class="op">=</span> <span class="fl">5.0</span>,</span>
+<span>             cameraType <span class="op">=</span><span class="st">"dji32"</span>,  <span class="co"># Air 2S</span></span>
+<span>             uavType <span class="op">=</span> <span class="st">"dji_csv"</span> </span>
+<span>             <span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="calling-makeap">Calling makeAP<a class="anchor" aria-label="anchor" href="#calling-makeap"></a>

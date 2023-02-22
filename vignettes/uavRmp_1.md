@@ -273,7 +273,8 @@ For an optimal deliniation of the flight area, please keep in mind some hints:
 
 Finish digitizing and save it as a KML file. Take care to add the correct extensions  ''.kml'' (the ''makeAP()'' function is requiring the correct extension). In the current example save it as a kml file named ''firstSurvey.kml''.
 
-#### Missionplanner or Qgroundcontrol survey feature
+### Missionplanner or Qgroundcontrol survey feature
+
 We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
 ![The first autonomous complex mission planned with QGroundcontrol](qcmission.png)
 
@@ -282,6 +283,39 @@ Save this at an appropriate folder. To use this planning file you have to set in
 
 ```r
  useMP = TRUE
+```
+
+
+The planning with QGroundControl is much more powerful and comfortable than the simple planning with uavRmp. However, if you want to use some features like near-surface flights or more important a survey planning for DJI/Litchi, some parameters have to be set very carefully to make this export usable. 
+Especially the Litchi export needs some care. 
+Not all parameters from the Qgroundcontrol settings are taken over. Crucial is:
+ * Set correct camera parameterization
+ * choose "calc above terain" and a reasonable "tolerance" filter (<=5) 
+
+With the parameters: horizonFilter, followSurfaceRes, altFilter the behavior of the smoothing of the surface flight curve is set. It makes sense to keep the values the same at first. In no case the followSurfaceRes must be larger than the horizonFilter. 
+
+With noFiles = 1 the task splitting is switched off which is useful for the modern DJI UAVs because you can use every waypoint in Litchi as a manual starting point for the continuation of the task after battery change.
+Crucial for a problem-free terrain contour flight is to set the parameter above_ground = FALSE.
+The example below shows this for an Air 2S DJI and a 30m ASL flight.
+
+
+
+```r
+demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
+fp <- makeAP(projectDir = tempdir(),
+             surveyArea = tutorial_flightArea,
+             useMP = TRUE,
+             noFiles = 1,
+             followSurface = TRUE,
+             above_ground = FALSE,
+             demFn = demFn,
+             horizonFilter = 5,
+             followSurfaceRes = 5,
+             altFilter = 5.0,
+             cameraType ="dji32",  # Air 2S
+             uavType = "dji_csv" 
+             )
 ```
 
 
