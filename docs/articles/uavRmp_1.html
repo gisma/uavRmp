@@ -459,8 +459,8 @@ parameter above_ground = FALSE. The example below shows this for an Air
 2S DJI and a 30m ASL flight.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>demFn <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, <span class="at">package =</span> <span class="st">"uavRmp"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>tutorial_flightArea <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"tutdata_qgc_survey30m.plan"</span>, <span class="at">package =</span> <span class="st">"uavRmp"</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> <span class="fu">makeAP</span>(<span class="at">projectDir =</span> <span class="st">"~/Desktop/tmp"</span>,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">surveyArea=</span><span class="st">"~/Desktop/tmp/test.plan"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> <span class="fu">makeAP</span>(<span class="at">projectDir =</span> <span class="fu">tempdir</span>(),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">surveyArea =</span> tutorial_flightArea,</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">useMP =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">noFiles =</span> <span class="dv">1</span>,</span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">followSurface =</span> <span class="cn">TRUE</span>,</span>

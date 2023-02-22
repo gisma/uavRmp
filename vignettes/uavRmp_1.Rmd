@@ -304,8 +304,8 @@ The example below shows this for an Air 2S DJI and a 30m ASL flight.
 ```{r, eval=FALSE}
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
-fp <- makeAP(projectDir = "~/Desktop/tmp",
-             surveyArea="~/Desktop/tmp/test.plan",
+fp <- makeAP(projectDir = tempdir(),
+             surveyArea = tutorial_flightArea,
              useMP = TRUE,
              noFiles = 1,
              followSurface = TRUE,
