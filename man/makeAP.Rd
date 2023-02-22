@@ -212,7 +212,7 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
 ##     You have to use a high quality high resolution DSM
 ##     (here simulated with a standard DEM)
 ##     NOTE All settings are taken from QGroundcontrol so adapt the survey settings according 
-##          to "calc above terain" and reduce the tMAPIRso used the all calculations for camera flight speed etc.
+##          to "calc above terain" and use the "YUN90" camera tag for camera flight speed etc.
 ##     NOTE EXPERIMENTAL 
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
@@ -223,6 +223,7 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
             demFn = demFn,
             windCondition = 1,
             uavType = "pixhawk",
+            cameraType = "YUN90",
             followSurfaceRes = 5,
              altFilter = .75)
 
