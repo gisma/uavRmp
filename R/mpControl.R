@@ -189,6 +189,8 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       #fDF <- rbind(turnPoints,samplePoints[-duplicates,])
       
       fDF <- rbind(samplePoints,turnPoints)
+      fDF$altitude.m. = as.matrix(fDF$altitude)
+      names(fDF) = names(t_points)[1:49]
       fDF <- fDF[order(fDF$sortID),]
       
       dif           <- abs(as.data.frame(diff(as.matrix(fDF$altitude))))
