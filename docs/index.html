@@ -95,14 +95,14 @@
 <h2 id="supported-uav-platforms">Supported UAV platforms<a class="anchor" aria-label="anchor" href="#supported-uav-platforms"></a>
 </h2>
 <p>Up to now the <code>uavRmp</code> package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI series that are supported by <a href="https://flylitchi.com/" class="external-link">Litchi</a> and Pixhawk based platforms as the Yuneec UAVs or the outdated but still running 3DR Solo.</p>
-<p>The core planning tool <code>makeFP</code> (make flight plan) creates either intermediate flight control files for the DJI UAVs or ready to upload control files for the 3DR Solo.</p>
+<p>The core planning tool <code>makeAP</code> (make arial flight plan) creates either intermediate flight control files for the DJI UAVs or ready to upload control files for the 3DR Solo.</p>
 </div>
 <div class="section level2">
 <h2 id="news">News<a class="anchor" aria-label="anchor" href="#news"></a>
 </h2>
 <p><strong>NOTE</strong> Starting with Version 0.6.3 the <code>raster</code> package is removed and you need to provide the <code>terra</code> package <code>SpatRaster</code> format only.</p>
 <p><strong>NOTE:</strong> You may use now the survey planning tool of <code>QGroundControl</code> or <code>Missionplanner</code> and convert it either to DJI compatible Litchi format or MavLink files. Both with safe flights to the mission start and RTH as well as task splitting. You will find an simple GUI interface calling <code>shiny::runApp(system.file("shiny/plan2litchi/", "/app.R", package = "uavRmp"))</code>.</p>
-<p><strong>NOTE:</strong> The DJI control files are designed for using with the proprietary <code>Litchi</code> flight control app exchange format, while the 3DR Solo files are using the <code>MAVLINK</code> common message format, that is used by the PixHawk flight controller family.</p>
+<p><strong>NOTE:</strong> The DJI control files are designed for using with the proprietary <code>Litchi</code> flight control app exchange format, while the PixHawk/3DR Solo files are using the <code>MAVLINK</code> common message format, that is used by the PixHawk flight controller family.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>

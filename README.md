@@ -24,7 +24,7 @@ The ```uavRmp``` bridges this gap  and  generates  ```MAVLINK``` format complian
 
 Up to now the ```uavRmp``` package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI series that are supported by [Litchi](https://flylitchi.com/) and Pixhawk based platforms as the Yuneec UAVs or the outdated but still running 3DR Solo. 
 
-The core planning tool ```makeFP``` (make flight plan) creates either intermediate flight control files for the DJI UAVs or ready to upload control files for the 3DR Solo. 
+The core planning tool ```makeAP``` (make arial flight plan) creates either intermediate flight control files for the DJI UAVs or ready to upload control files for the 3DR Solo. 
 
 ## News
 
@@ -32,7 +32,7 @@ The core planning tool ```makeFP``` (make flight plan) creates either intermedia
 
 **NOTE:** You may use now the survey planning tool of `QGroundControl` or `Missionplanner` and convert it either to DJI compatible Litchi format or MavLink files. Both with safe flights to the mission start and RTH as well as task splitting. You will find an simple GUI interface calling `shiny::runApp(system.file("shiny/plan2litchi/", "/app.R", package = "uavRmp"))`.
 
-**NOTE:** The DJI control files are designed for using with the proprietary `Litchi` flight control app exchange format, while the 3DR Solo files are using the ```MAVLINK``` common message format, that is used by the PixHawk flight controller family.
+**NOTE:** The DJI control files are designed for using with the proprietary `Litchi` flight control app exchange format, while the PixHawk/3DR Solo files are using the ```MAVLINK``` common message format, that is used by the PixHawk flight controller family.
 
 
 
