@@ -1,16 +1,21 @@
 ## uavRmp 0.6.4
-new features:
+
+new features: 
+
 * add additional terrain filter functions for QGroundcontrol planned surveys 
 
 changes:
+
 * substitute "dji4K"" camera tag with "dji23"/"dji43" for better path planning
 
 bugfixes:
+
 * fix the follow terrain altitude bug in translating the Qgroundcontrol planning files
 
 ## uavRmp 0.6.3
 
 changes:
+
 * remove dependencies on raster
 * drop heatmap of images
 
@@ -23,7 +28,9 @@ changes:
   
   
 ## uavRmp 0.6.1
+
 new features:
+
 * add functions to correct wrong DJI GPS altitude
 
 ## uavRmp 0.6.0
