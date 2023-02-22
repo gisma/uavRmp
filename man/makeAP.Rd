@@ -105,7 +105,7 @@ Options are:
 
 \item{cmd}{mavlink command}
 
-\item{uavViewDir}{dview direction of uav}
+\item{uavViewDir}{view direction of uav}
 
 \item{maxwaypoints}{maximal number of waypoints for Litchi default is 90}
 

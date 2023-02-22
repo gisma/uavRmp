@@ -96,7 +96,7 @@ if (!isGeneric('makeAP')) {
 #' @param copy copy switch
 #' @param cmd mavlink command
 #' @param noFiles manual split number of files
-#' @param uavViewDir dview direction of uav
+#' @param uavViewDir view direction of uav
 #' @param maxFlightTime user defined estimation of the lipo lifetime (20 min default)
 #' @param rcRange range of estimated range of remote control
 #' @param uavType type of UAV. currently "dji_csv" for Litchi CSV export and "pixhawk" for MAVlink compatible flightplans are supported
