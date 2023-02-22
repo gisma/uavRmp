@@ -1,7 +1,7 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '2023-01-29'
+date: '2023-02-22'
 editor_options:
   chunk_output_type: console
 output:
@@ -47,7 +47,7 @@ The ```uavRmd``` bridges this gap and generates ```MAVLINK``` format compliant m
 
 DJI: The reason using DJI UAVs is because of their absolute straightforward usage. Everybody can fly with a DJI but the price for this simplicity is a hermetically closed system. Only the Litchi app provides in addition to a cloud based mission planer an offline/standalone interface to upload a CSV formated way point file for autonomous flights to the Phantom.
 
-PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. '''uavRst''' supports the ```MAVLINK``` common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the ```upload2Solo``` function.
+PixHawk: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. '''uavRst''' supports the ```MAVLINK``` common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or for the outdated 3DR Solo use the ```upload2Solo``` function.
 
 ## Installation
 
@@ -342,7 +342,7 @@ DJI:
 
 Open [Litchi Mission](https://flylitchi.com/) and click on the button ''Missions->Import'' and navigate to the control file firstSurvey_1001.csv. To export it click ''Missions->Save''. 
 
-Solo 
+Solo:
 ```solo_upload("export_1001_solo.waypoints")```
 
 Ready to take off - that’s your first flight plan!

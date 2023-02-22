@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <title>Unmanned Aerial Vehicle R based Mission Planning</title>
 
@@ -23,6 +24,10 @@ body {
   margin: auto;
   padding: 1em;
   line-height: 1.5;
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 tt, code, pre {
   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
@@ -50,6 +55,7 @@ blockquote {
   border-left: 0.5em #eee solid;
 }
 hr { border: 1px #ddd dashed; }
+.frontmatter { text-align: center; }
 
 @media print {
   * {
@@ -80,10 +86,20 @@ hr { border: 1px #ddd dashed; }
 </style>
 
 
-
 </head>
 
 <body>
+<div class="include-before">
+
+</div>
+
+<div class="frontmatter">
+<div class="title"><h1>Unmanned Aerial Vehicle R based Mission Planning</h1></div>
+<div class="author"><h2>Chris Reudenbach</h2></div>
+<div class="date"><h3>2023-02-22</h3></div>
+</div>
+
+<div class="body">
 <h1>Introduction</h1>
 <p>Unmanned Aerial Vehicle R based Mission Planning</p>
 <p>The <a href="https://github.com/gisma/uavRmp">uavRmp</a> package is designed
@@ -98,7 +114,7 @@ surveys including battery-dependent task splitting and save departures and appro
 <p>The open UAV community is focused on the PixHawk autopilot unit and the <a href="http://qgroundcontrol.com/downloads/">MissionPlanner</a> or <a href="https://ardupilot.org/planner2/">QGroundcontrol</a> software. Both are well documented and provide APIs and easy to use GUIs. Nevertheless they are missing planning capability (APM Planner) or a terrain following autonomous flight planning tool, that is also dealing with battery-dependent task splitting and save departures and approaches (MissionPlanner) yet. Other commmercial competitors like the powerful <a href="https://www.ugcs.com/">ugcs</a> software package are still lacking an advanced capability for generating smooth and save surface following flight tasks for low AGL altitudes.</p>
 <p>The <code>uavRmd</code> bridges this gap and generates <code>MAVLINK</code> format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.</p>
 <p>DJI: The reason using DJI UAVs is because of their absolute straightforward usage. Everybody can fly with a DJI but the price for this simplicity is a hermetically closed system. Only the Litchi app provides in addition to a cloud based mission planer an offline/standalone interface to upload a CSV formated way point file for autonomous flights to the Phantom.</p>
-<p>PixHawk/3DR Solo: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. ‘’‘uavRst’’’ supports the <code>MAVLINK</code> common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or the <code>upload2Solo</code> function.</p>
+<p>PixHawk: The open UAV community is focused on the PixHawk autopilot unit and the Mission Planner software. It is well documented and several APIs are provided. Nevertheless a terrain following autonomous flight planning tool is not available. ‘’‘uavRst’’’ supports the <code>MAVLINK</code> common message format that can be uploaded directly on the Pixhawk controller using Ground Control Station software or for the outdated 3DR Solo use the <code>upload2Solo</code> function.</p>
 <h2>Installation</h2>
 <p>The most easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB.  For using some of the the Solo related functions you need to install the <a href="https://github.com/dronekit/dronekit-python">dronekit</a> python libs in addition.</p>
 <p>A full list of necessary libaries and binaries beyond <code>R</code> will soon be provided.</p>
@@ -306,7 +322,7 @@ DJI only: Automatically picture capturing in a time interval works only within t
 <h3>Export to the flight app</h3>
 <p>DJI:</p>
 <p>Open <a href="https://flylitchi.com/">Litchi Mission</a> and click on the button ’‘Missions-&gt;Import’’ and navigate to the control file firstSurvey_1001.csv. To export it click ’‘Missions-&gt;Save’’.</p>
-<p>Solo
+<p>Solo:
 <code>solo_upload(&quot;export_1001_solo.waypoints&quot;)</code></p>
 <p>Ready to take off - that’s your first flight plan!</p>
 <h1>Field Guide</h1>
@@ -440,8 +456,16 @@ As simple this seems it is full of pitfalls. Therefore we would like to provide 
 </li>
 </ul>
 
+</div>
+
+<div class="include-after">
+
+</div>
 
 <script src="https://cdn.jsdelivr.net/combine/npm/@xiee/utils/js/center-img.min.js" async></script>
+<script>
+
+</script>
 </body>
 
 </html>

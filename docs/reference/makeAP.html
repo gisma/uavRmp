@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.4</span>
       </span>
     </div>
 
@@ -199,11 +199,11 @@ Options are:
 
 
 <dt>uavType</dt>
-<dd><p>type of uav. currently "dji_csv" and "solo" are supported</p></dd>
+<dd><p>type of UAV. currently "dji_csv" for Litchi CSV export and "pixhawk" for MAVlink compatible flightplans are supported</p></dd>
 
 
 <dt>cameraType</dt>
-<dd><p>depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2</p></dd>
+<dd><p>depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the "dji43"  and for the DJI Air 2S the "dji32" tag. For GoPro action cams on whatever aircraft you can choose "GP3_7MP" or "GP3_11MP". Flying the Mapir 2 camera choose  "MAPIR2". For the E90X camera of Yuneec you choose "YUN90". Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.</p></dd>
 
 
 <dt>cmd</dt>
@@ -339,20 +339,21 @@ at <a href="https://gisma.github.io/uavRmp/articles/uavRmp_1.html" class="extern
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## (4) typical real case scenario (2)</span></span></span>
 <span class="r-in"><span><span class="co">##     A flight altitudes BELOW 50 m is ambitious and risky</span></span></span>
-<span class="r-in"><span><span class="co">##     You have to use a high quality high resulution DSM</span></span></span>
+<span class="r-in"><span><span class="co">##     You have to use a high quality high resolution DSM</span></span></span>
 <span class="r-in"><span><span class="co">##     (here simulated with a standard DEM)</span></span></span>
-<span class="r-in"><span><span class="co">##     This examples uses a flight planning from the QGroundcotrol Survey planning tool</span></span></span>
-<span class="r-in"><span><span class="co">##     It also used the all calculations for camera flight speed etc.</span></span></span>
+<span class="r-in"><span><span class="co">##     NOTE All settings are taken from QGroundcontrol so adapt the survey settings according </span></span></span>
+<span class="r-in"><span><span class="co">##          to "calc above terain" and use the "YUN90" camera tag for camera flight speed etc.</span></span></span>
 <span class="r-in"><span><span class="co">##     NOTE EXPERIMENTAL </span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">demFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">tutorial_flightArea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"qgc_survey.plan"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tutorial_flightArea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"tutdata_qgc_survey.plan"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu">makeAP</span><span class="op">(</span>surveyArea<span class="op">=</span><span class="va">tutorial_flightArea</span>,</span></span>
 <span class="r-in"><span>            useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>            followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>            demFn <span class="op">=</span> <span class="va">demFn</span>,</span></span>
 <span class="r-in"><span>            windCondition <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>            uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,</span></span>
+<span class="r-in"><span>            cameraType <span class="op">=</span> <span class="st">"YUN90"</span>,</span></span>
 <span class="r-in"><span>            followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>             altFilter <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -364,7 +365,7 @@ at <a href="https://gisma.github.io/uavRmp/articles/uavRmp_1.html" class="extern
 <span class="r-in"><span><span class="co">##     NOTE EXPERIMENTAL tested with DJI mavic mini 2</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">demFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">tutorial_flightArea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"qgc_survey.plan"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tutorial_flightArea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"tutdata_qgc_survey.plan"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu">makeAP</span><span class="op">(</span>surveyArea<span class="op">=</span><span class="va">tutorial_flightArea</span>,</span></span>
 <span class="r-in"><span>            useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>            demFn <span class="op">=</span> <span class="va">demFn</span>,</span></span>

@@ -39,7 +39,7 @@ fp<-makeAP(projectDir ="~/temp3/project1/",
            windCondition = 1,
            followSurfaceRes = 25,
            maxSpeed = 40,
-           uavType = "solo"
+           uavType = "pixhawk"
            
 )
 

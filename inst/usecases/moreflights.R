@@ -41,7 +41,7 @@ fp = makeAP(projectDir = "~/Schreibtisch/MOF/",
             uavType = "dji_csv")    
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
 fp <- makeAP(surveyArea=tutorial_flightArea,
              useMP = TRUE,
              noFiles = 1,

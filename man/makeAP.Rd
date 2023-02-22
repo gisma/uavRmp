@@ -99,9 +99,9 @@ Options are:
 
 \item{windCondition}{1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h}
 
-\item{uavType}{type of uav. currently "dji_csv" and "solo" are supported}
+\item{uavType}{type of UAV. currently "dji_csv" for Litchi CSV export and "pixhawk" for MAVlink compatible flightplans are supported}
 
-\item{cameraType}{depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2}
+\item{cameraType}{depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the "dji43"  and for the DJI Air 2S the "dji32" tag. For GoPro action cams on whatever aircraft you can choose "GP3_7MP" or "GP3_11MP". Flying the Mapir 2 camera choose  "MAPIR2". For the E90X camera of Yuneec you choose "YUN90". Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.}
 
 \item{cmd}{mavlink command}
 
@@ -212,13 +212,11 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
 ##     You have to use a high quality high resolution DSM
 ##     (here simulated with a standard DEM)
 ##     NOTE All settings are taken from QGroundcontrol so adapt the survey settings according 
-##          to "calc above terain" and reduce the tolerance to something like 5 meters or below!
-##     This examples uses a flight planning from the QGroundcotrol Survey planning tool
-##     It also used the all calculations for camera flight speed etc.
+##          to "calc above terain" and reduce the tMAPIRso used the all calculations for camera flight speed etc.
 ##     NOTE EXPERIMENTAL 
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
 fp <- makeAP(surveyArea=tutorial_flightArea,
             useMP = TRUE,
             followSurface = TRUE,
@@ -236,7 +234,7 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
 ##     NOTE EXPERIMENTAL tested with DJI mavic mini 2
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
 fp <- makeAP(surveyArea=tutorial_flightArea,
             useMP = TRUE,
             demFn = demFn,

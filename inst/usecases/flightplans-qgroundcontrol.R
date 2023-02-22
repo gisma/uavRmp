@@ -1,8 +1,8 @@
 library(uavRmp)
-fp = makeAP(projectDir = "~/Schreibtisch/forgenius/",
-            surveyArea="~/Schreibtisch/forgenius/lacanau_all_yuneec.plan",
+fp = makeAP(projectDir = "~/Desktop/Schreibtisch/forgenius/",
+            surveyArea="~/Desktop/Schreibtisch/forgenius/lacanau_all_yuneec.plan",
             useMP = TRUE,
-            demFn = "~/Schreibtisch/forgenius/lacanau-dem.tif",
+            demFn = "~/Desktop/Schreibtisch/forgenius/lacanau-dem.tif",
             noFiles = 1,
             followSurface = T,
             horizonFilter = 1,
@@ -27,27 +27,25 @@ fp = makeAP(projectDir = "~/Schreibtisch/MOF/",
             uavType = "dji_csv")    
 
 library(uavRmp)
-fp = makeAP(projectDir = "~/Schreibtisch/MOF/",
-            surveyArea="~/Schreibtisch/MOF/test-buche_35.plan.plan",
+fp = makeAP(projectDir = "~/Desktop/tmp",
+            surveyArea="~/Desktop/tmp/test.plan",
             useMP = TRUE,
-            demFn = "~/Schreibtisch/MOF/mr-dem.tif",
            noFiles=1,
-            followSurface = T,
-            horizonFilter = 1,
-            followSurfaceRes = 1,
-            flightAltitude = 35,
-            altFilter = 0.5,
-            cameraType ="MAPIR2",
-            uavType = "pixhawk")    
+           cameraType ="dji4k",
+           uavType = "dji_csv")    
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
-fp <- makeAP(surveyArea=tutorial_flightArea,
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
+fp <- makeAP(projectDir = "~/Desktop/tmp",
+             surveyArea="~/Desktop/tmp/test.plan",
              useMP = TRUE,
              noFiles = 1,
              followSurface = TRUE,
+             flightAltitude = 15,
              demFn = demFn,
-             windCondition = 1,
-             uavType = "dji_csv",
+             horizonFilter = 5,
              followSurfaceRes = 5,
-             altFilter = .75)
+             altFilter = 0.5,
+             cameraType ="dji4k",
+             uavType = "dji_csv", 
+             above_ground = FALSE)

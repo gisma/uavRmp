@@ -2,7 +2,7 @@ library(shiny)
 library(uavRmp)
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
 options(shiny.maxRequestSize=30*1024^2)
 withConsoleRedirect <- function(containerId, expr) {
   # Change type="output" to type="message" to catch stderr

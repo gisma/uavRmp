@@ -99,9 +99,9 @@ if (!isGeneric('makeAP')) {
 #' @param uavViewDir dview direction of uav
 #' @param maxFlightTime user defined estimation of the lipo lifetime (20 min default)
 #' @param rcRange range of estimated range of remote control
-#' @param uavType type of uav. currently "dji_csv" and "solo" are supported
+#' @param uavType type of UAV. currently "dji_csv" for Litchi CSV export and "pixhawk" for MAVlink compatible flightplans are supported
 #' @param dA if TRUE the real extent of the used DEM is returned helpful for low altitudes flight planning
-#' @param cameraType depending on uav system for dji the dji4k is default for solo you can choose GP3_7MP GP3_11MP and MAPIR2
+#' @param cameraType depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the "dji43"  and for the DJI Air 2S the "dji32" tag. For GoPro action cams on whatever aircraft you can choose "GP3_7MP" or "GP3_11MP". Flying the Mapir 2 camera choose  "MAPIR2". For the E90X camera of Yuneec you choose "YUN90". Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.
 #' @param runDir `character` runtime folder 
 #' @param gdalLink link to GDAL binaries
 #'
@@ -151,19 +151,18 @@ if (!isGeneric('makeAP')) {
 #' ##     You have to use a high quality high resolution DSM
 #' ##     (here simulated with a standard DEM)
 #' ##     NOTE All settings are taken from QGroundcontrol so adapt the survey settings according 
-#' ##          to "calc above terain" and reduce the tolerance to something like 5 meters or below!
-#' ##     This examples uses a flight planning from the QGroundcotrol Survey planning tool
-#' ##     It also used the all calculations for camera flight speed etc.
+#' ##          to "calc above terain" and use the "YUN90" camera tag for camera flight speed etc.
 #' ##     NOTE EXPERIMENTAL 
 #' 
 #'demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-#'tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+#'tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
 #'fp <- makeAP(surveyArea=tutorial_flightArea,
 #'             useMP = TRUE,
 #'             followSurface = TRUE,
 #'             demFn = demFn,
 #'             windCondition = 1,
 #'             uavType = "pixhawk",
+#'             cameraType = "YUN90",
 #'             followSurfaceRes = 5,
 #'              altFilter = .75)
 #'
@@ -175,7 +174,7 @@ if (!isGeneric('makeAP')) {
 #' ##     NOTE EXPERIMENTAL tested with DJI mavic mini 2
 #' 
 #'demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-#'tutorial_flightArea <- system.file("extdata", "qgc_survey.plan", package = "uavRmp")
+#'tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
 #'fp <- makeAP(surveyArea=tutorial_flightArea,
 #'             useMP = TRUE,
 #'             demFn = demFn,
@@ -279,8 +278,11 @@ makeAP <- function(projectDir = tempdir(),
   ## uav platform depending parameter setting
   if (uavType == "dji_csv") {
     #browser()
-    cameraType<-"dji4k"
-    factor <- 1.71 # FOV ratio
+    if (cameraType<-"dji43"){
+    factor <- 1.33 # FOV ratio
+    } else if (cameraType<-"dji32"){
+      factor <- 1.5 # FOV ratio
+    } 
     flightParams = c(flightPlanMode = flightPlanMode,
                      launchAltitude = launchAltitude,
                      flightAltitude = flightAltitude,
@@ -307,7 +309,10 @@ makeAP <- function(projectDir = tempdir(),
       factor <- 1.31
     } else if (cameraType == "GP3_11MP") {
       factor <-1.71
+    } else if (cameraType == "YUN90") {
+      factor <-1.5
     }
+    
   
     flightParams = c(flightPlanMode = flightPlanMode,
                      launchAltitude = launchAltitude,
