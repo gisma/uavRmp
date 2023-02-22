@@ -161,7 +161,8 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     t_points = df_sf[unlist(tdx),]
     i_points$id = 1
     t_points$id = 99
-    names(t_points)= names(i_points)
+    nms = names(i_points)
+    names(t_points)= nms
     sf::st_geometry(t_points) <- "geometry"
     df <-as(rbind(i_points,t_points), "Spatial")
     
@@ -190,7 +191,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       
       fDF <- rbind(samplePoints,turnPoints)
       fDF$altitude.m. = as.matrix(fDF$altitude)
-      names(fDF) = names(t_points)[1:49]
+      names(fDF) = nms
       fDF <- fDF[order(fDF$sortID),]
       
       dif           <- abs(as.data.frame(diff(as.matrix(fDF$altitude))))
