@@ -276,7 +276,8 @@ For an optimal deliniation of the flight area, please keep in mind some hints:
 
 Finish digitizing and save it as a KML file. Take care to add the correct extensions  ''.kml'' (the ''makeAP()'' function is requiring the correct extension). In the current example save it as a kml file named ''firstSurvey.kml''.
 
-#### Missionplanner or Qgroundcontrol survey feature
+### Missionplanner or Qgroundcontrol survey feature
+
 We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
 ![The first autonomous complex mission planned with QGroundcontrol](qcmission.png)
 
