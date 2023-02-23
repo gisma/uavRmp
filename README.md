@@ -25,7 +25,9 @@ The ```uavRmp``` bridges this gap  and  generates  ```MAVLINK``` format complian
 Up to now the ```uavRmp``` package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI series that are supported by [Litchi](https://flylitchi.com/) and Pixhawk based platforms as the Yuneec UAVs or the outdated but still running 3DR Solo. 
 
 The core planning tool ```makeAP``` (make arial flight plan) creates either intermediate flight control files for the DJI UAVs or waypoint files for the PixHawk family. Furthermore the option `useMP` unifies flight planning for PixHawk based platforms and DJI consumer drones.  as it offers an easy conversion of surveys planned with `QgroundContro`l into the format readable by Litchi.  
+
 ## News
+
 **NOTE:** The Litchi export for DJI Consumer drones is significantly improved now. 
 
 **NOTE:** Starting with Version 0.6.3 the `raster` package is removed and you need to provide the `terra` package `SpatRaster` format only.
