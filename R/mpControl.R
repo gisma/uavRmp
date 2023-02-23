@@ -895,7 +895,7 @@ fp_getPresetTask <- function(param="remote") {
 makeFlightParam <- function(surveyArea,flightParams,followSurface) {
   # retrieve and recalculate the arguments to provide the flight paramaer for litchi
   validPreset     <- c("multi_ortho","simple_ortho","simple_pano","remote","treetop","nothing")
-  validFlightPlan <- c("waypoints","track","manual")
+  validFlightPlan <- c("waypoints","track","manual","terrainTrack")
   stopifnot(flightParams["presetFlightTask"] %in% validPreset)
   stopifnot(flightParams["flightPlanMode"] %in% validFlightPlan)
   

@@ -350,6 +350,13 @@ makeAP <- function(projectDir = tempdir(),
     totalTrackdistance <- trackDistance
     fliAltRatio     <- 1 - t$mission$items$TransectStyleComplexItem$CameraCalc$SideOverlap[listPos]/100
     flightAltitude  <- t$mission$items$TransectStyleComplexItem$CameraCalc$DistanceToSurface[listPos]
+    fa_poly=t$mission$items$polygon[3][[1]]
+    p1 = c(fa_poly[1,2],fa_poly[1,1])
+    p2=  c(fa_poly[2,2],fa_poly[2,1])
+    p3 = c(fa_poly[3,2],fa_poly[3,1])
+    p4 =  c(fa_poly[4,2],fa_poly[4,1])
+    l_dist = geosphere::distGeo(p3,p4)
+    
     #maxSpeed        <-  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[3]*3.6 #t$mission$cruiseSpeed
     # if (length(t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[2]*3.6)!=0) maxSpeed <-  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[2]*3.6
     maxSpeed =  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[!is.na(t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed)]*3.6
@@ -363,6 +370,8 @@ makeAP <- function(projectDir = tempdir(),
     # calculate heading from launch position to mission start position
     launch2startHeading <- geosphere::bearing(p1 = c(launchLon, launchLat),p2 = c(df_coordinates[1,][2],df_coordinates[1,][1] ),a = 6378137,f = 1 / 298.257223563)
     groundResolution<-t$mission$items$TransectStyleComplexItem$CameraCalc$ImageDensity[listPos]
+    if (crossDistance < followSurfaceRes) followSurfaceRes = crossDistance
+    if (crossDistance < horizonFilter ) horizonFilter = crossDistance 
     
     # set cumulative flightlength to zero
     flightLength <- 0
@@ -484,16 +493,23 @@ makeAP <- function(projectDir = tempdir(),
     df_coord$heading=0
     df_coord$len=0
     df_coord$multiply=1
-    for (j in 2:(nrow(df_coord)-1)) {
-      df_coord$heading[j] <- geosphere::bearing(c(df_coord$lon[j],df_coord$lat[j] ), c(df_coord$lon[j + 1],df_coord$lat[j + 1]),a = 6378137,f = 1 / 298.257223563)
-      df_coord$len[j] <- geosphere::distGeo(c(df_coord$lon[j],df_coord$lat[j] ), c(df_coord$lon[j + 1],df_coord$lat[j + 1]),a = 6378137,f = 1 / 298.257223563)
+    for (j in 2:(nrow(df_coord))) {
+      j2 = j+1
+      goal_pos =  c(df_coord$lon[j2],df_coord$lat[j2])
+      start_pos = c(df_coord$lon[j],df_coord$lat[j] )
+      if (j==nrow(df_coord)) {
+        goal_pos= p4
+        start_pos=p3}
+      
+      df_coord$heading[j] <- geosphere::bearing(start_pos, goal_pos,a = 6378137,f = 1 / 298.257223563)
+      df_coord$len[j] <- geosphere::distGeo(start_pos, goal_pos,a = 6378137,f = 1 / 298.257223563)
       df_coord$multiply[j] <- floor(df_coord$len[j] / followSurfaceRes)
      }
     ## now start calculating the waypoints according to the resolution
     cat("calculating waypoints...\n")
     pb <- pb <- utils::txtProgressBar(max = tracks, style = 3)
     # then do for the rest  forward and backward
-    for (j in 2:(nrow(df_coord)-1)) {
+    for (j in 2:(nrow(df_coord))) {
       pOld<- c(df_coord$lon[j],df_coord$lat[j])
      # for (i in seq(1:df_coord$multiply[j])) {  mode == "terrainTrack"
         if (mode == "waypoints"  || mode == "track") {
@@ -504,7 +520,7 @@ makeAP <- function(projectDir = tempdir(),
         # calc next coordinate
         
         pos <- calcNextPos(pOld[1], pOld[2], df_coord$heading[j], followSurfaceRes)
-        
+        if (j==nrow(df_coord))pos <- calcNextPos(pOld[1], pOld[2], df_coord$heading[j], l_dist)
         pOld <- pos
 
         flightLength <- flightLength + followSurfaceRes
@@ -784,6 +800,7 @@ makeAP <- function(projectDir = tempdir(),
       if (uavType == "dji_csv") {
         lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = 99, p,ag=above_ground)
         heading <- updir
+
       }
       if (uavType == "pixhawk") {
         lns[length(lns) + 1] <-  makeUavPointMAV( lat = pos[2], lon = pos[1], head = uavViewDir - 180, group = 99)
@@ -792,6 +809,7 @@ makeAP <- function(projectDir = tempdir(),
       
     }
     # status bar
+   
     utils::setTxtProgressBar(pb, j)
   }
   close(pb)
@@ -809,7 +827,7 @@ makeAP <- function(projectDir = tempdir(),
                              totalTrackdistance,
                              picRate,
                              logger)
-  #browser()
+
   rawTime <- ft[1]
   maxFlightTime <- ft[2]
   maxSpeed <- ft[3]
