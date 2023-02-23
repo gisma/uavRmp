@@ -29,23 +29,23 @@ fp = makeAP(projectDir = "~/Schreibtisch/MOF/",
 library(uavRmp)
 fp = makeAP(projectDir = "~/Desktop/tmp",
             surveyArea="~/Desktop/tmp/test.plan",
+            followSurface = TRUE,
             useMP = TRUE,
-           noFiles=1,
-           cameraType ="dji4k",
+            demFn = demFn ,
+            altFilter = 1,
+            
+           cameraType ="dji32",
            uavType = "dji_csv")    
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
 fp <- makeAP(projectDir = "~/Desktop/tmp",
-             surveyArea="~/Desktop/tmp/test.plan",
+             surveyArea=tutorial_flightArea, #"~/Desktop/tmp/DJI_2_06gsd_OFM_grass.plan",
              useMP = TRUE,
-             noFiles = 1,
+             altFilter = 5,
              followSurface = TRUE,
-             flightAltitude = 15,
-             demFn = demFn,
-             horizonFilter = 5,
-             followSurfaceRes = 5,
-             altFilter = 0.5,
-             cameraType ="dji4k",
+             demFn = demFn, #"~/Desktop/tmp/DSM_MOF_4326.tif",
+
+             cameraType ="dji32",followSurfaceRes = 3,horizonFilter = 3,
              uavType = "dji_csv", 
              above_ground = FALSE)

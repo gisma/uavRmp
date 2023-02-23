@@ -240,6 +240,7 @@ fp <- makeAP(surveyArea=tutorial_flightArea,
             useMP = TRUE,
             demFn = demFn,
             maxFlightTime = 25,
+            cameraType = "dji32",
             uavType = "dji_csv")
             
 ## call a simple shiny interface

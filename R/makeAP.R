@@ -179,6 +179,7 @@ if (!isGeneric('makeAP')) {
 #'             useMP = TRUE,
 #'             demFn = demFn,
 #'             maxFlightTime = 25,
+#'             cameraType = "dji32",
 #'             uavType = "dji_csv")
 #'             
 #' ## call a simple shiny interface
@@ -350,16 +351,18 @@ makeAP <- function(projectDir = tempdir(),
     totalTrackdistance <- trackDistance
     fliAltRatio     <- 1 - t$mission$items$TransectStyleComplexItem$CameraCalc$SideOverlap[listPos]/100
     flightAltitude  <- t$mission$items$TransectStyleComplexItem$CameraCalc$DistanceToSurface[listPos]
-    fa_poly=t$mission$items$polygon[3][[1]]
-    p1 = c(fa_poly[1,2],fa_poly[1,1])
-    p2=  c(fa_poly[2,2],fa_poly[2,1])
-    p3 = c(fa_poly[3,2],fa_poly[3,1])
-    p4 =  c(fa_poly[4,2],fa_poly[4,1])
-    l_dist = geosphere::distGeo(p3,p4)
+    # fa_poly=t$mission$items$polygon[3][[1]]
+    # # p1 = c(fa_poly[1,2],fa_poly[1,1])
+    # # p2=  c(fa_poly[2,2],fa_poly[2,1])
+    # # p3 = c(fa_poly[3,2],fa_poly[3,1])
+    # # p4 =  c(fa_poly[4,2],fa_poly[4,1])
+    # # l_dist = geosphere::distGeo(p3,p4)
+    
     
     #maxSpeed        <-  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[3]*3.6 #t$mission$cruiseSpeed
     # if (length(t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[2]*3.6)!=0) maxSpeed <-  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[2]*3.6
-    maxSpeed =  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[!is.na(t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed)]*3.6
+    maxSp =  t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed[!is.na(t$mission$items$TransectStyleComplexItem$TerrainFlightSpeed)]*3.6
+    if (length(maxSp) != 0) maxSpeed = maxSp 
     launchLat       <- t$mission$plannedHomePosition[1]
     launchLon       <- t$mission$plannedHomePosition[2]
     updir           <- t$mission$items$angle[listPos]
@@ -489,27 +492,31 @@ makeAP <- function(projectDir = tempdir(),
       group = 99 }
     group = 99
     df_coord<-data.frame(df_coordinates)
+    df_coord = spatialEco::insert(df_coord,MARGIN = 1,value = c(pos[2], pos[1]), idx=1)
+
     names(df_coord)<-c("lat","lon")
     df_coord$heading=0
     df_coord$len=0
     df_coord$multiply=1
-    for (j in 2:(nrow(df_coord))) {
+    for (j in 1:(nrow(df_coord))) {
       j2 = j+1
       goal_pos =  c(df_coord$lon[j2],df_coord$lat[j2])
       start_pos = c(df_coord$lon[j],df_coord$lat[j] )
       if (j==nrow(df_coord)) {
-        goal_pos= p4
-        start_pos=p3}
+        goal_pos= c(df_coord$lon[j] ,df_coord$lat[j] )
+        start_pos=c(df_coord$lon[j],df_coord$lat[j] )
+        }
       
       df_coord$heading[j] <- geosphere::bearing(start_pos, goal_pos,a = 6378137,f = 1 / 298.257223563)
       df_coord$len[j] <- geosphere::distGeo(start_pos, goal_pos,a = 6378137,f = 1 / 298.257223563)
       df_coord$multiply[j] <- floor(df_coord$len[j] / followSurfaceRes)
+      max_len  = max(df_coord$len[j] * followSurfaceRes, followSurfaceRes)
      }
     ## now start calculating the waypoints according to the resolution
     cat("calculating waypoints...\n")
     pb <- pb <- utils::txtProgressBar(max = tracks, style = 3)
     # then do for the rest  forward and backward
-    for (j in 2:(nrow(df_coord))) {
+    for (j in 1:(nrow(df_coord))) {
       pOld<- c(df_coord$lon[j],df_coord$lat[j])
      # for (i in seq(1:df_coord$multiply[j])) {  mode == "terrainTrack"
         if (mode == "waypoints"  || mode == "track") {
@@ -520,7 +527,7 @@ makeAP <- function(projectDir = tempdir(),
         # calc next coordinate
         
         pos <- calcNextPos(pOld[1], pOld[2], df_coord$heading[j], followSurfaceRes)
-        if (j==nrow(df_coord))pos <- calcNextPos(pOld[1], pOld[2], df_coord$heading[j], l_dist)
+        if (j==nrow(df_coord))pos <- calcNextPos(pOld[1], pOld[2], df_coord$heading[j], max_len )
         pOld <- pos
 
         flightLength <- flightLength + followSurfaceRes
@@ -842,7 +849,7 @@ makeAP <- function(projectDir = tempdir(),
   if (uavType == "dji_csv") {
     #browser()
     # dump lns to file for read in as csv
-    writeLines(unlist(lns[1:length(lns) - 1]), fileConn)
+    writeLines(unlist(lns[1:length(lns)]), fileConn)
     djiDF <- utils::read.csv(file.path(runDir,"tmp.csv"), sep = ",", header = FALSE)
     # add correct header
     names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group =group,p,header = TRUE,sep = ','),split = ","))

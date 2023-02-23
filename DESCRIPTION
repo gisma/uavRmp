@@ -35,7 +35,8 @@ Imports:
     xfun,
     terra,
     concaveman,
-    dplyr
+    dplyr,
+    spatialEco
 RoxygenNote: 7.2.3
 SystemRequirements: GNU make
 Suggests: knitr,

@@ -150,20 +150,21 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     df$altitude <- round(altitude2,1)
     df$sortID <- seq(1,nrow(df))
     df_sf = sf::st_as_sf(df)
-    bobuf=concaveman::concaveman(points = df_sf)
+    bobuf=concaveman::concaveman(points = df_sf,concavity = 4)
     sf::st_crs(bobuf)=4326
     bobu= sf::st_cast(bobuf,"LINESTRING")
     bobu=sf::st_simplify(bobu,dTolerance = 3*horizonFilter)
-    buf=sf::st_buffer(bobu, 1.5*horizonFilter,joinStyle="BEVEL")
-    idx <- !sf::st_intersects(buf, df_sf )
+    buf=sf::st_buffer(bobu, 2*horizonFilter,joinStyle="BEVEL")
+    idx <- !sf::st_intersects(buf, df_sf ,)
     tdx <- sf::st_intersects(buf, df_sf )
     i_points = df_sf[unlist(idx),]
     t_points = df_sf[unlist(tdx),]
+    #t_points = rbind(df_sf[1,],t_points)
     i_points$id = 1
     t_points$id = 99
-    nms = names(i_points)
-    names(t_points)= nms
-    sf::st_geometry(t_points) <- "geometry"
+
+    # names(t_points)= paste(names(df),"geometry")
+    # sf::st_geometry(t_points) <- "geometry"
     df <-as(rbind(i_points,t_points), "Spatial")
     
     # if terraintrack = true try to reduce the number of waypoints by filtering
@@ -186,12 +187,14 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       turnPoints    <- sDF[sDF$id == "99",]
       #samplePoints  <- sDF[sDF$id == "1",]
       samplePoints  <- ipoi[seq(1, to = nrow(ipoi), by = horizonFilter),] 
+      names(samplePoints) = names(df)
+      names(turnPoints) = names(df)
       #duplicates <- which(!is.na(match(rownames(samplePoints),rownames(turnPoints))))
       #fDF <- rbind(turnPoints,samplePoints[-duplicates,])
-      
+      browser()
       fDF <- rbind(samplePoints,turnPoints)
-      fDF$altitude.m. = as.matrix(fDF$altitude)
-      names(fDF) = nms[1:49]
+      #fDF$altitude.m. = as.matrix(fDF$altitude)
+      names(fDF) = names(df)
       fDF <- fDF[order(fDF$sortID),]
       
       dif           <- abs(as.data.frame(diff(as.matrix(fDF$altitude))))
@@ -713,7 +716,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
                          
     # generate home position with heading and altitude
     #homerow <- cbind(row1[1:2],altitude,heading,row1[5:length(row1)])
-    homerow <- cbind(row1[1:2],altitude,heading,row1[5:length(row1)])
+    homerow <- cbind(launchLat,launchLon,altitude,heading,row1[5:length(row1)])
     names( homerow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
     # generate launch to start waypoint to realize save fly home altitude
     pos       <- calcNextPos(launchLon,launchLat,startheading,10)
@@ -741,9 +744,12 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     DF = dplyr::bind_rows(startmaxrow,DF)
     DF = dplyr::bind_rows(startascentrow,DF)
     DF = dplyr::bind_rows(startrow,DF)
+    
     DF = dplyr::bind_rows(DF,ascentrow)
     DF = dplyr::bind_rows(DF,homemaxrow)
     DF = dplyr::bind_rows(DF,homerow)
+
+
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
     utils::write.csv(DF[,1:(ncol(DF) - 2)],file = paste0(projectDir,"/",locationName ,"/", workingDir,"/fp-data/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
