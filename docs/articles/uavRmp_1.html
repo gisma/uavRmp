@@ -83,7 +83,7 @@ Planning</h1>
                         <h4 data-toc-skip class="author">Chris
 Reudenbach</h4>
             
-            <h4 data-toc-skip class="date">2023-02-23</h4>
+            <h4 data-toc-skip class="date">2023-02-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/gisma/uavRmp/blob/HEAD/vignettes/uavRmp_1.Rmd" class="external-link"><code>vignettes/uavRmp_1.Rmd</code></a></small>
       <div class="hidden name"><code>uavRmp_1.Rmd</code></div>
@@ -187,10 +187,10 @@ rtf UAVs on autonomous survey missions.</p>
 </h3>
 <p>To define a flight area you have to provide either 4 Points (or 3
 lines). You may take more complex vectors like a multi point polygon,
-but only the first 4 coordinates x1, x2, x3 and x4 (the latter for the
-launching position) are used in exactly this order. If you take a
-rectangle the 4th corner coordinate will be the launching point. The
-concept is looking like the following sketch:</p>
+but only the first 4 coordinates x1, x2, x3 and x4 (the last one is
+assumed to be the launching position) are used in exactly this order. If
+you take a rectangle the 4th corner coordinate will be the launching
+point. The concept is looking like the following sketch:</p>
 <pre><code>x2------x3           x2-------x1
 | a                 /
 |                  /
@@ -201,70 +201,78 @@ x1/             x3/</code></pre>
 calculate extend and parallels of the flight plan according to the
 flight altitude, overlap etc. NOTE: The flight direction depends on the
 order of the points.</p>
-<p>If <code>flightPlanMode = "tracks"</code>. The result look like
+<p>If <code>flightPlanMode = "tracks"</code>. The result may look like
 below.</p>
-<pre><code>#--#  #--&gt;             #-----#
-|  |  |               /    
+<pre><code>#--#  #--&gt;              #-----#
+|  |  |                /        
+|  |  |               /        
+|  |  |              /    
 |  |  |              #-----#
 |  |  |                   /
-#  #--#         &lt;--#-----#</code></pre>
-<p>If <code>flightPlanMode = "waypoints"</code> The result is an equal
-spatial distribution of way points:</p>
-<pre><code>#--#  #--&gt;             #--#--#
-|  |  |               /    
+|  |  |                  /
+|  |  |                 /    
+#  #--#       &lt;--#-----#</code></pre>
+<p>If <code>flightPlanMode = "waypoints"</code> Other than using tracks
+the result is an equal spatial distribution of way points:</p>
+<pre><code>#--#  #--&gt;              #--#--#
+|  |  |                /
+#  #  #               #    
+|  |  |              /        
 #  #  #              #--#--#
 |  |  |                   /
-#  #--#         &lt;--#--#--#</code></pre>
+#  #  #                  #
+|  |  |                 /    
+#  #--#       &lt;--#--#--#</code></pre>
 <p><code>waypoints</code> is optimal for autonomous flights under calm
 conditions in complex terrain because the camera takes a picture at
 every way point.</p>
 <p><code>track</code> is optimal for relatively plain areas and
-automatically triggered picture capturing DJI only: Automatically
-picture capturing in a time interval works only within the range of the
-remote control because the UAV needs a trigger signal for taking
-pictures.</p>
+automatically triggered picture capturing <strong>NOTE;</strong> DJI
+only: Automatically picture capturing in a time interval works only
+within the range of the remote control because the UAV needs a trigger
+signal for taking pictures.</p>
 </div>
 <div class="section level3">
 <h3 id="terrain-following-task">Terrain following task<a class="anchor" aria-label="anchor" href="#terrain-following-task"></a>
 </h3>
 <p>The argument <code>followSurface = TRUE</code> will switch from fixed
-AGL flight altitude into a terrain following flight altitude.</p>
-<p>NOTE: You have to be aware that the DJI UAV is calibrating the
-altitude at the launch position in the field! So you need either a
-correct coordinate altitude or a high resolution DEM to get a good(!)
-estimation of the launch position and altitude.</p>
+AGL flight altitude to a terrain following flight altitude.</p>
+<p><strong>NOTE:</strong> You have to be aware that by default the UAVs
+are calibrating the altitude at the launch position in the field! So you
+need either a correct coordinate altitude or a high resolution DEM to
+get a good(!) estimation of the launch position and altitude.</p>
 <p>You must choose a clearly defined and reliable launching position
 both in the map and the field. If one fails, we made the experience that
 the aircraft probably will hit the terrain…</p>
 <p>Let us assume a defined flight altitude of 50m. According to the
 launching point altitude the UAV will act like the following sketch
 shows:</p>
-<pre><code> ............... x_(uav)_x ........... UAV started at 30m altitude results in
-                                         a "real" flight altitude of 30m + 50m =&gt; 80m
+<pre><code> x_()_x &gt;&gt;&gt; ............................ UAV started at 30m altitude results in
+   ^                                     a "real" flight altitude of 30m + 50m =&gt; 80m
+   ^               ___60m____
+   ^              |          |
+   ^      30m _x__|          |
+   ^     ____|               |___
+ x_()_x_|                        |______
 
-                ___60m____
-               |          |
-       30m _x__|          |
-      ____|               |___
-  ___|                        |____
-
-               ___60m____
-    ..........|          |............ UAV started at 0 m altitude results in
-           ___|          |___          "real" flight altitude of 50m above 0m
-      ____|                  |
-  ___|                       |__x__ 0m</code></pre>
-<p>To avoid negative impacts from the Phantom 3 auto-calibration, the
-launch altitude is used to correct the flight altitude according to:</p>
+                  ___60m____
+x_()_x &gt;&gt;&gt; ......|          |..........  UAV started at 0 m altitude results in
+  ^           ___|          |___          "real" flight altitude of 50m above 0m
+  ^          |                  |
+  ^      ____|                  |
+x_()_x _|                       |_______</code></pre>
+<p>To avoid negative impacts from the UAV auto-calibration, the launch
+altitude is used to correct the flight altitude according to:</p>
 <pre><code><span> <span class="va">maximumAltitude_of_surveyArea</span> <span class="op">+</span> <span class="va">altitude_of_launchposition</span></span></code></pre>
 <p>So the adapted flight altitude is always seen as the flight altitude
 above the highest terrain altitude:</p>
-<pre><code> ...................................... real altitude of UAV: 110m
-
-               ___60m____
-              |          |
-       30m _x_|          |___
-      ____|                  |
-  ___|                       |______</code></pre>
+<pre><code>      x_()_x &gt;&gt;&gt; ..................... real altitude of UAV: 110m
+        ^
+        ^      ___60m____
+        ^     |          |
+    _ x_()_x__|   30m    |___
+____|                        |
+|                            |______</code></pre>
 <p>To get a fixed scale flight the launch altitude is used to correct
 the flight altitude according to:</p>
 <pre><code> ```maximumAltitude of surveyArea + altitude of launch position```</code></pre>
@@ -428,53 +436,6 @@ correct extension). In the current example save it as a kml file named
 </div>
 </div>
 <div class="section level4">
-<h4 id="missionplanner-or-qgroundcontrol-survey-feature">Missionplanner or Qgroundcontrol survey feature<a class="anchor" aria-label="anchor" href="#missionplanner-or-qgroundcontrol-survey-feature"></a>
-</h4>
-<p>We want to plan a flight in a structured terrain in the upper
-Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and
-open Pattern-&gt;Survey. Start digitizing a pattern as you want and also
-fill in the values on the right sided menus for camera angel overlap and
-so on. <img src="qcmission.png" alt="The first autonomous complex mission planned with QGroundcontrol"></p>
-<p>Save this at an appropriate folder. To use this planning file you
-have to set in <code>makeAP</code> the switch:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span> <span class="va">useMP</span> <span class="op">=</span> <span class="cn">TRUE</span></span></code></pre></div>
-<p>The planning with QGroundControl is much more powerful and
-comfortable than the simple planning with uavRmp. However, if you want
-to use some features like near-surface flights or more important a
-survey planning for DJI/Litchi, some parameters have to be set very
-carefully to make this export usable. Especially the Litchi export needs
-some care. Not all parameters from the Qgroundcontrol settings are taken
-over. Crucial is: * Set correct camera parameterization * choose “calc
-above terain” and a reasonable “tolerance” filter (&lt;=5)</p>
-<p>With the parameters: horizonFilter, followSurfaceRes, altFilter the
-behavior of the smoothing of the surface flight curve is set. It makes
-sense to keep the values the same at first. In no case the
-followSurfaceRes must be larger than the horizonFilter.</p>
-<p>With noFiles = 1 the task splitting is switched off which is useful
-for the modern DJI UAVs because you can use every waypoint in Litchi as
-a manual starting point for the continuation of the task after battery
-change. Crucial for a problem-free terrain contour flight is to set the
-parameter above_ground = FALSE. The example below shows this for an Air
-2S DJI and a 30m ASL flight.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">demFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
-<span><span class="va">tutorial_flightArea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"tutdata_qgc_survey30m.plan"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
-<span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>projectDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>             surveyArea <span class="op">=</span> <span class="va">tutorial_flightArea</span>,</span>
-<span>             useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             noFiles <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>             followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             above_ground <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>             demFn <span class="op">=</span> <span class="va">demFn</span>,</span>
-<span>             horizonFilter <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>             followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>             altFilter <span class="op">=</span> <span class="fl">5.0</span>,</span>
-<span>             cameraType <span class="op">=</span><span class="st">"dji32"</span>,  <span class="co"># Air 2S</span></span>
-<span>             uavType <span class="op">=</span> <span class="st">"dji_csv"</span> </span>
-<span>             <span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level4">
 <h4 id="calling-makeap">Calling makeAP<a class="anchor" aria-label="anchor" href="#calling-makeap"></a>
 </h4>
 <div class="section level5">
@@ -510,7 +471,7 @@ folder.</p>
 with 20m resulution is used to retrieve the altitude of the launching
 point. If we use the example data we first have to convert them to a
 valid GeoTiff file.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span>  <span class="co"># get example DEM data</span></span>
 <span> <span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
@@ -534,7 +495,7 @@ mission time.</p>
 results. The below example shows the footprints of the images (blue),
 surveyArea (red), turnpoints of track (blue circles) and the launch
 position (red).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/mapview" class="external-link">mapview</a></span><span class="op">)</span></span>
 <span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span>
 <span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,lwd<span class="op">=</span><span class="fl">1</span>,cex<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">+</span></span>
@@ -546,14 +507,84 @@ position (red).</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="export-to-the-flight-app">Export to the flight app<a class="anchor" aria-label="anchor" href="#export-to-the-flight-app"></a>
+<h4 id="planning-the-flight-task-with-the-missionplanner-or-qgroundcontrol-survey-feature">Planning the Flight task with the Missionplanner or Qgroundcontrol
+survey feature<a class="anchor" aria-label="anchor" href="#planning-the-flight-task-with-the-missionplanner-or-qgroundcontrol-survey-feature"></a>
 </h4>
+<p>We want to plan a flight in a structured terrain in the upper
+Lahn-valley. Start the QGroundcontrol and navigate to Mission tab and
+open Pattern-&gt;Survey. Start digitizing a pattern as you want and also
+fill in the values on the right sided menus for camera angel overlap and
+so on. <img src="qcmission.png" alt="The first autonomous complex mission planned with QGroundcontrol"></p>
+<p>Save this at an appropriate folder. To use this planning file you
+have to set in <code>makeAP</code> the switch:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span> <span class="va">useMP</span> <span class="op">=</span> <span class="cn">TRUE</span></span></code></pre></div>
+<p>The planning with QGroundControl is much more powerful and
+comfortable than the simple planning with uavRmp. However, if you want
+to use some features like near-surface flights or more important a
+survey planning for DJI/Litchi, some parameters have to be set very
+carefully to make this export usable. Especially the Litchi export needs
+some care. Not all parameters from the Qgroundcontrol settings are taken
+over. Crucial is: * Set correct camera parameterization * choose
+<code>calc above terrain</code> and a reasonable <code>tolerance</code>
+filter (&lt;=5)</p>
+<p>With the parameters: <code>horizonFilter</code>,
+<code>followSurfaceRes</code>, <code>altFilter</code> the behavior of
+the smoothing of the flight curve is set. It makes sense to keep the
+values the same at first. If the <code>followSurfaceRes</code> is set
+bigger than the distance of the single flight lines it will be
+automatically reduced.</p>
+<p>By default <code>noFiles</code> is set to one. Due to the modern UAVs
+it is strongly recommended to keep it so. If you want to calculate
+single tasks you may set it to the number you need. Howeverthe task
+splitting is switched off which is useful for the modern DJI UAVs
+because you can use every waypoint in as a manual starting point for the
+continuation of the task after a battery change.</p>
+<p><strong>Note:</strong> For a problem-free terrain contour flight it
+is obligatory to set the parameter <code>above_ground = FALSE</code>.
+The example below shows a meaningful exaple for an Air 2S DJI and a 30m
+ASL flight over beech wood.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">demFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span><span class="va">tutorial_flightArea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"tutdata_qgc_survey30m.plan"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>projectDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>             surveyArea <span class="op">=</span> <span class="va">tutorial_flightArea</span>,</span>
+<span>             useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>             followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>             above_ground <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>             demFn <span class="op">=</span> <span class="va">demFn</span>,</span>
+<span>             horizonFilter <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>             followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>             altFilter <span class="op">=</span> <span class="fl">5.0</span>,</span>
+<span>             cameraType <span class="op">=</span><span class="st">"dji32"</span>,  <span class="co"># Air 2S "dji43" for most of the other DJIs</span></span>
+<span>             uavType <span class="op">=</span> <span class="st">"dji_csv"</span> </span>
+<span>             <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="export-to-the-flight-apps">Export to the flight apps<a class="anchor" aria-label="anchor" href="#export-to-the-flight-apps"></a>
+</h4>
+<p>Originally, both the planning and output of the steurung files with
+uavRmp was intended for terrain/surfaces with high relief energy and
+supported direct upload to the 3DR Solo Drone and the CSV based
+interface of the Litchi software for DJI drones, respectively.</p>
+<p>The PixHawk based UAVs can be flown directly from QGroundcontrol.
+However, if the highest resolution terrain is to be taken into account
+for planning, uavRmp must be used beforehand to perform this analysis
+for flight planning. The control file can then be reloaded into
+QGroundcontrol as a waypoint file and used as a flight control file.</p>
+<p>For the DJI consumer drones there is no opensource or inexpensive
+planning tool. As a flight control app, the powerful and very
+inexpensive Litchi is a good choice. The output of both Qgroundcontrol
+and uavRmp planned surveys is a Litchi CSV control file. The flights are
+then directly available via the Litchi mission Hub Cloud.</p>
 <p>DJI:</p>
 <p>Open <a href="https://flylitchi.com/" class="external-link">Litchi Mission</a> and click on
 the button ‘’Missions-&gt;Import’’ and navigate to the control file
 firstSurvey_1001.csv. To export it click ‘’Missions-&gt;Save’’.</p>
-<p>Solo: <code>solo_upload("export_1001_solo.waypoints")</code></p>
-<p>Ready to take off - that’s your first flight plan!</p>
+<p>PixHawk:</p>
+<p>Open the control file via QGroundcontrol or one of its derivates and
+proceed like usual.</p>
+<p>3DR Solo: <code>solo_upload("export_1001_solo.waypoints")</code></p>
 </div>
 </div>
 </div>

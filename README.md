@@ -28,7 +28,7 @@ The core planning tool ```makeAP``` (make arial flight plan) creates either inte
 
 ## News
 
-**NOTE:** The Litchi export for DJI Consumer drones is significantly improved now. 
+**NOTE:** The Litchi export for DJI Consumer drones is significantly improved now. For details have a look at the vignette.  
 
 **NOTE:** Starting with Version 0.6.3 the `raster` package is removed and you need to provide the `terra` package `SpatRaster` format only.
 
@@ -41,9 +41,7 @@ The core planning tool ```makeAP``` (make arial flight plan) creates either inte
 
 ## Installation
 
-The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. For using some of the the Solo related functions you need to install the python libs in addition.
-
-A full list of necessary libraries and binaries beyond ```R``` will soon be provided.
+You need GDAL to be installed.  For using some of the the 3DR Solo related functions you need to install the python libs in addition.
 
 To install the most actual version do it from ```github```  you need to have installed the ```devtools``` package.
 

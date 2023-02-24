@@ -133,7 +133,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
   ###
   if (followSurface) {
     cat("apply follow terrain filter...\n")
-
+    
     # extract all waypoint altitudes
     altitude2 <-terra::extract(demll,terra::vect(df),layer = 1, nl = 1,ID=FALSE)
     # get maximum altitude of the task area
@@ -162,7 +162,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     #t_points = rbind(df_sf[1,],t_points)
     i_points$id = 1
     t_points$id = 99
-
+    
     # names(t_points)= paste(names(df),"geometry")
     # sf::st_geometry(t_points) <- "geometry"
     df <-as(rbind(i_points,t_points), "Spatial")
@@ -173,7 +173,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     #     to the raw waypoints altitudes the missing (moving window) values (in the end) are duplicated
     # (2) the resulting values are sampled by the same horizonFilter size distance
     # (3) finally the altFilter is applied
-   # browser()
+    # browser()
     if ( as.character(p$flightPlanMode) == "terrainTrack") {
       sDF <-  as.data.frame(df@data)
       #sDF$sortID <- seq(1,nrow(sDF))
@@ -191,7 +191,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       names(turnPoints) = names(df)
       #duplicates <- which(!is.na(match(rownames(samplePoints),rownames(turnPoints))))
       #fDF <- rbind(turnPoints,samplePoints[-duplicates,])
-      browser()
+      #browser()
       fDF <- rbind(samplePoints,turnPoints)
       #fDF$altitude.m. = as.matrix(fDF$altitude)
       names(fDF) = names(df)
@@ -203,7 +203,7 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       fDF$dif       <- dif[,1]
       
       fDF <- fDF[fDF$id == "99" | fDF$dif > altFilter , ]
-
+      
       fDF$lon <- as.numeric(fDF$longitude)
       fDF$lat <- as.numeric(fDF$latitude)
       
@@ -211,8 +211,17 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       sp::proj4string(fDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
       fDF@data$sortID      <- NULL
       fDF@data$dif         <- NULL
-      fDF[["altitude(m)"]] = as.matrix(fDF$altitude)[,1]
-     
+      if (any(grepl(names(fDF), pattern = ".m."))){
+      fDF[["altitude.m."]] = as.matrix(fDF$altitude)[,1]
+      nms = gsub("\\.m\\.s\\.","(m/s)",names(fDF))
+      nms = gsub("\\.m\\.","(m)",nms)
+      names(fDF) = gsub("\\.deg\\.","(deg)",nms)
+
+      } else {
+        names(fDF) = c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","j")
+        fDF[["altitude"]] = as.matrix(fDF$altitude)[,1]
+      }
+      
       df <- fDF
     }
   }
@@ -470,33 +479,33 @@ calcSurveyArea <- function(surveyArea,projectDir,logger,useMP) {
   
   # check and read mission area coordinates
   if (!useMP){
-  if (is.null(surveyArea)) {
-    log4r::levellog(logger, 'FATAL', '### external flight area file or coordinates missing - dont know what to to')
-    stop("### external flight area file or coordinates missing - don't know what to to")
-  }
-  else {
-    # import flight area if provided by an external vector file
-    
-    if (!methods::is(surveyArea, "numeric") & length(surveyArea) >= 8) {
-      surveyArea <- surveyArea
+    if (is.null(surveyArea)) {
+      log4r::levellog(logger, 'FATAL', '### external flight area file or coordinates missing - dont know what to to')
+      stop("### external flight area file or coordinates missing - don't know what to to")
     }
-    # else if (!methods::is(surveyArea, "numeric") & length(surveyArea) < 8) {
-    #   log4r::levellog(logger, 'FATAL', "### you did not provide a launching coordinate")
-    #   stop("### you did not provide a launching coordinate")
-    # }
     else {
-      #file.copy( from = surveyArea, to = file.path(projectDir,"data"))
-      test <- try(flightBound <- readExternalFlightBoundary(surveyArea))
-      if (!methods::is(test, "try-error")) {
-        surveyArea <- flightBound 
-      } else {
-        log4r::levellog(logger, 'FATAL', "### can not find/read input file")        
-        stop("### could not read surveyArea file")
+      # import flight area if provided by an external vector file
+      
+      if (!methods::is(surveyArea, "numeric") & length(surveyArea) >= 8) {
+        surveyArea <- surveyArea
+      }
+      # else if (!methods::is(surveyArea, "numeric") & length(surveyArea) < 8) {
+      #   log4r::levellog(logger, 'FATAL', "### you did not provide a launching coordinate")
+      #   stop("### you did not provide a launching coordinate")
+      # }
+      else {
+        #file.copy( from = surveyArea, to = file.path(projectDir,"data"))
+        test <- try(flightBound <- readExternalFlightBoundary(surveyArea))
+        if (!methods::is(test, "try-error")) {
+          surveyArea <- flightBound 
+        } else {
+          log4r::levellog(logger, 'FATAL', "### can not find/read input file")        
+          stop("### could not read surveyArea file")
+        }
       }
     }
+    return(surveyArea)
   }
-  return(surveyArea)
-    }
 }
 
 # imports the survey area from a json or kml file
@@ -560,17 +569,17 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
         launchLon <- fb@coords[4,1] 
         launchLat <- fb@coords[4,2]  
       } else {
-      lon1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,1] 
-      lat1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,2] 
-      
-      lon2 <- flightBound@lines[[1]]@Lines[[1]]@coords[3,1] 
-      lat2 <- flightBound@lines[[1]]@Lines[[1]]@coords[3,2] 
-      
-      lon3 <- flightBound@lines[[1]]@Lines[[1]]@coords[5,1] 
-      lat3 <- flightBound@lines[[1]]@Lines[[1]]@coords[5,2]
-      
-      launchLon <- flightBound@lines[[1]]@Lines[[1]]@coords[7,1] 
-      launchLat <- flightBound@lines[[1]]@Lines[[1]]@coords[7,2]}
+        lon1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,1] 
+        lat1 <- flightBound@lines[[1]]@Lines[[1]]@coords[1,2] 
+        
+        lon2 <- flightBound@lines[[1]]@Lines[[1]]@coords[3,1] 
+        lat2 <- flightBound@lines[[1]]@Lines[[1]]@coords[3,2] 
+        
+        lon3 <- flightBound@lines[[1]]@Lines[[1]]@coords[5,1] 
+        lat3 <- flightBound@lines[[1]]@Lines[[1]]@coords[5,2]
+        
+        launchLon <- flightBound@lines[[1]]@Lines[[1]]@coords[7,1] 
+        launchLat <- flightBound@lines[[1]]@Lines[[1]]@coords[7,2]}
     }
   }
   return(c(lat1,lon1,lat2,lon2,lat3,lon3,launchLat,launchLon))
@@ -627,14 +636,14 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
   row1      <- df@data[1,1:(ncol(df@data))]
   launchLat <- p$launchLat # df@data[1,1]
   launchLon <- p$launchLon #df@data[1,2]
-
+  
   # g<- link2GI::linkGDAL()
   # system(paste0(g$path,'gdalwarp -overwrite -q ',
   #               '-t_srs "+proj=longlat +datum=WGS84 +no_defs" ',
   #               file.path(runDir,"tmpdem.tif"),' ',
   #               file.path(runDir,"demdll.tif")
   # ))
-
+  
   #demll=raster::projectRaster(from = dem,crs ="+proj=longlat +datum=WGS84 +no_defs" )
   #raster::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
   dem <-terra::rast(file.path(runDir,"demll.tif"))
@@ -644,7 +653,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
   sp::proj4string(launch_pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   launchAlt <- as.numeric(terra::extract(dem,terra::vect(launch_pos),ID=FALSE)) #exactextractr::exact_extract(terra::rast(dem),sf::st_as_sf(launch_pos)  )
   
- # browser()
+  # browser()
   # for each of the splitted task files
   for (i in 1:nofiles) {
     cat(paste0("create ",i, " of ",nofiles, " control files...\n"))  
@@ -690,7 +699,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     homemaxrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
     names(homemaxrow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
     
- 
+    
     
     # generate maximum altitude wp on the way to the mission start
     heading     <- startheading
@@ -699,7 +708,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     longitude   <- startLon #startmaxpos[1,1]
     startmaxrow <- cbind(latitude,longitude,altitude,heading,row1[5:(length(row1))])
     names(startmaxrow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
-
+    
     
     # calculate rth ascent from last task position
     pos <- calcNextPos(endLon,endLat,homeheading,10)
@@ -713,7 +722,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     # generate ascent waypoint to realize save fly home altitude
     ascentrow <- cbind(latitude,longitude,altitude,heading,row1[5:length(row1)])
     names(ascentrow) = c("latitude","longitude","altitude(m)","heading(deg)",names(row1[5:length(row1)]))
-                         
+    
     # generate home position with heading and altitude
     #homerow <- cbind(row1[1:2],altitude,heading,row1[5:length(row1)])
     homerow <- cbind(launchLat,launchLon,altitude,heading,row1[5:length(row1)])
@@ -748,8 +757,8 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     DF = dplyr::bind_rows(DF,ascentrow)
     DF = dplyr::bind_rows(DF,homemaxrow)
     DF = dplyr::bind_rows(DF,homerow)
-
-
+    
+    
     
     #if (maxPoints>nrow(DF)){maxPoints<-nrow(DF)}
     utils::write.csv(DF[,1:(ncol(DF) - 2)],file = paste0(projectDir,"/",locationName ,"/", workingDir,"/fp-data/control/",mission,i,"_dji.csv"),quote = FALSE,row.names = FALSE)
@@ -793,7 +802,7 @@ makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = "," , 
   }
   # create the header
   else {
-     action = "actiontype1,actionparam1,actiontype2,actionparam2,actiontype3,actionparam3,actiontype4,actionparam4,actiontype5,actionparam5,actiontype6,actionparam6,actiontype7,actionparam7,actiontype8,actionparam8,actiontype9,actionparam9,actiontype10,actionparam10,actiontype11,actionparam11,actiontype12,actionparam12,actiontype13,actionparam13,actiontype14,actionparam14,actiontype15,actionparam15,"
+    action = "actiontype1,actionparam1,actiontype2,actionparam2,actiontype3,actionparam3,actiontype4,actionparam4,actiontype5,actionparam5,actiontype6,actionparam6,actiontype7,actionparam7,actiontype8,actionparam8,actiontype9,actionparam9,actiontype10,actionparam10,actiontype11,actionparam11,actiontype12,actionparam12,actiontype13,actionparam13,actiontype14,actionparam14,actiontype15,actionparam15,"
     tmp <-    paste0("lon",sep,"lat",sep,"latitude",sep,"longitude",sep,
                      "altitude(m)",sep,
                      "heading(deg)",sep,
@@ -805,7 +814,7 @@ makeUavPoint <- function(pos, uavViewDir, group, p, header = FALSE, sep = "," , 
                      "altitudemode,speed(m/s),poi_latitude,poi_longitude,poi_altitude(m),poi_altitudemode,photo_timeinterval,photo_distinterval,id")    
   }
   
-
+  
   
   
   
@@ -1256,7 +1265,7 @@ makeFlightPathT3 <- function(treeList,
     #demll <- gdalUtils::gdalwarp(srcfile = demFn, dstfile = file.path(runDir,"demll.tif"), overwrite=TRUE,  t_srs = "+proj=longlat +datum=WGS84 +no_defs",output_Raster = TRUE ) 
     system(paste0(g$path,'gdalwarp -overwrite -q ', demFn,' ', file.path(runDir,"demll.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
     demll<-terra::rast(file.path(runDir,"tmpdem.tif"))
-
+    
     flightAreaBuffer <- sf::st_buffer(flightArea,0.00421) 
     cut<- sf::st_bbox(flightAreaBuffer)
     cut<-sf::st_as_sfc(sf::st_bbox(cut))
@@ -1407,7 +1416,7 @@ makeFlightPathT3 <- function(treeList,
     return(result)
     
   } 
- else if (uavType == "pixhawk") {
+  else if (uavType == "pixhawk") {
     cat("getting altitudes...\n")
     df <- utils::read.csv(file.path(runDir,"treepoints.csv"),sep = "\t",header = FALSE)
     names(df) <- c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","autocont","lat","lon")
@@ -1529,9 +1538,9 @@ is.odd <- function(x) x %% 2 != 0
 
 # extract highest altitude position and agl of a single track
 get_seg_fparams <- function(dem,
-                              start,
-                              target,
-                              p,
+                            start,
+                            target,
+                            p,
                             runDir){
   # depending on DEM/DSM sometimes there are no data values
   startAlt<-p$launchAltitude
@@ -1559,10 +1568,10 @@ get_seg_fparams <- function(dem,
 
 # extract highest altitude position and agl of a position with a defined radius
 get_point_fparams <- function(dem,
-
-                                point,
-                                p, 
-                                radius= 5.0){
+                              
+                              point,
+                              p, 
+                              radius= 5.0){
   # depending on DEM/DSM sometimes there are no data values
   startAlt<-p$launchAltitude
   seg  <- sp_point(point[1],point[2],"point")
@@ -1597,11 +1606,11 @@ setProjStructure <- function(projectDir,
   if (ft=="P") ftype <- "_POSITION"
   flight_date <- format(Sys.time(), "%Y_%m_%d")
   taskName <-paste0(format(Sys.time(), "%Y%m%d_%H%M"),
-                          "__",
-                          cameraType,"__", 
-                          tools::file_path_sans_ext(basename(as.character(surveyArea))),"_", 
-                          ftype,
-                   "__",
+                    "__",
+                    cameraType,"__", 
+                    tools::file_path_sans_ext(basename(as.character(surveyArea))),"_", 
+                    ftype,
+                    "__",
                     flightAltitude,"m")
   
   initProj(projRootDir= projRootDir, projFolders=c("fp-data/log/",

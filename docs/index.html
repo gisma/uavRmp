@@ -100,7 +100,7 @@
 <div class="section level2">
 <h2 id="news">News<a class="anchor" aria-label="anchor" href="#news"></a>
 </h2>
-<p><strong>NOTE:</strong> The Litchi export for DJI Consumer drones is significantly improved now.</p>
+<p><strong>NOTE:</strong> The Litchi export for DJI Consumer drones is significantly improved now. For details have a look at the vignette.</p>
 <p><strong>NOTE:</strong> Starting with Version 0.6.3 the <code>raster</code> package is removed and you need to provide the <code>terra</code> package <code>SpatRaster</code> format only.</p>
 <p><strong>NOTE:</strong> You may use now the survey planning tool of <code>QGroundControl</code> or <code>Missionplanner</code> and convert it either to DJI compatible Litchi format or MavLink files. Both with safe flights to the mission start and RTH as well as task splitting. You will find an simple GUI interface calling <code>shiny::runApp(system.file("shiny/plan2litchi/", "/app.R", package = "uavRmp"))</code>.</p>
 <p><strong>NOTE:</strong> The DJI control files are designed for using with the proprietary <code>Litchi</code> flight control app exchange format, while the PixHawk/3DR Solo files are using the <code>MAVLINK</code> common message format, that is used by the PixHawk flight controller family.</p>
@@ -108,8 +108,7 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The easiest way to obtain a fairly good runtime enviroment is to setup Linux as a dual boot system or in a VB. For using some of the the Solo related functions you need to install the python libs in addition.</p>
-<p>A full list of necessary libraries and binaries beyond <code>R</code> will soon be provided.</p>
+<p>You need GDAL to be installed. For using some of the the 3DR Solo related functions you need to install the python libs in addition.</p>
 <p>To install the most actual version do it from <code>github</code> you need to have installed the <code>devtools</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>install.packages<span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>

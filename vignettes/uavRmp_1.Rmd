@@ -78,7 +78,7 @@ The basic idea is to provide an easy to use workflow for controlling rtf UAVs on
 
 ## The types of mission tasks
  
-To define a flight area you have to provide either 4 Points (or 3 lines). You may take more complex vectors like a multi point polygon, but only the first 4 coordinates x1, x2, x3 and x4 (the latter for the launching position) are used in exactly this order. If you take a rectangle the 4th corner coordinate will be the launching point. The concept is looking like the following sketch:
+To define a flight area you have to provide either 4 Points (or 3 lines). You may take more complex vectors like a multi point polygon, but only the first 4 coordinates x1, x2, x3 and x4 (the last one is assumed to be the launching position) are used in exactly this order. If you take a rectangle the 4th corner coordinate will be the launching point. The concept is looking like the following sketch:
     
     x2------x3           x2-------x1
     | a                 /
@@ -89,66 +89,74 @@ To define a flight area you have to provide either 4 Points (or 3 lines). You ma
    
 This coordinates the length of the line and the angle are used to calculate extend and parallels of the flight plan according to the flight altitude, overlap etc. NOTE: The flight direction depends on the order of the points. 
 
-If ```flightPlanMode = "tracks"```. The result look like below.
+If ```flightPlanMode = "tracks"```. The result may look like below.
 
-    #--#  #-->             #-----#
-    |  |  |               /    
+    #--#  #-->              #-----#
+    |  |  |                /        
+    |  |  |               /        
+    |  |  |              /    
     |  |  |              #-----#
     |  |  |                   /
-    #  #--#         <--#-----#
+    |  |  |                  /
+    |  |  |                 /    
+    #  #--#       <--#-----#
 
-If ```flightPlanMode = "waypoints"``` The result is an equal spatial distribution of way points:
+If ```flightPlanMode = "waypoints"``` Other than using tracks the result is an equal spatial distribution of way points:
  
-    #--#  #-->             #--#--#
-    |  |  |               /    
+    #--#  #-->              #--#--#
+    |  |  |                /
+    #  #  #               #    
+    |  |  |              /        
     #  #  #              #--#--#
     |  |  |                   /
-    #  #--#         <--#--#--#
+    #  #  #                  #
+    |  |  |                 /    
+    #  #--#       <--#--#--#
 
 ```waypoints``` is optimal for autonomous flights under calm conditions in complex terrain because the camera takes a picture at every way point.
 
 ```track``` is optimal for relatively plain areas and automatically triggered picture capturing 
- DJI only: Automatically picture capturing in a time interval works only within the range of the remote control because the UAV needs a trigger signal for taking pictures.
+ **NOTE;** DJI only: Automatically picture capturing in a time interval works only within the range of the remote control because the UAV needs a trigger signal for taking pictures.
  
 ## Terrain following task
 
- The argument ```followSurface = TRUE``` will switch from fixed AGL flight altitude into a terrain following flight altitude.
+ The argument ```followSurface = TRUE``` will switch from fixed AGL flight altitude to a terrain following flight altitude.
 
-NOTE: You have to be aware that the DJI UAV is calibrating the altitude at the launch position in the field! So you need either a correct coordinate altitude or a high resolution DEM to get a good(!) estimation of the launch position and altitude.
+**NOTE:** You have to be aware that by default the UAVs are calibrating the altitude at the launch position in the field! So you need either a correct coordinate altitude or a high resolution DEM to get a good(!) estimation of the launch position and altitude.
  
 You must choose a clearly defined and reliable launching position both in the map and the field. If one fails, we made the experience that the aircraft probably will hit the terrain...
 
  
 Let us assume a defined flight altitude of 50m. According to the launching point altitude the UAV will act like the following sketch shows:
 
-     ............... x_(uav)_x ........... UAV started at 30m altitude results in
-                                             a "real" flight altitude of 30m + 50m => 80m
+     x_()_x >>> ............................ UAV started at 30m altitude results in
+       ^                                     a "real" flight altitude of 30m + 50m => 80m
+       ^               ___60m____
+       ^              |          |
+       ^      30m _x__|          |
+       ^     ____|               |___
+     x_()_x_|                        |______
 
-                    ___60m____
-                   |          |
-           30m _x__|          |
-          ____|               |___
-      ___|                        |____
+                      ___60m____
+    x_()_x >>> ......|          |..........  UAV started at 0 m altitude results in
+      ^           ___|          |___          "real" flight altitude of 50m above 0m
+      ^          |                  |
+      ^      ____|                  |
+    x_()_x _|                       |_______
 
-                   ___60m____
-        ..........|          |............ UAV started at 0 m altitude results in
-               ___|          |___          "real" flight altitude of 50m above 0m
-          ____|                  |
-      ___|                       |__x__ 0m
-
-To avoid negative impacts from the Phantom 3 auto-calibration, the launch altitude is used to correct the flight altitude according to:
+To avoid negative impacts from the UAV auto-calibration, the launch altitude is used to correct the flight altitude according to:
 
      maximumAltitude_of_surveyArea + altitude_of_launchposition
    
 So the adapted flight altitude is always seen as the flight altitude above the highest terrain altitude:
 
-     ...................................... real altitude of UAV: 110m
-
-                   ___60m____
-                  |          |
-           30m _x_|          |___
-          ____|                  |
-      ___|                       |______
+          x_()_x >>> ..................... real altitude of UAV: 110m
+            ^
+            ^      ___60m____
+            ^     |          |
+        _ x_()_x__|   30m    |___
+    ____|                        |
+    |                            |______
 
 To get a fixed scale flight the launch altitude is used to correct the flight altitude according to:
 
@@ -276,50 +284,6 @@ For an optimal deliniation of the flight area, please keep in mind some hints:
 
 Finish digitizing and save it as a KML file. Take care to add the correct extensions  ''.kml'' (the ''makeAP()'' function is requiring the correct extension). In the current example save it as a kml file named ''firstSurvey.kml''.
 
-### Missionplanner or Qgroundcontrol survey feature
-
-We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the qGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
-![The first autonomous complex mission planned with QGroundcontrol](qcmission.png)
-
-Save this at an appropriate folder. To use this planning file you have to set in `makeAP` the switch:
-
-```{r, eval=FALSE}
- useMP = TRUE
-```
-
-
-The planning with QGroundControl is much more powerful and comfortable than the simple planning with uavRmp. However, if you want to use some features like near-surface flights or more important a survey planning for DJI/Litchi, some parameters have to be set very carefully to make this export usable. 
-Especially the Litchi export needs some care. 
-Not all parameters from the Qgroundcontrol settings are taken over. Crucial is:
- * Set correct camera parameterization
- * choose "calc above terain" and a reasonable "tolerance" filter (<=5) 
-
-With the parameters: horizonFilter, followSurfaceRes, altFilter the behavior of the smoothing of the surface flight curve is set. It makes sense to keep the values the same at first. In no case the followSurfaceRes must be larger than the horizonFilter. 
-
-With noFiles = 1 the task splitting is switched off which is useful for the modern DJI UAVs because you can use every waypoint in Litchi as a manual starting point for the continuation of the task after battery change.
-Crucial for a problem-free terrain contour flight is to set the parameter above_ground = FALSE.
-The example below shows this for an Air 2S DJI and a 30m ASL flight.
-
-
-```{r, eval=FALSE}
-demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
-fp <- makeAP(projectDir = tempdir(),
-             surveyArea = tutorial_flightArea,
-             useMP = TRUE,
-             noFiles = 1,
-             followSurface = TRUE,
-             above_ground = FALSE,
-             demFn = demFn,
-             horizonFilter = 5,
-             followSurfaceRes = 5,
-             altFilter = 5.0,
-             cameraType ="dji32",  # Air 2S
-             uavType = "dji_csv" 
-             )
-```
-
-
 
 ### Calling makeAP 
 
@@ -368,17 +332,73 @@ Using the ```mapview``` package  you can easily visualize the results. The below
 
 ![The first autonomous mission](simplemission.png)  
 
-### Export to the flight app 
+### Planning the Flight task with the Missionplanner or Qgroundcontrol survey feature
 
+We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the QGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
+![The first autonomous complex mission planned with QGroundcontrol](qcmission.png)
+
+Save this at an appropriate folder. To use this planning file you have to set in `makeAP` the switch:
+
+```{r, eval=FALSE}
+ useMP = TRUE
+```
+
+
+The planning with QGroundControl is much more powerful and comfortable than the simple planning with uavRmp. However, if you want to use some features like near-surface flights or more important a survey planning for DJI/Litchi, some parameters have to be set very carefully to make this export usable. 
+Especially the Litchi export needs some care. 
+Not all parameters from the Qgroundcontrol settings are taken over. Crucial is:
+ * Set correct camera parameterization
+ * choose `calc above terrain` and a reasonable `tolerance` filter (<=5) 
+
+With the parameters: `horizonFilter`, `followSurfaceRes`, `altFilter` the behavior of the smoothing of the flight curve is set. It makes sense to keep the values the same at first. If the `followSurfaceRes` is set bigger than the distance of the single flight lines it will be automatically reduced.  
+
+By default  `noFiles` is set to one. Due to the modern UAVs it is strongly recommended to keep it so. If you want to calculate single tasks you may set it to the number you need. Howeverthe task splitting is switched off which is useful for the modern DJI UAVs because you can use every waypoint in as a manual starting point for the continuation of the task after a battery change.
+
+**Note:** For a problem-free terrain contour flight it is obligatory to set the parameter `above_ground = FALSE`.
+The example below shows a meaningful exaple for an Air 2S DJI and a 30m ASL flight over beech wood.
+
+
+```{r, eval=FALSE}
+demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
+fp <- makeAP(projectDir = tempdir(),
+             surveyArea = tutorial_flightArea,
+             useMP = TRUE,
+             followSurface = TRUE,
+             above_ground = FALSE,
+             demFn = demFn,
+             horizonFilter = 5,
+             followSurfaceRes = 5,
+             altFilter = 5.0,
+             cameraType ="dji32",  # Air 2S "dji43" for most of the other DJIs
+             uavType = "dji_csv" 
+             )
+```
+
+
+
+
+### Export to the flight apps
+
+Originally, both the planning and output of the steurung files with uavRmp was intended for terrain/surfaces with high relief energy and supported direct upload to the 3DR Solo Drone and the CSV based interface of the Litchi software for DJI drones, respectively. 
+
+The PixHawk based UAVs can be flown directly from QGroundcontrol. However, if the highest resolution terrain is to be taken into account for planning, uavRmp must be used beforehand to perform this analysis for flight planning. The control file can then be reloaded into QGroundcontrol as a waypoint file and used as a flight control file.
+
+For the DJI consumer drones there is no opensource or inexpensive planning tool. As a flight control app, the powerful and very inexpensive Litchi is a good choice. The output of both Qgroundcontrol and uavRmp planned surveys is a Litchi CSV control file. The flights are then directly available via the Litchi mission Hub Cloud. 
 
 DJI:
 
 Open [Litchi Mission](https://flylitchi.com/) and click on the button ''Missions->Import'' and navigate to the control file firstSurvey_1001.csv. To export it click ''Missions->Save''. 
 
-Solo:
+PixHawk:
+
+Open the control file via QGroundcontrol or one of its derivates and proceed like usual. 
+
+
+3DR Solo:
 ```solo_upload("export_1001_solo.waypoints")```
 
-Ready to take off - that’s your first flight plan!
+
 
 # Field Guide
 
