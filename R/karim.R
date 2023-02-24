@@ -53,8 +53,6 @@ sp_line <- function(Y_coords,
 #' ## creating sp spatial point object
 #' point <- sp_point(8.770362,50.815240,ID="Faculty of Geographie Marburg")
 #' 
-#' ## plot it
-#' terra::plot(terra::vect(point))
 #' 
 sp_point <- function(lon,
                      lat,

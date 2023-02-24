@@ -331,7 +331,7 @@ Using the ```mapview``` package  you can easily visualize the results. The below
 
 ![The first autonomous mission](simplemission.png)  
 
-### Planning the Flight task with the Missionplanner or Qgroundcontrol survey feature
+# Planning the Flight task with the Missionplanner or Qgroundcontrol survey feature
 
 We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the QGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
 ![The first autonomous complex mission planned with QGroundcontrol](qcmission.png)
@@ -368,9 +368,6 @@ fp <- makeAP(projectDir = tempdir(),
              followSurface = TRUE,
              above_ground = FALSE,
              demFn = demFn,
-             horizonFilter = 5,
-             followSurfaceRes = 5,
-             altFilter = 5.0,
              cameraType ="dji32",  # Air 2S "dji43" for most of the other DJIs
              uavType = "dji_csv" 
              )
@@ -379,7 +376,7 @@ fp <- makeAP(projectDir = tempdir(),
 
 
 
-### Export to the flight apps
+# Export to the flight apps
 
 Originally, both the planning and output of the steurung files with uavRmp was intended for terrain/surfaces with high relief energy and supported direct upload to the 3DR Solo Drone and the CSV based interface of the Litchi software for DJI drones, respectively. 
 

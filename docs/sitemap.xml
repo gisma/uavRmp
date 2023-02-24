@@ -1,105 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/404.html</loc>
+    <loc>/404.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/LICENSE-text.html</loc>
+    <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/articles/index.html</loc>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/articles/uavRmp_1.html</loc>
+    <loc>/articles/uavRmp_1.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/authors.html</loc>
+    <loc>/authors.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/index.html</loc>
+    <loc>/index.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/news/index.html</loc>
+    <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/copyDir.html</loc>
+    <loc>/reference/copyDir.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/extractExifr.html</loc>
+    <loc>/reference/extractExifr.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/fixGPSAlt.html</loc>
+    <loc>/reference/fixGPSAlt.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/getGPSAltDiff.html</loc>
+    <loc>/reference/getGPSAltDiff.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/index.html</loc>
+    <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/initProj.html</loc>
+    <loc>/reference/initProj.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/makeAP.html</loc>
+    <loc>/reference/makeAP.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/makeGlobalVar.html</loc>
+    <loc>/reference/makeGlobalVar.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/makeTP.html</loc>
+    <loc>/reference/makeTP.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/maxpos_on_line.html</loc>
+    <loc>/reference/maxpos_on_line.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/minBB.html</loc>
+    <loc>/reference/minBB.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/qgc_survey.html</loc>
+    <loc>/reference/soloLog.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/read_gpx.html</loc>
+    <loc>/reference/solo_upload.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/soloLog.html</loc>
+    <loc>/reference/sp_line.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/solo_upload.html</loc>
+    <loc>/reference/sp_point.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/sp_line.html</loc>
+    <loc>/reference/tutdata_dem.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/sp_point.html</loc>
+    <loc>/reference/tutdata_dji.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_dem.html</loc>
+    <loc>/reference/tutdata_flightarea.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_dji.html</loc>
+    <loc>/reference/tutdata_flighttrack.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_flightarea.html</loc>
+    <loc>/reference/tutdata_position.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_flighttrack.html</loc>
+    <loc>/reference/tutdata_qgc_survey.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_position.html</loc>
+    <loc>/reference/tutdata_qgc_survey30m.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_qgc_survey.html</loc>
+    <loc>/reference/tutdata_waypoints.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_qgc_survey30m.html</loc>
+    <loc>/reference/uavRmp.html</loc>
   </url>
   <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/tutdata_waypoints.html</loc>
-  </url>
-  <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/uavRmp.html</loc>
-  </url>
-  <url>
-    <loc>https://r-spatial.github.io/uavRmp/reference/vecDraw.html</loc>
+    <loc>/reference/vecDraw.html</loc>
   </url>
 </urlset>
