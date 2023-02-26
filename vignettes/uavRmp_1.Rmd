@@ -352,10 +352,11 @@ Not all parameters from the Qgroundcontrol settings are taken over. Crucial is:
 
 With the parameters: `horizonFilter`, `followSurfaceRes`, `altFilter` the behavior of the smoothing of the flight curve is set. It makes sense to keep the values the same at first. If the `followSurfaceRes` is set bigger than the distance of the single flight lines it will be automatically reduced.  
 
-By default  `noFiles` is set to one. Due to the modern UAVs it is strongly recommended to keep it so. If you want to calculate single tasks you may set it to the number you need. Howeverthe task splitting is switched off which is useful for the modern DJI UAVs because you can use every waypoint in as a manual starting point for the continuation of the task after a battery change.
+By default  `noFiles` is set to one. Due to the modern UAVs it is strongly recommended to keep it so. If you want to calculate single tasks you may set it to the number you need. However the task splitting is switched off which is useful for the modern DJI UAVs because you can use every waypoint in as a manual starting point for the continuation of the task after a battery change.
 
 **Note:** For a problem-free terrain contour flight it is obligatory to set the parameter `above_ground = FALSE`.
-The example below shows a meaningful exaple for an Air 2S DJI and a 30m ASL flight over beech wood.
+
+The example below shows a meaningful example for an Air 2S DJI and a 30m ASL flight over beech wood.
 
 
 ```{r, eval=FALSE}
@@ -367,12 +368,19 @@ fp <- makeAP(projectDir = tempdir(),
              followSurface = TRUE,
              above_ground = FALSE,
              demFn = demFn,
-             cameraType ="dji32",  # Air 2S "dji43" for most of the other DJIs
              uavType = "dji_csv" 
              )
 ```
 
+The result looks like this in Litchi.
+![Litchi result](qcmissionb15.png)  
 
+It is easy to see that there are errors in the transmission.
+
+![Litchi result detail](qcmissionb15_detail.png)
+
+These result from the complex outer shell of the structure and that the inflection points necessary to maintain the lateral overlap are filtered out in the DSM analysis.  A simple way around this is to increase the argument buf_mult to e.g. `buf_mult = 3`.
+![Litchi result](qcmissionb3_detail.png)  
 
 
 # Export to the flight apps

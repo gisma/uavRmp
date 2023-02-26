@@ -56,7 +56,6 @@ knitr::opts_knit$set(root.dir = tempdir())
 #               followSurface = TRUE,
 #               above_ground = FALSE,
 #               demFn = demFn,
-#               cameraType ="dji32",  # Air 2S "dji43" for most of the other DJIs
 #               uavType = "dji_csv"
 #               )
 

@@ -281,7 +281,11 @@ makeAP <- function(projectDir = tempdir(),
   
   ## uav platform depending parameter setting
   if (uavType == "dji_csv") {
-    #browser()
+    if (cameraType=="MAPIR2"  | cameraType == "YUN90") {
+      cameraType = "dji43"
+      message("set cameraType to dji43")
+      log4r::levellog(logger, 'INFO', paste("force cameratype to   :  'dji4'3"))
+      }
     if (cameraType == "dji43"){
     factor <- 1.33 # FOV ratio
     } else if (cameraType == "dji32"){
