@@ -55,9 +55,10 @@ if (!isGeneric('makeAP')) {
 #' If no DEM data is provided and `followSurface` is TRUE,
 #' SRTM data will be downloaded and used.
 #' Further explanation at seealso
-#' @param altFilter if `followingTerrain` is equal `TRUE` then
+#' @param altFilter if `followSurface` is equal `TRUE` then
 #' `altFilter` is the threshold value of accepted altitude difference (m) between two way points.
 #'  If this value is not exceeded, the way point is omitted due to the fact that only 99 way points per mission are allowed.
+#' @param followSurfaceRes horizontal step distance for analyzing the DEM altitudes
 #' @param horizonFilter integer filter size of the rolling filter kernel for the flight track. Must be multiplied by the `followSurfaceRes` to get the spatial extent
 #' @param flightPlanMode type of flight plan. Available are: `"waypoints"`,
 #'   `"track"`, `"manual"`.
@@ -66,7 +67,7 @@ if (!isGeneric('makeAP')) {
 #'        \cr
 #'  Options are:
 #' `"simple_ortho"` takes one picture/way point,
-#' `"multi_ortho"` takes 4 picture at a waunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’unable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’ypoint, two vertically down and two in forward and backward viewing direction and an Angele of -60deg,
+#' `"multi_ortho"` takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angle of -60deg,
 #' `"simple_pano"` takes a 360 deg panorama picture and
 #' `"remote"` which assumes that the camera is controlled by the remote control (RC)
 #' @param flightAltitude set the default flight altitude of the mission. It is
@@ -90,12 +91,13 @@ if (!isGeneric('makeAP')) {
 #' @param maxSpeed  cruising speed
 # #' @param heatMap switch for calculating the overlapping factor on a raster map
 #' @param picFootprint switch for calculating the footprint at all way points
-#' @param followSurfaceRes horizontal step distance for analyzing the DEM altitudes
+
 #' @param picRate fastest stable interval (s) for shooting pictures
 #' @param windCondition 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h
 #' @param copy copy switch
 #' @param cmd mavlink command
 #' @param noFiles manual split number of files
+#' @param buf_mult multiplier for defining the zone in which the waypoints  are assumed to be turning waypoints according to  buf_mult * `followSurfaceRes` 
 #' @param uavViewDir view direction of uav
 #' @param maxFlightTime user defined estimation of the lipo lifetime (20 min default)
 #' @param rcRange range of estimated range of remote control
@@ -136,14 +138,14 @@ if (!isGeneric('makeAP')) {
 #' ##     You have to use a high quality high resulution DSM
 #' ##     (here simulated with a standard DEM)
 #'
-#' fp <- makeAP(surveyArea=tutorial_flightArea,
-#'            followSurface = TRUE,
-#'            flightAltitude = 45,
-#'            demFn = demFn,
-#'            windCondition = 1,
-#'            uavType = "pixhawk",
-#'            followSurfaceRes = 5,
-#'            altFilter = .75)
+#'fp <- makeAP(surveyArea=tutorial_flightArea,
+#'           followSurface = TRUE,
+#'           flightAltitude = 45,
+#'           demFn = demFn,
+#'           windCondition = 1,
+#'           uavType = "dji_csv",cameraType = "dji32",
+#'           followSurfaceRes = 5,
+#'           altFilter = .75)
 #'
 #'
 #' ## (4) typical real case scenario (2)
@@ -233,6 +235,7 @@ makeAP <- function(projectDir = tempdir(),
                    windCondition = 0,
                    uavType = "pixhawk",
                    cameraType = "MAPIR2",
+                   buf_mult =1.5,
                    cmd=16,
                    uavViewDir = 0,
                    maxwaypoints = 9999,
@@ -858,7 +861,7 @@ makeAP <- function(projectDir = tempdir(),
     sp::proj4string(djiDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     # now DEM stuff
 
-     result <- analyzeDSM(demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea=taskArea,gdalLink)
+     result <- analyzeDSM(useMP=useMP,demFn,djiDF,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskarea=taskArea,gdalLink,buf_mult=buf_mult)
     # assign adapted dem to demFn
    demFn <- result[[3]]
    dfcor <- result[[2]]
@@ -896,7 +899,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if (is.null(launchAltitude)) {
       # analyze DEM related stuff
-      result <- analyzeDSM(demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea,gdalLink)
+      result <- analyzeDSM(useMP=useMP,demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea,gdalLink,buf_mult=buf_mult)
       # assign adapted dem to demFn
       lauchPos <- result[[1]]
       dfcor <- result[[2]]

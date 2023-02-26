@@ -41,7 +41,7 @@ makeTP(
 \item{flightAltitude}{\code{numeric} set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is \code{100}
 default is (\verb{= 0.0}). If set to \code{-99} it will be
 calculated from the swath width of the pictures. NOTE: This makes only sense for
-\code{followingTerrain = TRUE} to smooth curves.
+\code{followSurface = TRUE} to smooth curves.
 For \code{flightPlanMode = "waypoint"} camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.}
 
 \item{climbDist}{\code{numeric} distance within the uav will climb on the caluclated save flight altitude in meter, default is \code{7.5}}

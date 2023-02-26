@@ -16,7 +16,7 @@ if (!isGeneric('makeTP')) {
 #' @param flightAltitude `numeric` set the AGL flight altitude (AGL while the provided raster model represents this surface) of the mission, default is `100`
 #' default is (`= 0.0`). If set to `-99` it will be 
 #' calculated from the swath width of the pictures. NOTE: This makes only sense for 
-#' `followingTerrain = TRUE` to smooth curves.
+#' `followSurface = TRUE` to smooth curves.
 #' For `flightPlanMode = "waypoint"` camera actions (DJI only EXPERIMENTAL) are DISABLED during curve flights.
 #' @param maxSpeed `numeric`  cruising speed, default is `25.0`
 #' @param windCondition `numeric`options are 1= calm 2= light air 1-5km/h, 3= light breeze 6-11km/h, 4=gentle breeze 12-19km/h 5= moderate breeze 20-28km/h, default is `1`

@@ -85,6 +85,7 @@
 <span>  windCondition <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,</span>
 <span>  cameraType <span class="op">=</span> <span class="st">"MAPIR2"</span>,</span>
+<span>  buf_mult <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>  cmd <span class="op">=</span> <span class="fl">16</span>,</span>
 <span>  uavViewDir <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  maxwaypoints <span class="op">=</span> <span class="fl">9999</span>,</span>
@@ -150,7 +151,7 @@ Further explanation at seealso</p></dd>
 
 
 <dt>altFilter</dt>
-<dd><p>if <code>followingTerrain</code> is equal <code>TRUE</code> then
+<dd><p>if <code>followSurface</code> is equal <code>TRUE</code> then
 <code>altFilter</code> is the threshold value of accepted altitude difference (m) between two way points.
 If this value is not exceeded, the way point is omitted due to the fact that only 99 way points per mission are allowed.</p></dd>
 
@@ -173,7 +174,7 @@ If this value is not exceeded, the way point is omitted due to the fact that onl
 <br>
 Options are:
 <code>"simple_ortho"</code> takes one picture/way point,
-<code>"multi_ortho"</code> takes 4 picture at a waunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’unable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’ypoint, two vertically down and two in forward and backward viewing direction and an Angele of -60deg,
+<code>"multi_ortho"</code> takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angle of -60deg,
 <code>"simple_pano"</code> takes a 360 deg panorama picture and
 <code>"remote"</code> which assumes that the camera is controlled by the remote control (RC)</p></dd>
 
@@ -204,6 +205,10 @@ Options are:
 
 <dt>cameraType</dt>
 <dd><p>depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the "dji43"  and for the DJI Air 2S the "dji32" tag. For GoPro action cams on whatever aircraft you can choose "GP3_7MP" or "GP3_11MP". Flying the Mapir 2 camera choose  "MAPIR2". For the E90X camera of Yuneec you choose "YUN90". Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.</p></dd>
+
+
+<dt>buf_mult</dt>
+<dd><p>multiplier for defining the zone in which the waypoints  are assumed to be turning waypoints according to  buf_mult * <code>followSurfaceRes</code></p></dd>
 
 
 <dt>cmd</dt>
@@ -328,13 +333,13 @@ at <a href="https://gisma.github.io/uavRmp/articles/uavRmp_1.html" class="extern
 <span class="r-in"><span><span class="co">##     (here simulated with a standard DEM)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu">makeAP</span><span class="op">(</span>surveyArea<span class="op">=</span><span class="va">tutorial_flightArea</span>,</span></span>
-<span class="r-in"><span>           followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>           flightAltitude <span class="op">=</span> <span class="fl">45</span>,</span></span>
-<span class="r-in"><span>           demFn <span class="op">=</span> <span class="va">demFn</span>,</span></span>
-<span class="r-in"><span>           windCondition <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>           uavType <span class="op">=</span> <span class="st">"pixhawk"</span>,</span></span>
-<span class="r-in"><span>           followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>           altFilter <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span></span></span>
+<span class="r-in"><span>          followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>          flightAltitude <span class="op">=</span> <span class="fl">45</span>,</span></span>
+<span class="r-in"><span>          demFn <span class="op">=</span> <span class="va">demFn</span>,</span></span>
+<span class="r-in"><span>          windCondition <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>          uavType <span class="op">=</span> <span class="st">"dji_csv"</span>,cameraType <span class="op">=</span> <span class="st">"dji32"</span>,</span></span>
+<span class="r-in"><span>          followSurfaceRes <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>          altFilter <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## (4) typical real case scenario (2)</span></span></span>

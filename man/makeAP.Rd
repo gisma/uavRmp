@@ -26,6 +26,7 @@ makeAP(
   windCondition = 0,
   uavType = "pixhawk",
   cameraType = "MAPIR2",
+  buf_mult = 1.5,
   cmd = 16,
   uavViewDir = 0,
   maxwaypoints = 9999,
@@ -70,7 +71,7 @@ Further explanation at seealso}
 
 \item{noFiles}{manual split number of files}
 
-\item{altFilter}{if \code{followingTerrain} is equal \code{TRUE} then
+\item{altFilter}{if \code{followSurface} is equal \code{TRUE} then
 \code{altFilter} is the threshold value of accepted altitude difference (m) between two way points.
 If this value is not exceeded, the way point is omitted due to the fact that only 99 way points per mission are allowed.}
 
@@ -85,7 +86,7 @@ If this value is not exceeded, the way point is omitted due to the fact that onl
 \cr
 Options are:
 \code{"simple_ortho"} takes one picture/way point,
-\code{"multi_ortho"} takes 4 picture at a waunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’unable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’ypoint, two vertically down and two in forward and backward viewing direction and an Angele of -60deg,
+\code{"multi_ortho"} takes 4 picture at a waypoint, two vertically down and two in forward and backward viewing direction and an angle of -60deg,
 \code{"simple_pano"} takes a 360 deg panorama picture and
 \code{"remote"} which assumes that the camera is controlled by the remote control (RC)}
 
@@ -102,6 +103,8 @@ Options are:
 \item{uavType}{type of UAV. currently "dji_csv" for Litchi CSV export and "pixhawk" for MAVlink compatible flightplans are supported}
 
 \item{cameraType}{depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the "dji43"  and for the DJI Air 2S the "dji32" tag. For GoPro action cams on whatever aircraft you can choose "GP3_7MP" or "GP3_11MP". Flying the Mapir 2 camera choose  "MAPIR2". For the E90X camera of Yuneec you choose "YUN90". Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.}
+
+\item{buf_mult}{multiplier for defining the zone in which the waypoints  are assumed to be turning waypoints according to  buf_mult * \code{followSurfaceRes}}
 
 \item{cmd}{mavlink command}
 
@@ -198,13 +201,13 @@ fp <- makeAP(surveyArea = tutorial_flightArea,
 ##     (here simulated with a standard DEM)
 
 fp <- makeAP(surveyArea=tutorial_flightArea,
-           followSurface = TRUE,
-           flightAltitude = 45,
-           demFn = demFn,
-           windCondition = 1,
-           uavType = "pixhawk",
-           followSurfaceRes = 5,
-           altFilter = .75)
+          followSurface = TRUE,
+          flightAltitude = 45,
+          demFn = demFn,
+          windCondition = 1,
+          uavType = "dji_csv",cameraType = "dji32",
+          followSurfaceRes = 5,
+          altFilter = .75)
 
 
 ## (4) typical real case scenario (2)

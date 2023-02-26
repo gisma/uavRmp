@@ -14,7 +14,7 @@
 #
 
 
-analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName,runDir,taskarea,gdalLink=NULL){
+analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName,runDir,taskarea,gdalLink=NULL, buf_mult = 1){
   #browser()
   if (is.null(gdalLink))
     g<- link2GI::linkGDAL()
@@ -150,23 +150,24 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
     df$altitude <- round(altitude2,1)
     df$sortID <- seq(1,nrow(df))
     df_sf = sf::st_as_sf(df)
-    bobuf=concaveman::concaveman(points = df_sf,concavity = 4)
-    sf::st_crs(bobuf)=4326
-    bobu= sf::st_cast(bobuf,"LINESTRING")
-    bobu=sf::st_simplify(bobu,dTolerance = 3*horizonFilter)
-    buf=sf::st_buffer(bobu, 2*horizonFilter,joinStyle="BEVEL")
-    idx <- !sf::st_intersects(buf, df_sf ,)
-    tdx <- sf::st_intersects(buf, df_sf )
-    i_points = df_sf[unlist(idx),]
-    t_points = df_sf[unlist(tdx),]
-    #t_points = rbind(df_sf[1,],t_points)
-    i_points$id = 1
-    t_points$id = 99
-    
-    # names(t_points)= paste(names(df),"geometry")
-    # sf::st_geometry(t_points) <- "geometry"
-    df <-as(rbind(i_points,t_points), "Spatial")
-    
+    if (useMP){
+      bobuf=concaveman::concaveman(points = df_sf,concavity = 4)
+      sf::st_crs(bobuf)=4326
+      bobu= sf::st_cast(bobuf,"LINESTRING")
+      bobu=sf::st_simplify(bobu,dTolerance = 3*horizonFilter)
+      buf=sf::st_buffer(bobu, buf_mult * horizonFilter,joinStyle="BEVEL")
+      idx <- !sf::st_intersects(buf, df_sf ,)
+      tdx <- sf::st_intersects(buf, df_sf )
+      i_points = df_sf[unlist(idx),]
+      t_points = df_sf[unlist(tdx),]
+      #t_points = rbind(df_sf[1,],t_points)
+      i_points$id = 1
+      t_points$id = 99
+      
+      # names(t_points)= paste(names(df),"geometry")
+      # sf::st_geometry(t_points) <- "geometry"
+      df <-as(rbind(i_points,t_points), "Spatial")
+    }
     # if terraintrack = true try to reduce the number of waypoints by filtering
     # this is done by: 
     # (1) applying the horizonFilter size via the rollmax function of the zoo package
@@ -182,47 +183,53 @@ analyzeDSM <- function(demFn ,df,p,altFilter,horizonFilter,followSurface,followS
       sDF$altitude  <- filtAlt
       colNames      <- colnames(sDF)
       colnames(sDF) <- colNames
-      ipoi = sDF[sDF$id == 1,]
-      #i_poi$id[seq(1, to = nrow(i_points), by = horizonFilter)] = 1
-      turnPoints    <- sDF[sDF$id == "99",]
-      #samplePoints  <- sDF[sDF$id == "1",]
-      samplePoints  <- ipoi[seq(1, to = nrow(ipoi), by = horizonFilter),] 
-      names(samplePoints) = names(df)
-      names(turnPoints) = names(df)
-      #duplicates <- which(!is.na(match(rownames(samplePoints),rownames(turnPoints))))
-      #fDF <- rbind(turnPoints,samplePoints[-duplicates,])
-      #browser()
-      fDF <- rbind(samplePoints,turnPoints)
-      #fDF$altitude.m. = as.matrix(fDF$altitude)
-      names(fDF) = names(df)
-      fDF <- fDF[order(fDF$sortID),]
-      
-      dif           <- abs(as.data.frame(diff(as.matrix(fDF$altitude))))
-      colnames(dif) <- c("dif")
-      fDF           <- fDF[-c(1), ] # drop first line
-      fDF$dif       <- dif[,1]
-      
-      fDF <- fDF[fDF$id == "99" | fDF$dif > altFilter , ]
-      
-      fDF$lon <- as.numeric(fDF$longitude)
-      fDF$lat <- as.numeric(fDF$latitude)
-      
-      sp::coordinates(fDF) <- ~lon+lat
-      sp::proj4string(fDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-      fDF@data$sortID      <- NULL
-      fDF@data$dif         <- NULL
-      if (any(grepl(names(fDF), pattern = ".m."))){
-      fDF[["altitude.m."]] = as.matrix(fDF$altitude)[,1]
-      nms = gsub("\\.m\\.s\\.","(m/s)",names(fDF))
-      nms = gsub("\\.m\\.","(m)",nms)
-      names(fDF) = gsub("\\.deg\\.","(deg)",nms)
+      if (useMP){
+        ipoi = sDF[sDF$id == 1,]
+        #i_poi$id[seq(1, to = nrow(i_points), by = horizonFilter)] = 1
+        turnPoints    <- sDF[sDF$id == "99",]
+        #samplePoints  <- sDF[sDF$id == "1",]
+        samplePoints  <- ipoi[seq(1, to = nrow(ipoi), by = horizonFilter),] 
+        names(samplePoints) = names(df)
+        names(turnPoints) = names(df)
+        #duplicates <- which(!is.na(match(rownames(samplePoints),rownames(turnPoints))))
+        #fDF <- rbind(turnPoints,samplePoints[-duplicates,])
+        #browser()
+        sDF <- rbind(samplePoints,turnPoints)
+        #fDF$altitude.m. = as.matrix(fDF$altitude)
+        names(sDF) = names(df)
 
-      } else {
-        names(fDF) = c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","j")
-        fDF[["altitude"]] = as.matrix(fDF$altitude)[,1]
+      }
+      sDF <- sDF[order(sDF$sortID),]
+      
+      dif           <- abs(as.data.frame(diff(as.matrix(sDF$altitude))))
+      colnames(dif) <- c("dif")
+      sDF           <- sDF[-c(1), ] # drop first line
+      sDF$dif       <- dif[,1]
+      
+      sDF <- sDF[sDF$id == "99" | sDF$dif > altFilter , ]
+      
+      sDF$lon <- as.numeric(sDF$longitude)
+      sDF$lat <- as.numeric(sDF$latitude)
+      
+      sp::coordinates(sDF) <- ~lon+lat
+      sp::proj4string(sDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
+      sDF@data$sortID      <- NULL
+      sDF@data$dif         <- NULL
+      if (any(grepl(names(sDF), pattern = "\\.m\\."))){
+        sDF[["altitude.m."]] = as.matrix(sDF$altitude)[,1]
+        nms = gsub("\\.m\\.s\\.","(m/s)",names(sDF))
+        nms = gsub("\\.m\\.","(m)",nms)
+        names(sDF) = gsub("\\.deg\\.","(deg)",nms)
+        
+      } else if(any(grepl(names(sDF), pattern = "(m)"))){
+        sDF[["altitude(m)"]] = as.matrix(sDF$altitude)[,1]
+      }else {
+        names(sDF) = c("a","b","c","d","e","f","g","latitude","longitude","altitude","id","j")
+        sDF[["altitude"]] = as.matrix(sDF$altitude)[,1]
       }
       
-      df <- fDF
+      
+      df <- sDF
     }
   }
   
