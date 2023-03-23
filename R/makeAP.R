@@ -40,10 +40,7 @@ if (!isGeneric('makeAP')) {
 
 #' @param projectDir `character` path to the main folder where several locations can be hosted, default is `tempdir()`
 #' @param locationName `character` path to the location folder where all tasks of this plot are hosted, default is `"flightArea"` 
-#' @param surveyArea  you may provide either the coordinates by
-#' c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or
-#' an OGR compatible file (prefunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’erably geoJSON or KML) with
-#' at least 4 coordinates that describe the flight area.
+#' @param surveyArea  you may provide an OGR compatible file (preferable SHP or KML) withbat least 4 coordinates that describe the flight area.
 #' The fourth coordinate is the launch position.
 #'  You will find further explanation under seealso.
 #' @param launchAltitude absolute altitude of launching position.
@@ -190,11 +187,11 @@ if (!isGeneric('makeAP')) {
 #'         
 #' ## (6) view results
 #' 
-#'mapview::mapview(fp$wp,cex=4, lwd=0.5)+
-#'mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
-#'mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
-#'mapview::mapview(fp$oDEM,col=terrain.colors(256))
-#'
+#'  mapview::mapview(fp$wp,cex=4, lwd=0.5)+
+#'  mapview::mapview(fp$lp,color = "red", lwd=1,cex=4)+
+#'  mapview::mapview(fp$fA,color="blue", alpha.regions = 0.1,lwd=0.5)+
+#'  mapview::mapview(fp$oDEM,col=terrain.colors(256))
+
 #'
 #'
 #' ## (6) digitize flight area using the small "onboard" tool vecDraw()

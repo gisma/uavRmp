@@ -1,15 +1,12 @@
 library(uavRmp)
-fp = makeAP(projectDir = "~/Desktop/Schreibtisch/forgenius/",
-            surveyArea="~/Desktop/Schreibtisch/forgenius/lacanau_all_yuneec.plan",
-            useMP = TRUE,
-            demFn = "~/Desktop/Schreibtisch/forgenius/lacanau-dem.tif",
-            noFiles = 1,
-            followSurface = T,
-            horizonFilter = 1,
-            followSurfaceRes = 1,
-            flightAltitude = 70,
-            altFilter = 0.5,
-            cameraType ="dji4k",
+fp = makeAP(projectDir = "/media/creu/meta/forgenius-pn/",
+            surveyArea="/media/creu/meta/forgenius-pn/plan2.shp",#c(-0.762089556658727,41.5876705181715,-0.762039097997477,41.5889620552973,-0.761366315847475,41.5889452822535,-0.762302604339561,41.5880479180555),
+            useMP = F,
+            demFn = "/media/creu/meta/forgenius-pn/dsm.tif",
+            noFiles = 1,flightAltitude = 15,
+            followSurface = T,followSurfaceRes = 1,
+            altFilter = 0.1,
+            cameraType ="dji32",
             uavType = "dji_csv")    
 
 library(uavRmp)

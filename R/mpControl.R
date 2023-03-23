@@ -527,7 +527,7 @@ importSurveyArea <- function(fN) {
 # imports the survey area from a list of for coordinates
 readExternalFlightBoundary <- function(fN, extend = FALSE) {
   flightBound <- importSurveyArea(fN)
-  sp::spTransform(flightBound, sp::CRS("+proj=longlat +datum=WGS84 +no_defs"))
+  #sp::spTransform(flightBound, sp::CRS("+proj=longlat +datum=WGS84 +no_defs"))
   if (extend) {
     x <- sf::st_bbox(flightBound)
     
@@ -559,7 +559,7 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
       launchLon  <- flightBound@polygons[[1]]@Polygons[[1]]@coords[4,1] 
       launchLat <- flightBound@polygons[[1]]@Polygons[[1]]@coords[4,2]       
     }
-    if (methods::is(flightBound, "SpatialLinesDataFrame")) {
+    if (methods::is(flightBound, "SpatialLinesDataFrame")| methods::is(flightBound, "SpatialPointsDataFrame")) {
       fb = as(flightBound, "SpatialPointsDataFrame")
       fb = sp::remove.duplicates(fb)
       tr<-try(lon3 <- fb@coords[4,1],silent = TRUE)
@@ -1606,7 +1606,7 @@ setProjStructure <- function(projectDir,
                              ft="A",
                              runDir){
   workingDir <- tools::file_path_sans_ext(basename(as.character(surveyArea)))
-  
+  if (length(workingDir) > 1) workingDir = paste0(workingDir[1],"_",workingDir[2])
   projRootDir <- file.path(projectDir, locationName, workingDir)
   
   if (ft=="A") ftype <- "_AREA"
@@ -1615,7 +1615,7 @@ setProjStructure <- function(projectDir,
   taskName <-paste0(format(Sys.time(), "%Y%m%d_%H%M"),
                     "__",
                     cameraType,"__", 
-                    tools::file_path_sans_ext(basename(as.character(surveyArea))),"_", 
+                    workingDir,"_", 
                     ftype,
                     "__",
                     flightAltitude,"m")
