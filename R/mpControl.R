@@ -671,8 +671,13 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     startLon <-  launchLon #df@data[minPoints + 1,2]
     
     # take current end position of split task
+    if (i > 1){
     endLat <- df@data[maxPoints,1]
     endLon <- df@data[maxPoints,2]
+    } else if (i==1) {
+      endLat <-  startLat 
+      endLon <-startLon 
+    }
     
     # generate flight lines from launch to start and launch to end point of splitted task
     home  <- sp_line(c(launchLon,endLon),c(launchLat,endLat),"home",runDir=runDir)
