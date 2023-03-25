@@ -320,7 +320,7 @@ HTMLWidgets.widget({
         //document.getElementById("coords").innerHTML = '<div class="coords"' + grabstring + '"</div>"' 
         $('#coords').text( convertedData );
         //window.alert(grabstring);}).addTo(map);
-       download(new Blob([kml]), "dlTextBlob.txt", "text/plain");}).addTo(map);
+       download(new Blob([kml]), "flightarea.kml", "text/plain");}).addTo(map);
       //}
 
   // grab the lnlt div and put the mousmove output there
