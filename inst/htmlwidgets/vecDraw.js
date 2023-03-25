@@ -189,15 +189,15 @@ HTMLWidgets.widget({
        var polyLayer = geojsonLayer = L.geoJson(jsondata, {
     style: function(feature) {
         return {
-        	color: "black"
+        	color: "gray"
         };
     },
     pointToLayer: function(feature, latlng) {
         return new L.CircleMarker(latlng, {
         	radius: 3, 
-        	weight: 0.5,
-        	fillOpacity: 0.7,
-        	fillColor: "magenta"
+        	weight: 0.25,
+        	fillOpacity: 0.35,
+        	fillColor: "orange"
         	
         });
     }
