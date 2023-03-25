@@ -1,7 +1,7 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '2023-02-26'
+date: '2023-03-25'
 editor_options:
   chunk_output_type: console
 output:
@@ -182,7 +182,7 @@ This recipe deals with the effective and safe planning of an autonomous flight. 
 
 The basic workflow of planning a good aerial and target oriented flight mission. In the extended version you find some more explanations and hints for improving your planning. 
 
-Even if you can assume the use of uavs for autonomous flights as somehow “operational”, you should always keep in mind that avoiding negative impacts is a result of ￼responsible and focused planning.
+Even if you can assume the use of uavs for autonomous flights as somehow “operational”, you should always keep in mind that avoiding negative impacts is a result of responsible and focused planning.
 
      Please keep in mind that autonomous UAVs can harm the the pilot and environment. 
 
@@ -228,7 +228,7 @@ Digitize the 3 corner points of an area you want to map and in addition as fourt
    # get example DEM data
    fn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
    fa <- system.file("extdata", "flightarea.kml", package = "uavRmp")
-   # preset = "uav" supress all not necessary tools
+   # preset = "uav" suppress all not necessary tools
    vecDraw(mapCenter = c(50.855,8.691),preset="uav")
   
    # Use the digitized data (assumed to be named "firstSurvey.json")

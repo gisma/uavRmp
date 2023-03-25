@@ -506,8 +506,8 @@ calcSurveyArea <- function(surveyArea,projectDir,logger,useMP) {
         if (!methods::is(test, "try-error")) {
           surveyArea <- flightBound 
         } else {
-          log4r::levellog(logger, 'FATAL', "### can not find/read input file")        
-          stop("### could not read surveyArea file")
+          log4r::levellog(logger, 'FATAL', "### can not find or read input file")        
+          stop("### problems to read surveyArea file\n\n NOTE: KML is only suported if vecDraw was used.")
         }
       }
     }
@@ -518,7 +518,11 @@ calcSurveyArea <- function(surveyArea,projectDir,logger,useMP) {
 # imports the survey area from a json or kml file
 importSurveyArea <- function(fN) {
   tmp <- sf::st_read(path.expand(fN))
-  flightBound = methods::as(tmp, "Spatial")
+  if (xfun::file_ext(fN) == "shp" | xfun::file_ext(fN) == "gpkg" | xfun::file_ext(fN) == "kml")
+    flightBound = methods::as(tmp, "Spatial")  
+  # else if (xfun::file_ext(fN) == "kml")
+  #   flightBound = methods::as(st_cast(tmp, "POINT"), "Spatial")
+  else {stop("only KML as created with vecDraw or GPKG and SHP are supported\n")}
   flightBound@data <- as.data.frame(cbind(1,1,1,1,1,-1,0,-1,1,1,1))
   names(flightBound@data) <- c("Name", "description", "timestamp", "begin", "end", "altitudeMode", "tessellate", "extrude", "visibility", "drawOrder", "icon")
   return(flightBound)

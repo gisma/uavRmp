@@ -77,7 +77,7 @@ HTMLWidgets.widget({
      "opacity": x.opacity
    };
    // define a dummy layer for the geojson data
-    //var myLayer = L.geoJson(undefined,{style:style,onEachFeature:onEachFeature}).addTo(map);
+   var myLayer = L.geoJson(undefined,{style:style,onEachFeature:onEachFeature}).addTo(map);
   
    var feature = {
     "type": "Feature",
@@ -186,10 +186,22 @@ HTMLWidgets.widget({
 };
    // create geojsonlayer
    if (x.overlay == 1) {
-   var polyLayer = L.Proj.geoJson(jsondata,{ pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, geojsonMarkerOptions);
-    },style:style,onEachFeature:onEachFeature})
-    
+       var polyLayer = geojsonLayer = L.geoJson(jsondata, {
+    style: function(feature) {
+        return {
+        	color: "black"
+        };
+    },
+    pointToLayer: function(feature, latlng) {
+        return new L.CircleMarker(latlng, {
+        	radius: 3, 
+        	weight: 0.5,
+        	fillOpacity: 0.7,
+        	fillColor: "magenta"
+        	
+        });
+    }
+});   
        var overlayLayers = {};
       overlayLayers['userOverlay'] = polyLayer;
 

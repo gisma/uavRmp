@@ -10,7 +10,7 @@ knitr::opts_knit$set(root.dir = tempdir())
 #     # get example DEM data
 #     fn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 #     fa <- system.file("extdata", "flightarea.kml", package = "uavRmp")
-#     # preset = "uav" supress all not necessary tools
+#     # preset = "uav" suppress all not necessary tools
 #     vecDraw(mapCenter = c(50.855,8.691),preset="uav")
 #  
 #     # Use the digitized data (assumed to be named "firstSurvey.json")
