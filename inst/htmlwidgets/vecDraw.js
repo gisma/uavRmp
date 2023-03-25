@@ -296,13 +296,13 @@ HTMLWidgets.widget({
 
     //  <span style="font: 15px " class="star" >&#x2704;</span>
     //'<span style="font-size: 20px" class="glyphicon glyphicon-download"></span>'
-         L.easyButton(  '<span style="font-size: 5px font-weight:bold" class="glyphicon glyphicon-download"> JS</span>',
-         function(){
-           var data = drawnItems.toGeoJSON();
+     //    L.easyButton(  '<span style="font-size: 5px font-weight:bold" class="glyphicon glyphicon-download"> JS</span>',
+//         function(){
+//           var data = drawnItems.toGeoJSON();
            // Stringify the GeoJson
-           var convertedData = JSON.stringify(data);
+//           var convertedData = JSON.stringify(data);
            // Create ajax export using download.js
-           download(new Blob([convertedData]), "dlTextBlob.txt", "text/plain");}).addTo(map);
+//           download(new Blob([convertedData]), "dlTextBlob.txt", "text/plain");}).addTo(map);
      
      
 
