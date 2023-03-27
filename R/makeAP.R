@@ -380,8 +380,8 @@ makeAP <- function(projectDir = tempdir(),
     # calculate heading from launch position to mission start position
     launch2startHeading <- geosphere::bearing(p1 = c(launchLon, launchLat),p2 = c(df_coordinates[1,][2],df_coordinates[1,][1] ),a = 6378137,f = 1 / 298.257223563)
     groundResolution<-t$mission$items$TransectStyleComplexItem$CameraCalc$ImageDensity[listPos]
-    #if (crossDistance < followSurfaceRes) followSurfaceRes = crossDistance
-    #if (crossDistance < horizonFilter ) horizonFilter = crossDistance 
+    if (crossDistance < followSurfaceRes) followSurfaceRes = crossDistance
+    if (crossDistance < horizonFilter ) horizonFilter = crossDistance 
     
     # set cumulative flightlength to zero
     flightLength <- 0

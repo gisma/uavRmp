@@ -382,11 +382,14 @@ These resuls from the (a) a complex outer hull of the structure and that b) the 
 There are some simple ways to overcome this structural problem:
 
 
-2.  Lower the resolution of the DSM or at minimum to the cross-distance of the  tracks `followSurfaceRes = 1` 
-2. lower the parameter of the rolling filter ` horizonFilter = 1`
-1. Increase the argument buf_mult to e.g. `buf_mult = 3`.
+2. increase the distance of synthetic waypoints:  `followSurfaceRes = 2` 
+2. in doubt choose the same value for the argument that controls the the rolling filter.: ` horizonFilter = 2`
+3. adapt the number of waypoints to your needs e.g..: `altFilter = 5.0`
+1. increase the argument buf_mult to e.g.: ` buf_mult = 3`
 
-![Litchi result](qcmissionb15_detail.png)  
+
+![Litchi result](images/qcmissionb15.png)  
+
 
 
 # Export to the flight apps
