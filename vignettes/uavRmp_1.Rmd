@@ -373,7 +373,9 @@ fp <- makeAP(projectDir = tempdir(),
 ```
 
 The result looks like this in Litchi.
-![Litchi result](qcmissionb4_arte.png)  
+
+![](qcmissionb15.png)  
+
 
 It is easy to see that there are major errors in the transmission.
 
@@ -381,13 +383,28 @@ These resuls from the (a) a complex outer hull of the structure and that b) the 
 There are some simple ways to overcome this structural problem:
 
 
-2. increase the distance of synthetic waypoints:  `followSurfaceRes = 2` 
+1. increase the distance of synthetic waypoints:  `followSurfaceRes = 2` 
 2. in doubt choose the same value for the argument that controls the the rolling filter.: ` horizonFilter = 2`
 3. adapt the number of waypoints to your needs e.g..: `altFilter = 5.0`
 1. increase the argument buf_mult to e.g.: ` buf_mult = 3`
 
+So adding a extended turning point tolerance (`mult-buf`) the results looks like below:
 
-![Litchi result](images/qcmissionb15.png)  
+```{r, eval=FALSE}
+demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
+fp <- makeAP(projectDir = tempdir(),
+             surveyArea = tutorial_flightArea,
+             useMP = TRUE,
+             followSurface = TRUE,
+             buf_mult = 3,
+             above_ground = FALSE,
+             demFn = demFn,
+             uavType = "dji_csv" 
+             )
+```
+![Litchi result](qcmissionb15_detail.png)  
+
 
 
 
