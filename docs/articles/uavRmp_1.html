@@ -566,20 +566,21 @@ that b) the turning points which are necessary to maintain the lateral
 overlap are filtered out in the DSM analysis. There are some simple ways
 to overcome this structural problem:</p>
 <ol start="2" style="list-style-type: decimal">
-<li>Lower the resolution of the DSM or at minimum to the cross-distance
-of the tracks <code>followSurfaceRes = 1</code>
+<li>increase the distance of synthetic waypoints:
+<code>followSurfaceRes = 2</code>
 </li>
-<li>lower the parameter of the rolling filter
-<code>horizonFilter = 1</code>
+<li>in doubt choose the same value for the argument that controls the
+the rolling filter.: <code>horizonFilter = 2</code>
 </li>
-<li>adapt the number of waypoints to your needs
-i.e. <code>altFilter = 2.5</code>
+<li>adapt the number of waypoints to your needs e.g..:
+<code>altFilter = 5.0</code>
 </li>
-<li>Increase the argument buf_mult to
-e.g. <code>buf_mult = 3</code>.</li>
+<li>increase the argument buf_mult to e.g.:
+<code>buf_mult = 3</code>
+</li>
 </ol>
 <div class="figure">
-<img src="qcmissionb15_detail.png" alt=""><p class="caption">Litchi result</p>
+<img src="images/qcmissionb15.png" alt=""><p class="caption">Litchi result</p>
 </div>
 </div>
 <div class="section level2">
