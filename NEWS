@@ -1,3 +1,14 @@
+## uavRmp 0.7
+
+new features: 
+
+* add QGIS digitizing support 
+* new QGC terrain following analysis 
+
+bugfixes:
+
+* fix the overlay error of vecDraw
+
 ## uavRmp 0.6.4
 new features:
 * add additional terrain filter functions for QGroundcontrol planned surveys 
