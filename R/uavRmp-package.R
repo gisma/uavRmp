@@ -21,6 +21,8 @@
 #' @importFrom geosphere destPoint
 #' @importFrom methods as
 #' @import log4r
+#' @import dplyr
+#' @import sf
 #' @keywords package
 #' 
 NULL

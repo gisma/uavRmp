@@ -111,7 +111,10 @@
 
 
 <dt>surveyArea</dt>
-<dd><p>you may provide an OGR compatible file (preferable SHP or KML) withbat least 4 coordinates that describe the flight area.
+<dd><p>you may provide either the coordinates by
+c(lon1,lat1,lon2,lat2,lon3,lat3,launchLat,launchLon) or
+an OGR compatible file (prefunable to find an inherited method for function ‘makeAP’ for signature ‘"missing"’erably geoJSON or KML) with
+at least 4 coordinates that describe the flight area.
 The fourth coordinate is the launch position.
 You will find further explanation under seealso.</p></dd>
 
@@ -381,10 +384,11 @@ at <a href="https://gisma.github.io/uavRmp/articles/uavRmp_1.html" class="extern
 <span class="r-in"><span>        </span></span>
 <span class="r-in"><span><span class="co">## (6) view results</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span> <span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">wp</span>,cex<span class="op">=</span><span class="fl">4</span>, lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span></span>
-<span class="r-in"><span> <span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">lp</span>,color <span class="op">=</span> <span class="st">"red"</span>, lwd<span class="op">=</span><span class="fl">1</span>,cex<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">+</span></span></span>
-<span class="r-in"><span> <span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">fA</span>,color<span class="op">=</span><span class="st">"blue"</span>, alpha.regions <span class="op">=</span> <span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span></span>
-<span class="r-in"><span> <span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">oDEM</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">terrain.colors</a></span><span class="op">(</span><span class="fl">256</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">wp</span>,cex<span class="op">=</span><span class="fl">4</span>, lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span></span>
+<span class="r-in"><span><span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">lp</span>,color <span class="op">=</span> <span class="st">"red"</span>, lwd<span class="op">=</span><span class="fl">1</span>,cex<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">+</span></span></span>
+<span class="r-in"><span><span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">fA</span>,color<span class="op">=</span><span class="st">"blue"</span>, alpha.regions <span class="op">=</span> <span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span></span>
+<span class="r-in"><span><span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">$</span><span class="va">oDEM</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">terrain.colors</a></span><span class="op">(</span><span class="fl">256</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## (6) digitize flight area using the small "onboard" tool vecDraw()</span></span></span>
