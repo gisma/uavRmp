@@ -43,3 +43,16 @@ fp <- makeAP(projectDir = "~/Desktop/tmp",
              cameraType ="YUN90",
              uavType = "pixhawk", 
              above_ground = FALSE)
+
+demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
+fp <- makeAP(projectDir = tempdir(),
+             surveyArea = tutorial_flightArea,
+             useMP = TRUE,followSurfaceRes = 2, horizonFilter = 10,altFilter = 2.5,
+             
+             followSurface = TRUE,
+             above_ground = FALSE,
+             demFn = demFn,
+             uavType = "dji_csv" 
+)
+

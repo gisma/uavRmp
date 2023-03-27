@@ -1,7 +1,7 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '2023-03-25'
+date: '2023-03-27'
 editor_options:
   chunk_output_type: console
 output:
@@ -356,7 +356,7 @@ By default  `noFiles` is set to one. Due to the modern UAVs it is strongly recom
 
 **Note:** For a problem-free terrain contour flight it is obligatory to set the parameter `above_ground = FALSE`.
 
-The example below shows a meaningful example for an Air 2S DJI and a 30m ASL flight over beech wood.
+The example below shows a meaningful example for an Air 2S DJI and a 30m ASL flight over beech wood with default settings.
 
 
 
@@ -374,14 +374,19 @@ fp <- makeAP(projectDir = tempdir(),
 ```
 
 The result looks like this in Litchi.
-![Litchi result](qcmissionb15.png)  
+![Litchi result](qcmissionb4_arte.png)  
 
-It is easy to see that there are errors in the transmission.
+It is easy to see that there are major errors in the transmission.
 
-![Litchi result detail](qcmissionb15_detail.png)
+These resuls from the (a) a complex outer hull of the structure and that b) the turning points which are necessary to maintain the lateral overlap are filtered out in the DSM analysis. 
+There are some simple ways to overcome this structural problem:
 
-These result from the complex outer shell of the structure and that the inflection points necessary to maintain the lateral overlap are filtered out in the DSM analysis.  A simple way around this is to increase the argument buf_mult to e.g. `buf_mult = 3`.
-![Litchi result](qcmissionb3_detail.png)  
+
+2.  Lower the resolution of the DSM or at minimum to the cross-distance of the  tracks `followSurfaceRes = 1` 
+2. lower the parameter of the rolling filter ` horizonFilter = 1`
+1. Increase the argument buf_mult to e.g. `buf_mult = 3`.
+
+![Litchi result](qcmissionb15_detail.png)  
 
 
 # Export to the flight apps
