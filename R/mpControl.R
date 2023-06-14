@@ -95,7 +95,7 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
   sp::proj4string(pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   
   # extract all waypoint altitudes
-  altitude <- terra::extract(demll,terra::vect(df),layer = 1, nl = 1,ID=FALSE)
+  altitude <- terra::extract(demll,terra::vect(df),layer = 1, ID=FALSE)
   
   # get maximum altitude of the task area
   maxAlt <- max(altitude,na.rm = TRUE)
@@ -104,7 +104,7 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
   
   # extract launch altitude from DEM
   if (is.na(p$launchAltitude)) {
-    tmpalt <-as.numeric(terra::extract(demll,terra::vect(pos),layer = 1, nl = 1,ID=FALSE))
+    tmpalt <-as.numeric(terra::extract(demll,terra::vect(pos),layer = 1,ID=FALSE))
     p$launchAltitude <- as.numeric(tmpalt)
     # otherwise take it from the parameter set
   } else 
@@ -135,11 +135,11 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
     cat("apply follow terrain filter...\n")
     
     # extract all waypoint altitudes
-    altitude2 <-terra::extract(demll,terra::vect(df),layer = 1, nl = 1,ID=FALSE)
+    altitude2 <-terra::extract(demll,terra::vect(df),layer = 1,ID=FALSE)
     # get maximum altitude of the task area
     
     # extract launch altitude from DEM
-    launchAlt <- as.numeric(terra::extract(demll,terra::vect(pos),layer = 1, nl = 1,ID=FALSE))
+    launchAlt <- as.numeric(terra::extract(demll,terra::vect(pos),layer = 1,ID=FALSE))
     
     # calculate the agl flight altitude
     #altitude<-altitude+as.numeric(p$flightAltitude)-maxAlt    
@@ -308,7 +308,7 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
   launch_pos <- as.data.frame(cbind(launchLat,launchLon))
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
   sp::proj4string(launch_pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
-  launchAlt <- as.numeric(terra::extract(dem,terra::vect(launch_pos),layer = 1, nl = 1,ID=FALSE))
+  launchAlt <- as.numeric(terra::extract(dem,terra::vect(launch_pos),layer = 1,ID=FALSE))
   
   # for each splitted task file
   for (i in 1:nofiles) {
@@ -330,8 +330,8 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start",runDir=runDir)
       
       # calculate minimum rth altitude for each line by identifying max altitude
-      homeRth  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
-      startRth <- as.numeric(terra::extract(dem,terra::vect(start),fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+      homeRth  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max,na.rm = TRUE,exact=TRUE,layer = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+      startRth <- as.numeric(terra::extract(dem,terra::vect(start),fun = max,na.rm = TRUE,exact=TRUE,layer = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
       
       # add 10% of flight altitude as safety buffer
       homeRth  <- homeRth  + 0.1 * homeRth
@@ -690,8 +690,8 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     # calculate minimum rth altitude for each line by identifying max altitude
     #homeRth<-max(unlist(raster::extract(dem,home)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
     #startRth<-max(unlist(raster::extract(dem,start)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
-    maxAltHomeFlight  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max, na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
-    maxAltStartFlight <- as.numeric(terra::extract(dem,terra::vect(start),fun = max, na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+    maxAltHomeFlight  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max, na.rm = TRUE,layer = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+    maxAltStartFlight <- as.numeric(terra::extract(dem,terra::vect(start),fun = max, na.rm = TRUE,layer = 1, ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
     
     # get the max position of the flightlines
     homemaxpos  <- maxpos_on_line(dem,home)
@@ -1111,8 +1111,8 @@ MAVTreeCSV <- function(flightPlanMode,
     start <- sp_line(c(launchLon,startLon),c(launchLat,startLat),"Start",runDir=runDir)
     
     # calculate minimum rth altitude for each line by identifing max altitude
-    homeRth  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
-    startRth <- as.numeric(terra::extract(dem,terra::vect(start),fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+    homeRth  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max,na.rm = TRUE,layer = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
+    startRth <- as.numeric(terra::extract(dem,terra::vect(start),fun = max,na.rm = TRUE,layer = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
     
     # add 10% of flight altitude as safety buffer
     homeRth  <- homeRth  + 0.1 * homeRth
@@ -1326,7 +1326,7 @@ makeFlightPathT3 <- function(treeList,
       lp <- sp_point(p$launchLon,p$launchLat,"LaunchPos")
       
       if (p$launchAltitude == -9999){
-        tmpalt <- as.numeric(terra::extract(dem,terra::vect(lp),layer = 1, nl = 1,ID=FALSE))  
+        tmpalt <- as.numeric(terra::extract(dem,terra::vect(lp),layer = 1,ID=FALSE))  
         p$launchAltitude <- as.numeric(tmpalt)
         # otherwise take it from the parameter set
       } else 
@@ -1334,7 +1334,7 @@ makeFlightPathT3 <- function(treeList,
         p$launchAltitude <- as.numeric(p$launchAltitude)
       }
       # extract all waypoint altitudes
-      altitude <- as.data.frame(as.numeric(terra::extract(demll,terra::vect(treeList),layer = 1, nl = 1),ID=FALSE))
+      altitude <- as.data.frame(as.numeric(terra::extract(demll,terra::vect(treeList),layer = 1),ID=FALSE))
       altitude<-as.matrix(altitude)
       # get maximum altitude of the flight corridors
       maxAlt <- max(altitude,na.rm = TRUE)
@@ -1565,7 +1565,7 @@ get_seg_fparams <- function(dem,
   seg_buf<- sf::st_buffer(seg_utm,dist = 5.0) #rgeos::gBuffer(spgeom = seg_utm,width = 5.0)
   seg_buf <- sf::st_transform(seg_buf,crs = 4326) #sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
   # calculate minimum rth altitude for each line by identifing max altitude
-  seg_flight_altitude  <- as.numeric(terra::extract(dem,terra::vect(seg_buf), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - startAlt + as.numeric(p$flightAltitude)
+  seg_flight_altitude  <- as.numeric(terra::extract(dem,terra::vect(seg_buf), fun = max,na.rm = TRUE,layer = 1,ID=FALSE)) - startAlt + as.numeric(p$flightAltitude)
   
   # add 10% of flight altitude as safety buffer
   #seg_flight_altitude  <- seg_flight_altitude  + 0.1 * seg_flight_altitude
@@ -1596,7 +1596,7 @@ get_point_fparams <- function(dem,
   seg_buf <- sf::st_transform(seg_buf,crs = 4326) #sp::spTransform(seg_buf,CRSobj = "+proj=longlat +datum=WGS84 +no_defs" )
   
   # calculate minimum rth altitude for each line by identifing max altitude
-  seg_flight_altitude  <- as.numeric(terra::extract(dem,terra::vect(seg_buf), fun = max,na.rm = TRUE,layer = 1, nl = 1,ID=FALSE)) - startAlt + as.numeric(p$aboveTreeAlt)
+  seg_flight_altitude  <- as.numeric(terra::extract(dem,terra::vect(seg_buf), fun = max,na.rm = TRUE,layer = 1,ID=FALSE)) - startAlt + as.numeric(p$aboveTreeAlt)
   
   # calculate heading 
   return (c(seg_flight_altitude))
@@ -1715,8 +1715,8 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
     sp::proj4string(start) <-sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     
     # calculate minimum rth altitude for each line by identifying max altitude
-    homeRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(home),layer = 1, nl = 1),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt))
-    startRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(start),layer = 1, nl = 1),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt))
+    homeRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(home),layer = 1),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt))
+    startRth<-max(unlist(as.numeric(terra::extract(dem,terra::vect(start),layer = 1),ID=FALSE)) + as.numeric(p$flightAltitude)-as.numeric(maxAlt))
     
     # calculate rth heading 
     homeheading<-geosphere::bearing(c(endLon,endLat),c(launchLon,launchLat), a=6378137, f=1/298.257223563)
@@ -1765,7 +1765,7 @@ writeDjiTreeCSV <-function(df,mission,nofiles,maxPoints,p,logger,rth,trackSwitch
 getAltitudes <- function(demll ,df,p,followSurfaceRes,logger,projectDir,locationName,flightArea) {
   
   # extract all waypoint altitudes
-  altitude <- as.data.frame(as.numeric(terra::extract(demll,terra::vect(df),layer = 1, nl = 1),ID=FALSE))
+  altitude <- as.data.frame(as.numeric(terra::extract(demll,terra::vect(df),layer = 1),ID=FALSE))
   names(altitude) <- "altitude"
   altitude<-as.matrix(altitude)
   # get maximum altitude of the task area
@@ -1777,7 +1777,7 @@ getAltitudes <- function(demll ,df,p,followSurfaceRes,logger,projectDir,location
   sp::proj4string(pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   
   if (p$launchAltitude == -9999){
-    tmpalt <- as.numeric(terra::extract(demll,terra::vect(pos),layer = 1, nl = 1,ID=FALSE))
+    tmpalt <- as.numeric(terra::extract(demll,terra::vect(pos),layer = 1,ID=FALSE))
     p$launchAltitude <- as.numeric(tmpalt)
     # otherwise take it from the parameter set
   } else 
