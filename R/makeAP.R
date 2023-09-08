@@ -823,7 +823,24 @@ makeAP <- function(projectDir = tempdir(),
   }
   close(pb)
   }
-  
+  if (uavType == "dji_csv") {
+  browser()
+  fileConn <- file(file.path(runDir,"del2.csv"))
+  writeLines(unlist(lns[1:length(lns)]), fileConn)
+  djiDF <- utils::read.csv(file.path(runDir,"del2.csv"), sep = ",", header = FALSE)
+  # add correct header
+  # if (!followSurface){
+  # djiDF1= djiDF[1:3,]
+  # t1=nrow(djiDF)-3
+  # t2=nrow(djiDF)-0
+  # djiDF2= djiDF[t1:t2,]
+  # djiDinner= djiDF1[4:length(djiDF-4),]
+  # }
+  names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group =group,p,header = TRUE,sep = ','),split = ","))
+  djiDF=djiDF[,-(1:2)]
+  # df_coord_pos = sf::st_as_sf(djiDF, coords = c("lon","lat"),remove = TRUE)
+  # r6 = st_difference(df_coord_pos)
+  }
   ##########################
   ##########################################
   #browser()
