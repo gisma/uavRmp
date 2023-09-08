@@ -824,7 +824,7 @@ makeAP <- function(projectDir = tempdir(),
   close(pb)
   }
   if (uavType == "dji_csv") {
-  browser()
+  #browser()
   fileConn <- file(file.path(runDir,"del2.csv"))
   writeLines(unlist(lns[1:length(lns)]), fileConn)
   djiDF <- utils::read.csv(file.path(runDir,"del2.csv"), sep = ",", header = FALSE)
