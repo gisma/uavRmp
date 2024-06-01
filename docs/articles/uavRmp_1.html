@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unmanned Aerial Vehicle R based Mission Planning • uavRmp</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -92,7 +92,7 @@ Planning</h1>
                         <h4 data-toc-skip class="author">Chris
 Reudenbach</h4>
             
-            <h4 data-toc-skip class="date">2023-03-28</h4>
+            <h4 data-toc-skip class="date">2024-06-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/gisma/uavRmp/blob/HEAD/vignettes/uavRmp_1.Rmd" class="external-link"><code>vignettes/uavRmp_1.Rmd</code></a></small>
       <div class="hidden name"><code>uavRmp_1.Rmd</code></div>
@@ -173,9 +173,9 @@ libs in addition.</p>
 will soon be provided.</p>
 <p>To install from <code>github</code> you need to have installed the
 <code>devtools</code> package.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span></span></code></pre></div>
 <p>If you want to install all dependencies use:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">,</span> dependencies <span class="op">=</span> TRUE<span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">,</span> dependencies <span class="op">=</span> TRUE<span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -414,8 +414,8 @@ digitizing tool that is provided in ‘’uavRmp’’.</p>
 <span> <span class="co"># start digitizing tool with preset = "uav" for a reduced toolbar</span></span>
 <span> <span class="co"># see ?leafDraw for more information</span></span>
 <span> <span class="fu"><a href="../reference/vecDraw.html">vecDraw</a></span><span class="op">(</span>mapCenter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50.855</span>,<span class="fl">8.691</span><span class="op">)</span>,preset<span class="op">=</span><span class="st">"uav"</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="missionarea.png" alt=""><p class="caption">Digitized Flight Area</p>
+<div class="float">
+<img src="https://github.com/gisma/uavRmp/blob/master/docs/articles/missionarea.png" alt="Digitized Flight Area"><div class="figcaption">Digitized Flight Area</div>
 </div>
 <p>Feel free to digitize - similar to the above figure - the four points
 needed:</p>
@@ -468,8 +468,8 @@ stored in a folder called ‘’run’’.</p>
 called ‘’data’‘, which is located directly under the’‘projectDir’’
 folder.</p>
 <p>The project structure will look like the figure.</p>
-<div class="figure">
-<img src="folderstructure.png" alt=""><p class="caption">Example of uavRmp folder structure</p>
+<div class="float">
+<img src="https://github.com/gisma/uavRmp/blob/master/docs/articles/folderstructure.png" alt="Example of uavRmp folder structure"><div class="figcaption">Example of uavRmp folder structure</div>
 </div>
 </div>
 <div class="section level5">
@@ -506,12 +506,12 @@ surveyArea (red), turnpoints of track (blue circles) and the launch
 position (red).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/mapview" class="external-link">mapview</a></span><span class="op">)</span></span>
-<span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span>
-<span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,lwd<span class="op">=</span><span class="fl">1</span>,cex<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">+</span></span>
-<span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>,cex<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">+</span></span>
-<span> <span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"darkblue"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="simplemission.png" alt=""><p class="caption">The first autonomous mission</p>
+<span> <span class="fu"><a href="https://r-spatial.github.io/mapview/reference/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">+</span></span>
+<span> <span class="fu"><a href="https://r-spatial.github.io/mapview/reference/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,lwd<span class="op">=</span><span class="fl">1</span>,cex<span class="op">=</span><span class="fl">4</span><span class="op">)</span><span class="op">+</span></span>
+<span> <span class="fu"><a href="https://r-spatial.github.io/mapview/reference/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"red"</span>,cex<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">+</span></span>
+<span> <span class="fu"><a href="https://r-spatial.github.io/mapview/reference/mapView.html" class="external-link">mapview</a></span><span class="op">(</span><span class="va">fp</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>,color<span class="op">=</span><span class="st">"darkblue"</span>, alpha.regions <span class="op">=</span><span class="fl">0.1</span>,lwd<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="https://github.com/gisma/uavRmp/blob/master/docs/articles/simplemission.png" alt="The first autonomous mission"><div class="figcaption">The first autonomous mission</div>
 </div>
 </div>
 </div>
@@ -536,7 +536,7 @@ position (red).</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>

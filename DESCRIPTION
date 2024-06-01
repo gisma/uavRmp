@@ -14,7 +14,6 @@ Maintainer: Chris Reudenbach <reudenbach@uni-marburg.de>
 Description: The Unmanned Aerial Vehicle Mission Planner provides an easy to use work flow for planning autonomous obstacle avoiding surveys of ready to fly unmanned aerial vehicles to retrieve aerial or spot related data. It creates either intermediate flight control files for the DJI-Litchi supported series or ready to upload control files for the pixhawk-based flight controller as used in the 3DR-Solo or Yuneec series. Additionally it contains some useful tools for digitizing and data manipulation.
 URL: https://github.com/gisma/uavRmp
 BugReports: https://github.com/gisma/uavRmp/issues
-LazyData: TRUE
 License: GPL (>= 3) | file LICENSE
 Depends:
     R (>= 3.1.0)
@@ -37,7 +36,7 @@ Imports:
     concaveman,
     dplyr,
     spatialEco
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,

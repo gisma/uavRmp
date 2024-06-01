@@ -1,7 +1,7 @@
 ---
 title: "Mission Planning on basis of QGroundcontrol"
 author: "Chris Reudenbach"
-date: '`r Sys.Date()`'
+date: '2024-06-01'
 editor_options:
   chunk_output_type: console
 output:
@@ -20,9 +20,7 @@ vignette: >
 ---
 
 
-```{r echo=FALSE}
-knitr::opts_chunk$set(collapse = TRUE)
-```
+
 
 # Planning the Flight task with the Missionplanner or Qgroundcontrol survey feature
 
@@ -31,7 +29,8 @@ We want to plan a flight in a structured terrain in the upper Lahn-valley. Start
 
 Save this at an appropriate folder. To use this planning file you have to set in `makeAP` the switch:
 
-```{r, eval=FALSE}
+
+``` r
  useMP = TRUE
 ```
 
@@ -51,7 +50,8 @@ By default  `noFiles` is set to one. Due to the modern UAVs it is strongly recom
 The example below shows a meaningful example for an Air 2S DJI and a 30m ASL flight over beech wood with default settings.
 
 
-```{r, eval=FALSE}
+
+``` r
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
 fp <- makeAP(projectDir = tempdir(),
@@ -82,7 +82,8 @@ There are some simple ways to overcome this structural problem:
 
 So adding a extended turning point tolerance (`mult-buf`) the results looks like below:
 
-```{r, eval=FALSE}
+
+``` r
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
 fp <- makeAP(projectDir = tempdir(),
@@ -100,7 +101,8 @@ fp <- makeAP(projectDir = tempdir(),
 
 Modifying the terrain following control arguments  `followSundrfaceRes`, `horizonFilter` and `altFilter` will yield in a much more detailed control file:
 
-```{r, eval=FALSE}
+
+``` r
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", package = "uavRmp")
 fp <- makeAP(projectDir = tempdir(),

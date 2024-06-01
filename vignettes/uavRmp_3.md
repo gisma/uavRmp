@@ -1,7 +1,7 @@
 ---
 title: "Export to Litchi"
 author: "Chris Reudenbach"
-date: '`r Sys.Date()`'
+date: '2024-06-01'
 editor_options:
   chunk_output_type: console
 output:
@@ -18,18 +18,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}{inputenc}\
   %\VignetteEngine{knitr::knitr}
 ---
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  #fig.path = "https://raw.githubusercontent.com/r-spatial/link2GI/master/figures/",
-  fig.align = "center",
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
-```{r echo=FALSE}
-knitr::opts_chunk$set(collapse = TRUE)
-```
+
+
 
 
 # Introduction

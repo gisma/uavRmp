@@ -267,7 +267,7 @@ We want to plan a flight in a more or less flat terrain in the upper Lahn-valley
  # see ?leafDraw for more information
  vecDraw(mapCenter = c(50.855,8.691),preset="uav")
 ```
-![Digitized Flight Area](missionarea.png)  
+![Digitized Flight Area](https://github.com/gisma/uavRmp/blob/master/docs/articles/missionarea.png)  
 
 Feel free to digitize - similar to the above figure - the four points needed:
 
@@ -295,7 +295,7 @@ PLEASE NOTE: Optionally all used data files are copied to a folder called ''data
 
 The project structure will look like the figure.
 
-![Example of uavRmp folder structure](folderstructure.png)  
+![Example of uavRmp folder structure](https://github.com/gisma/uavRmp/blob/master/docs/articles/folderstructure.png)
 
 #### The used arguments
 
@@ -330,4 +330,4 @@ Using the ```mapview``` package  you can easily visualize the results. The below
  mapview(fp[[4]],color="darkblue", alpha.regions =0.1,lwd=0.5)
 ```
 
-![The first autonomous mission](simplemission.png)  
+![The first autonomous mission](https://github.com/gisma/uavRmp/blob/master/docs/articles/simplemission.png)  

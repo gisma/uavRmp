@@ -1,7 +1,7 @@
 ---
 title: "Basic Field Guide"
 author: "Chris Reudenbach"
-date: '`r Sys.Date()`'
+date: '2024-06-01'
 editor_options:
   chunk_output_type: console
 output:
@@ -20,9 +20,7 @@ vignette: >
 ---
 
 
-```{r echo=FALSE}
-knitr::opts_chunk$set(collapse = TRUE)
-```
+
 
 # Planning your Survey
 

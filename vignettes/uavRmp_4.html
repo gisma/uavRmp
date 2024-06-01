@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Basic Field Guide</title>
+<style type="text/css">
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+body, .footnotes, code { font-size: .9em; }
+li li { font-size: .95em; }
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+pre, img { max-width: 100%; }
+pre, pre:hover {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+pre code {
+  display: block;
+  overflow-x: auto;
+}
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
+:not(pre) > code, code[class] { background-color: #F8F8F8; }
+code.language-undefined, pre > code:not([class]) {
+  background-color: inherit;
+  border: 1px solid #eee;
+}
+table {
+  margin: auto;
+  border-top: 1px solid #666;
+}
+table thead th { border-bottom: 1px solid #ddd; }
+th, td { padding: 5px; }
+thead, tfoot, tr:nth-child(even) { background: #eee; }
+blockquote {
+  color: #666;
+  margin: 0;
+  padding-left: 1em;
+  border-left: 0.5em solid #eee;
+}
+hr, .footnotes::before { border: 1px dashed #ddd; }
+.frontmatter { text-align: center; }
+#TOC .numbered li { list-style: none; }
+#TOC .numbered { padding-left: 0; }
+#TOC .numbered ul { padding-left: 1em; }
+table, .body h2 { border-bottom: 1px solid #666; }
+.body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
+.footnote-ref a::before { content: "["; }
+.footnote-ref a::after { content: "]"; }
+section.footnotes::before {
+  content: "";
+  display: block;
+  max-width: 20em;
+}
+
+@media print {
+  body {
+    font-size: 12pt;
+    max-width: 100%;
+  }
+  tr, img { page-break-inside: avoid; }
+}
+@media only screen and (min-width: 992px) {
+  pre { white-space: pre; }
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+</head>
+<body>
+<div class="frontmatter">
+<div class="title"><h1>Basic Field Guide</h1></div>
+<div class="author"><h2>Chris Reudenbach</h2></div>
+<div class="date"><h3>2024-06-01</h3></div>
+</div>
+<div class="body">
+<h1 id="planning-your-survey">Planning your Survey</h1>
+<p>It is most important that you setup your survey with an appropriate overlap for reliable stitching results. If the overlap is too small or vice versa you fly too fast you will get poor or no results. Same is with the flight altitude and the camera settings. Below you find suggested values.</p>
+<table>
+<thead>
+<tr>
+<th>ASL Alt m</th>
+<th>GP8MP3+ (cm)</th>
+<th>GP12MP3+ (cm)</th>
+<th>DJI P3 4K (cm)</th>
+<th>MAPIR 2 (cm)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>15</td>
+<td>1.08</td>
+<td>0.9</td>
+<td>0.63</td>
+<td>0.56</td>
+</tr>
+<tr>
+<td>30</td>
+<td>2.16</td>
+<td>1.8</td>
+<td>1.27</td>
+<td>1.03</td>
+</tr>
+<tr>
+<td>75</td>
+<td>5.4</td>
+<td>4.5</td>
+<td>3.2</td>
+<td>2.53</td>
+</tr>
+<tr>
+<td>100</td>
+<td>7.2</td>
+<td>6.0</td>
+<td>4.25</td>
+<td>3.38</td>
+</tr>
+<tr>
+<td>Ground Resolution of typical cameras</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="suggested-overlap">Suggested Overlap</h2>
+<p>Front Overlap 80%,  Side Overlap 60%</p>
+<h2 id="camera-speed">Camera Speed</h2>
+<p>Depending on the product and manufactor of the cameras you have to deal with different speeds. NOTE: Only the speed that can be continously achieved is taken into account. Currently a picture rate of 2 sconds is the maximum in speed.</p>
+<p><strong>It is strongly recommended that you use (if available) an autonoumous camera timer (time lapse) for controlling the pictures interval.</strong></p>
+<h2 id="flight-speed">Flight Speed</h2>
+<p>On average the fasted SD Cards will be able to achieve an average speed of about 2 seconds/JPEG (Raw + JPEG 3.5 seconds) image. As a result taking pictures every 2 seconds will be a sporty attempt. The Flight speed recommodations are meeting this needs. Let us assume you fly a task with the field of view (FOV) of the DJI 4K camera at 35 meters above ground level (AGL). To derive the maximum flight distance from picture to picture in meter for the given overlap you have to calculate:</p>
+<p>\(FOV*agl*(1-overlap) = 1,71*35*0,2 = 12 m\)</p>
+<p>If you can take a picture every 2 seconds your max speed is: \(12 m / 2 s  = 6 m/s\)</p>
+<h2 id="rule-of-thumb">Rule of thumb</h2>
+<p>For  JPG pictures: \(0,15 * agl (RAW; 0,07 * agl)\)
+For a 100 meter AGL flight you should set the speed to a maximum of:
+\(0,15 * 100 = 15 m/s (54 km/h)\)
+For a flight of 35m agl this is will be roughly 5,25 m/s</p>
+<h2 id="dem-dsm-data">DEM/DSM Data</h2>
+<p>If you fly in an wide open flat area you do not need additional data. But if you fly in middle range mountains, forests or similar complex structures you will need a digtal surface model (DSM/DEM) for retrieving an optimal and safe flight path.</p>
+<h2 id="weather">Weather</h2>
+<p>Actually you also should check the weather.
+Forget about flying with wind speed above 4 Beaufort - the UAV is <strong>not</strong> a falcon.</p>
+<h2 id="workflow-in-the-field">Workflow in the field</h2>
+<ol>
+<li>Plan you r flight with an adequate planning tool at home and control it in the field (see examples, check your flightplan)</li>
+<li>Setup your Remote Controller</li>
+<li>Setup your controlling device</li>
+<li>Setup your UAV</li>
+<li>Setup your safety system (use a parachute!)</li>
+<li>Setup your camera(s)</li>
+<li>Start RC</li>
+<li>Start UAV</li>
+<li>Start Camera</li>
+<li>Load Task</li>
+<li>Fly Task
+As simple this seems it is full of pitfalls. Therefore we would like to provide some checklist:</li>
+</ol>
+<h2 id="pretask-check">Pretask Check</h2>
+<ul>
+<li>
+<p>UAV</p>
+<ul>
+<li>batteries fully charged</li>
+<li>remote control charged</li>
+<li>props</li>
+<li>cables</li>
+<li>parachute</li>
+<li>cleanup MicroSD cards</li>
+<li>charge camera(s)</li>
+<li>configure camera(s)</li>
+<li>charger</li>
+<li>minute book</li>
+<li>power bank</li>
+</ul>
+</li>
+<li>
+<p>Tools</p>
+<ul>
+<li>Tools for the UAV</li>
+<li>Tape, glue etc.</li>
+<li>Table, chairs etc.</li>
+</ul>
+</li>
+<li>
+<p>Survey</p>
+<ul>
+<li>Survey is checked</li>
+<li>Task is stored on controller (app)</li>
+<li>offline maps loaded</li>
+</ul>
+</li>
+<li>
+<p>Legal stuff</p>
+<ul>
+<li>insurance valid</li>
+<li>common flight permission</li>
+<li>specific permissions</li>
+<li>necessary to inform flight security authorithy</li>
+<li>necessary to inform local air control</li>
+</ul>
+</li>
+</ul>
+</div>
+<script src="https://cdn.jsdelivr.net/combine/npm/katex/dist/katex.min.js,npm/katex/dist/contrib/auto-render.min.js,npm/@xiee/utils/js/render-katex.js" defer></script>
+</body>
+</html>

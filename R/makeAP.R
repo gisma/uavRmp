@@ -340,7 +340,7 @@ makeAP <- function(projectDir = tempdir(),
   #-----------------------------------------------------------------------------------------------
   #-----------------------------------------------------------------------------------------------
   #-----------------------------------------------------------------------------------------------
-  # if a missionplanner surveypalanning is used 
+  # if missionplanner survey plan is used 
   if (useMP) {
     #browser()
     t<-jsonlite::fromJSON(surveyArea)

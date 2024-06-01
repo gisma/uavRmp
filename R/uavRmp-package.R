@@ -23,8 +23,9 @@
 #' @import log4r
 #' @import dplyr
 #' @import sf
-#' @keywords package
-#' 
+#' @keywords internal
+#' @aliases uavRmp-package
+"_PACKAGE"
 NULL
 #' DJI image of a survey flight
 #' @docType data
