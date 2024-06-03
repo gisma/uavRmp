@@ -665,7 +665,7 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
   sp::coordinates(launch_pos) <- ~launchLon+launchLat
   sp::proj4string(launch_pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   launchAlt <- as.numeric(terra::extract(dem,terra::vect(launch_pos),ID=FALSE)) #exactextractr::exact_extract(terra::rast(dem),sf::st_as_sf(launch_pos)  )
-  launchAlt = launchAlt[2]
+  #launchAlt = launchAlt[2]
   # browser()
   # for each of the splitted task files
   for (i in 1:nofiles) {
@@ -692,10 +692,10 @@ calcDjiTask <- function(df, mission, nofiles, maxPoints, p, logger, rth, trackSw
     # calculate minimum rth altitude for each line by identifying max altitude
     #homeRth<-max(unlist(raster::extract(dem,home)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
     #startRth<-max(unlist(raster::extract(dem,start)))+as.numeric(p$flightAltitude)-as.numeric(maxAlt)
-    maxAltHomeFlight  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max, na.rm = TRUE,layer = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
-    maxAltStartFlight <- as.numeric(terra::extract(dem,terra::vect(start),fun = max, na.rm = TRUE,layer = 1, ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
-    maxAltHomeFlight = maxAltHomeFlight[2]
-    maxAltStartFlight = maxAltStartFlight[2]
+    maxAltHomeFlight  <- terra::extract(dem,terra::vect(home), fun = max, na.rm = TRUE,layer = 1,ID=FALSE) 
+    maxAltStartFlight <- terra::extract(dem,terra::vect(start),fun = max, na.rm = TRUE,layer = 1, ID=FALSE)
+    maxAltHomeFlight = maxAltHomeFlight$value - launchAlt + as.numeric(p$flightAltitude)
+    maxAltStartFlight = maxAltStartFlight$value - launchAlt + as.numeric(p$flightAltitude)
     # get the max position of the flightlines
     homemaxpos  <- maxpos_on_line(dem,home)
     startmaxpos <- maxpos_on_line(dem,start)

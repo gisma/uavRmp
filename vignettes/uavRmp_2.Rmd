@@ -116,4 +116,4 @@ fp <- makeAP(projectDir = tempdir(),
              uavType = "dji_csv" 
              )
 ```
-![Litchi result](https://github.com/gisma/uavRmp/blob/master/docs/articles/qcmissionb16.png)  
+![Litchi result](https://github.com/gisma/uavRmp/master/docs/articles/qcmissionb16.png)  
