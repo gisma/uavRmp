@@ -844,7 +844,7 @@ makeAP <- function(projectDir = tempdir(),
   }
   ##########################
   ##########################################
-  browser()
+  #browser()
   #estimate time regarding parameter
   ft <- calculateFlightTime( maxFlightTime,
                              windCondition,

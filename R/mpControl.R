@@ -68,8 +68,9 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
       rundem<- terra::crop(terra::rast(path.expand(demFn)), cut)
       terra::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
       demll=terra::project(rundem,"+proj=longlat +datum=WGS84 +no_defs" )
+      
       terra::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
-      terra::writeRaster(demll,file.path(projectDir,locationName,dateString,"fp-data/demll.tif"),overwrite = TRUE)
+      terra::writeRaster(demll,file.path(projectDir,locationName,workingDir,"fp-data/data/demll.tif"),overwrite = TRUE)
       # system(paste0(g$path,'gdalwarp -overwrite -q ', file.path(runDir,"tmpdem.tif"),' ',
       #               file.path(runDir,"demll.tif"), ' ',
       #               '-t_srs "+proj=longlat +datum=WGS84 +no_defs"'))
@@ -236,7 +237,7 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
   
   # dump flightDEM as it was used for agl prediction
   terra::writeRaster(demll,file.path(runDir,"AGLFlightDEM.tif"),overwrite = TRUE)
-  terra::writeRaster(demll,file.path(projectDir,locationName,dateString,"fp-data/AGLFlightDEM.tif"),overwrite = TRUE)
+  terra::writeRaster(demll,file.path(projectDir,locationName,workingDir,"fp-data/data/AGLFlightDEM.tif"),overwrite = TRUE)
   
   # gdalUtils::gdalwarp(srcfile = file.path(runDir,"AGLFlightDEM.tif"), dstfile = file.path(runDir,"tmpdem.tif"),  
   #          overwrite = TRUE,  

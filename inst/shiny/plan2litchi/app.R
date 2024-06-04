@@ -15,8 +15,6 @@ withConsoleRedirect <- function(containerId, expr) {
   }
   results
 }
-#data <- read.csv("data/data.csv")
-#map <- readOGR("data/fe_2007_39_county/fe_2007_39_county.shp")
 
 # ui object
 ui <- fluidPage(
@@ -24,18 +22,6 @@ ui <- fluidPage(
   titlePanel(p("QGC Survey to Litchi Converter", style = "color:#3474A7")),
   includeMarkdown("home.md"),
   fluidRow(
-    column(2, wellPanel(
-      fileInput("planfile", "choose flighplan", multiple = FALSE,
-                accept = c(
-                  ".waypoints",
-                  ".plan")),
-      fileInput("demfile", "choose dem", multiple = FALSE,
-                accept = c( 
-                  ".tif",
-                  ".asc")),
-      actionButton("do", "Convert Data"),
-      
-    )),
       column(2, wellPanel(
   textInput("projectDir", "Provide a Project Folder name", "~/tmp"),
   verbatimTextOutput("value1"),
@@ -51,7 +37,26 @@ ui <- fluidPage(
   verbatimTextOutput("value6"),
   textInput("cameraType", "Camera Type (see help)", "dji32"),
   verbatimTextOutput("value7"),
-      ))),
+      )),
+  column(2, wellPanel(
+    fileInput("planfile", "choose flighplan", multiple = FALSE,
+              accept = c(
+                ".waypoints",
+                ".plan")),
+    fileInput("demfile", "choose dem", multiple = FALSE,
+              accept = c( 
+                ".tif",
+                ".asc")),
+    
+    
+  )),
+  column(2, wellPanel(
+ 
+    actionButton("do", "Convert Data")
+  ))
+  ),
+  
+
     mainPanel(
 
 
