@@ -252,6 +252,7 @@ makeAP <- function(projectDir = tempdir(),
   ###  setup environ and params
   cat("setup environ and params...\n")
   nofiles=1
+  if (useMP & flightAltitude > 50 & horizonFilter > 10) horizonFilter = 3
   # assign flight mission name
   #locationName <- file.path(locationName,"missions")
   if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "/")  projectDir <- substr(projectDir,1,nchar(projectDir)-1)
