@@ -103,7 +103,7 @@ if (!isGeneric('makeAP')) {
 #' @param rcRange range of estimated range of remote control
 #' @param uavType type of UAV. currently "dji_csv" for Litchi CSV export and "pixhawk" for MAVlink compatible flightplans are supported
 #' @param dA if TRUE the real extent of the used DEM is returned helpful for low altitudes flight planning
-#' @param cameraType depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the "dji43"  and for the DJI Air 2S the "dji32" tag. For GoPro action cams on whatever aircraft you can choose "GP3_7MP" or "GP3_11MP". Flying the Mapir 2 camera choose  "MAPIR2". For the E90X camera of Yuneec you choose "YUN90". Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.
+#' @param cameraType depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the `dji43`  and for the DJI Air 2S the `dji32` tag. For GoPro action cams on whatever aircraft you can choose `GP3_7MP` or `GP3_11MP`. Flying the Mapir 2 camera choose  `MAPIR2`. For the E90X camera of Yuneec you choose `YUN90`. Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.
 #' @param runDir `character` runtime folder 
 #' @param gdalLink link to GDAL binaries
 #'
@@ -253,6 +253,7 @@ makeAP <- function(projectDir = tempdir(),
   cat("setup environ and params...\n")
   nofiles=1
   if (useMP & flightAltitude > 50 & horizonFilter > 10) horizonFilter = 3
+  if (useMP) followSurface = TRUE
   # assign flight mission name
   #locationName <- file.path(locationName,"missions")
   if (substr(projectDir,nchar(projectDir),nchar(projectDir)) == "/")  projectDir <- substr(projectDir,1,nchar(projectDir)-1)
