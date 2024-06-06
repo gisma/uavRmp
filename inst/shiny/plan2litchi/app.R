@@ -25,17 +25,7 @@ ui <- fluidPage(
       column(2, wellPanel(
   textInput("projectDir", "Provide a Project Folder name", "~/tmp"),
   verbatimTextOutput("value1"),
-    numericInput("maxWayPoints", "Maximum waypoints", 9999, min = 3, max = 9999),
-    verbatimTextOutput("value2"),
-  numericInput("altFilter", "Provide the altFilter value in meter",  5.0, min = 0.1, max = 25),
-  verbatimTextOutput("value3"),
-  textInput("followSurface", "Apply surface Analysis for Flightplan (TRUE/FALSE)", "TRUE"),
-  verbatimTextOutput("value4"),
-  numericInput("followSurfaceRes", "Maximum waypoints", 5, min = 1, max = 100),
-  verbatimTextOutput("value5"),
-  numericInput("horizonFilter", "Maximum waypoints", 5, min = 1, max = 100),
-  verbatimTextOutput("value6"),
-  textInput("cameraType", "Camera Type (see help)", "dji32"),
+  textInput("cameraType", "Camera Type (see help)", "dji43"),
   verbatimTextOutput("value7"),
       )),
   column(2, wellPanel(
@@ -49,10 +39,6 @@ ui <- fluidPage(
                 ".asc")),
     
     
-  )),
-  column(2, wellPanel(
- 
-    actionButton("do", "Convert Data")
   ))
   ),
   
@@ -83,12 +69,7 @@ server <- function(input, output) {
                surveyArea=file1$datapath,
                useMP = TRUE,
                demFn = file2$datapath,
-               maxFlightTime = input$maxWayPoints,
-               altFilter = input$altFilter,
-               followSurface = input$followSurface,
                cameraType = input$cameraType ,
-               followSurfaceRes = input$followSurfaceRes,
-               horizonFilter = input$horizonFilter,
                uavType = "dji_csv") 
         
       })
