@@ -1,7 +1,7 @@
 ---
 title: "Mission Planning on basis of QGroundcontrol"
 author: "Chris Reudenbach"
-date: '2024-06-01'
+date: '2024-06-07'
 editor_options:
   chunk_output_type: console
 output:
@@ -38,6 +38,7 @@ Save this at an appropriate folder. To use this planning file you have to set in
 The planning with QGroundControl is much more powerful and comfortable than the simple planning with uavRmp. However, if you want to use some features like near-surface flights or more important a survey planning for DJI/Litchi, some parameters have to be set very carefully to make this export usable. 
 Especially the Litchi export needs some care. 
 Not all parameters from the Qgroundcontrol settings are taken over. Crucial is:
+
  * Set correct camera parameterization
  * choose `calc above terrain` and a reasonable `tolerance` filter (<=5) 
 
@@ -57,7 +58,6 @@ tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", pack
 fp <- makeAP(projectDir = tempdir(),
              surveyArea = tutorial_flightArea,
              useMP = TRUE,
-             followSurface = TRUE,
              above_ground = FALSE,
              demFn = demFn,
              uavType = "dji_csv" 
@@ -80,7 +80,7 @@ There are some simple ways to overcome this structural problem:
 3. adapt the number of waypoints to your needs e.g..: `altFilter = 5.0`
 1. increase the argument buf_mult to e.g.: ` buf_mult = 3`
 
-So adding a extended turning point tolerance (`mult-buf`) the results looks like below:
+So adding a extended turning point tolerance (`buf_mult`) the results looks like below:
 
 
 ``` r
@@ -89,7 +89,6 @@ tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", pack
 fp <- makeAP(projectDir = tempdir(),
              surveyArea = tutorial_flightArea,
              useMP = TRUE,
-             followSurface = TRUE,
              buf_mult = 3,
              above_ground = FALSE,
              demFn = demFn,
@@ -108,7 +107,6 @@ tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey30m.plan", pack
 fp <- makeAP(projectDir = tempdir(),
              surveyArea = tutorial_flightArea,
              useMP = TRUE,
-             followSurface = TRUE,
              buf_mult = 3,
              followSurfaceRes = 2, 
              horizonFilter = 2, 

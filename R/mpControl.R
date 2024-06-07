@@ -1121,7 +1121,7 @@ MAVTreeCSV <- function(flightPlanMode,
     homeRth  <- as.numeric(terra::extract(dem,terra::vect(home), fun = max,na.rm = TRUE,layer = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
     startRth <- as.numeric(terra::extract(dem,terra::vect(start),fun = max,na.rm = TRUE,layer = 1,ID=FALSE)) - launchAlt + as.numeric(p$flightAltitude)
     homeRth =  homeRth[2]
-    startRth = startRt[2]
+    startRth = startRth[2]
     # add 10% of flight altitude as safety buffer
     homeRth  <- homeRth  + 0.1 * homeRth
     startRth <- startRth + 0.1 * startRth

@@ -1,17 +1,17 @@
 ---
 title: "Unmanned Aerial Vehicle R based Mission Planning"
 author: "Chris Reudenbach"
-date: '2024-06-01'
+date: '2024-06-07'
 editor_options:
   chunk_output_type: console
 output:
   html_document: 
     theme: united
     toc: yes
-  rmarkdown: default
-  pdf_document:
-    latex_engine: xelatex
-    toc: yes
+  # rmarkdown: default
+  # pdf_document:
+  #   latex_engine: xelatex
+  #   toc: yes
 urlcolor: blue
 vignette: >
   %\VignetteIndexEntry{Unmanned Aerial Vehicle R based Mission Planning}
@@ -292,7 +292,7 @@ PLEASE NOTE: Optionally all used data files are copied to a folder called ''data
 
 The project structure will look like the figure.
 
-![Example of uavRmp folder structure](https://github.com/gisma/uavRmp/blob/master/docs/articles/folderstructure.png)
+![Example of uavRmp folder structure](folderstructure.png)
 
 #### The used arguments
 
@@ -329,4 +329,4 @@ Using the ```mapview``` package  you can easily visualize the results. The below
  mapview(fp[[4]],color="darkblue", alpha.regions =0.1,lwd=0.5)
 ```
 
-![The first autonomous mission](https://github.com/gisma/uavRmp/blob/master/docs/articles/simplemission.png)  
+![The first autonomous mission](simplemission.png)  

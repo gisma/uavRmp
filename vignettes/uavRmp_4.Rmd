@@ -5,10 +5,10 @@ date: '`r Sys.Date()`'
 editor_options:
   chunk_output_type: console
 output:
-  html_document: 
-    theme: united
-    toc: yes
-  rmarkdown: default
+  # html_document: 
+  #   theme: united
+  #   toc: yes
+ # rmarkdown: default
   pdf_document:
     latex_engine: xelatex
     toc: yes

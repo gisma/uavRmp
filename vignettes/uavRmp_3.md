@@ -1,7 +1,7 @@
 ---
 title: "Export to Litchi"
 author: "Chris Reudenbach"
-date: '2024-06-01'
+date: '2024-06-07'
 editor_options:
   chunk_output_type: console
 output:
