@@ -25,7 +25,7 @@ vignette: >
 # Planning the Flight task with the Missionplanner or Qgroundcontrol survey feature
 
 We want to plan a flight in a structured terrain in the upper Lahn-valley. Start the QGroundcontrol and navigate to Mission tab and open Pattern->Survey. Start digitizing a pattern as you want and also fill in the values on the right sided menus for camera angel overlap and so on. 
-![The first autonomous complex mission planned with QGroundcontrol](https://github.com/gisma/uavRmp/blob/master/docs/articles/qcmission.png)
+![The first autonomous complex mission planned with QGroundcontrol](qcmission.png)
 
 Save this at an appropriate folder. To use this planning file you have to set in `makeAP` the switch:
 
@@ -66,7 +66,7 @@ fp <- makeAP(projectDir = tempdir(),
 
 The result looks like this in Litchi.
 
-![](https://github.com/gisma/uavRmp/blob/master/docs/articles/qcmissionb15.png)  
+![](qcmissionb15.png)  
 
 
 It is easy to see that there are major errors in the transmission.
@@ -96,7 +96,7 @@ fp <- makeAP(projectDir = tempdir(),
              uavType = "dji_csv" 
              )
 ```
-![Litchi result](https://github.com/gisma/uavRmp/blob/master/docs/articles/qcmissionb15_detail.png)  
+![Litchi result](qcmissionb15_detail.png)  
 
 
 Modifying the terrain following control arguments  `followSundrfaceRes`, `horizonFilter` and `altFilter` will yield in a much more detailed control file:
@@ -118,4 +118,4 @@ fp <- makeAP(projectDir = tempdir(),
              uavType = "dji_csv" 
              )
 ```
-![Litchi result](https://github.com/gisma/uavRmp/blob/master/docs/articles/qcmissionb16.png)  
+![Litchi result](qcmissionb16.png)  

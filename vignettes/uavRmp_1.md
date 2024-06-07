@@ -264,7 +264,7 @@ We want to plan a flight in a more or less flat terrain in the upper Lahn-valley
  # see ?leafDraw for more information
  vecDraw(mapCenter = c(50.855,8.691),preset="uav")
 ```
-![Digitized Flight Area](https://github.com/gisma/uavRmp/blob/master/docs/articles/missionarea.png)  
+![Digitized Flight Area](missionarea.png)  
 
 Feel free to digitize - similar to the above figure - the four points needed:
 

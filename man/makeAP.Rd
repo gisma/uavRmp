@@ -102,7 +102,7 @@ Options are:
 
 \item{uavType}{type of UAV. currently "dji_csv" for Litchi CSV export and "pixhawk" for MAVlink compatible flightplans are supported}
 
-\item{cameraType}{depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the "dji43"  and for the DJI Air 2S the "dji32" tag. For GoPro action cams on whatever aircraft you can choose "GP3_7MP" or "GP3_11MP". Flying the Mapir 2 camera choose  "MAPIR2". For the E90X camera of Yuneec you choose "YUN90". Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.}
+\item{cameraType}{depending on the UAV Platform and integrated camera choose for DJI Mini 1/2/3, Phantom 3/Phantom 4 , Inspire 1) the \code{dji43}  and for the DJI Air 2S the \code{dji32} tag. For GoPro action cams on whatever aircraft you can choose \code{GP3_7MP} or \code{GP3_11MP}. Flying the Mapir 2 camera choose  \code{MAPIR2}. For the E90X camera of Yuneec you choose \code{YUN90}. Please note the calculation of the flight pathes is done via the ratio of vertical and horizontal resolution of the camera in the NON 16:9 and Landscape Modus.}
 
 \item{buf_mult}{multiplier for defining the zone in which the waypoints  are assumed to be turning waypoints according to  buf_mult * \code{followSurfaceRes}}
 

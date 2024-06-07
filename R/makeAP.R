@@ -75,7 +75,7 @@ if (!isGeneric('makeAP')) {
 #'   otherwise you have to defined the position of launching.
 #' @param overlap overlapping of the pictures in percent (1.0 = 100)
 #' @param maxwaypoints maximal number of waypoints for Litchi default is 90
-#' @param above_ground Litchi setting if the waypoint altitudes are interpreted as AGL default = TRUE 
+#' @param above_ground Litchi setting if the waypoint altitudes are interpreted as AGL default = FALSE
 #' @param djiBasic c(0,0,0,-90)
 #' \cr curvesize (DJI only) controls the curve angle of the uav passing way points.
 #' By default it is set to (`= 0.0`).
@@ -239,7 +239,7 @@ makeAP <- function(projectDir = tempdir(),
                    cmd=16,
                    uavViewDir = 0,
                    maxwaypoints = 9999,
-                   above_ground = TRUE,
+                   above_ground = FALSE,
                    djiBasic = c(0, 0, 0,-90, 0),
                    dA = FALSE,
                    #heatMap = FALSE,

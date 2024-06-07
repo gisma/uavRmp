@@ -91,7 +91,7 @@
                         <h4 data-toc-skip class="author">Chris
 Reudenbach</h4>
             
-            <h4 data-toc-skip class="date">2024-06-03</h4>
+            <h4 data-toc-skip class="date">2024-06-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/gisma/uavRmp/blob/HEAD/vignettes/uavRmp_2.Rmd" class="external-link"><code>vignettes/uavRmp_2.Rmd</code></a></small>
       <div class="hidden name"><code>uavRmp_2.Rmd</code></div>
@@ -108,7 +108,7 @@ survey feature<a class="anchor" aria-label="anchor" href="#planning-the-flight-t
 Lahn-valley. Start the QGroundcontrol and navigate to Mission tab and
 open Pattern-&gt;Survey. Start digitizing a pattern as you want and also
 fill in the values on the right sided menus for camera angel overlap and
-so on. <img src="https://github.com/gisma/uavRmp/blob/master/docs/articles/qcmission.png" alt="The first autonomous complex mission planned with QGroundcontrol"></p>
+so on. <img src="qcmission.png" alt="The first autonomous complex mission planned with QGroundcontrol"></p>
 <p>Save this at an appropriate folder. To use this planning file you
 have to set in <code>makeAP</code> the switch:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -119,9 +119,12 @@ to use some features like near-surface flights or more important a
 survey planning for DJI/Litchi, some parameters have to be set very
 carefully to make this export usable. Especially the Litchi export needs
 some care. Not all parameters from the Qgroundcontrol settings are taken
-over. Crucial is: * Set correct camera parameterization * choose
-<code>calc above terrain</code> and a reasonable <code>tolerance</code>
-filter (&lt;=5)</p>
+over. Crucial is:</p>
+<ul>
+<li>Set correct camera parameterization</li>
+<li>choose <code>calc above terrain</code> and a reasonable
+<code>tolerance</code> filter (&lt;=5)</li>
+</ul>
 <p>With the parameters: <code>horizonFilter</code>,
 <code>followSurfaceRes</code>, <code>altFilter</code> the behavior of
 the smoothing of the flight curve is set. It makes sense to keep the
@@ -145,13 +148,12 @@ is obligatory to set the parameter
 <span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>projectDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>             surveyArea <span class="op">=</span> <span class="va">tutorial_flightArea</span>,</span>
 <span>             useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>             above_ground <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>             demFn <span class="op">=</span> <span class="va">demFn</span>,</span>
 <span>             uavType <span class="op">=</span> <span class="st">"dji_csv"</span> </span>
 <span>             <span class="op">)</span></span></code></pre></div>
 <p>The result looks like this in Litchi.</p>
-<p><img src="https://github.com/gisma/uavRmp/blob/master/docs/articles/qcmissionb15.png"></p>
+<p><img src="qcmissionb15.png"></p>
 <p>It is easy to see that there are major errors in the
 transmission.</p>
 <p>These resuls from the (a) a complex outer hull of the structure and
@@ -172,7 +174,7 @@ the rolling filter.: <code>horizonFilter = 2</code>
 <code>buf_mult = 3</code>
 </li>
 </ol>
-<p>So adding a extended turning point tolerance (<code>mult-buf</code>)
+<p>So adding a extended turning point tolerance (<code>buf_mult</code>)
 the results looks like below:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">demFn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
@@ -180,14 +182,13 @@ the results looks like below:</p>
 <span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>projectDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>             surveyArea <span class="op">=</span> <span class="va">tutorial_flightArea</span>,</span>
 <span>             useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>             buf_mult <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>             above_ground <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>             demFn <span class="op">=</span> <span class="va">demFn</span>,</span>
 <span>             uavType <span class="op">=</span> <span class="st">"dji_csv"</span> </span>
 <span>             <span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="https://github.com/gisma/uavRmp/blob/master/docs/articles/qcmissionb15_detail.png" alt="Litchi result"><div class="figcaption">Litchi result</div>
+<img src="qcmissionb15_detail.png" alt="Litchi result"><div class="figcaption">Litchi result</div>
 </div>
 <p>Modifying the terrain following control arguments
 <code>followSundrfaceRes</code>, <code>horizonFilter</code> and
@@ -199,7 +200,6 @@ file:</p>
 <span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeAP.html">makeAP</a></span><span class="op">(</span>projectDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>             surveyArea <span class="op">=</span> <span class="va">tutorial_flightArea</span>,</span>
 <span>             useMP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             followSurface <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>             buf_mult <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>             followSurfaceRes <span class="op">=</span> <span class="fl">2</span>, </span>
 <span>             horizonFilter <span class="op">=</span> <span class="fl">2</span>, </span>
@@ -209,7 +209,7 @@ file:</p>
 <span>             uavType <span class="op">=</span> <span class="st">"dji_csv"</span> </span>
 <span>             <span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="https://github.com/gisma/uavRmp/master/docs/articles/qcmissionb16.png" alt="Litchi result"><div class="figcaption">Litchi result</div>
+<img src="qcmissionb16.png" alt="Litchi result"><div class="figcaption">Litchi result</div>
 </div>
 </div>
   </div>
