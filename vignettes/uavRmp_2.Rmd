@@ -97,7 +97,7 @@ fp <- makeAP(projectDir = tempdir(),
 ![Litchi result](https://gisma.github.io/uavRmp/articles/qcmissionb15_detail.png)  
 
 
-Modifying the terrain following control arguments  `followSundrfaceRes`, `horizonFilter` and `altFilter` will yield in a much more detailed control file:
+Modifying the terrain following control arguments  `followSurfaceRes`, `horizonFilter` and `altFilter` will yield in a much more detailed control file:
 
 ```{r, eval=FALSE}
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")

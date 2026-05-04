@@ -20,7 +20,7 @@ fp = makeAP(projectDir = "~/Schreibtisch/MOF/",
             followSurfaceRes = 5,
             flightAltitude = 100,
             altFilter = 0.5,
-            cameraType ="dji4k",
+            cameraType ="dji43",
             uavType = "dji_csv")    
 
 library(uavRmp)
@@ -28,7 +28,7 @@ fp = makeAP(projectDir = "~/Desktop/tmp",
             surveyArea="~/Desktop/tmp/test.plan",
             useMP = TRUE,
            noFiles=1,
-           cameraType ="dji4k",
+           cameraType ="dji43",
            uavType = "dji_csv")    
 
 demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
@@ -56,4 +56,3 @@ fp <- makeAP(projectDir = tempdir(),
              demFn = demFn,
              uavType = "dji_csv" 
 )
-

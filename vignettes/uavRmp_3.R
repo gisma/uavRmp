@@ -9,3 +9,6 @@ knitr::opts_chunk$set(
 ## ----echo=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(collapse = TRUE)
 
+## ----eval=FALSE---------------------------------------------------------------
+# solo_upload("export_1001_solo.waypoints")
+

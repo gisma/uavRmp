@@ -19,7 +19,7 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">uavRmp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.0</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -71,7 +71,7 @@
 <li>
   <a href="https://github.com/gisma/uavRmp/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -82,7 +82,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="contents col-md-9">
@@ -92,36 +92,118 @@
 </h2>
 <!-- badges: start -->
 
-<p>The <a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a> package is designed for a light weighted uav autonomous mission planning including full documentation capabilities. In the first place it is a simple and open source planning tool for monitoring flights of low budget drones based on <code>R</code>. It provide an easy workflow for planning autonomous surveys including battery-dependent task splitting, save departures, and approaches of each monitoring chunks.</p>
+<p>The <a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a> package provides <code>R</code> based mission planning tools for autonomous UAV survey flights. It was originally designed as a lightweight open source planning workflow for low-budget UAV mapping missions, including terrain-aware flight planning, battery-dependent task splitting, and safe departure and approach sections for each mission chunk.</p>
+<p>Typical use cases include survey flights for Digital Surface Models (DSM), Digital Elevation Models (DEM), orthophotos, point clouds, land use and landscape classification, NDVI products, and forest structure mapping.</p>
+</div>
+<div class="section level2">
+<h2 id="project-status">Project status<a class="anchor" aria-label="anchor" href="#project-status"></a>
+</h2>
+<p><code>uavRmp</code> is entering maintenance mode.</p>
+<p>The development context has changed substantially since the package was started. As of 2026, the new Litchi Hub has become a practical low-budget baseline tool for many DJI-based mapping missions. It provides browser-based mission planning, area mapping for photogrammetry, Google Earth based 3D planning and simulation, KML/KMZ import, and elevation-aware workflows. For many ordinary and moderately demanding DJI survey missions, including terrain-aware planning and 3D visual mission preparation, Litchi Hub is now sufficient as the primary planning environment.</p>
+<p>Therefore, <code>uavRmp</code> is no longer intended to compete with Litchi Hub as a general-purpose low-budget DJI mission planner.</p>
+<p>Version <code>0.8</code> is planned as the final feature release. After that, the package will be maintained in bug-fix mode only. The main purpose of future maintenance is to keep existing workflows usable, not to extend the package into a new general UAV planning platform.</p>
+<p><code>uavRmp</code> remains useful for specialised workflows where the mission is not simply drawn in a graphical interface, but computed from external geospatial data. This includes reproducible <code>R</code>/GIS workflows, custom terrain models, explicit terrain-following logic, batch generation of survey missions, conversion between mission formats, and legacy support for existing Pixhawk, 3DR Solo, and Litchi CSV workflows.</p>
 </div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The majority of the open UAV community is using the PixHawk autopilot unit and for planning probably the <a href="https://ardupilot.org/planner/" class="external-link">MissionPlanner</a> or a bit more basic <a href="http://qgroundcontrol.com/" class="external-link">QGroundControl</a> ground station software. Both are well documented and provide APIs (Application program interface) and easy to use GUIs (graphical user interface). Nevertheless both have only a poor planning support for terrain following autonomous flights (basically SRTM data) and no straightforward support for battery-dependent task splitting and save departures and approaches (MissionPlanner). Up to now the most affordable powerful <a href="https://www.ugcs.com/" class="external-link">UgCS</a> software provides all of the above mentioned capabilities. However it is challenging to use especially for a fast deployment of a small local flight task as typically requested in fieldwork.</p>
-<p>The <code>uavRmp</code> bridges this gap and generates <code>MAVLINK</code> format compliant mission files that can be uploaded to the Pixhawk controller using an integrated function or externally by any Ground Control Station software.</p>
+<p>The majority of the open UAV community uses the Pixhawk autopilot ecosystem together with Ground Control Station software such as <a href="https://ardupilot.org/planner/" class="external-link">Mission Planner</a> or <a href="https://qgroundcontrol.com/" class="external-link">QGroundControl</a>. Both are well documented and provide APIs and graphical user interfaces. However, depending on the workflow, they still offer limited support for fully reproducible terrain-following survey planning, battery-dependent task splitting, and explicit safe departure and approach generation.</p>
+<p><code>uavRmp</code> bridges this gap by generating mission files that can be uploaded to Pixhawk-based flight controllers directly or via Ground Control Station software. It also provides export and conversion workflows for Litchi-compatible DJI missions.</p>
+<p>The package should be understood as a specialised mission generation and conversion toolkit. It is not a flight safety system and it does not replace field checks, legal checks, aircraft-specific mission validation, or pilot responsibility.</p>
 </div>
 <div class="section level2">
 <h2 id="supported-uav-platforms">Supported UAV platforms<a class="anchor" aria-label="anchor" href="#supported-uav-platforms"></a>
 </h2>
-<p>Up to now the <code>uavRmp</code> package has been dedicated to low budget rtf-UAVs (ready-to-fly) as the DJI series that are supported by <a href="https://flylitchi.com/" class="external-link">Litchi</a> and Pixhawk based platforms as the Yuneec UAVs or the outdated but still running 3DR Solo.</p>
-<p>The core planning tool <code>makeAP</code> (make arial flight plan) creates either intermediate flight control files for the DJI UAVs or waypoint files for the PixHawk family. Furthermore the option <code>useMP</code> unifies flight planning for PixHawk based platforms and DJI consumer drones. as it offers an easy conversion of surveys planned with <code>QgroundContro</code>l into the format readable by Litchi.</p>
+<p>Up to now, <code>uavRmp</code> has mainly supported low-budget ready-to-fly UAVs, including DJI drones supported by <a href="https://flylitchi.com/" class="external-link">Litchi</a> and Pixhawk-based platforms such as Yuneec UAVs or the outdated but still usable 3DR Solo.</p>
+<p>The core planning tool <code><a href="reference/makeAP.html">makeAP()</a></code> creates area survey flight plans. Depending on the selected output workflow, it creates intermediate flight control files for DJI/Litchi workflows or waypoint files for the Pixhawk family.</p>
+<p>The option <code>useMP</code> supports conversion-oriented workflows. It can be used to process survey missions planned with <code>QGroundControl</code> or <code>Mission Planner</code> and convert them into formats readable by Litchi or Pixhawk-compatible systems, including safe connection flights to the mission start, return sections, and task splitting.</p>
+<p>DJI support should now be interpreted differently from earlier package versions. Historically, Litchi was mainly used as a way to execute externally generated CSV waypoint files on DJI consumer drones. With the new Litchi Hub, many standard DJI mapping missions can be planned directly in the browser. For DJI users, <code>uavRmp</code> is therefore primarily useful when missions are generated from external GIS data, when the terrain-following logic must be controlled explicitly, or when an existing reproducible <code>R</code> workflow has to be preserved.</p>
+<p>Pixhawk-based UAVs remain the more open platform for scriptable and reproducible mission planning. <code>uavRmp</code> continues to provide MAVLink-compatible output for Pixhawk workflows.</p>
 </div>
 <div class="section level2">
 <h2 id="news">News<a class="anchor" aria-label="anchor" href="#news"></a>
 </h2>
-<p><strong>NOTE:</strong> The Litchi export for DJI Consumer drones is significantly improved now. For details have a look at the vignette.</p>
-<p><strong>NOTE:</strong> Starting with Version 0.6.3 the <code>raster</code> package is removed and you need to provide the <code>terra</code> package <code>SpatRaster</code> format only.</p>
-<p><strong>NOTE:</strong> You may use now the survey planning tool of <code>QGroundControl</code> or <code>Missionplanner</code> and convert it either to DJI compatible Litchi format or MavLink files. Both with safe flights to the mission start and RTH as well as task splitting. You will find an simple GUI interface calling <code>shiny::runApp(system.file("shiny/plan2litchi/", "/app.R", package = "uavRmp"))</code>.</p>
-<p><strong>NOTE:</strong> The DJI control files are designed for using with the proprietary <code>Litchi</code> flight control app exchange format, while the PixHawk/3DR Solo files are using the <code>MAVLINK</code> common message format, that is used by the PixHawk flight controller family.</p>
+<p><strong>NOTE:</strong> Starting with version <code>0.8</code>, <code>uavRmp</code> is planned to enter its final feature release line. After that, the package will receive bug fixes only.</p>
+<p><strong>NOTE:</strong> As of 2026, Litchi Hub is suitable as a low-budget baseline planning tool for many DJI mapping workflows, including ordinary and moderately demanding terrain-aware missions and 3D visual mission preparation. For such missions, direct Litchi Hub planning is usually the preferred workflow.</p>
+<p><strong>NOTE:</strong> The Litchi export remains available as a compatibility and special-purpose interface. Use it when flight plans are computed from external geospatial data, when mission geometry must be generated reproducibly from <code>R</code>, or when conversion from <code>QGroundControl</code>/<code>Mission Planner</code> workflows to Litchi is required.</p>
+<p><strong>NOTE:</strong> Starting with version <code>0.6.3</code>, the <code>raster</code> package was removed. Raster input should be provided as <code>terra</code> <code>SpatRaster</code> objects.</p>
+<p><strong>NOTE:</strong> You may use the survey planning tools of <code>QGroundControl</code> or <code>Mission Planner</code> and convert their missions either to DJI-compatible Litchi format or to MAVLink files. This includes safe flights to the mission start, return-to-home sections, and task splitting. A simple GUI interface is available via:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shiny/plan2litchi/"</span>, <span class="st">"app.R"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><strong>NOTE:</strong> DJI control files are designed for use with the proprietary <code>Litchi</code> flight control app exchange format, while Pixhawk/3DR Solo files use the <code>MAVLink</code> common message format used by the Pixhawk flight controller family.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You need GDAL to be installed. For using some of the the 3DR Solo related functions you need to install the python libs in addition.</p>
-<p>To install the most actual version do it from <code>github</code> you need to have installed the <code>devtools</code> package.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode s"><code class="sourceCode gnuassembler"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>install.packages<span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">devtools::</span>install_github<span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">,</span> ref <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span></span></code></pre></div>
+<p>You need GDAL and the usual geospatial system libraries installed. For some of the older 3DR Solo related functions, additional Python libraries such as <code>dronekit</code> may be required.</p>
+<p>The recommended way to install the current development version from GitHub is <code>pak</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">)</span></span></code></pre></div>
+<p>If <code>pak</code> is already installed, use:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"gisma/uavRmp"</span><span class="op">)</span></span></code></pre></div>
+<p>The older <code><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">devtools::install_github()</a></code> workflow is no longer the recommended installation path for this package. It may still work in existing development environments, but new installations should use <code>pak</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+</h2>
+<p>A minimal area planning workflow uses a survey area and a DEM:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gisma/uavRmp" class="external-link">uavRmp</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mrbiko.tif"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span><span class="va">fa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"flightarea.kml"</span>, package <span class="op">=</span> <span class="st">"uavRmp"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/makeAP.html">makeAP</a></span><span class="op">(</span></span>
+<span>  surveyArea <span class="op">=</span> <span class="va">fa</span>,</span>
+<span>  demFn <span class="op">=</span> <span class="va">fn</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The resulting object contains the planned mission geometry and the generated mission control output. Depending on the selected options, the output can be used for Litchi-compatible DJI workflows or Pixhawk/MAVLink workflows.</p>
+</div>
+<div class="section level2">
+<h2 id="when-to-use-litchi-hub-directly">When to use Litchi Hub directly<a class="anchor" aria-label="anchor" href="#when-to-use-litchi-hub-directly"></a>
+</h2>
+<p>Use direct Litchi Hub planning when:</p>
+<ul>
+<li>the survey area can be drawn manually or imported as a simple KML/KMZ mapping polygon,</li>
+<li>the mission is a standard photogrammetry grid,</li>
+<li>overlap, speed, gimbal angle, and capture settings can be handled in Litchi,</li>
+<li>Litchi’s terrain and 3D planning tools are sufficient,</li>
+<li>manual browser-based planning is acceptable.</li>
+</ul>
+<p>This is now the recommended low-budget workflow for many ordinary DJI mapping tasks.</p>
+</div>
+<div class="section level2">
+<h2 id="when-to-use-uavrmp">When to use <code>uavRmp</code>
+<a class="anchor" aria-label="anchor" href="#when-to-use-uavrmp"></a>
+</h2>
+<p>Use <code>uavRmp</code> when:</p>
+<ul>
+<li>the flight plan must be generated reproducibly from <code>R</code> code,</li>
+<li>the survey geometry is derived from GIS analysis,</li>
+<li>terrain-following logic must be computed explicitly,</li>
+<li>a custom high-resolution DEM is required in the planning workflow,</li>
+<li>many similar missions must be generated automatically,</li>
+<li>mission chunks must be split according to battery or distance constraints,</li>
+<li>safe departures and approaches must be generated programmatically,</li>
+<li>existing Pixhawk, 3DR Solo, or Litchi CSV workflows must be preserved,</li>
+<li>
+<code>QGroundControl</code> or <code>Mission Planner</code> missions must be converted into Litchi-compatible output.</li>
+</ul>
+<p>In short: Litchi Hub is now the practical baseline tool for many DJI missions. <code>uavRmp</code> remains relevant where the mission is not merely planned interactively, but computed from geospatial data.</p>
+</div>
+<div class="section level2">
+<h2 id="safety-warning">Safety warning<a class="anchor" aria-label="anchor" href="#safety-warning"></a>
+</h2>
+<p>Autonomous UAV missions can cause serious damage if coordinates, altitude references, terrain models, camera parameters, launch positions, or flight modes are wrong.</p>
+<p>Always double-check generated missions before flying. Validate the mission in the target flight software, inspect altitudes and waypoint order, check the launch position, check terrain clearance, and perform a conservative field assessment.</p>
+<p>Use <code>uavRmp</code> as a planning and conversion tool only. The pilot remains responsible for legal compliance, field safety, aircraft behaviour, and mission execution.</p>
+</div>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
+<p>GPL (&gt;= 3)</p>
 </div>
 
   </div>
@@ -155,7 +237,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Chris Reudenbach <br><small class="roles"> Maintainer, author </small>  </li>
+<li>Chris Reudenbach <br><small class="roles"> Maintainer, author </small>   </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -181,16 +263,16 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

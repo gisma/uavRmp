@@ -1,10 +1,9 @@
-pandoc: 3.1.11
-pkgdown: 2.0.9
+pandoc: 3.8.3
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   uavRmp_1: uavRmp_1.html
   uavRmp_2: uavRmp_2.html
   uavRmp_3: uavRmp_3.html
   uavRmp_4: uavRmp_4.html
-last_built: 2024-06-07T08:33Z
-
+last_built: 2026-05-04T21:02Z

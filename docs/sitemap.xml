@@ -1,108 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/uavRmp_1.html</loc>
-  </url>
-  <url>
-    <loc>/articles/uavRmp_2.html</loc>
-  </url>
-  <url>
-    <loc>/articles/uavRmp_3.html</loc>
-  </url>
-  <url>
-    <loc>/articles/uavRmp_4.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/copyDir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extractExifr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fixGPSAlt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getGPSAltDiff.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/initProj.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makeAP.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makeGlobalVar.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makeTP.html</loc>
-  </url>
-  <url>
-    <loc>/reference/maxpos_on_line.html</loc>
-  </url>
-  <url>
-    <loc>/reference/minBB.html</loc>
-  </url>
-  <url>
-    <loc>/reference/soloLog.html</loc>
-  </url>
-  <url>
-    <loc>/reference/solo_upload.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sp_line.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sp_point.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tutdata_dem.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tutdata_dji.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tutdata_flightarea.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tutdata_flighttrack.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tutdata_position.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tutdata_qgc_survey.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tutdata_qgc_survey30m.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tutdata_waypoints.html</loc>
-  </url>
-  <url>
-    <loc>/reference/uavRmp.html</loc>
-  </url>
-  <url>
-    <loc>/reference/vecDraw.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/uavRmp_1.html</loc></url>
+<url><loc>/articles/uavRmp_2.html</loc></url>
+<url><loc>/articles/uavRmp_3.html</loc></url>
+<url><loc>/articles/uavRmp_4.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/copyDir.html</loc></url>
+<url><loc>/reference/extractExifr.html</loc></url>
+<url><loc>/reference/fixGPSAlt.html</loc></url>
+<url><loc>/reference/getGPSAltDiff.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/initProj.html</loc></url>
+<url><loc>/reference/makeAP.html</loc></url>
+<url><loc>/reference/makeGlobalVar.html</loc></url>
+<url><loc>/reference/makeTP.html</loc></url>
+<url><loc>/reference/maxpos_on_line.html</loc></url>
+<url><loc>/reference/minBB.html</loc></url>
+<url><loc>/reference/soloLog.html</loc></url>
+<url><loc>/reference/solo_upload.html</loc></url>
+<url><loc>/reference/sp_line.html</loc></url>
+<url><loc>/reference/sp_point.html</loc></url>
+<url><loc>/reference/tutdata_dem.html</loc></url>
+<url><loc>/reference/tutdata_dji.html</loc></url>
+<url><loc>/reference/tutdata_flightarea.html</loc></url>
+<url><loc>/reference/tutdata_flighttrack.html</loc></url>
+<url><loc>/reference/tutdata_position.html</loc></url>
+<url><loc>/reference/tutdata_qgc_survey.html</loc></url>
+<url><loc>/reference/tutdata_qgc_survey30m.html</loc></url>
+<url><loc>/reference/tutdata_waypoints.html</loc></url>
+<url><loc>/reference/uavRmp.html</loc></url>
+<url><loc>/reference/vecDraw.html</loc></url>
 </urlset>
+

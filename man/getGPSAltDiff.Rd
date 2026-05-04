@@ -18,6 +18,7 @@ extract the difference of the exif GPS aLtitude tag and a given DEM altitude at 
 \dontrun{
 demFN <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 picFN <- system.file("extdata", "dji.jpg", package = "uavRmp")
+getGPSAltDiff(picFN, demFN)
 
 }
 }

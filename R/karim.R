@@ -16,8 +16,7 @@
 #' \dontrun{
 #' ## creating sp spatial point object
 #'line <- sp_line(c(8.770367,8.771161,8.771536),
-#'                 c(50.815172,50.814743,50.814875),
-#'                 runDir=tempdir())
+#'                 c(50.815172,50.814743,50.814875))
 #' 
 #' ## plot it
 #' plot(line)
@@ -83,7 +82,9 @@ sp_point <- function(lon,
 #' dem <- terra::rast(system.file("extdata", "mrbiko.tif", package = "uavRmp"))
 #' 
 #' ## generate extraction line object
-#' line <- sp_line(c(8.66821,8.68212),c(50.83939,50.83267),ID="Highest Position",runDir=runDir)
+#' line <- sp_line(c(8.66821,8.68212),
+#'                 c(50.83939,50.83267),
+#'                 ID="Highest Position")
 
 #' ## extract highest position
 #' maxpos_on_line(dem,line)  
@@ -428,7 +429,7 @@ vecDrawInternal <- function(tmpPath, x = NULL) {
 #' \dontrun{
 #' demFN <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
 #' picFN <- system.file("extdata", "dji.jpg", package = "uavRmp")
-#  getGPSAltDiff(picFN,demFN)
+#' getGPSAltDiff(picFN, demFN)
 #' 
 #' }
 #' @keywords internal
@@ -456,7 +457,7 @@ getGPSAltDiff <- function(picPath,demPath){
 #' \dontrun{
 #' 
 #' picFN <- system.file("extdata", "dji.jpg", package = "uavRmp")
-#  fixGPSAlt(picFN,100.0)
+#' fixGPSAlt(picFN, 100.0)
 #' 
 #' }
 #' @keywords internal

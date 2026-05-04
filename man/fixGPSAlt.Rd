@@ -20,6 +20,7 @@ fixes broken GPS altitudes in the exif data of DJI images  with the given differ
 \dontrun{
 
 picFN <- system.file("extdata", "dji.jpg", package = "uavRmp")
+fixGPSAlt(picFN, 100.0)
 
 }
 }

@@ -84,6 +84,7 @@ makeTP generates a flight track chaining up point objects with respect to a hete
 \dontrun{
 ## (1) get example DEM data
 dsmFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
+tutorial_flightArea <- system.file("extdata", "positions.csv", package = "uavRmp")
 ## (2) make position flight plan
 makeTP  <-  makeTP(missionTrackList= tutorial_flightArea,
                   demFn = dsmFn,

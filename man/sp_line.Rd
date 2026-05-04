@@ -33,8 +33,7 @@ create an spatiallineobject from 2 points, optional export as shapefile
 \dontrun{
 ## creating sp spatial point object
 line <- sp_line(c(8.770367,8.771161,8.771536),
-                c(50.815172,50.814743,50.814875),
-                runDir=tempdir())
+                c(50.815172,50.814743,50.814875))
 
 ## plot it
 plot(line)
