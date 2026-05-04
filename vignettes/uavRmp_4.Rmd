@@ -7,11 +7,11 @@ editor_options:
 output:
   # html_document: 
   #   theme: united
-  #   toc: yes
+  #   toc: true
  # rmarkdown: default
   pdf_document:
     latex_engine: xelatex
-    toc: yes
+    toc: true
 urlcolor: blue
 vignette: >
   %\VignetteIndexEntry{Basic Field Guide}
@@ -111,4 +111,3 @@ As simple this seems it is full of pitfalls. Therefore we would like to provide 
     + specific permissions
     + necessary to inform flight security authorithy
     + necessary to inform local air control
-

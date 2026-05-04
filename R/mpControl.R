@@ -13,13 +13,38 @@
 # (7)  generates a sp object of the outer boundary of reliable DEM values
 #
 
+normalizeGdalLink <- function(gdalLink = NULL) {
+  if (is.null(gdalLink)) {
+    g <- link2GI::linkGDAL()
+  } else {
+    g <- gdalLink
+  }
+
+  if (is.null(g$path) || is.na(g$path)) {
+    g$path <- ""
+  } else if (nzchar(g$path) && !grepl("[/\\\\]$", g$path)) {
+    g$path <- paste0(g$path, .Platform$file.sep)
+  }
+
+  g
+}
+
+terraExtractValues <- function(x) {
+  if (is.data.frame(x)) {
+    numericCols <- vapply(x, is.numeric, logical(1))
+    if (any(numericCols)) {
+      return(as.numeric(x[[which(numericCols)[1]]]))
+    }
+    return(as.numeric(x[[1]]))
+  }
+
+  as.numeric(x)
+}
+
 
 analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,followSurfaceRes,logger,projectDir,dA,workingDir,locationName,runDir,taskarea,gdalLink=NULL, buf_mult = 1){
   #browser()
-  if (is.null(gdalLink))
-    g<- link2GI::linkGDAL()
-  else
-    g<-gdalLink
+  g <- normalizeGdalLink(gdalLink)
   #browser() 
   cat("load DEM/DSM data...\n")
   ## load DEM data either from a local GDAL File or from a raster object or if nothing is provided tray to download SRTM dataa
@@ -32,10 +57,9 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
     if (class(demFn)[1] %in% c("RasterLayer", "RasterStack", "RasterBrick")) {
       # get information of the raw file
       # project the  extent to the current input ref system 
+      rundem <- terra::rast(demFn)
       proj <- terra::crs(rundem)
       
-      tmpproj<-grep(system(paste0(g$path,'gdalinfo -proj4 ',path.expand(demFn)),intern = TRUE),pattern = "+proj=",value = TRUE)
-      proj <- substring(tmpproj,2,nchar(tmpproj) - 2)
       if (class(taskarea)[1] == 'SpatialPolygonsDataFrame' | class(taskarea)[1] == 'SpatialPolygons') taskarea <- sf::st_as_sf(taskarea)
       ta <- sf::st_transform(taskarea, sp::CRS(proj))
       #ta<- sp::spTransform(taskarea,sp::CRS(proj))
@@ -44,13 +68,13 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
       cut<-sf::st_as_sfc(sf::st_bbox(cut))
       rundem <- terra::crop(terra::rast(demFn), cut)   
       terra::writeRaster(rundem,file.path(runDir,"tmpdem.tif"),overwrite = TRUE)
-      system(paste0(g$path,'gdalwarp -overwrite -q ',
-                    '-t_srs "+proj=longlat +datum=WGS84 +no_defs" ',
-                    file.path(runDir,"tmpdem.tif"),' ',
-                    file.path(runDir,"demdll.tif")
-      ))
-      
-      demll<-terra::rast(file.path(runDir,"demdll.tif"))
+      if (terra::is.lonlat(rundem)) {
+        demll <- rundem
+      } else {
+        demll <- terra::project(rundem, "+proj=longlat +datum=WGS84 +no_defs")
+      }
+      terra::writeRaster(demll,file.path(runDir,"demll.tif"),overwrite = TRUE)
+      terra::writeRaster(demll,file.path(projectDir,locationName,workingDir,"fp-data/data/demll.tif"),overwrite = TRUE)
       dem<-terra::rast(file.path(runDir,"tmpdem.tif"))
       
       # if GEOTIFF or other gdal type of data
@@ -82,7 +106,6 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
       
     }
   }  # end of loading DEM data
-  demll<-terra::rast(demFn) 
   # check if dem has an geographic reference system as EPSG4326 outherwise reproject
   #if (!comp_ll_proj4((as.character(demll@crs)))) {
   #  system(paste0(g$path,'gdalwarp.exe -overwrite -q ', file.path(runDir,"demll.tif"),' ', file.path(runDir,"demtmp.tif"), ' -t_srs "+proj=longlat +datum=WGS84 +no_defs",'))
@@ -97,8 +120,7 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
   sp::proj4string(pos) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
   
   # extract all waypoint altitudes
-  altitude <- terra::extract(demll,terra::vect(df),layer = 1, ID=FALSE)
-  altitude=altitude$value
+  altitude <- terraExtractValues(terra::extract(demll,terra::vect(df),layer = 1, ID=FALSE))
   # get maximum altitude of the task area
   maxAlt <- max(altitude,na.rm = TRUE)
   
@@ -106,8 +128,8 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
   
   # extract launch altitude from DEM
   if (is.na(p$launchAltitude)) {
-    tmpalt <-as.numeric(terra::extract(demll,terra::vect(pos),layer = 1,ID=FALSE))
-    p$launchAltitude <- as.numeric(tmpalt[2] )
+    tmpalt <- terraExtractValues(terra::extract(demll,terra::vect(pos),layer = 1,ID=FALSE))
+    p$launchAltitude <- as.numeric(tmpalt[1] )
     # otherwise take it from the parameter set
   } else 
   {
@@ -139,10 +161,10 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
     # extract all waypoint altitudes
     altitude2 <-terra::extract(demll,terra::vect(df),layer = 1,ID=FALSE)
     # get maximum altitude of the task area
-    altitude2 = altitude2$value
+    altitude2 = terraExtractValues(altitude2)
     # extract launch altitude from DEM
-    launchAlt <- as.numeric(terra::extract(demll,terra::vect(pos),layer = 1,ID=FALSE))
-    launchAlt = launchAlt[2]
+    launchAlt <- terraExtractValues(terra::extract(demll,terra::vect(pos),layer = 1,ID=FALSE))
+    launchAlt = launchAlt[1]
     # calculate the agl flight altitude
     #altitude<-altitude+as.numeric(p$flightAltitude)-maxAlt    
     altitude2 <- altitude2 - launchAlt + flightAltitude
@@ -158,17 +180,10 @@ analyzeDSM <- function(useMP,demFn ,df,p,altFilter,horizonFilter,followSurface,f
       bobu= sf::st_cast(bobuf,"LINESTRING")
       bobu=sf::st_simplify(bobu,dTolerance = 3*horizonFilter)
       buf=sf::st_buffer(bobu, buf_mult * horizonFilter,joinStyle="BEVEL")
-      idx <- !sf::st_intersects(buf, df_sf ,)
-      tdx <- sf::st_intersects(buf, df_sf )
-      i_points = df_sf[unlist(idx),]
-      t_points = df_sf[unlist(tdx),]
-      #t_points = rbind(df_sf[1,],t_points)
-      i_points$id = 1
-      t_points$id = 99
-      
-      # names(t_points)= paste(names(df),"geometry")
-      # sf::st_geometry(t_points) <- "geometry"
-      df <-as(rbind(i_points,t_points), "Spatial")
+      tdx <- lengths(sf::st_intersects(df_sf, buf)) > 0
+      tdx[df_sf$id == 99] <- TRUE
+      df_sf$id <- ifelse(tdx, 99, 1)
+      df <- as(df_sf, "Spatial")
     }
     # if terraintrack = true try to reduce the number of waypoints by filtering
     # this is done by: 
@@ -436,14 +451,14 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       }
       
       # ascent2home WP
-      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
+      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                               cmd = 16,
                                               p4 = round(abs(uavViewDir),1),
                                               lat = round(calcNextPos(endLon,endLat,homeheading,5)[2],6),
                                               lon = round(calcNextPos(endLon,endLat,homeheading,5)[1],6),
                                               alt = round(homeRth,0))
       # maxhomepos WP
-      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
+      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                               cmd = 16,
                                               p4 = round(abs(uavViewDir),1),
                                               lat = round(homemaxpos[1,2],6),
@@ -452,15 +467,15 @@ calcMAVTask <- function(df,mission,nofiles,rawTime,flightPlanMode,trackDistance,
       
       # MAV fly to launch sequence
       # RTH altitude TODO
-      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
+      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                               cmd = 30,
                                               alt = round(homeRth,0))
       # SPEED max return speed
-      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
+      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                               cmd = 178,
                                               p2 = round(speed*4.0,6))
       # trigger RTL event
-      lnsnew[length(lnsnew[,1]) ,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
+      lnsnew[length(lnsnew[,1]) + 1,1] <- mavCmd(id = as.character(length(lnsnew[,1]) ), 
                                               cmd = 20)
       
       # write the control file
@@ -499,7 +514,7 @@ calcSurveyArea <- function(surveyArea,projectDir,logger,useMP) {
     else {
       # import flight area if provided by an external vector file
       
-      if (!methods::is(surveyArea, "numeric") & length(surveyArea) >= 8) {
+      if (methods::is(surveyArea, "numeric") & length(surveyArea) >= 8) {
         surveyArea <- surveyArea
       }
       # else if (!methods::is(surveyArea, "numeric") & length(surveyArea) < 8) {
@@ -542,21 +557,23 @@ readExternalFlightBoundary <- function(fN, extend = FALSE) {
     x <- sf::st_bbox(flightBound)
     
     # first flightline used for length and angle of the parallels
-    lon1 <- x@xmin # startpoint
-    lat1 <- x@ymin # startpoint
-    lon2 <- x@xmin # endpoint
-    lat2 <- x@ymax # endpoint
-    lon3 <- x@xmax # crosswaypoint
-    lat3 <- x@ymax # crosswaypoint
-    if (!methods::is(flightBound, "SpatialPolygonesDataFrame")) {
+    lon1 <- x[["xmin"]] # startpoint
+    lat1 <- x[["ymin"]] # startpoint
+    lon2 <- x[["xmin"]] # endpoint
+    lat2 <- x[["ymax"]] # endpoint
+    lon3 <- x[["xmax"]] # crosswaypoint
+    lat3 <- x[["ymax"]] # crosswaypoint
+    if (methods::is(flightBound, "SpatialPolygonsDataFrame") | methods::is(flightBound, "SpatialPolygons")) {
       launchLon  <- flightBound@polygons[[1]]@Polygons[[1]]@coords[4,1] 
       launchLat <- flightBound@polygons[[1]]@Polygons[[1]]@coords[4,2]  
-    } else if (!methods::is(flightBound, "SpatialLinesDataFrame")) {
+    } else if (methods::is(flightBound, "SpatialLinesDataFrame") | methods::is(flightBound, "SpatialLines")) {
       launchLon <- flightBound@lines[[1]]@Lines[[1]]@coords[7,1] 
       launchLat <- flightBound@lines[[1]]@Lines[[1]]@coords[7,2]
+    } else {
+      stop("unsupported flight boundary type")
     }
   } else {
-    if (methods::is(flightBound, "SpatialPolygonesDataFrame")) {
+    if (methods::is(flightBound, "SpatialPolygonsDataFrame")) {
       lon1 <- flightBound@polygons[[1]]@Polygons[[1]]@coords[1,1] 
       lat1 <- flightBound@polygons[[1]]@Polygons[[1]]@coords[1,2] 
       
@@ -1020,6 +1037,8 @@ calculateFlightTime <- function(maxFlightTime, windCondition, maxSpeed, uavOptim
     windConditionFactor <- 0.7
   } else if (windCondition == 4) {
     windConditionFactor <- 0.6
+  } else if (windCondition == 5) {
+    windConditionFactor <- 0.5
   } else if (windCondition > 5) {
     windConditionFactor <- 0.0
     log4r::levellog(logger, 'INFO', "come on, it is a uav not the falcon...")  
@@ -1043,6 +1062,10 @@ calculateFlightTime <- function(maxFlightTime, windCondition, maxSpeed, uavOptim
   log4r::levellog(logger, 'INFO', paste("initial speed estimation  : ", round(maxSpeed, digits = 1),   "  (km/h)      "))
   while (picIntervall < picRate) {
     maxSpeed <- maxSpeed - 1
+    if (maxSpeed <= 0) {
+      log4r::levellog(logger, 'FATAL', "maxSpeed dropped to zero while calculating flight time")
+      stop("maxSpeed dropped to zero while calculating flight time")
+    }
     rawTime <- round(((flightLength/1000)/maxSpeed)*60, digits = 1)
     rawTime <- rawTime*windConditionFactor
     picIntervall <- round(rawTime*60/(flightLength/totalTrackdistance),digits = 1)
@@ -1270,10 +1293,7 @@ makeFlightPathT3 <- function(treeList,
                              runDir, 
                              gdalLink = NULL,
                              above_ground){
-  if (is.null(gdalLink)) 
-    g<- link2GI::linkGDAL()
-  else 
-    g<-gdalLink
+  g <- normalizeGdalLink(gdalLink)
   
   # due to RMD Check Note
   uavViewDir<-pos<-workingDir<-trackSwitch<-NULL
@@ -1820,5 +1840,3 @@ getAltitudes <- function(demll ,df,p,followSurfaceRes,logger,projectDir,location
   names(return) <- c("lp","wp","dsm","rth","la","xa")
   return(return)
 }
-
-

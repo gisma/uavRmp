@@ -1,17 +1,17 @@
 ---
 title: "Basic Field Guide"
 author: "Chris Reudenbach"
-date: '2024-06-07'
+date: '2026-05-04'
 editor_options:
   chunk_output_type: console
 output:
-  html_document: 
-    theme: united
-    toc: yes
-  rmarkdown: default
+  # html_document: 
+  #   theme: united
+  #   toc: true
+ # rmarkdown: default
   pdf_document:
     latex_engine: xelatex
-    toc: yes
+    toc: true
 urlcolor: blue
 vignette: >
   %\VignetteIndexEntry{Basic Field Guide}
@@ -109,4 +109,3 @@ As simple this seems it is full of pitfalls. Therefore we would like to provide 
     + specific permissions
     + necessary to inform flight security authorithy
     + necessary to inform local air control
-

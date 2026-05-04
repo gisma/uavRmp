@@ -1,6 +1,8 @@
-makeAP(projectDir = input$projectDir,
-       surveyArea=file1$datapath,
-       useMP = TRUE,
-       demFn = file2$datapath,
-       cameraType = input$CameraType,
-       uavType = "dji_csv") 
+runPlan2Litchi <- function(projectDir, planfile, demfile) {
+  makeAP(projectDir = path.expand(projectDir),
+         surveyArea = planfile,
+         useMP = TRUE,
+         demFn = demfile,
+         cameraType = "dji43",
+         uavType = "dji_csv")
+}

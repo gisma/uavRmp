@@ -5,9 +5,18 @@ new features:
 * add QGIS digitizing support 
 * new QGC terrain following analysis 
 
+changes:
+
+* improve DEM handling with terra and more robust altitude extraction
+* simplify the QGroundControl-to-Litchi Shiny helper app
+
 bugfixes:
 
 * fix the overlay error of vecDraw
+* fix QGroundControl survey import and terrain-following waypoint interpolation
+* fix short flight segments below followSurfaceRes
+* fix launch altitude extraction and MAVLink return-to-home command generation
+* fix numeric survey areas, spatial boundary imports, and flight-time edge cases
 
 ## uavRmp 0.6.4
 new features:

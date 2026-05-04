@@ -1,8 +1,8 @@
 Package: uavRmp
 Type: Package
 Title: UAV Mission Planner
-Version: 0.7
-Date: 2023-03-27
+Version: 0.8.0
+Date: 2026-05-04
 Authors@R: c(person("Chris", "Reudenbach", email = "reudenbach@uni-marburg.de", role = c("cre", "aut")),
              person("Marvin", "Ludwig", role = c("ctb")),
              person("Sebastian", "Richter", role = c("ctb")),
@@ -36,7 +36,6 @@ Imports:
     concaveman,
     dplyr,
     spatialEco
-RoxygenNote: 7.3.1
 SystemRequirements: GNU make
 Suggests: knitr,
     rmarkdown,
@@ -48,3 +47,4 @@ Suggests: knitr,
     htmlwidgets,
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.0.0

@@ -1,89 +1,57 @@
 library(shiny)
 library(uavRmp)
 
-demFn <- system.file("extdata", "mrbiko.tif", package = "uavRmp")
-tutorial_flightArea <- system.file("extdata", "tutdata_qgc_survey.plan", package = "uavRmp")
-options(shiny.maxRequestSize=30*1024^2)
-withConsoleRedirect <- function(containerId, expr) {
-  # Change type="output" to type="message" to catch stderr
-  # (messages, warnings, and errors) instead of stdout.
-  txt <- capture.output(results <- expr, type = "output")
-  if (length(txt) > 0) {
-    insertUI(paste0("#", containerId), where = "beforeEnd",
-             ui = paste0(txt, "\n", collapse = "")
-    )
-  }
-  results
-}
+options(shiny.maxRequestSize = 30 * 1024^2)
 
-# ui object
 ui <- fluidPage(
-
   titlePanel(p("QGC Survey to Litchi Converter", style = "color:#3474A7")),
-  includeMarkdown("home.md"),
+  p("Convert a QGroundControl survey .plan file to DJI compatible Litchi CSV files."),
+  p("The app runs makeAP(useMP = TRUE). Flight altitude, overlap and footprint settings are read from the uploaded survey plan."),
   fluidRow(
-      column(2, wellPanel(
-  textInput("projectDir", "Provide a Project Folder name", "~/tmp"),
-  verbatimTextOutput("value1"),
-  textInput("cameraType", "Camera Type (see help)", "dji43"),
-  verbatimTextOutput("value7"),
-      )),
-  column(2, wellPanel(
-    fileInput("planfile", "choose flighplan", multiple = FALSE,
-              accept = c(
-                ".waypoints",
-                ".plan")),
-    fileInput("demfile", "choose dem", multiple = FALSE,
-              accept = c( 
-                ".tif",
-                ".asc")),
-    
-    
-  ))
-  ),
-  
-
-    mainPanel(
-
-
-      pre(id = "console")
-      
-      
+    column(
+      4,
+      wellPanel(
+        textInput("projectDir", "Project directory", "~/tmp"),
+        fileInput("planfile",
+                  "QGroundControl survey plan",
+                  multiple = FALSE,
+                  accept = c(".plan")),
+        fileInput("demfile",
+                  "DGM/DEM",
+                  multiple = FALSE,
+                  accept = c(".tif", ".tiff", ".asc")),
+        actionButton("run", "Create Litchi files")
+      )
+    ),
+    column(
+      8,
+      verbatimTextOutput("console")
     )
   )
+)
 
+server <- function(input, output, session) {
+  consoleText <- reactiveVal("")
+  output$console <- renderText(consoleText())
 
-# server()
-server <- function(input, output) {
-  observe({
-    file1 = input$planfile
-    file2 = input$demfile
-    if (is.null(file1) || is.null(file2)) {
-      return(NULL)}
-    #    data1 = read.csv(file1$datapath,header = TRUE, sep=",",skipNul = TRUE)
-    #    data2 = read.csv(file2$datapath,header = TRUE, sep=",",skipNul = TRUE)
-    observe({
-      withConsoleRedirect("console", {
-        # output$value <- renderText({ input$projectDir })
-        makeAP(projectDir = input$projectDir,
-               surveyArea=file1$datapath,
-               useMP = TRUE,
-               demFn = file2$datapath,
-               cameraType = input$cameraType ,
-               uavType = "dji_csv") 
-        
-      })
-      # makeAP(surveyArea=file1$datapath,
-      #                    useMP = TRUE,
-      #                    demFn = file2$datapath,
-      #        flightAltitude =70,
-      #                    maxFlightTime = 25,
-      #                    uavType = "dji_csv") 
-    })
-  }) 
+  observeEvent(input$run, {
+    req(input$projectDir)
+    req(input$planfile)
+    req(input$demfile)
+
+    consoleText("Running makeAP with useMP = TRUE ...")
+    txt <- tryCatch(capture.output({
+      makeAP(projectDir = path.expand(input$projectDir),
+             surveyArea = input$planfile$datapath,
+             useMP = TRUE,
+             demFn = input$demfile$datapath,
+             cameraType = "dji43",
+             uavType = "dji_csv")
+    }, type = "output"),
+    error = function(e) paste("ERROR:", conditionMessage(e)))
+
+    consoleText(paste(txt, collapse = "\n"))
+  })
 }
 
-
-
-# shinyApp()
 shinyApp(ui = ui, server = server)

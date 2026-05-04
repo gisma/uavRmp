@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="generator" content="litedown 0.9">
+<title>Basic Field Guide</title>
+<style type="text/css">
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 1.5;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+body, .abstract, code, .footnotes, footer, #refs, .caption { font-size: .9em; }
+li li { font-size: .95em; }
+ul:has(li > input[type="checkbox"]) { list-style: none; padding-left: 1em; }
+*, :before, :after { box-sizing: border-box; }
+a { color: steelblue; }
+pre, img { max-width: 100%; }
+pre { white-space: pre-wrap; word-break: break-word; }
+pre code { display: block; padding: 1em; overflow-x: auto; }
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
+:not(pre, th) > code, code[class], div > .caption { background: #f8f8f8; }
+pre > code:is(:not([class]), .language-plain, .language-none, .plain), .box, .figure, .table { background: inherit; border: 1px solid #eee; }
+pre > code {
+  &.message { border-color: #9eeaf9; }
+  &.warning { background: #fff3cd; border-color: #fff3cd; }
+  &.error { background: #f8d7da; border-color: #f8d7da; }
+}
+.fenced-chunk { border-left: 1px solid #666; }
+.code-fence {
+  opacity: .4;
+  border: 1px dashed #666;
+  border-left: 2px solid;
+  &:hover { opacity: inherit; }
+}
+.box, .figure, .table, table { margin: 1em auto; }
+div > .caption { padding: 1px 1em; }
+.figure { p:has(img, svg), pre:has(svg) { text-align: center; } }
+.flex-col { display: flex; justify-content: space-between; }
+table {
+  &:only-child:not(.table > *) { margin: auto; }
+  th, td { padding: 5px; font-variant-numeric: tabular-nums; }
+  thead, tfoot, tr:nth-child(even) { background: whitesmoke; }
+  thead th { border-bottom: 1px solid #ddd; }
+  &:not(.datatable-table) {
+    border-top: 1px solid #666;
+    border-bottom: 1px solid #666;
+  }
+}
+blockquote {
+  color: #666;
+  margin: 0;
+  padding: 1px 1em;
+  border-left: .5em solid #eee;
+}
+hr, .footnotes::before { border: 1px dashed #ddd; }
+.frontmatter { text-align: center; }
+#TOC {
+  a { text-decoration: none; }
+  ul { list-style: none; padding-left: 1em; }
+  & > ul { padding: 0; }
+  ul ul { border-left: 1px solid lightsteelblue; }
+}
+.body h2 { border-bottom: 1px solid #666; }
+.body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
+.main-number::after { content: "."; }
+span[class^="ref-number-"] { font-weight: bold; }
+.ref-number-fig::after, .ref-number-tab::after { content: ":"; }
+.cross-ref-chp::before { content: "Chapter "; }
+.cross-ref-sec::before { content: "Section "; }
+.cross-ref-fig::before, .ref-number-fig::before { content: "Figure "; }
+.cross-ref-tab::before, .ref-number-tab::before { content: "Table "; }
+.cross-ref-eqn::before, .MathJax_ref:has(mjx-mtext > mjx-c + mjx-c)::before { content: "Equation "; }
+.abstract, #refs {
+  &::before { display: block; margin: 1em auto; font-weight: bold; }
+}
+.abstract::before { content: "Abstract"; text-align: center; }
+#refs::before { content: "Bibliography"; font-size: 1.5em; }
+.ref-paren-open::before { content: "("; }
+.ref-paren-close::after { content: ")"; }
+.ref-semicolon::after { content: "; "; }
+.ref-and::after { content: " and "; }
+.ref-et-al::after { content: " et al."; font-style: italic; }
+.footnote-ref a {
+  &::before { content: "["; }
+  &::after { content: "]"; }
+}
+section.footnotes {
+  margin-top: 2em;
+  &::before { content: ""; display: block; max-width: 20em; }
+}
+.fade {
+  background: repeating-linear-gradient(135deg, white, white 30px, #ddd 32px, #ddd 32px);
+  opacity: 0.6;
+}
+
+@media print {
+  body { max-width: 100%; }
+  tr, img { break-inside: avoid; }
+}
+@media only screen and (min-width: 992px) {
+  body:not(.pagesjs) pre:has(.line-numbers):not(:hover) { white-space: pre; }
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css">
+</head>
+<body>
+<div class="frontmatter">
+<div class="title"><h1>Basic Field Guide</h1></div>
+<div class="author"><h2>Chris Reudenbach</h2></div>
+<div class="date"><h3>2026-05-04</h3></div>
+</div>
+<div class="body">
+<h1 id="chp:planning-your-survey">Planning your Survey</h1>
+<p>It is most important that you setup your survey with an appropriate overlap for reliable stitching results. If the overlap is too small or vice versa you fly too fast you will get poor or no results. Same is with the flight altitude and the camera settings. Below you find suggested values.</p>
+<table>
+<thead>
+<tr>
+<th>ASL Alt m</th>
+<th>GP8MP3+ (cm)</th>
+<th>GP12MP3+ (cm)</th>
+<th>DJI P3 4K (cm)</th>
+<th>MAPIR 2 (cm)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>15</td>
+<td>1.08</td>
+<td>0.9</td>
+<td>0.63</td>
+<td>0.56</td>
+</tr>
+<tr>
+<td>30</td>
+<td>2.16</td>
+<td>1.8</td>
+<td>1.27</td>
+<td>1.03</td>
+</tr>
+<tr>
+<td>75</td>
+<td>5.4</td>
+<td>4.5</td>
+<td>3.2</td>
+<td>2.53</td>
+</tr>
+<tr>
+<td>100</td>
+<td>7.2</td>
+<td>6.0</td>
+<td>4.25</td>
+<td>3.38</td>
+</tr>
+<tr>
+<td>Ground Resolution of typical cameras</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="sec:suggested-overlap">Suggested Overlap</h2>
+<p>Front Overlap 80%,  Side Overlap 60%</p>
+<h2 id="sec:camera-speed">Camera Speed</h2>
+<p>Depending on the product and manufactor of the cameras you have to deal with different speeds. NOTE: Only the speed that can be continously achieved is taken into account. Currently a picture rate of 2 sconds is the maximum in speed.</p>
+<p><strong>It is strongly recommended that you use (if available) an autonoumous camera timer (time lapse) for controlling the pictures interval.</strong></p>
+<h2 id="sec:flight-speed">Flight Speed</h2>
+<p>On average the fasted SD Cards will be able to achieve an average speed of about 2 seconds/JPEG (Raw + JPEG 3.5 seconds) image. As a result taking pictures every 2 seconds will be a sporty attempt. The Flight speed recommodations are meeting this needs. Let us assume you fly a task with the field of view (FOV) of the DJI 4K camera at 35 meters above ground level (AGL). To derive the maximum flight distance from picture to picture in meter for the given overlap you have to calculate:</p>
+<p>\(FOV*agl*(1-overlap) = 1,71*35*0,2 = 12 m\)</p>
+<p>If you can take a picture every 2 seconds your max speed is: \(12 m / 2 s  = 6 m/s\)</p>
+<h2 id="sec:rule-of-thumb">Rule of thumb</h2>
+<p>For  JPG pictures: \(0,15 * agl (RAW; 0,07 * agl)\)
+For a 100 meter AGL flight you should set the speed to a maximum of:
+\(0,15 * 100 = 15 m/s (54 km/h)\)
+For a flight of 35m agl this is will be roughly 5,25 m/s</p>
+<h2 id="sec:dem-dsm-data">DEM/DSM Data</h2>
+<p>If you fly in an wide open flat area you do not need additional data. But if you fly in middle range mountains, forests or similar complex structures you will need a digtal surface model (DSM/DEM) for retrieving an optimal and safe flight path.</p>
+<h2 id="sec:weather">Weather</h2>
+<p>Actually you also should check the weather.
+Forget about flying with wind speed above 4 Beaufort - the UAV is <strong>not</strong> a falcon.</p>
+<h2 id="sec:workflow-in-the-field">Workflow in the field</h2>
+<ol>
+<li>Plan you r flight with an adequate planning tool at home and control it in the field (see examples, check your flightplan)</li>
+<li>Setup your Remote Controller</li>
+<li>Setup your controlling device</li>
+<li>Setup your UAV</li>
+<li>Setup your safety system (use a parachute!)</li>
+<li>Setup your camera(s)</li>
+<li>Start RC</li>
+<li>Start UAV</li>
+<li>Start Camera</li>
+<li>Load Task</li>
+<li>Fly Task
+As simple this seems it is full of pitfalls. Therefore we would like to provide some checklist:</li>
+</ol>
+<h2 id="sec:pretask-check">Pretask Check</h2>
+<ul>
+<li>
+<p>UAV</p>
+<ul>
+<li>batteries fully charged</li>
+<li>remote control charged</li>
+<li>props</li>
+<li>cables</li>
+<li>parachute</li>
+<li>cleanup MicroSD cards</li>
+<li>charge camera(s)</li>
+<li>configure camera(s)</li>
+<li>charger</li>
+<li>minute book</li>
+<li>power bank</li>
+</ul>
+</li>
+<li>
+<p>Tools</p>
+<ul>
+<li>Tools for the UAV</li>
+<li>Tape, glue etc.</li>
+<li>Table, chairs etc.</li>
+</ul>
+</li>
+<li>
+<p>Survey</p>
+<ul>
+<li>Survey is checked</li>
+<li>Task is stored on controller (app)</li>
+<li>offline maps loaded</li>
+</ul>
+</li>
+<li>
+<p>Legal stuff</p>
+<ul>
+<li>insurance valid</li>
+<li>common flight permission</li>
+<li>specific permissions</li>
+<li>necessary to inform flight security authorithy</li>
+<li>necessary to inform local air control</li>
+</ul>
+</li>
+</ul>
+</div>
+<script src="https://cdn.jsdelivr.net/combine/npm/katex@0.16.45/dist/katex.min.js,npm/katex@0.16.45/dist/contrib/auto-render.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@xiee/utils@1.14.20/js/render-katex.min.js" defer></script>
+</body>
+</html>

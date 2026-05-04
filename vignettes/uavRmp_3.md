@@ -1,17 +1,17 @@
 ---
 title: "Export to Litchi"
 author: "Chris Reudenbach"
-date: '2024-06-07'
+date: '2026-05-04'
 editor_options:
   chunk_output_type: console
 output:
-  html_document: 
-    theme: united
-    toc: yes
-  rmarkdown: default
+  # html_document: 
+  #   theme: united
+  #   toc: true
+#  rmarkdown: default
   pdf_document:
     latex_engine: xelatex
-    toc: yes
+    toc: true
 urlcolor: blue
 vignette: >
   %\VignetteIndexEntry{Export to Litchi}
@@ -42,7 +42,6 @@ Open the control file via QGroundcontrol or one of its derivates and proceed lik
 For the `DJI` consumer drones there is no opensource or inexpensive planning tool. As a flight control app, the powerful and very inexpensive `Litchi` is a good choice. The output of both `Qgroundcontrol` and `uavRmp` planned surveys is a `Litchi` CSV control file. After upload/import the flights are available via the `Litchi mission Hub` Cloud. 
 
 Open [Litchi Mission](https://flylitchi.com/) and click on the button ''Missions->Import'' and navigate to the control file firstSurvey_1001.csv. To export it click ''Missions->Save''. 
-
 
 
 

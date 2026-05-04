@@ -252,6 +252,11 @@ makeAP <- function(projectDir = tempdir(),
   ###  setup environ and params
   cat("setup environ and params...\n")
   nofiles=1
+  if (!is.null(followSurfaceRes) &&
+      (length(followSurfaceRes) != 1 || is.na(followSurfaceRes) ||
+       !is.finite(followSurfaceRes) || followSurfaceRes <= 0)) {
+    stop("followSurfaceRes must be a positive finite number")
+  }
   if (useMP  & horizonFilter > 10) horizonFilter = 3
   if (useMP) followSurface = TRUE
   options(warn=0)
@@ -293,6 +298,8 @@ makeAP <- function(projectDir = tempdir(),
     factor <- 1.33 # FOV ratio
     } else if (cameraType == "dji32"){
       factor <- 1.5 # FOV ratio
+    } else {
+      stop("unsupported cameraType for dji_csv: ", cameraType)
     } 
     flightParams = c(flightPlanMode = flightPlanMode,
                      launchAltitude = launchAltitude,
@@ -322,6 +329,8 @@ makeAP <- function(projectDir = tempdir(),
       factor <-1.71
     } else if (cameraType == "YUN90") {
       factor <-1.5
+    } else {
+      stop("unsupported cameraType for pixhawk: ", cameraType)
     }
     
   
@@ -338,6 +347,8 @@ makeAP <- function(projectDir = tempdir(),
     
     # FOV*agl*(1-overlap)
     uavOptimumSpeed <- ceiling(factor * flightAltitude * fliAltRatio)
+  } else {
+    stop("unsupported uavType: ", uavType)
   }
   
   #-----------------------------------------------------------------------------------------------
@@ -347,11 +358,19 @@ makeAP <- function(projectDir = tempdir(),
   if (useMP) {
     #browser()
     t<-jsonlite::fromJSON(surveyArea)
-    listPos<-grep("command", t$mission$items$TransectStyleComplexItem$Items)
+    listPos <- which(vapply(t$mission$items$TransectStyleComplexItem$Items,
+                            function(x) !is.null(x) && is.data.frame(x) && "command" %in% names(x),
+                            logical(1)))
+    if (length(listPos) != 1) {
+      stop("useMP requires exactly one TransectStyleComplexItem; found ", length(listPos))
+    }
     tmp<- t$mission$items$TransectStyleComplexItem$Items[listPos][[1]]
     #length(tmp$params[[60]])
     #tmp$params[[1]][5:6]
     coord<-tmp[tmp["command"]==16, ]
+    if (nrow(coord) < 3) {
+      stop("useMP requires at least three command 16 coordinates")
+    }
     #coord$params
     df_coordinates<-t(as.data.frame(rlist::list.cbind(coord[,"params",])))[,5:6]
     # t$mission$items$TransectStyleComplexItem$VisualTransectPoints
@@ -359,8 +378,16 @@ makeAP <- function(projectDir = tempdir(),
     trackDistance <- t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintFrontal[listPos]
     crossDistance   <- t$mission$items$TransectStyleComplexItem$CameraCalc$AdjustedFootprintSide[listPos]
     totalTrackdistance <- trackDistance
+    len <- sum(geosphere::distGeo(cbind(df_coordinates[-nrow(df_coordinates), 2],
+                                        df_coordinates[-nrow(df_coordinates), 1]),
+                                  cbind(df_coordinates[-1, 2],
+                                        df_coordinates[-1, 1]),
+                                  a = 6378137,
+                                  f = 1 / 298.257223563))
+    multiply <- max(1, floor(len / followSurfaceRes))
     fliAltRatio     <- 1 - t$mission$items$TransectStyleComplexItem$CameraCalc$SideOverlap[listPos]/100
     flightAltitude  <- t$mission$items$TransectStyleComplexItem$CameraCalc$DistanceToSurface[listPos]
+    uavOptimumSpeed <- ceiling(factor * flightAltitude * fliAltRatio)
     # fa_poly=t$mission$items$polygon[3][[1]]
     # # p1 = c(fa_poly[1,2],fa_poly[1,1])
     # # p2=  c(fa_poly[2,2],fa_poly[2,1])
@@ -385,6 +412,7 @@ makeAP <- function(projectDir = tempdir(),
     groundResolution<-t$mission$items$TransectStyleComplexItem$CameraCalc$ImageDensity[listPos]
     if (crossDistance < followSurfaceRes) followSurfaceRes = crossDistance
     if (crossDistance < horizonFilter ) horizonFilter = crossDistance 
+    multiply <- max(1, floor(len / followSurfaceRes))
     
     # set cumulative flightlength to zero
     flightLength <- 0
@@ -393,7 +421,7 @@ makeAP <- function(projectDir = tempdir(),
                      launchAltitude = launchAltitude,
                      flightAltitude = flightAltitude,
                      presetFlightTask = presetFlightTask,
-                     overlap = overlap,
+                     overlap = 1 - fliAltRatio,
                      curvesize = djiBasic[1],        # curvesize
                      rotationdir = djiBasic[2],      # rotationdir
                      gimbalmode = djiBasic[3],       # gimbalmode
@@ -501,94 +529,87 @@ makeAP <- function(projectDir = tempdir(),
     else if (mode == "terrainTrack")
       group = 99 }
     group = 99
-    df_coord<-data.frame(df_coordinates)
-    df_coord = spatialEco::insert(df_coord,MARGIN = 1,value = c(pos[2], pos[1]), idx=1)
-
-    names(df_coord)<-c("lat","lon")
-    df_coord$heading=0
-    df_coord$len=0
-    df_coord$multiply=1
-    for (j in 1:(nrow(df_coord))) {
-      j2 = j+1
-      goal_pos =  c(df_coord$lon[j2],df_coord$lat[j2])
-      start_pos = c(df_coord$lon[j],df_coord$lat[j] )
-      if (j==nrow(df_coord)) {
-        goal_pos= c(df_coord$lon[j] ,df_coord$lat[j] )
-        start_pos=c(df_coord$lon[j],df_coord$lat[j] )
-        }
-      
-      df_coord$heading[j] <- round(geosphere::bearing(start_pos, goal_pos,a = 6378137,f = 1 / 298.257223563),digits = 0)
-      df_coord$len[j] <- geosphere::distGeo(start_pos, goal_pos,a = 6378137,f = 1 / 298.257223563)
-      df_coord$multiply[j] <- floor(df_coord$len[j] / followSurfaceRes)
-      max_len  = max(df_coord$len[j] * followSurfaceRes, followSurfaceRes)
-     }
+    df_coord <- data.frame(df_coordinates)
+    names(df_coord) <- c("lat", "lon")
+    df_coord$lat <- as.numeric(df_coord$lat)
+    df_coord$lon <- as.numeric(df_coord$lon)
+    df_coord$heading <- NA_real_
+    df_coord$len <- 0
+    df_coord$multiply <- 1
+    if (nrow(df_coord) > 1) {
+      for (j in seq_len(nrow(df_coord) - 1)) {
+        start_pos <- c(df_coord$lon[j], df_coord$lat[j])
+        goal_pos <- c(df_coord$lon[j + 1], df_coord$lat[j + 1])
+        df_coord$heading[j] <- round(geosphere::bearing(start_pos, goal_pos,
+                                                        a = 6378137,
+                                                        f = 1 / 298.257223563),
+                                     digits = 0)
+        df_coord$len[j] <- geosphere::distGeo(start_pos, goal_pos,
+                                              a = 6378137,
+                                              f = 1 / 298.257223563)
+        df_coord$multiply[j] <- floor(df_coord$len[j] / followSurfaceRes)
+      }
+    }
     ## now start calculating the waypoints according to the resolution
     cat("calculating waypoints...\n")
-    pb <- pb <- utils::txtProgressBar(max = tracks, style = 3)
+    pb <- utils::txtProgressBar(max = max(1, nrow(df_coord) - 1), style = 3)
     # then do for the rest  forward and backward
-    pOld<- c(df_coord$lon[1],df_coord$lat[1])
-    df_coord$group = 99
-    for (j in 1:(nrow(df_coord))) {
-      
-     # for (i in seq(1:df_coord$multiply[j])) {  mode == "terrainTrack"
-        # if (mode == "waypoints"  || mode == "track") {
-        #   group <- 1
-        #   if (df_coord$multiply[j] < 1 || is.na(df_coord$multiply[j])) {group <- 99}}
-        #  else      {group <- 1}}
-        #else {i <- 2}
-        # calc next coordinate
-      if (j < nrow(df_coord))
-        dist = geosphere::distGeo(pOld, c(df_coord$lon[j+1],df_coord$lat[j+1]),a = 6378137,f = 1 / 298.257223563)
-        postiterator = floor(dist/followSurfaceRes)
-        if ( postiterator <= 2) postiterator=1
-        #print(postiterator)
-        for (jj in 1:postiterator) {
-          group=1
-          postmp <- calcNextPos(pOld[1], pOld[2], df_coord$heading[j], followSurfaceRes)
-          dfpos = data.frame(
-            lat=postmp[2],
-            long=postmp[1])
-          df_coord_pos = data.frame(
-            lat=df_coord$lat[j],
-            long=df_coord$lon[j])
-          df_coord_pos = sf::st_as_sf(df_coord_pos, coords = c("long","lat"),remove = FALSE)
-          pos = sf::st_as_sf(dfpos, coords = c("long","lat"),remove = FALSE)
-          intersect=sf::st_intersection(sf::st_buffer(pos,dist = followSurfaceRes),df_coord_pos)
-          if (nrow(intersect)>0)
-          {
-            pos = sf::st_coordinates(df_coord_pos)
-            group = 99
-            #j= j+1
+    pOld <- c(df_coord$lon[1], df_coord$lat[1])
+    if (uavType == "dji_csv") {
+      lns[length(lns) + 1] <- makeUavPoint(pOld, uavViewDir, group = 99, p, ag = above_ground)
+    }
+    if (nrow(df_coord) > 1) {
+      for (j in seq_len(nrow(df_coord) - 1)) {
+        start_pos <- c(df_coord$lon[j], df_coord$lat[j])
+        goal_pos <- c(df_coord$lon[j + 1], df_coord$lat[j + 1])
+        segment_len <- geosphere::distGeo(start_pos, goal_pos,
+                                          a = 6378137,
+                                          f = 1 / 298.257223563)
+        if (is.na(segment_len) || segment_len == 0) {
+          utils::setTxtProgressBar(pb, j)
+          next
+        }
+        if (segment_len <= followSurfaceRes) {
+          step_distances <- segment_len
+        } else {
+          step_distances <- seq(followSurfaceRes, segment_len, by = followSurfaceRes)
+        }
+        if (tail(step_distances, 1) != segment_len) {
+          step_distances <- c(step_distances, segment_len)
+        }
+        for (step_distance in step_distances) {
+          is_turnpoint <- isTRUE(all.equal(step_distance, segment_len))
+          if (is_turnpoint) {
+            pos <- goal_pos
+          } else {
+            pos <- calcNextPos(start_pos[1], start_pos[2], df_coord$heading[j], step_distance)
           }
-        if (j==nrow(df_coord))pos <- calcNextPos(pOld[1], pOld[2], df_coord$heading[j], max_len )
-        flightLength <- flightLength + followSurfaceRes
-        
-        if (mode == "track") {
-          group <- 99
+          flightLength <- flightLength + geosphere::distGeo(pOld, pos,
+                                                            a = 6378137,
+                                                            f = 1 / 298.257223563)
+          group <- if (mode == "track" || is_turnpoint) 99 else 1
+          if (uavType == "dji_csv") {
+            lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = group, p, ag = above_ground)
+          }
+          if (uavType == "pixhawk") {
+            lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2], lon = pos[1], head = uavViewDir, group = group)
+          }
+          pOld <- pos
         }
-        if (uavType == "dji_csv") {
-          lns[length(lns) + 1] <- makeUavPoint(pos, uavViewDir, group = group, p,ag=above_ground)
-        }
-        if (uavType == "pixhawk") {
-          lns[length(lns) + 1] <- makeUavPointMAV(lat = pos[2], lon = pos[1], head = uavViewDir, group = group)
-        }
-        pOld <- pos
-        }
-
-    
-      # status bar
-      utils::setTxtProgressBar(pb, j)
+        utils::setTxtProgressBar(pb, j)
+      }
     }
     
     close(pb) 
-    fileConn <- file(file.path(runDir,"del.csv"))
-    writeLines(unlist(lns[1:length(lns)]), fileConn)
-    djiDF <- utils::read.csv(file.path(runDir,"del.csv"), sep = ",", header = FALSE)
-    # add correct header
-    names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group =group,p,header = TRUE,sep = ','),split = ","))
- 
-    df_coord_pos = sf::st_as_sf(djiDF, coords = c("lon","lat"),remove = FALSE)
-    r6 = st_difference(df_coord_pos)
+    if (uavType == "dji_csv") {
+      fileConn <- file(file.path(runDir,"del.csv"))
+      writeLines(unlist(lns[1:length(lns)]), fileConn)
+      close(fileConn)
+      djiDF <- utils::read.csv(file.path(runDir,"del.csv"), sep = ",", header = FALSE)
+      # add correct header
+      names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group =group,p,header = TRUE,sep = ','),split = ","))
+   
+    }
     
   }
   #-----------------------------------------------------------------------------------------------
@@ -647,7 +668,7 @@ makeAP <- function(projectDir = tempdir(),
   len <- geosphere::distGeo(c(p$lon1, p$lat1), c(p$lon2, p$lat2))
   
   # calculate and assign distance of the cross base flight track
-  crosslen <- distGeo(c(p$lon2, p$lat2),c(p$lon3, p$lat3),a = 6378137,f = 1 / 298.257223563)
+  crosslen <- geosphere::distGeo(c(p$lon2, p$lat2),c(p$lon3, p$lat3),a = 6378137,f = 1 / 298.257223563)
   
   if (is.null(followSurfaceRes)) {
     followSurfaceRes <- trackDistance
@@ -656,15 +677,15 @@ makeAP <- function(projectDir = tempdir(),
   
   # IF followSurface set track/crossDistance to followSurfaceRes
   if (followSurface) {
-    multiply <- floor(len / followSurfaceRes)
+    multiply <- max(1, floor(len / followSurfaceRes))
     trackDistance <- followSurfaceRes
     #crossDistance<-followSurfaceRes
   } else{
-    multiply <- floor(len / trackDistance)
+    multiply <- max(1, floor(len / trackDistance))
   }
   
   # calculate and assign  number of tracklines
-  tracks <- floor(crosslen / crossDistance)
+  tracks <- max(1, floor(crosslen / crossDistance))
   
   #set initial heading
   heading <- updir
@@ -753,8 +774,8 @@ makeAP <- function(projectDir = tempdir(),
   cat("calculating waypoints...\n")
   pb <- pb <- utils::txtProgressBar(max = tracks, style = 3)
   # then do for the rest  forward and backward
-  for (j in seq(1:tracks)) {
-    for (i in seq(1:multiply)) {
+  for (j in seq_len(tracks)) {
+    for (i in seq_len(multiply)) {
       if (mode == "waypoints" || mode == "terrainTrack") {
         if (i >= multiply) {
           group <- 99
@@ -769,7 +790,7 @@ makeAP <- function(projectDir = tempdir(),
       
       # calc next coordinate
       pos <- calcNextPos(pOld[1], pOld[2], heading, trackDistance)
-      if (picFootprint) camera <- sf::st_polygon(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j,factor))
+      if (picFootprint) camera <- rbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance, flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + trackDistance
       if (mode == "track") {
@@ -785,7 +806,7 @@ makeAP <- function(projectDir = tempdir(),
     
     if ((j %% 2 != 0)) {
       pos <- calcNextPos(pOld[1], pOld[2], crossdir, crossDistance)
-      if (picFootprint) camera <- sf::st_polygon(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor))
+      if (picFootprint) camera <- rbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + crossDistance
       if (uavType == "dji_csv") {
@@ -805,7 +826,7 @@ makeAP <- function(projectDir = tempdir(),
     
     else if ((j %% 2 == 0)) {
       pos <- calcNextPos(pOld[1], pOld[2], crossdir, crossDistance)
-      if (picFootprint) camera <- sf::st_polygon(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir,trackDistance,flightAltitude,i,j,factor))
+      if (picFootprint) camera <- rbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir, trackDistance,flightAltitude,i,j,factor)) #maptools::spRbind(camera, calcCamFoot( pos[1], pos[2], uavViewDir,trackDistance,flightAltitude,i,j,factor))
       pOld <- pos
       flightLength <- flightLength + crossDistance
       
@@ -828,9 +849,9 @@ makeAP <- function(projectDir = tempdir(),
   }
   if (uavType == "dji_csv") {
   #browser()
-  fileConn <- file(file.path(runDir,"del2.csv"))
-  writeLines(unlist(lns[1:length(lns)]), fileConn)
-  djiDF <- utils::read.csv(file.path(runDir,"del2.csv"), sep = ",", header = FALSE)
+  del2Fn <- file.path(runDir,"del2.csv")
+  writeLines(unlist(lns[1:length(lns)]), del2Fn)
+  djiDF <- utils::read.csv(del2Fn, sep = ",", header = FALSE)
   # add correct header
   # if (!followSurface){
   # djiDF1= djiDF[1:3,]
@@ -841,8 +862,6 @@ makeAP <- function(projectDir = tempdir(),
   # }
   names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group =group,p,header = TRUE,sep = ','),split = ","))
   djiDF=djiDF[,-(1:2)]
-  # df_coord_pos = sf::st_as_sf(djiDF, coords = c("lon","lat"),remove = TRUE)
-  # r6 = st_difference(df_coord_pos)
   }
   ##########################
   ##########################################
@@ -867,14 +886,14 @@ makeAP <- function(projectDir = tempdir(),
   
   # postprocessing
   
-  fileConn <- file(file.path(runDir,"tmp.csv"))
+  tmpFn <- file.path(runDir,"tmp.csv")
   cat("preprocessing DEM related stuff...\n")
   if (uavType == "dji_csv") {
     if (!exists("r6")){
     #browser()
     # dump lns to file for read in as csv
-    writeLines(unlist(lns[1:length(lns)]), fileConn)
-    djiDF <- utils::read.csv(file.path(runDir,"tmp.csv"), sep = ",", header = FALSE)
+    writeLines(unlist(lns[1:length(lns)]), tmpFn)
+    djiDF <- utils::read.csv(tmpFn, sep = ",", header = FALSE)
     # add correct header
     names(djiDF) <-unlist(strsplit(makeUavPoint(pos,uavViewDir,group =group,p,header = TRUE,sep = ','),split = ","))
     # make it spatial
@@ -912,8 +931,8 @@ makeAP <- function(projectDir = tempdir(),
   }
   
   else if (uavType == "pixhawk") {
-    writeLines(unlist(lns), fileConn)
-    mavDF <- utils::read.csv(file.path(runDir,"tmp.csv"), colClasses=c("V4"="character",
+    writeLines(unlist(lns), tmpFn)
+    mavDF <- utils::read.csv(tmpFn, colClasses=c("V4"="character",
                                                                        "V5"="character",
                                                                        "V6"="character",
                                                                        "V7"="character"),sep = "\t", header = FALSE)
@@ -922,18 +941,15 @@ makeAP <- function(projectDir = tempdir(),
     sp::proj4string(mavDF) <- sp::CRS("+proj=longlat +datum=WGS84 +no_defs")
     
     
-    if (is.null(launchAltitude)) {
-      # analyze DEM related stuff
-      result <- analyzeDSM(useMP=useMP,demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea,gdalLink,buf_mult=buf_mult)
-      # assign adapted dem to demFn
-      lauchPos <- result[[1]]
-      dfcor <- result[[2]]
-      demFn <- result[[3]]
-      if (noFiles > nofiles)
-      {nofiles <- ceiling(rawTime / maxFlightTime)} else {nofiles = noFiles}
-      maxPoints <- ceiling(nrow(dfcor@data) / nofiles) + 1
-      
-    }
+    # analyze DEM related stuff
+    result <- analyzeDSM(useMP=useMP,demFn,mavDF,p,altFilter,horizonFilter ,followSurface,followSurfaceRes,logger,projectDir,dA,dateString,locationName,runDir,taskArea,gdalLink,buf_mult=buf_mult)
+    # assign adapted dem to demFn
+    lauchPos <- result[[1]]
+    dfcor <- result[[2]]
+    demFn <- result[[3]]
+    if (noFiles > nofiles)
+    {nofiles <- ceiling(rawTime / maxFlightTime)} else {nofiles = noFiles}
+    maxPoints <- ceiling(nrow(dfcor@data) / nofiles) + 1
     # generate single tasks waypoint file for MAV pixhawk format
     calcMAVTask(result[[2]],
                 taskName,
@@ -959,8 +975,6 @@ makeAP <- function(projectDir = tempdir(),
                 cmd,
                 runDir)
   }
-  close(fileConn)
-  
   # # if heatMap is requested
   # if (heatMap) {
   #   cat("calculating picture coverage heat map\n")

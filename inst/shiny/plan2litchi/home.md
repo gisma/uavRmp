@@ -1,10 +1,8 @@
-This is a very straightforward interface to utilize `uavRmd` to convert a `QGroundcontrol`  or `Missionplanner` flightplan to the DJI compatible Litchi csv format.
+This is a straightforward interface to convert a `QGroundControl` survey `.plan` file to the DJI compatible Litchi CSV format.
 
-There is **aboslutley no error handling**.  Please make usere that you have installed the latest `uavRmp` package from the GitHub repository:
+The app uses the special QGroundControl workflow in `makeAP(useMP = TRUE)`. Flight altitude, overlap and footprint settings are read from the uploaded survey plan. You only need to provide a project directory, the QGroundControl plan file and a digital elevation model.
 
-`devtools::install_github("gisma/uavRmp", ref = "master")`
-
-Please note that you need to provide obligatory a project directory (which will be created if not exist) and digitial elevation model. There is an upload limit of 30 GByte.
+Please note that there is an upload limit of 30 MB.
 
 According to the default path, you will find the `Litchi` control files in the folder `~/tmp/flightArea/0/fp-data/control`. 
 
